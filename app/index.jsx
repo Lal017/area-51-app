@@ -1,8 +1,18 @@
-import { Text, View } from "react-native";
+import { Amplify } from "aws-amplify";
+import awsconfig from '../src/amplifyconfiguration.json';
+Amplify.configure(awsconfig);
+import { Authenticator } from "@aws-amplify/ui-react-native";
+import SignOutButton from "./components";
 
-export default function Index() {
+const Index = () =>
+{
   return (
-    <View>
-    </View>
+    <Authenticator.Provider>
+      <Authenticator>
+        <SignOutButton />
+      </Authenticator>
+    </Authenticator.Provider>
   );
 }
+
+export default Index;
