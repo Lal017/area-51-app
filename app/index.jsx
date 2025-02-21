@@ -1,17 +1,17 @@
-import { Amplify } from "aws-amplify";
-import awsconfig from '../src/amplifyconfiguration.json';
-Amplify.configure(awsconfig);
-import { Authenticator } from "@aws-amplify/ui-react-native";
-import SignOutButton from "./components";
+import { View } from "react-native";
+import SignOutButton from "../components/components";
+import Styles from "../constants/styles";
 
 const Index = () =>
 {
   return (
-    <Authenticator.Provider>
-      <Authenticator>
-        <SignOutButton />
-      </Authenticator>
-    </Authenticator.Provider>
+    <View style={Styles.page}>
+      <View style={Styles.header}></View>
+        <View style={Styles.body}>
+          <SignOutButton />
+        </View>
+      <View style={Styles.footer}></View>
+    </View>
   );
 }
 
