@@ -1,4 +1,10 @@
 {
+  "analytics": {
+    "troplocksmithapp": {
+      "providerPlugin": "awscloudformation",
+      "service": "Pinpoint"
+    }
+  },
   "auth": {
     "troplocksmithapp": {
       "customAuth": false,
@@ -29,6 +35,14 @@
       },
       "providerPlugin": "awscloudformation",
       "service": "Cognito"
+    }
+  },
+  "notifications": {
+    "troplocksmithapp": {
+      "channels": [
+        "FCM"
+      ],
+      "service": "Pinpoint"
     }
   }
 }

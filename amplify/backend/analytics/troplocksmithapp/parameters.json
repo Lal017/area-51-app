@@ -1,0 +1,21 @@
+{
+    "appName": "troplocksmithapp",
+    "roleName": "pinpointLambdaRole12655add",
+    "cloudformationPolicyName": "cloudformationPolicy12655add",
+    "cloudWatchPolicyName": "cloudWatchPolicy12655add",
+    "pinpointPolicyName": "pinpointPolicy12655add",
+    "authPolicyName": "pinpoint_amplify_12655add",
+    "unauthPolicyName": "pinpoint_amplify_12655add",
+    "authRoleName": {
+        "Ref": "AuthRoleName"
+    },
+    "unauthRoleName": {
+        "Ref": "UnauthRoleName"
+    },
+    "authRoleArn": {
+        "Fn::GetAtt": [
+            "AuthRole",
+            "Arn"
+        ]
+    }
+}

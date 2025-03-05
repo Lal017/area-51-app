@@ -60,3 +60,7 @@ amplifytools.xcconfig
 **.sample
 amplify/team-provider-info.json
 #amplify-do-not-edit-end
+
+#firebase
+trop-locksmith-app-f399d-firebase-adminsdk-fbsvc-3eb3a172aa.json
+google-services.json
