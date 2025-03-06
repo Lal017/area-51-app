@@ -1,6 +1,7 @@
-import { View } from "react-native";
-import Styles from "../../constants/styles"
-import { SignOutButton, SettingsTab, websiteRedirect } from "../../components/components";
+import { View, Text, TouchableOpacity } from "react-native";
+import { Styles, AuthStyles } from "../../constants/styles";
+import { SettingsTab, websiteRedirect } from "../../components/components";
+import { handleSignOut } from "../../components/authComponents";
 
 // Profile page
 const Profile = () =>
@@ -14,7 +15,12 @@ const Profile = () =>
                 <SettingsTab text="Contact us" />
                 <SettingsTab text="Website" action={websiteRedirect}/>
             </View>
-            <SignOutButton />
+            <TouchableOpacity
+                onPress={() => handleSignOut()}
+                style={AuthStyles.actionButton}
+            >
+                <Text style={{color: 'white', textAlign: 'center'}}>Sign Out</Text>
+            </TouchableOpacity>
         </View>
     );
 };

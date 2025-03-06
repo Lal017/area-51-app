@@ -98,6 +98,70 @@ const Styles = StyleSheet.create({
     OutText: {
         textAlign: 'center',
     }
-})
+});
 
-export default Styles;
+const AuthStyles = StyleSheet.create({
+    page: {
+        backgroundColor: Colors.primary,
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    backgroundContainer: {
+        backgroundColor: Colors.primary,
+        width: '100%',
+        height: '80%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'absolute',
+        rowGap: 200,
+    },
+    background: {
+        backgroundColor: Colors.background,
+        width: '110%',
+        height: '1%',
+        transform: [{ rotate: '15deg' }]
+    },
+    container: {
+        backgroundColor: Colors.background,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '75%',
+        rowGap: 40,
+        paddingTop: 20,
+        paddingBottom: 20,
+        borderRadius: 20
+    },
+    confirmContainer: {
+        width: '100%',
+        alignItems: 'center',
+        rowGap: 10,
+        padding: 0
+    },
+    title: {
+        fontSize: 30
+    },
+    description: {
+        fontSize: 15,
+        textAlign: 'center',
+        width: '75%',
+    },
+    inputContainer: {
+        rowGap: 20,
+    },
+    input: {
+        backgroundColor: 'white',
+        color: '#000',
+        width: 225,
+        height: 40,
+        paddingLeft: 10,
+        borderWidth: 1
+    },
+    actionButton: {
+        backgroundColor: Colors.secondary,
+        padding: 10,
+        width: 100,
+    }
+});
+
+export { Styles, AuthStyles };

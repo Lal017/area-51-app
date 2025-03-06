@@ -1,8 +1,7 @@
 import { View, Text, Image, TouchableOpacity, Linking } from 'react-native';
 import { useAuthenticator } from '@aws-amplify/ui-react';
-import { signOut } from '@aws-amplify/auth';
 import { getPermissionStatus, requestPermissions} from '@aws-amplify/rtn-push-notification';
-import Styles from '../constants/styles';
+import { Styles } from '../constants/styles';
 import { Auth } from 'aws-amplify';
 
 // permission to send push notifications
@@ -61,32 +60,6 @@ const CustHeader = () =>
     );
 };
 
-// Sign out button component
-const SignOutButton = () =>
-{    
-    const { signOut, toSignIn } = useAuthenticator((context) => [context.signOut, context.route]);
-    // delete user info and sign out of app
-    const handleSignOut = async () =>
-    {
-        try {
-            // sign out from amplify
-            signOut({global: true});
-            toSignIn();
-            console.log('signed out successfully');
-        } catch (error) {
-            console.log('error signing out: ', error);
-        }
-    };
-
-    return(
-        <TouchableOpacity
-            style={Styles.OutButton}
-            onPress={handleSignOut}>
-            <Text style={Styles.OutText}>Sign Out</Text>
-        </TouchableOpacity>
-    )
-};
-
 // reusable tab component for settings section
 const SettingsTab = ({text, action}) =>
 {
@@ -108,7 +81,6 @@ const websiteRedirect = () =>
     Linking.openURL('https://troplocksmithlasvegas.com/');
 }
 
-export { SignOutButton };
 export { CustHeader };
 export { SettingsTab };
 export { websiteRedirect };

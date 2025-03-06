@@ -2,7 +2,7 @@ import { View } from "react-native";
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { CustHeader } from "../../components/components";
-import Styles from "../../constants/styles";
+import { Styles } from "../../constants/styles";
 import Colors from "../../constants/colors";
 
 const TabsLayout = () =>

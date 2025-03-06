@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import Styles from "../../constants/styles";
+import { Styles } from "../../constants/styles";
 
 const Request = () =>
 {
