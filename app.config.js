@@ -4,7 +4,7 @@ export const expo = {
   version: "1.0.0",
   orientation: "portrait",
   icon: "./assets/images/icon.png",
-  scheme: "myapp",
+  scheme: "troplocksmithscheme",
   userInterfaceStyle: "automatic",
   newArchEnabled: true,
   ios: {

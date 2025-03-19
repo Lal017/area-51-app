@@ -2,6 +2,7 @@ import { Stack } from "expo-router";
 
 const AuthLayout = () =>
 {
+    console.log('auth layout');
     return (
         <Stack screenOptions={{headerShown: false}}>
             <Stack.Screen name="signUp" />

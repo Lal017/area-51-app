@@ -1,3 +1,5 @@
+import { TouchableOpacity, Image, Text } from 'react-native';
+import { AuthStyles } from '../constants/styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
     signUp,
@@ -7,10 +9,16 @@ import {
     signOut,
     resendSignUpCode,
     fetchAuthSession,
+    resetPassword,
+    confirmResetPassword,
+    updatePassword,
+    signInWithRedirect,
+    deleteUser
 } from 'aws-amplify/auth';
 import { router } from 'expo-router';
 
-// handlers 
+// Sign Up
+// ---------------------------------------------------------------------
 const handleSignUp = async ({name, email, password, confPassword}) =>
 {
     if (password !== confPassword)
@@ -57,11 +65,16 @@ const handleSignUpConfirm = async ({username, confirmationCode}) =>
         });
 
         console.log(isSignUpComplete, nextStep);
-        if (nextStep.signUpStep === 'COMPLETE_AUTO_SIGN_IN' || nextStep.signUpStep === 'DONE') {
+        if (nextStep.signUpStep === 'COMPLETE_AUTO_SIGN_IN') {
             handleAutoSignIn({username});
+        }
+        else if(nextStep.signUpStep === 'DONE') {
+            console.log('Sign-up complete')
+            router.replace('(auth)');
         }
         else {
             console.log('error, could not auto sign in');
+            router.replace('(auth)');
         }
     } catch (error) {
         console.log('error confirming sign up', error);
@@ -88,6 +101,8 @@ const handleResendSignUpCode = async ({username}) =>
     }
 };
 
+// Sign In
+// -----------------------------------------------------------------------------------------
 const handleAutoSignIn = async ({username}) =>
 {
     try {
@@ -95,6 +110,7 @@ const handleAutoSignIn = async ({username}) =>
         signInConfirm({username, isSignedIn: signInOutput.isSignedIn, nextStep: signInOutput.nextStep})
     } catch (error) {
         console.log('error auto signing in', error);
+        router.replace('(auth)');
     }
 };
 
@@ -111,7 +127,7 @@ const handleSignIn = async ({username, password}) =>
 
 const signInConfirm = ({username, isSignedIn, nextStep}) =>
 {
-    console.log(isSignedIn, nextStep);
+    console.log(username, isSignedIn, nextStep);
     if (isSignedIn && nextStep.signInStep === 'DONE') {
         router.replace('(tabs)');
     }
@@ -122,8 +138,54 @@ const signInConfirm = ({username, isSignedIn, nextStep}) =>
             params: {username}
         });
     }
-}
+};
 
+const handleSignInWithRedirect = async ({providerName}) =>
+{
+    try {
+        await signInWithRedirect({ provider: providerName });
+        console.log('signed in with redirect');
+    } catch (error) {
+        console.log('error signing in with redirect', error);
+    }
+};
+
+// Google and amazon sign in buttons
+// ---------------------------------------------------
+const GoogleSignInButton = () =>
+    {
+        return(
+            <TouchableOpacity
+                onPress={() => handleSignInWithRedirect({providerName: 'Google'})}
+                style={AuthStyles.googleSignIn}
+            >
+                <Image
+                    source={require('../assets/images/google-icon.png')}
+                    style={AuthStyles.signInImg}
+                />
+                <Text style={AuthStyles.signInText}>Sign in</Text>
+            </TouchableOpacity>
+        );
+    };
+    
+    const AmazonSignInButton = () =>
+    {
+        return(
+            <TouchableOpacity
+                onPress={() => handleSignInWithRedirect({providerName: 'Amazon'})}
+                style={AuthStyles.amazonSignIn}
+            >
+                <Image
+                    source={require('../assets/images/amazon-icon.png')}
+                    style={AuthStyles.signInImg}
+                />
+                <Text style={AuthStyles.signInText}>Sign in</Text>
+            </TouchableOpacity>
+        );
+    };
+
+// Sign Out
+// --------------------------------------------------------
 const handleSignOut = async () =>
 {
     try {
@@ -144,8 +206,88 @@ const clearLocalStorage = async () =>
     } catch (error) {
         console.log('error clearing local storage', error);
     }
+};
+
+// Reset Password
+// -------------------------------------------------------------
+const handleResetPassword = async ({username}) =>
+{
+    try {
+        const output = await resetPassword({ username });
+        handleResetPasswordNextSteps(output, {username});
+    } catch (error) {
+        console.log('error resetting password', error);
+    }
+};
+
+const handleResetPasswordNextSteps = (output, {username}) =>
+{
+    const { nextStep } = output;
+    switch (nextStep.resetPasswordStep) {
+        case 'CONFIRM_RESET_PASSWORD_WITH_CODE':
+            const codeDeliveryDetails = nextStep.codeDeliveryDetails;
+            console.log(`Confirmation code was sent to ${codeDeliveryDetails.deliveryMedium}`);
+            router.push({
+                pathname: '/resetPasswordConfirm',
+                params: {username}
+            });
+            break;
+        case 'DONE':
+            console.log('Password rest succesful');
+            break;
+    }
+};
+
+const handleConfirmResetPassword = async ({username, confirmationCode, newPassword, confNewPassword}) =>
+{
+    if (newPassword !== confNewPassword)
+    {
+        console.log('passwords do not match');
+        return;
+    }
+
+    try {
+        await confirmResetPassword({username, confirmationCode, newPassword});
+        console.log('password reset successful');
+        router.replace('(auth)');
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+// Update Password
+// --------------------------------------------------------------
+const handleUpdatePassword = async ({oldPassword, newPassword, confNewPassword}) =>
+{
+    if (newPassword !== confNewPassword)
+    {
+        console.log('passwords do not match');
+        return;
+    }
+
+    try {
+        await updatePassword({oldPassword, newPassword});
+        console.log('password updated successfully');
+        router.replace('(profile)');
+    } catch (error) {
+        console.log('error updating password', error);
+    }
+};
+
+// Delete User
+// --------------------------------------------------------------
+const handleDeleteUser = async () =>
+{
+    try {
+        await deleteUser();
+        console.log('user deleted successfully');
+    } catch (error) {
+        console.log('error deleting user', error);
+    }
 }
 
+// Other
+// -----------------------------------------------------
 const handleGetCurrentUser = async () =>
 {
     try {
@@ -157,12 +299,21 @@ const handleGetCurrentUser = async () =>
     }
 };
 
+// Exports
+// -------------------------------------------------------------
 export {
     handleSignUp,
     handleSignUpConfirm,
     handleAutoSignIn,
     handleSignIn,
+    handleSignInWithRedirect,
     handleSignOut,
     handleResendSignUpCode,
-    handleGetCurrentUser
+    handleGetCurrentUser,
+    handleResetPassword,
+    handleConfirmResetPassword,
+    handleUpdatePassword,
+    handleDeleteUser,
+    GoogleSignInButton,
+    AmazonSignInButton
 };

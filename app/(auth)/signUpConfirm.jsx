@@ -1,4 +1,4 @@
-import { View, Text, TextInput, StatusBar, TouchableOpacity, KeyboardAvoidingView} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView} from 'react-native';
 import { useState } from 'react';
 import { useLocalSearchParams } from 'expo-router';
 import { AuthStyles } from '../../constants/styles';
@@ -14,7 +14,6 @@ const signUpConfirm = () =>
             behavior='padding'
             style={AuthStyles.page}
         >
-            <StatusBar barStyle="light-content" hidden={true}/>
             <View style={AuthStyles.backgroundContainer}>
                 <View style={AuthStyles.background} />
                 <View style={AuthStyles.background} />

@@ -1,8 +1,8 @@
-import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, StatusBar } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView } from "react-native";
 import { useState } from "react";
-import { handleSignUp } from "../../components/authComponents";
-import { Link, router } from "expo-router";
-import { AuthStyles } from "../../constants/styles";
+import { handleSignUp, GoogleSignInButton, AmazonSignInButton } from "../../components/authComponents";
+import { Link } from "expo-router";
+import { AuthStyles, Styles } from "../../constants/styles";
 
 const signUp = () =>
 {
@@ -16,7 +16,6 @@ const signUp = () =>
             behavior='padding'
             style={AuthStyles.page}
         >
-            <StatusBar barStyle="light-content" hidden={true}/>
             <View style={AuthStyles.backgroundContainer}>
                 <View style={AuthStyles.background} />
                 <View style={AuthStyles.background} />
@@ -63,6 +62,11 @@ const signUp = () =>
                 >
                     <Text style={{color: 'white', textAlign: 'center'}}>Sign Up</Text>
                 </TouchableOpacity>
+                <View style={Styles.hr} />
+                <View style={AuthStyles.providerContainer}>
+                    <GoogleSignInButton />
+                    <AmazonSignInButton />
+                </View>
                 <Link href="/signIn">Sign In</Link>
             </View>
         </KeyboardAvoidingView>

@@ -1,11 +1,13 @@
 import { Text, TextInput, View, TouchableOpacity, StatusBar, KeyboardAvoidingView } from 'react-native';
 import { useState } from 'react';
-import { handleGetCurrentUser, handleSignIn, handleSignOut } from '../../components/authComponents';
+import { handleSignIn } from '../../components/authComponents';
 import { Link } from 'expo-router';
-import { AuthStyles } from '../../constants/styles';
+import { AuthStyles, Styles } from '../../constants/styles';
+import { GoogleSignInButton, AmazonSignInButton } from '../../components/authComponents';
 
 const signIn = () =>
 {
+    console.log('sign in');
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
 
@@ -48,7 +50,15 @@ const signIn = () =>
                 >
                     <Text style={{color: 'white', textAlign: 'center'}}>Login</Text>
                 </TouchableOpacity>
-                <Link href="/signUp">Sign Up</Link>
+                <View style={Styles.hr}/>
+                <View style={AuthStyles.providerContainer}>
+                    <GoogleSignInButton />
+                    <AmazonSignInButton />
+                </View>
+                <View style={AuthStyles.linkContainer}>
+                    <Link href="/resetPassword">Forgot Password?</Link>
+                    <Link href="/signUp">Sign Up</Link>
+                </View>
             </View>
         </KeyboardAvoidingView>
     );

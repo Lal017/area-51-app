@@ -5,6 +5,7 @@ import { handleGetCurrentUser } from '../components/authComponents';
 
 const Index = () =>
 {
+    console.log('index');
     const [user, setUser] = useState();
     const [loading, setLoading] = useState(true);
 
@@ -19,7 +20,8 @@ const Index = () =>
             } finally {
                 setLoading(false);
             }
-        }
+        };
+
         fetchUser();
     }, []);
 

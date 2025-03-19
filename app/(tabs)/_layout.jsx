@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import { Tabs } from "expo-router";
+import { router, Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { CustHeader } from "../../components/components";
 import { Styles } from "../../constants/styles";
@@ -7,13 +7,12 @@ import Colors from "../../constants/colors";
 
 const TabsLayout = () =>
 {
+    console.log('tabs layout');
     return (
         <Tabs
             screenOptions={{
                 header: () => <CustHeader/>,
                 tabBarStyle: Styles.tabBarStyle,
-                tabBarItemStyle: Styles.tabBarItemStyle,
-                tabBarIconStyle: Styles.tabBarIconStyle,
                 tabBarActiveTintColor: Colors.primary,
                 tabBarInactiveTintColor: Colors.secondary,
                 tabBarShowLabel: false,
@@ -43,7 +42,7 @@ const TabsLayout = () =>
                 }}
             />
             <Tabs.Screen
-                name="profile"
+                name="(profile)"
                 options={{
                 title: "Profile",
                 tabBarIcon: ({ color, size }) => (

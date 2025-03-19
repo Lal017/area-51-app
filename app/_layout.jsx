@@ -6,7 +6,14 @@ Amplify.configure(awsconfig);
 
 const RootLayout = () =>
 {
-  return <Stack screenOptions={{headerShown: false}}/>;
+  console.log('root layout');
+  return (
+    <Stack screenOptions={{headerShown: false}}>
+      <Stack.Screen name='index' options={{title: 'Home'}}/>
+      <Stack.Screen name='(auth)' options={{title: 'Authentication'}}/>
+      <Stack.Screen name='(tabs)' options={{title: 'App'}}/>
+    </Stack>
+  );
 }
 
 export default RootLayout;
