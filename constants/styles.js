@@ -16,13 +16,13 @@ const Styles = StyleSheet.create({
         marginLeft: 25,
     },
     tabBarStyle: {
-        display: 'flex',
         backgroundColor: Colors.background,
-        justifyContent: 'center',
-        alignItems: 'center',
         elevation: 0,
         shadowOpacity: 0,
         borderTopWidth: 0,
+    },
+    tabBarIconStyle: {
+        width: 50,
     },
     KeyIconContainer: {
         width: 75,
@@ -46,7 +46,7 @@ const Styles = StyleSheet.create({
 // Request page styles
     RequestPage: {
         flex: 1,
-        backgroundColor: Colors.background,
+        backgroundColor: Colors.primary,
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -149,11 +149,27 @@ const AuthStyles = StyleSheet.create({
     }
 });
 
+const HomeStyles = StyleSheet.create({
+    page: {
+        flex: 1,
+        backgroundColor: Colors.background,
+        alignItems: 'center',
+    },
+    input: {
+        backgroundColor: Colors.tertiary,
+        height: 45,
+        width: 250,
+        paddingLeft: 10,
+        borderWidth: 1,
+    },
+})
+
 const ProfileStyles = StyleSheet.create({
     page: {
         flex: 1,
         backgroundColor: Colors.primary,
-        justifyContent: 'center',
+        paddingTop: 75,
+        justifyContent: 'flexStart',
         alignItems: 'center',
         rowGap: 50,
     },
@@ -188,15 +204,34 @@ const ProfileStyles = StyleSheet.create({
     // Index
     accountCard: {
         backgroundColor: Colors.tertiary,
-        width: '75%',
-        height: '15%',
-        marginTop: 50,
+        flexDirection: 'row',
+        width: '90%',
+        height: '125',
         borderRadius: 25,
-        justifyContent: 'space-evenly',
+        columnGap: 100,
+        marginTop: 10,
+        justifyContent: 'flexStart',
         alignItems: 'center',
+        paddingLeft: 35
     },
-    // Change Password
-    changePassContainer: {
+    accountText: {
+        rowGap: 10
+    },
+    editAccount: {
+        height: '75%',
+
+    },
+    editButton: {
+        backgroundColor: Colors.secondary,
+        borderWidth: 1,
+        borderRadius: 10,
+        width: 50,
+        height: 30,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    // Change Password / attributes
+    textContainer: {
         backgroundColor: Colors.tertiary,
         padding: 25,
         borderRadius: 25,
@@ -206,6 +241,11 @@ const ProfileStyles = StyleSheet.create({
     title: {
         fontSize: 25,
         textAlign: 'center',
+    },
+    subTitle: {
+        fontSize: 17,
+        fontWeight: '600',
+        textAlign: 'center'
     },
     inputContainer: {
         rowGap: 20,
@@ -219,4 +259,4 @@ const ProfileStyles = StyleSheet.create({
     },
 });
 
-export { Styles, AuthStyles, ProfileStyles };
+export { Styles, AuthStyles, HomeStyles, ProfileStyles };

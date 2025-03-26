@@ -1,29 +1,5 @@
-import { View, Text, Image, TouchableOpacity, Linking } from 'react-native';
-import { getPermissionStatus, requestPermissions} from '@aws-amplify/rtn-push-notification';
+import { View, Text, Image, TouchableOpacity, Linking, Alert } from 'react-native';
 import { Styles, ProfileStyles } from '../constants/styles';
-
-// permission to send push notifications
-const handlePermissions = async () =>
-{
-    const status = await getPermissionStatus();
-    if (status === 'granted') { return; }
-    if (status === 'denied') { return; }
-    if (status === 'shouldRequest') { await requestPermissions(); }
-    if (status === 'shouldExplainThenRequest')
-    {
-        await permissionRequestExplanation();
-        await requestPermissions();
-    }
-};
-
-// explanation to user for permission request
-const permissionRequestExplanation = async () =>
-{
-    Alert.alert(
-        'Allow Push Notifications',
-        'Note: this app requires push notifications to be enabled.',
-    );
-};
 
 // custom header component to replace default header
 const CustHeader = () =>
@@ -62,5 +38,4 @@ export {
     CustHeader,
     SettingsTab,
     websiteRedirect,
-    handlePermissions,
 };

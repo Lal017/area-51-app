@@ -5,7 +5,6 @@ import { handleGetCurrentUser } from '../components/authComponents';
 
 const Index = () =>
 {
-    console.log('index');
     const [user, setUser] = useState();
     const [loading, setLoading] = useState(true);
 
@@ -34,10 +33,8 @@ const Index = () =>
     }
 
     if (!user) {
-        console.log('no user', user);
         return <Redirect href={{ pathname: '/(auth)' }} />;
     }
-    console.log('user found');
     return <Redirect href={{ pathname: '/(tabs)' }} />;
 };
 

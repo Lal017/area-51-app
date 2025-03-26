@@ -13,13 +13,11 @@ const Loading = () => {
             switch (payload.event) {
                 case 'signedIn':
                     // Redirect to home screen or dashboard after successful sign in
-                    console.log('payload signed in');
                     if (router.canGoBack()) { router.dismiss(); }
                     router.replace('(tabs)');
                     break;
                 case 'signedOut':
                     // Redirect to login screen after sign out
-                    console.log('payload signed out');
                     if (router.canGoBack()) { router.dismiss(); }
                     router.replace('(auth)');
                     break;
@@ -29,11 +27,6 @@ const Loading = () => {
                     router.replace('(auth)');
                     break;
             }
-
-            console.log(
-                'A new auth event has happened: ',
-                payload.data?.username + ' has ' + payload.event
-            );
         });
 
         return listener;

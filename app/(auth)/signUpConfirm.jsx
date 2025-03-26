@@ -29,6 +29,7 @@ const signUpConfirm = () =>
                         value={confirmationCode}
                         onChangeText={setCode}
                         autoCapitalize='none'
+                        keyboardType='number-pad'
                         style={AuthStyles.input}
                     />
                 </View>

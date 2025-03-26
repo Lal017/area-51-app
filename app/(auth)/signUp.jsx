@@ -10,6 +10,7 @@ const signUp = () =>
     const [password, setPassword] = useState();
     const [confPassword, setConfPassword] = useState();
     const [name, setName] = useState();
+    const [phoneNumber, setPhoneNumber] = useState();
 
     return(
         <KeyboardAvoidingView
@@ -26,9 +27,17 @@ const signUp = () =>
                 <Text style={AuthStyles.title}>Sign Up</Text>
                 <View style={AuthStyles.inputContainer}>
                     <TextInput
-                        placeholder="name"
+                        placeholder="full name"
                         value={name}
                         onChangeText={setName}
+                        style={AuthStyles.input}
+                    />
+                    <TextInput
+                        placeholder="phone number"
+                        value={phoneNumber}
+                        onChangeText={setPhoneNumber}
+                        autoCapitalize="none"
+                        keyboardType="phone-pad"
                         style={AuthStyles.input}
                     />
                     <TextInput
@@ -57,7 +66,7 @@ const signUp = () =>
                     />
                 </View>
                 <TouchableOpacity
-                    onPress={() => handleSignUp({name, email, password, confPassword})}
+                    onPress={() => handleSignUp({name, email, password, confPassword, phoneNumber})}
                     style={AuthStyles.actionButton}
                 >
                     <Text style={{color: 'white', textAlign: 'center'}}>Sign Up</Text>

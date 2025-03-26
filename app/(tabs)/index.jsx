@@ -1,12 +1,12 @@
-import { View } from "react-native";
-import { Styles } from "../../constants/styles";
+import { View, Text } from "react-native";
+import { HomeStyles } from "../../constants/styles";
 
 // Home page after login
 const Index = () =>
 {
-  console.log('tabs index');
   return (
-    <View style={Styles.HomePage}>
+    <View style={HomeStyles.page}>
+      <Text>Information</Text>
     </View>
   );
 }

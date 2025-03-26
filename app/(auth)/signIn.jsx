@@ -1,13 +1,12 @@
 import { Text, TextInput, View, TouchableOpacity, StatusBar, KeyboardAvoidingView } from 'react-native';
 import { useState } from 'react';
-import { handleSignIn } from '../../components/authComponents';
+import { handleGetCurrentUser, handleSignIn } from '../../components/authComponents';
 import { Link } from 'expo-router';
 import { AuthStyles, Styles } from '../../constants/styles';
 import { GoogleSignInButton, AmazonSignInButton } from '../../components/authComponents';
 
 const signIn = () =>
 {
-    console.log('sign in');
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
 

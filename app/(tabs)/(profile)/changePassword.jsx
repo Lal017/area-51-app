@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import { useState } from 'react';
 import { ProfileStyles } from '../../../constants/styles';
 import { handleUpdatePassword } from '../../../components/authComponents';
@@ -10,8 +10,11 @@ const changePassword = () =>
     const [confNewPassword, setConfNewPassword] = useState();
 
     return(
-        <View style={ProfileStyles.page}>
-            <View style={ProfileStyles.changePassContainer}>
+        <KeyboardAvoidingView
+            enabled={true}
+            behavior='padding'
+            style={ProfileStyles.page}>
+            <View style={ProfileStyles.textContainer}>
                 <Text style={ProfileStyles.title}>Change Password</Text>
                 <View style={ProfileStyles.inputContainer}>
                     <TextInput
@@ -45,8 +48,8 @@ const changePassword = () =>
                     <Text style={{color: 'white', textAlign: 'center'}}>Change</Text>
                 </TouchableOpacity>
             </View>
-        </View>
-    )
+        </KeyboardAvoidingView>
+    );
 };
 
 export default changePassword;

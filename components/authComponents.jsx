@@ -1,4 +1,4 @@
-import { TouchableOpacity, Image, Text } from 'react-native';
+import { TouchableOpacity, Image, Text, Alert } from 'react-native';
 import { AuthStyles } from '../constants/styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
@@ -13,63 +13,92 @@ import {
     confirmResetPassword,
     updatePassword,
     signInWithRedirect,
-    deleteUser
+    deleteUser,
+    getCurrentUser,
+    updateUserAttributes,
+    confirmUserAttribute
 } from 'aws-amplify/auth';
+import { identifyUser } from 'aws-amplify/push-notifications';
 import { router } from 'expo-router';
 
 // Sign Up
 // ---------------------------------------------------------------------
-const handleSignUp = async ({name, email, password, confPassword}) =>
+const handleSignUp = async ({name, email, password, confPassword, phoneNumber}) =>
 {
     if (password !== confPassword)
     {
-        console.log('passwords do not match');
+        Alert.alert(
+            "Error",
+            "Passwords do not match",
+            [
+                { text: "Ok" }
+            ]
+        );
+        return;
+    }
+    const phoneNumberCheck = phoneNumber.replace(/\D/g, '');
+    if (phoneNumberCheck.length !== 10)
+    {
+        Alert.alert(
+            "Error",
+            "Invalid phone number",
+            [
+                { text: "Ok" }
+            ]
+        );
         return;
     }
     try {
-        const { isSignUpComplete, userId, nextStep } = await signUp({
+        const { nextStep } = await signUp({
             username: email,
             password,
             options: {
                 userAttributes: {
                     name,
                     email,
+                    phone_number: `+1${phoneNumberCheck}`
                 },
                 autoSignIn: true
             }
         });
 
-        console.log(userId, isSignUpComplete, nextStep);
-
         if (nextStep.signUpStep === 'CONFIRM_SIGN_UP') {
-            console.log('This worked');
             router.push({
                 pathname: '/signUpConfirm',
                 params: {username: email}
             });
         }
-        else {
-            console.log('This did not work');
-        }
     } catch (error) {
         console.log('error signing up:', error);
+        Alert.alert(
+            'Error',
+            error.message,
+            [
+                { text: 'Ok'}
+            ]
+        )
     }
 };
 
 const handleSignUpConfirm = async ({username, confirmationCode}) =>
 {
     try {
-        const { isSignUpComplete, nextStep } = await confirmSignUp({
+        const { nextStep } = await confirmSignUp({
             username,
             confirmationCode
         });
 
-        console.log(isSignUpComplete, nextStep);
         if (nextStep.signUpStep === 'COMPLETE_AUTO_SIGN_IN') {
             handleAutoSignIn({username});
+            Alert.alert(
+                "Success",
+                "Sign up successful!",
+                [
+                    { text: "Ok" }
+                ]
+            );
         }
         else if(nextStep.signUpStep === 'DONE') {
-            console.log('Sign-up complete')
             router.replace('(auth)');
         }
         else {
@@ -78,26 +107,39 @@ const handleSignUpConfirm = async ({username, confirmationCode}) =>
         }
     } catch (error) {
         console.log('error confirming sign up', error);
+        Alert.alert(
+            "Error",
+            error.message,
+            [
+                { text: "Ok" }
+            ]
+        );
     }
 };
 
 const handleResendSignUpCode = async ({username}) =>
 {
     try {
-        const { destination, deliveryMedium, attributeName } = await resendSignUpCode({
+        const { destination, deliveryMedium } = await resendSignUpCode({
             username
         });
-
-        console.log(destination, deliveryMedium, attributeName);
+        Alert.alert(
+            "Success",
+            `Code sent to ${destination} via ${deliveryMedium}`,
+            [
+                { text: "Ok" }
+            ]
+        );
         return;
     } catch (error) {
         console.log('error resending sign up code', error);
-        if (error.name == 'UserNotFoundException') {
-            console.log('user not found');
-        }
-        else if (error.name === 'LimitedExceededException') {
-            console.log('too many attempts to resend code. Please try again later');
-        }
+        Alert.alert(
+            'Error',
+            error.message,
+            [
+                { text: "Ok" }
+            ]
+        );
     }
 };
 
@@ -116,18 +158,23 @@ const handleAutoSignIn = async ({username}) =>
 
 const handleSignIn = async ({username, password}) =>
 {
-    console.log(username, password);
     try {
         const { isSignedIn, nextStep } = await signIn({ username, password });
         signInConfirm({username, isSignedIn, nextStep});
     } catch (error) {
         console.log('error signing in', error);
+        Alert.alert(
+            'Error',
+            error.message,
+            [
+                { text: 'Ok'}
+            ]
+        );
     }
 };
 
 const signInConfirm = ({username, isSignedIn, nextStep}) =>
 {
-    console.log(username, isSignedIn, nextStep);
     if (isSignedIn && nextStep.signInStep === 'DONE') {
         router.replace('(tabs)');
     }
@@ -144,9 +191,15 @@ const handleSignInWithRedirect = async ({providerName}) =>
 {
     try {
         await signInWithRedirect({ provider: providerName });
-        console.log('signed in with redirect');
     } catch (error) {
         console.log('error signing in with redirect', error);
+        Alert.alert(
+            'Error',
+            error.message,
+            [
+                { text: 'Ok'}
+            ]
+        );
     }
 };
 
@@ -192,9 +245,15 @@ const handleSignOut = async () =>
         await signOut({global: true });
         clearLocalStorage();
         router.replace('(auth)');
-        console.log('signed out');
     } catch (error) {
         console.log('error signing out', error);
+        Alert.alert(
+            'Error',
+            error.message,
+            [
+                { text: 'Ok'}
+            ]
+        );
     }
 };
 
@@ -202,7 +261,6 @@ const clearLocalStorage = async () =>
 {
     try {
         await AsyncStorage.clear();
-        console.log('local storage cleared');
     } catch (error) {
         console.log('error clearing local storage', error);
     }
@@ -214,9 +272,23 @@ const handleResetPassword = async ({username}) =>
 {
     try {
         const output = await resetPassword({ username });
+        Alert.alert(
+            "Verification",
+            "Check your email for your Verification code",
+            [
+                { text: 'Ok'}
+            ]
+        );
         handleResetPasswordNextSteps(output, {username});
     } catch (error) {
         console.log('error resetting password', error);
+        Alert.alert(
+            'Error',
+            error.message,
+            [
+                { text: 'Ok'}
+            ]
+        );
     }
 };
 
@@ -233,7 +305,13 @@ const handleResetPasswordNextSteps = (output, {username}) =>
             });
             break;
         case 'DONE':
-            console.log('Password rest succesful');
+            Alert.alert(
+                "Success",
+                "Password reset successful!",
+                [
+                    { text: 'Ok'}
+                ]
+            );
             break;
     }
 };
@@ -242,16 +320,35 @@ const handleConfirmResetPassword = async ({username, confirmationCode, newPasswo
 {
     if (newPassword !== confNewPassword)
     {
-        console.log('passwords do not match');
+        Alert.alert(
+            "Error",
+            "Passwords do not match",
+            [
+                { text: 'Ok'}
+            ]
+        );
         return;
     }
 
     try {
         await confirmResetPassword({username, confirmationCode, newPassword});
-        console.log('password reset successful');
+        Alert.alert(
+            "Success",
+            "Password reset successful!",
+            [
+                { text: 'Ok'}
+            ]
+        );
         router.replace('(auth)');
     } catch (error) {
         console.log(error);
+        Alert.alert(
+            "Error",
+            error.message,
+            [
+                { text: 'Ok'}
+            ]
+        );
     }
 };
 
@@ -261,28 +358,73 @@ const handleUpdatePassword = async ({oldPassword, newPassword, confNewPassword})
 {
     if (newPassword !== confNewPassword)
     {
-        console.log('passwords do not match');
+        Alert.alert(
+            "Error",
+            "Passwords do not match",
+            [
+                { text: 'Ok'}
+            ]
+        );
         return;
     }
 
     try {
         await updatePassword({oldPassword, newPassword});
-        console.log('password updated successfully');
+        Alert.alert(
+            "Success",
+            "Password updated successfully!",
+            [
+                { text: 'Ok'}
+            ]
+        );
         router.replace('(profile)');
     } catch (error) {
         console.log('error updating password', error);
+        Alert.alert(
+            "Error",
+            error.message,
+            [
+                { text: 'Ok'}
+            ]
+        );
     }
 };
 
 // Delete User
 // --------------------------------------------------------------
-const handleDeleteUser = async () =>
+const handleDeleteUser = async ({email, inputEmail}) =>
 {
+    if (email.toLowerCase() !== inputEmail.toLowerCase())
+    {
+        Alert.alert(
+            "Error",
+            "Email is incorrect",
+            [
+                { text: 'Ok'}
+            ]
+        );
+        router.replace('(tabs');
+        return;
+    }
     try {
         await deleteUser();
-        console.log('user deleted successfully');
+        Alert.alert(
+            "Success",
+            "User deleted successfully!",
+            [
+                { text: 'Ok'}
+            ]
+        );
+        router.replace('(auth)');
     } catch (error) {
         console.log('error deleting user', error);
+        Alert.alert(
+            "Error",
+            error.message,
+            [
+                { text: 'Ok'}
+            ]
+        );
     }
 }
 
@@ -292,12 +434,112 @@ const handleGetCurrentUser = async () =>
 {
     try {
         const { tokens } = await fetchAuthSession();
-        console.log(tokens);
         return tokens;
     } catch (error) {
-        console.log('error getting current user', error);
+        // this means there is currently no user signed in
     }
 };
+
+// Pinpoint notifications
+// ----------------------------------------------------
+
+const handleSetPinpoint = async () =>
+{
+    const currentUser = await getCurrentUser();
+    const { userId, username, signInDetails } = currentUser;
+
+    const userAttributes = currentUser.userAttributes || {};
+    const { name = '', email = '' } = userAttributes;
+    const identifyUserInput = {
+        userId: userId,
+        userAttributes: {
+            name,
+            email
+        }
+    };
+
+    console.log(name, email);
+
+    await identifyUser(identifyUserInput);
+};
+
+// update attributes
+// ------------------------------------------------------
+const handleUpdateAttributes = async (updatedEmail, updatedName, updatedPhone) =>
+{
+    const phoneNumberCheck = updatedPhone.replace(/\D/g, '');
+    if (phoneNumberCheck.length !== 10)
+    {
+        Alert.alert(
+            "Error",
+            "Invalid phone number",
+            [
+                { text: "Ok" }
+            ]
+        );
+        return;
+    }
+    try {
+        const attributes = await updateUserAttributes({
+            userAttributes: {
+                email: updatedEmail,
+                name: updatedName,
+                phone_number: `+1${phoneNumberCheck}`
+            },
+        });
+        handleUpdateAttributesNextSteps(attributes.email.nextStep.updateAttributeStep);
+    } catch (error) {
+        console.log(error);
+        Alert.alert(
+            "Error",
+            error.message,
+            [
+                { text: 'Ok'}
+            ]
+        );
+    };
+};
+
+const handleUpdateAttributesNextSteps = (nextStep) =>
+{
+    if (nextStep === 'DONE') {
+        Alert.alert(
+            "Success",
+            "Attributes updated successfully!",
+            [
+                { text: 'Ok'}
+            ]
+        );
+        router.replace('(tabs)');
+    }
+    else if (nextStep === 'CONFIRM_ATTRIBUTE_WITH_CODE') {
+        router.push('/confirmAttribute');
+    }
+}
+
+const handleConfirmUserAttribute = async ({ userAttributeKey, confirmationCode }) =>
+{
+    try {
+        await confirmUserAttribute({ userAttributeKey, confirmationCode });
+        router.replace('(tabs)');
+        Alert.alert(
+            "Success",
+            "Email confirmed!",
+            [
+                { text: 'Ok'}
+            ]
+        );
+    } catch (error) {
+        console.log(error);
+        Alert.alert(
+            "Error",
+            error.message,
+            [
+                { text: 'Ok'}
+            ]
+        );
+    }
+}
 
 // Exports
 // -------------------------------------------------------------
@@ -315,5 +557,8 @@ export {
     handleUpdatePassword,
     handleDeleteUser,
     GoogleSignInButton,
-    AmazonSignInButton
+    AmazonSignInButton,
+    handleSetPinpoint,
+    handleUpdateAttributes,
+    handleConfirmUserAttribute
 };
