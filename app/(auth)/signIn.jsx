@@ -1,6 +1,6 @@
 import { Text, TextInput, View, TouchableOpacity, StatusBar, KeyboardAvoidingView } from 'react-native';
 import { useState } from 'react';
-import { handleGetCurrentUser, handleSignIn } from '../../components/authComponents';
+import { handleSignIn } from '../../components/authComponents';
 import { Link } from 'expo-router';
 import { AuthStyles, Styles } from '../../constants/styles';
 import { GoogleSignInButton, AmazonSignInButton } from '../../components/authComponents';

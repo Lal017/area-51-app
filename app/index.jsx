@@ -15,7 +15,7 @@ const Index = () =>
                 const userData = await handleGetCurrentUser();
                 setUser(userData);
             } catch (error) {
-                console.error('Error fetching user:', error)
+                // no user is signed in
             } finally {
                 setLoading(false);
             }

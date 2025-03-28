@@ -1,15 +1,13 @@
 import {
     getPermissionStatus,
     requestPermissions,
-    onNotificationReceivedInForeground,
-    onNotificationReceivedInBackground
 } from 'aws-amplify/push-notifications';
+import { Alert } from 'react-native';
 
 // permission to send push notifications
 const handlePermissions = async () =>
 {
     const status = await getPermissionStatus();
-    console.log(status);
 
     if (status === 'granted') { return; }
     if (status === 'denied') { await permissionRequestExplanation(); return; }
@@ -32,6 +30,25 @@ const permissionRequestExplanation = async () =>
     );
 };
 
+const notificationRecievedHandler = async (notification) =>
+{
+    Alert.alert(
+        'Notification Received',
+        `Message: ${notification.body}`,
+        [
+            { text: 'Ok' }
+        ]
+    )
+};
+
+const notificationOpenedHandler = async (notification) =>
+{
+    console.log('Notification opened:', notification);
+    router.replace('(tabs)/profile');
+};
+
 export {
-    handlePermissions
+    handlePermissions,
+    notificationRecievedHandler,
+    notificationOpenedHandler
 };

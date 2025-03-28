@@ -1,7 +1,8 @@
 import { View, ActivityIndicator } from 'react-native';
 import { Hub } from 'aws-amplify/utils';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { router } from 'expo-router';
+import { fetchUserAttributes } from '@aws-amplify/auth';
 
 const Loading = () => {
 

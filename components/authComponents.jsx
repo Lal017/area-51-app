@@ -15,6 +15,7 @@ import {
     signInWithRedirect,
     deleteUser,
     getCurrentUser,
+    updateUserAttribute,
     updateUserAttributes,
     confirmUserAttribute
 } from 'aws-amplify/auth';
@@ -403,6 +404,7 @@ const handleDeleteUser = async ({email, inputEmail}) =>
                 { text: 'Ok'}
             ]
         );
+        console.log('email is wrong');
         router.replace('(tabs');
         return;
     }
@@ -428,7 +430,7 @@ const handleDeleteUser = async ({email, inputEmail}) =>
     }
 }
 
-// Other
+// Get User
 // -----------------------------------------------------
 const handleGetCurrentUser = async () =>
 {
@@ -465,6 +467,41 @@ const handleSetPinpoint = async () =>
 
 // update attributes
 // ------------------------------------------------------
+const handleUpdatePhone = async (phoneNumber) =>
+{
+    const phoneNumberCheck = phoneNumber.replace(/\D/g, '');
+
+    if (phoneNumberCheck.length !== 10)
+    {
+        Alert.alert(
+            "Error",
+            "Invalid phone number",
+            [
+                { text: "Ok" }
+            ]
+        );
+        return;
+    }
+    try {
+        const output = await updateUserAttribute({
+            userAttribute: {
+                attributeKey: 'phone_number',
+                value: `+1${phoneNumberCheck}`
+            }
+        });
+
+        console.log(output);
+        handleUpdateAttributesNextSteps(output.nextStep.updateAttributeStep);
+    } catch (error) {
+        Alert.alert(
+            "Error",
+            error.message,
+            [
+                { text: 'Ok'}
+            ]
+        )
+    }
+}
 const handleUpdateAttributes = async (updatedEmail, updatedName, updatedPhone) =>
 {
     const phoneNumberCheck = updatedPhone.replace(/\D/g, '');
@@ -489,7 +526,6 @@ const handleUpdateAttributes = async (updatedEmail, updatedName, updatedPhone) =
         });
         handleUpdateAttributesNextSteps(attributes.email.nextStep.updateAttributeStep);
     } catch (error) {
-        console.log(error);
         Alert.alert(
             "Error",
             error.message,
@@ -505,7 +541,7 @@ const handleUpdateAttributesNextSteps = (nextStep) =>
     if (nextStep === 'DONE') {
         Alert.alert(
             "Success",
-            "Attributes updated successfully!",
+            "Attribute updated successfully!",
             [
                 { text: 'Ok'}
             ]
@@ -559,6 +595,7 @@ export {
     GoogleSignInButton,
     AmazonSignInButton,
     handleSetPinpoint,
+    handleUpdatePhone,
     handleUpdateAttributes,
     handleConfirmUserAttribute
 };

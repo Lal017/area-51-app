@@ -27,7 +27,7 @@ const Styles = StyleSheet.create({
     KeyIconContainer: {
         width: 75,
         height: 75,
-        backgroundColor: Colors.keyContainer,
+        backgroundColor: Colors.blue,
         borderRadius: 100,
         justifyContent: 'center',
         alignItems: 'center',
@@ -35,6 +35,13 @@ const Styles = StyleSheet.create({
     hr: {
         borderBottomWidth: 1,
         width: 250,
+    },
+// Phone Input page styles
+    phonePage: {
+        flex: 1,
+        backgroundColor: Colors.primary,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 // Home page styles
     HomePage: {
@@ -154,6 +161,7 @@ const HomeStyles = StyleSheet.create({
         flex: 1,
         backgroundColor: Colors.background,
         alignItems: 'center',
+        justifyContent: 'flex-start',
     },
     input: {
         backgroundColor: Colors.tertiary,
@@ -162,6 +170,15 @@ const HomeStyles = StyleSheet.create({
         paddingLeft: 10,
         borderWidth: 1,
     },
+    request: {
+        backgroundColor: Colors.blue,
+        width: 250,
+        height: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10,
+        marginTop: 20,
+    }
 })
 
 const ProfileStyles = StyleSheet.create({

@@ -49,5 +49,11 @@ export const expo = {
     eas: {
       projectId: "290ba131-9be6-4508-9bdd-cfeb16b0e35d"
     }
+  },
+  updates: {
+    url: "https://u.expo.dev/290ba131-9be6-4508-9bdd-cfeb16b0e35d"
+  },
+  runtimeVersion: {
+    policy: "appVersion"
   }
 };
