@@ -1,8 +1,7 @@
 import { View, ActivityIndicator } from 'react-native';
 import { Hub } from 'aws-amplify/utils';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { router } from 'expo-router';
-import { fetchUserAttributes } from '@aws-amplify/auth';
 
 const Loading = () => {
 
@@ -15,6 +14,7 @@ const Loading = () => {
                 case 'signedIn':
                     // Redirect to home screen or dashboard after successful sign in
                     if (router.canGoBack()) { router.dismiss(); }
+                    console.log('loading page redirecting to tabs');
                     router.replace('(tabs)');
                     break;
                 case 'signedOut':

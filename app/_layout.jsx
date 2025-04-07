@@ -1,10 +1,20 @@
-import { Amplify } from "aws-amplify";
-import awsconfig from "../src/amplifyconfiguration.json";
+import { Amplify } from 'aws-amplify';
+// import Constants from "expo-constants";
+import amplifyconfig from '../src/amplifyconfiguration.json';
 import { Stack } from "expo-router";
-import { initializePushNotifications } from "aws-amplify/push-notifications";
+import { setNotificationHandler } from "expo-notifications";
 
-Amplify.configure(awsconfig);
-initializePushNotifications();
+// const amplifyConfig = Constants.expoConfig?.extra?.amplifyConfig;
+
+Amplify.configure(amplifyconfig);
+
+setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  })
+});
 
 const RootLayout = () =>
 {

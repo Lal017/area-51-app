@@ -1,11 +1,4 @@
 export type AmplifyDependentResourcesAttributes = {
-  "analytics": {
-    "troplocksmithapp": {
-      "Id": "string",
-      "Region": "string",
-      "appName": "string"
-    }
-  },
   "auth": {
     "troplocksmithapp": {
       "AppClientID": "string",

@@ -1,10 +1,5 @@
 {
-  "analytics": {
-    "troplocksmithapp": {
-      "providerPlugin": "awscloudformation",
-      "service": "Pinpoint"
-    }
-  },
+  "analytics": {},
   "auth": {
     "troplocksmithapp": {
       "customAuth": false,
@@ -37,14 +32,7 @@
       "service": "Cognito"
     }
   },
-  "notifications": {
-    "troplocksmithapp": {
-      "channels": [
-        "FCM"
-      ],
-      "service": "Pinpoint"
-    }
-  },
+  "notifications": {},
   "parameters": {
     "AMPLIFY_analytics_Pinpoint_Id": {
       "usedBy": [

@@ -4,7 +4,7 @@ import { SettingsTab, websiteRedirect } from "../../../components/components";
 import { handleSignOut } from "../../../components/authComponents";
 import { router, useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
-import { fetchUserAttributes } from "@aws-amplify/auth";
+import { fetchUserAttributes } from "aws-amplify/auth";
 
 // Profile page
 const Profile = () =>

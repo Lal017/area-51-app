@@ -27,7 +27,7 @@ const Styles = StyleSheet.create({
     KeyIconContainer: {
         width: 75,
         height: 75,
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.secondary,
         borderRadius: 100,
         justifyContent: 'center',
         alignItems: 'center',
@@ -171,7 +171,7 @@ const HomeStyles = StyleSheet.create({
         borderWidth: 1,
     },
     request: {
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.secondary,
         width: 250,
         height: 50,
         justifyContent: 'center',

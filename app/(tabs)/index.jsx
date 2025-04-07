@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, Modal, KeyboardAvoidingView, StatusBar, TextInput } from "react-native";
 import { HomeStyles, AuthStyles } from "../../constants/styles";
 import { useState, useEffect } from "react";
-import { fetchUserAttributes } from "@aws-amplify/auth";
+import { fetchUserAttributes } from 'aws-amplify/auth';
 import { handleUpdatePhone } from '../../components/authComponents';
 
 // Home page after login
@@ -11,19 +11,21 @@ const Index = () =>
   const [showModal, setShowModal] = useState(false);
   const [isPhoneUpdated, setIsPhoneUpdated] = useState(false);
 
+  // Check if user has phone number attribute set. if not, prompt user for phone number
   useEffect(() => {
     const checkPhone = async () => {
       try {
         const user = await fetchUserAttributes();
         setShowModal(!user.phone_number);
       } catch (error) {
-        console.log(error);
+        console.log('fetch user error: ', error);
       }
     };
 
     checkPhone();
   }, [isPhoneUpdated]);
 
+  // function to set phone number attribute and remove modal if successful
   const handleSubmit = async () =>
   {
     try {
@@ -67,7 +69,9 @@ const Index = () =>
           </View>
         </KeyboardAvoidingView>
       </Modal>
-      <TouchableOpacity style={HomeStyles.request}>
+      <TouchableOpacity
+        style={HomeStyles.request}
+      >
         <Text style={{color: 'white', textAlign: 'center'}}>Need a locksmith?</Text>
       </TouchableOpacity>
     </View>

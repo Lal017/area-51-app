@@ -1,6 +1,7 @@
 import { TouchableOpacity, Image, Text, Alert } from 'react-native';
 import { AuthStyles } from '../constants/styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from 'expo-router';
 import {
     signUp,
     confirmSignUp,
@@ -14,13 +15,10 @@ import {
     updatePassword,
     signInWithRedirect,
     deleteUser,
-    getCurrentUser,
     updateUserAttribute,
     updateUserAttributes,
-    confirmUserAttribute
+    confirmUserAttribute,
 } from 'aws-amplify/auth';
-import { identifyUser } from 'aws-amplify/push-notifications';
-import { router } from 'expo-router';
 
 // Sign Up
 // ---------------------------------------------------------------------
@@ -190,8 +188,10 @@ const signInConfirm = ({username, isSignedIn, nextStep}) =>
 
 const handleSignInWithRedirect = async ({providerName}) =>
 {
+    console.log('signing in with redirect...');
     try {
         await signInWithRedirect({ provider: providerName });
+        console.log('signed in!');
     } catch (error) {
         console.log('error signing in with redirect', error);
         Alert.alert(
@@ -207,36 +207,36 @@ const handleSignInWithRedirect = async ({providerName}) =>
 // Google and amazon sign in buttons
 // ---------------------------------------------------
 const GoogleSignInButton = () =>
-    {
-        return(
-            <TouchableOpacity
-                onPress={() => handleSignInWithRedirect({providerName: 'Google'})}
-                style={AuthStyles.googleSignIn}
-            >
-                <Image
-                    source={require('../assets/images/google-icon.png')}
-                    style={AuthStyles.signInImg}
-                />
-                <Text style={AuthStyles.signInText}>Sign in</Text>
-            </TouchableOpacity>
-        );
-    };
-    
-    const AmazonSignInButton = () =>
-    {
-        return(
-            <TouchableOpacity
-                onPress={() => handleSignInWithRedirect({providerName: 'Amazon'})}
-                style={AuthStyles.amazonSignIn}
-            >
-                <Image
-                    source={require('../assets/images/amazon-icon.png')}
-                    style={AuthStyles.signInImg}
-                />
-                <Text style={AuthStyles.signInText}>Sign in</Text>
-            </TouchableOpacity>
-        );
-    };
+{
+    return(
+        <TouchableOpacity
+            onPress={() => handleSignInWithRedirect({providerName: 'Google'})}
+            style={AuthStyles.googleSignIn}
+        >
+            <Image
+                source={require('../assets/images/google-icon.png')}
+                style={AuthStyles.signInImg}
+            />
+            <Text style={AuthStyles.signInText}>Sign in</Text>
+        </TouchableOpacity>
+    );
+};
+
+const AmazonSignInButton = () =>
+{
+    return(
+        <TouchableOpacity
+            onPress={() => handleSignInWithRedirect({providerName: 'Amazon'})}
+            style={AuthStyles.amazonSignIn}
+        >
+            <Image
+                source={require('../assets/images/amazon-icon.png')}
+                style={AuthStyles.signInImg}
+            />
+            <Text style={AuthStyles.signInText}>Sign in</Text>
+        </TouchableOpacity>
+    );
+};
 
 // Sign Out
 // --------------------------------------------------------
@@ -428,7 +428,7 @@ const handleDeleteUser = async ({email, inputEmail}) =>
             ]
         );
     }
-}
+};
 
 // Get User
 // -----------------------------------------------------
@@ -438,31 +438,9 @@ const handleGetCurrentUser = async () =>
         const { tokens } = await fetchAuthSession();
         return tokens;
     } catch (error) {
+        console.log('no user signed in');
         // this means there is currently no user signed in
     }
-};
-
-// Pinpoint notifications
-// ----------------------------------------------------
-
-const handleSetPinpoint = async () =>
-{
-    const currentUser = await getCurrentUser();
-    const { userId, username, signInDetails } = currentUser;
-
-    const userAttributes = currentUser.userAttributes || {};
-    const { name = '', email = '' } = userAttributes;
-    const identifyUserInput = {
-        userId: userId,
-        userAttributes: {
-            name,
-            email
-        }
-    };
-
-    console.log(name, email);
-
-    await identifyUser(identifyUserInput);
 };
 
 // update attributes
@@ -490,7 +468,6 @@ const handleUpdatePhone = async (phoneNumber) =>
             }
         });
 
-        console.log(output);
         handleUpdateAttributesNextSteps(output.nextStep.updateAttributeStep);
     } catch (error) {
         Alert.alert(
@@ -501,7 +478,8 @@ const handleUpdatePhone = async (phoneNumber) =>
             ]
         )
     }
-}
+};
+
 const handleUpdateAttributes = async (updatedEmail, updatedName, updatedPhone) =>
 {
     const phoneNumberCheck = updatedPhone.replace(/\D/g, '');
@@ -551,7 +529,7 @@ const handleUpdateAttributesNextSteps = (nextStep) =>
     else if (nextStep === 'CONFIRM_ATTRIBUTE_WITH_CODE') {
         router.push('/confirmAttribute');
     }
-}
+};
 
 const handleConfirmUserAttribute = async ({ userAttributeKey, confirmationCode }) =>
 {
@@ -575,7 +553,7 @@ const handleConfirmUserAttribute = async ({ userAttributeKey, confirmationCode }
             ]
         );
     }
-}
+};
 
 // Exports
 // -------------------------------------------------------------
@@ -594,7 +572,6 @@ export {
     handleDeleteUser,
     GoogleSignInButton,
     AmazonSignInButton,
-    handleSetPinpoint,
     handleUpdatePhone,
     handleUpdateAttributes,
     handleConfirmUserAttribute
