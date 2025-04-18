@@ -188,10 +188,8 @@ const signInConfirm = ({username, isSignedIn, nextStep}) =>
 
 const handleSignInWithRedirect = async ({providerName}) =>
 {
-    console.log('signing in with redirect...');
     try {
         await signInWithRedirect({ provider: providerName });
-        console.log('signed in!');
     } catch (error) {
         console.log('error signing in with redirect', error);
         Alert.alert(
@@ -206,7 +204,7 @@ const handleSignInWithRedirect = async ({providerName}) =>
 
 // Google and amazon sign in buttons
 // ---------------------------------------------------
-const GoogleSignInButton = () =>
+const GoogleSignInButton = ({text}) =>
 {
     return(
         <TouchableOpacity
@@ -217,12 +215,12 @@ const GoogleSignInButton = () =>
                 source={require('../assets/images/google-icon.png')}
                 style={AuthStyles.signInImg}
             />
-            <Text style={AuthStyles.signInText}>Sign in</Text>
+            <Text style={AuthStyles.signInText}>{text}</Text>
         </TouchableOpacity>
     );
 };
 
-const AmazonSignInButton = () =>
+const AmazonSignInButton = ({text}) =>
 {
     return(
         <TouchableOpacity
@@ -233,7 +231,7 @@ const AmazonSignInButton = () =>
                 source={require('../assets/images/amazon-icon.png')}
                 style={AuthStyles.signInImg}
             />
-            <Text style={AuthStyles.signInText}>Sign in</Text>
+            <Text style={AuthStyles.signInText}>{text}</Text>
         </TouchableOpacity>
     );
 };
@@ -299,7 +297,13 @@ const handleResetPasswordNextSteps = (output, {username}) =>
     switch (nextStep.resetPasswordStep) {
         case 'CONFIRM_RESET_PASSWORD_WITH_CODE':
             const codeDeliveryDetails = nextStep.codeDeliveryDetails;
-            console.log(`Confirmation code was sent to ${codeDeliveryDetails.deliveryMedium}`);
+            Alert.alert(
+                "Verification",
+                `Check your ${codeDeliveryDetails.deliveryMedium} for your Verification code`,
+                [
+                    { text: 'Ok'}
+                ]
+            );
             router.push({
                 pathname: '/resetPasswordConfirm',
                 params: {username}
@@ -307,7 +311,6 @@ const handleResetPasswordNextSteps = (output, {username}) =>
             break;
         case 'DONE':
             Alert.alert(
-                "Success",
                 "Password reset successful!",
                 [
                     { text: 'Ok'}
@@ -404,7 +407,6 @@ const handleDeleteUser = async ({email, inputEmail}) =>
                 { text: 'Ok'}
             ]
         );
-        console.log('email is wrong');
         router.replace('(tabs');
         return;
     }
@@ -445,7 +447,7 @@ const handleGetCurrentUser = async () =>
 
 // update attributes
 // ------------------------------------------------------
-const handleUpdatePhone = async (phoneNumber) =>
+const handleUpdatePhone = async (phoneNumber, setPhoneNumber) =>
 {
     const phoneNumberCheck = phoneNumber.replace(/\D/g, '');
 
@@ -468,6 +470,7 @@ const handleUpdatePhone = async (phoneNumber) =>
             }
         });
 
+        setPhoneNumber(`+1${phoneNumberCheck}`);
         handleUpdateAttributesNextSteps(output.nextStep.updateAttributeStep);
     } catch (error) {
         Alert.alert(
@@ -480,7 +483,7 @@ const handleUpdatePhone = async (phoneNumber) =>
     }
 };
 
-const handleUpdateAttributes = async (updatedEmail, updatedName, updatedPhone) =>
+const handleUpdateAttributes = async (updatedEmail, updatedName, updatedPhone, setName, setPhoneNumber) =>
 {
     const phoneNumberCheck = updatedPhone.replace(/\D/g, '');
     if (phoneNumberCheck.length !== 10)
@@ -502,6 +505,9 @@ const handleUpdateAttributes = async (updatedEmail, updatedName, updatedPhone) =
                 phone_number: `+1${phoneNumberCheck}`
             },
         });
+
+        setName(updatedName);
+        setPhoneNumber(`+1${phoneNumberCheck}`);
         handleUpdateAttributesNextSteps(attributes.email.nextStep.updateAttributeStep);
     } catch (error) {
         Alert.alert(

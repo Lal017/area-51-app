@@ -13,7 +13,7 @@ const DeleteAccount = () =>
         <View style={ProfileStyles.page}>
             <View style={ProfileStyles.textContainer}>
                 <Text style={ProfileStyles.title}> Delete Account </Text>
-                <Text style={{textAlign: 'center'}}>
+                <Text style={ProfileStyles.subTitle}>
                     Are you sure you want to delete your account?{'\n'}
                     This action cannot be undone
                 </Text>

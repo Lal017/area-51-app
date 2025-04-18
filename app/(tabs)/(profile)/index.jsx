@@ -2,51 +2,34 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { ProfileStyles } from "../../../constants/styles";
 import { SettingsTab, websiteRedirect } from "../../../components/components";
 import { handleSignOut } from "../../../components/authComponents";
-import { router, useNavigation } from "expo-router";
+import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { fetchUserAttributes } from "aws-amplify/auth";
+import { useApp } from "../../../components/context";
+import Colors from '../../../constants/colors';
 
 // Profile page
 const Profile = () =>
 {
-    const navigation = useNavigation();
-    const [ email, setEmail ] = useState();
-    const [ name, setName ] = useState();
-    const [ phoneNumber, setPhoneNumber ] = useState();
+    const { email, name, phoneNumber } = useApp();
+
+    // Set a readable phone number for the user
     const [ phoneNumberDisplay, setPhoneNumberDisplay ] = useState();
 
     useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
-            const fetchUserData = async() => {
-                try {
-                    const user = await fetchUserAttributes();
-                    setEmail(user?.email);
-                    setName(user?.name);
-                    setPhoneNumber(user?.phone_number);
-                    const phoneNumber = user?.phone_number
-                    const countryCode = phoneNumber.slice(0, 2);
-                    const areaCode = phoneNumber.slice(2,5);
-                    const firstPart = phoneNumber.slice(5, 8);
-                    const secondPart = phoneNumber.slice(8, 12);
-                    setPhoneNumberDisplay(`${countryCode} (${areaCode}) ${firstPart} - ${secondPart}`)
-                } catch (error) {
-                    console.log(error);
-                }
-            }
-
-            fetchUserData();
-        });
-
-        return unsubscribe;
-    }, [navigation]);
+        const countryCode = phoneNumber.slice(0, 2);
+        const areaCode = phoneNumber.slice(2,5);
+        const firstPart = phoneNumber.slice(5, 8);
+        const secondPart = phoneNumber.slice(8, 12);
+        setPhoneNumberDisplay(`${countryCode} (${areaCode}) ${firstPart} - ${secondPart}`)
+    }, [phoneNumber]);
 
     return(
         <View style={ProfileStyles.page}>
             <View style={ProfileStyles.accountCard}>
                 <View style={ProfileStyles.accountText}>
-                    <Text>{name}</Text>
-                    <Text>{email}</Text>
-                    <Text>{phoneNumberDisplay}</Text>
+                    <Text style={{color: Colors.text}}>{name}</Text>
+                    <Text style={{color: Colors.text}}>{email}</Text>
+                    <Text style={{color: Colors.text}}>{phoneNumberDisplay}</Text>
                 </View>
                 <View style={ProfileStyles.editAccount}>
                     <TouchableOpacity
@@ -60,7 +43,7 @@ const Profile = () =>
                         })}
                         style={ProfileStyles.editButton}
                     >
-                        <Text style={{color: 'white', textAlign: 'center'}}>Edit</Text>
+                        <Text style={{textAlign: 'center'}}>Edit</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -78,7 +61,7 @@ const Profile = () =>
                 onPress={() => handleSignOut()}
                 style={ProfileStyles.actionButton}
             >
-                <Text style={{color: 'white', textAlign: 'center'}}>Sign Out</Text>
+                <Text style={{color: 'white' , textAlign: 'center'}}>Sign Out</Text>
             </TouchableOpacity>
         </View>
     );

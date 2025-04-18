@@ -1,18 +1,20 @@
 import { Amplify } from 'aws-amplify';
 // import Constants from "expo-constants";
 import amplifyconfig from '../src/amplifyconfiguration.json';
-import { Stack } from "expo-router";
-import { setNotificationHandler } from "expo-notifications";
+import { Stack } from 'expo-router';
+import { setNotificationHandler } from 'expo-notifications';
 
-// const amplifyConfig = Constants.expoConfig?.extra?.amplifyConfig;
+// const amplifyConfigFile = Constants.expoConfig?.extra?.amplifyConfig;
 
-Amplify.configure(amplifyconfig);
+Amplify.configure( amplifyconfig );
 
 setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+    vibrationPattern: [0, 200, 200, 200],
+    priority: 'high',
   })
 });
 

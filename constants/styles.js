@@ -4,25 +4,23 @@ import Colors from "./colors";
 const Styles = StyleSheet.create({
 // All page styles
     HeaderContainer: {
-        backgroundColor: Colors.background,
+        backgroundColor: Colors.backgroundAccent,
         flexDirection: 'row',
-        height: 125,
+        height: 150,
         justifyContent: 'flex-start',
         alignItems: 'center',
     },
     LogoImg: {
-        width: 100,
-        height: 100,
-        marginLeft: 25,
+        width: 200,
+        resizeMode: 'contain',
+        marginLeft: 20,
+        marginTop: 50,
     },
     tabBarStyle: {
-        backgroundColor: Colors.background,
+        backgroundColor: Colors.backgroundAccent,
         elevation: 0,
         shadowOpacity: 0,
         borderTopWidth: 0,
-    },
-    tabBarIconStyle: {
-        width: 50,
     },
     KeyIconContainer: {
         width: 75,
@@ -34,26 +32,13 @@ const Styles = StyleSheet.create({
     },
     hr: {
         borderBottomWidth: 1,
+        borderColor: Colors.text,
         width: 250,
     },
 // Phone Input page styles
     phonePage: {
         flex: 1,
-        backgroundColor: Colors.primary,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-// Home page styles
-    HomePage: {
-        flex: 1,
-        backgroundColor: Colors.background,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-// Request page styles
-    RequestPage: {
-        flex: 1,
-        backgroundColor: Colors.primary,
+        backgroundColor: Colors.backgroundAccent,
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -61,13 +46,13 @@ const Styles = StyleSheet.create({
 
 const AuthStyles = StyleSheet.create({
     page: {
-        backgroundColor: Colors.primary,
+        backgroundColor: Colors.background,
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
     },
     backgroundContainer: {
-        backgroundColor: Colors.primary,
+        backgroundColor: Colors.background,
         width: '100%',
         height: '80%',
         justifyContent: 'center',
@@ -76,20 +61,20 @@ const AuthStyles = StyleSheet.create({
         rowGap: 200,
     },
     background: {
-        backgroundColor: Colors.background,
+        backgroundColor: Colors.backgroundAccent,
         width: '110%',
         height: '1%',
         transform: [{ rotate: '15deg' }]
     },
     container: {
-        backgroundColor: Colors.tertiary,
+        backgroundColor: Colors.secondary,
         justifyContent: 'center',
         alignItems: 'center',
         width: '75%',
         rowGap: 40,
         paddingTop: 20,
         paddingBottom: 20,
-        borderRadius: 20
+        borderRadius: 15
     },
     confirmContainer: {
         width: '100%',
@@ -98,9 +83,11 @@ const AuthStyles = StyleSheet.create({
         padding: 0
     },
     title: {
+        color: Colors.text,
         fontSize: 30
     },
     description: {
+        color: Colors.text,
         fontSize: 15,
         textAlign: 'center',
         width: '75%',
@@ -109,15 +96,14 @@ const AuthStyles = StyleSheet.create({
         rowGap: 20,
     },
     input: {
-        backgroundColor: Colors.tertiary,
-        color: '#000',
+        backgroundColor: Colors.background,
         width: 225,
         height: 40,
         paddingLeft: 10,
         borderWidth: 1
     },
     actionButton: {
-        backgroundColor: Colors.secondary,
+        backgroundColor: Colors.tertiary,
         padding: 10,
         width: 100,
     },
@@ -136,6 +122,7 @@ const AuthStyles = StyleSheet.create({
         height: 25,
     },
     googleSignIn: {
+        backgroundColor: 'white',
         borderWidth: 1,
         padding: 5,
         borderRadius: 20,
@@ -144,6 +131,7 @@ const AuthStyles = StyleSheet.create({
         alignItems: 'center',
     },
     amazonSignIn: {
+        backgroundColor: 'white',
         borderWidth: 1,
         padding: 5,
         borderRadius: 20,
@@ -164,7 +152,7 @@ const HomeStyles = StyleSheet.create({
         justifyContent: 'flex-start',
     },
     input: {
-        backgroundColor: Colors.tertiary,
+        backgroundColor: Colors.backgroundAccent,
         height: 45,
         width: 250,
         paddingLeft: 10,
@@ -179,12 +167,62 @@ const HomeStyles = StyleSheet.create({
         borderRadius: 10,
         marginTop: 20,
     }
-})
+});
+
+const RequestStyles = StyleSheet.create({
+    page: {
+        backgroundColor: Colors.background,
+        alignItems: 'center',
+        justifyContent: 'space-evenly',
+        rowGap: 20,
+        paddingTop: 50,
+        paddingBottom: 50,
+    },
+    container: {
+        backgroundColor: Colors.secondary,
+        borderRadius: 15,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingTop: 50,
+        paddingBottom: 50,
+        width: '75%',
+        rowGap: 50,
+    },
+    title: {
+        color: Colors.text,
+        fontSize: 25,
+        textAlign: 'center',
+    },
+    messageContainer: {
+        rowGap: 10,
+    },
+    inputTitle: {
+        backgroundColor: Colors.background,
+        borderWidth: 1,
+        width: '75%',
+        height: 40,
+        paddingLeft: 10,
+    },
+    inputMessage: {
+        backgroundColor: Colors.background,
+        borderWidth: 1,
+        width: '75%',
+        height: 200,
+        paddingLeft: 10,
+        paddingTop: 10,
+        textAlignVertical: 'top',
+    },
+    actionButton: {
+        backgroundColor: Colors.tertiary,
+        padding: 10,
+        width: 100,
+    }
+});
 
 const ProfileStyles = StyleSheet.create({
     page: {
         flex: 1,
-        backgroundColor: Colors.primary,
+        backgroundColor: Colors.background,
         paddingTop: 75,
         justifyContent: 'flexStart',
         alignItems: 'center',
@@ -197,7 +235,6 @@ const ProfileStyles = StyleSheet.create({
     },
     tab: {
         width: '100%',
-        color: Colors.text,
         alignItems: 'center',
         marginTop: 10,
     },
@@ -210,21 +247,20 @@ const ProfileStyles = StyleSheet.create({
         padding: 10,
     },
     tabText: {
-        color: Colors.text,
         textAlign: 'center',
     },
     actionButton: {
-        backgroundColor: Colors.secondary,
+        backgroundColor: Colors.tertiary,
         padding: 10,
         width: 100,
     },
     // Index
     accountCard: {
-        backgroundColor: Colors.tertiary,
+        backgroundColor: Colors.secondary,
         flexDirection: 'row',
         width: '90%',
         height: '125',
-        borderRadius: 25,
+        borderRadius: 15,
         columnGap: 100,
         marginTop: 10,
         justifyContent: 'flexStart',
@@ -236,10 +272,9 @@ const ProfileStyles = StyleSheet.create({
     },
     editAccount: {
         height: '75%',
-
     },
     editButton: {
-        backgroundColor: Colors.secondary,
+        backgroundColor: Colors.tertiary,
         borderWidth: 1,
         borderRadius: 10,
         width: 50,
@@ -249,26 +284,28 @@ const ProfileStyles = StyleSheet.create({
     },
     // Change Password / attributes
     textContainer: {
-        backgroundColor: Colors.tertiary,
+        backgroundColor: Colors.secondary,
         padding: 25,
-        borderRadius: 25,
+        borderRadius: 15,
         alignItems: 'center',
         rowGap: 20,
     },
     title: {
+        color: Colors.text,
         fontSize: 25,
         textAlign: 'center',
     },
     subTitle: {
-        fontSize: 17,
-        fontWeight: '600',
+        color: Colors.text,
+        fontSize: 15,
+        fontWeight: 'bold',
         textAlign: 'center'
     },
     inputContainer: {
         rowGap: 20,
     },
     input: {
-        backgroundColor: Colors.tertiary,
+        backgroundColor: Colors.background,
         height: 45,
         width: 250,
         paddingLeft: 10,
@@ -276,4 +313,4 @@ const ProfileStyles = StyleSheet.create({
     },
 });
 
-export { Styles, AuthStyles, HomeStyles, ProfileStyles };
+export { Styles, AuthStyles, HomeStyles, RequestStyles, ProfileStyles };

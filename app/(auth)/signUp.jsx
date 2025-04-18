@@ -3,6 +3,7 @@ import { useState } from "react";
 import { handleSignUp, GoogleSignInButton, AmazonSignInButton } from "../../components/authComponents";
 import { Link } from "expo-router";
 import { AuthStyles, Styles } from "../../constants/styles";
+import Colors from "../../constants/colors";
 
 const signUp = () =>
 {
@@ -73,10 +74,10 @@ const signUp = () =>
                 </TouchableOpacity>
                 <View style={Styles.hr} />
                 <View style={AuthStyles.providerContainer}>
-                    <GoogleSignInButton />
-                    <AmazonSignInButton />
+                    <GoogleSignInButton text='Sign Up'/>
+                    <AmazonSignInButton text='Sign Up'/>
                 </View>
-                <Link href="/signIn">Sign In</Link>
+                <Link href="/signIn" style={{color: Colors.text}}>Sign In</Link>
             </View>
         </KeyboardAvoidingView>
     );

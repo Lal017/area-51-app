@@ -4,6 +4,7 @@ import { handleSignIn } from '../../components/authComponents';
 import { Link } from 'expo-router';
 import { AuthStyles, Styles } from '../../constants/styles';
 import { GoogleSignInButton, AmazonSignInButton } from '../../components/authComponents';
+import Colors from '../../constants/colors';
 
 const signIn = () =>
 {
@@ -51,12 +52,12 @@ const signIn = () =>
                 </TouchableOpacity>
                 <View style={Styles.hr}/>
                 <View style={AuthStyles.providerContainer}>
-                    <GoogleSignInButton />
-                    <AmazonSignInButton />
+                    <GoogleSignInButton text='Sign In'/>
+                    <AmazonSignInButton text='Sign In'/>
                 </View>
                 <View style={AuthStyles.linkContainer}>
-                    <Link href="/resetPassword">Forgot Password?</Link>
-                    <Link href="/signUp">Sign Up</Link>
+                    <Link href="/resetPassword" style={{color: Colors.text}}>Forgot Password?</Link>
+                    <Link href="/signUp" style={{color: Colors.text}}>Sign Up</Link>
                 </View>
             </View>
         </KeyboardAvoidingView>

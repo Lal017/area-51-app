@@ -7,8 +7,9 @@ const CustHeader = () =>
     return(
         <View style={Styles.HeaderContainer}>
             <Image
-                source={require('../assets/images/icon.png')}
-                style={Styles.LogoImg} />
+                source={require('../assets/images/a51-title-logo.png')}
+                style={Styles.LogoImg}
+            />
         </View>
     );
 };

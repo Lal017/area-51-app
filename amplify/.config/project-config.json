@@ -2,7 +2,7 @@
   "providers": [
     "awscloudformation"
   ],
-  "projectName": "troplocksmithapp",
+  "projectName": "area51App",
   "version": "3.1",
   "frontend": "javascript",
   "javascript": {

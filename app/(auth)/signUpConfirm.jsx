@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useLocalSearchParams } from 'expo-router';
 import { AuthStyles } from '../../constants/styles';
 import { handleSignUpConfirm, handleResendSignUpCode } from '../../components/authComponents';
+import Colors from '../../constants/colors';
 
 const signUpConfirm = () =>
 {
@@ -42,7 +43,7 @@ const signUpConfirm = () =>
                 <TouchableOpacity
                     onPress={() => handleResendSignUpCode({username})}
                 >
-                    <Text style={{textAlign: 'center'}}>Resend Code</Text>
+                    <Text style={{textAlign: 'center', color: Colors.text}}>Resend Code</Text>
                 </TouchableOpacity>
             </View>
         </KeyboardAvoidingView>

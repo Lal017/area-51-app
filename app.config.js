@@ -1,10 +1,10 @@
 export const expo = {
-  name: "trop-locksmith-app",
+  name: "Area 51 Motorsports",
   slug: "trop-locksmith-app",
   version: "1.0.0",
   orientation: "portrait",
   icon: "./assets/images/icon.png",
-  scheme: "troplocksmithscheme",
+  scheme: "area51scheme",
   userInterfaceStyle: "automatic",
   newArchEnabled: true,
   ios: {
@@ -17,10 +17,10 @@ export const expo = {
   android: {
     adaptiveIcon: {
       foregroundImage: "./assets/images/adaptive-icon.png",
-      backgroundColor: "#ffffff"
+      backgroundColor: "#000000"
     },
     package: "com.lalo17.troplocksmithapp",
-    googleServicesFile: process.env.GOOGLE_SERVICES_JSON ?? './google-services.json'
+    googleServicesFile: process.env.GOOGLE_SERVICES_JSON ?? './google-services.json',
   },
   web: {
     bundler: "metro",
@@ -37,12 +37,20 @@ export const expo = {
         "resizeMode": "contain",
         "backgroundColor": "#ffffff"
       }
+    ],
+    [
+      "expo-notifications",
+      {
+        "icon": "./assets/images/logo-large.png",
+        "color": "#000000",
+      }
     ]
   ],
   experiments: {
     typedRoutes: true
   },
   extra: {
+    amplifyConfig: process.env.AMPLIFY_CONFIG ?? '../src/amplifyconfiguration.json',
     router: {
       origin: false
     },

@@ -1,16 +1,17 @@
 import { View, Text, TextInput, KeyboardAvoidingView, ScrollView, TouchableOpacity } from "react-native";
-import { useLocalSearchParams } from "expo-router";
 import { ProfileStyles } from "../../../constants/styles";
 import { handleUpdateAttributes } from "../../../components/authComponents";
 import { useState } from "react";
+import { useApp } from "../../../components/context";
+import Colors from "../../../constants/colors";
 
 const AccountEdit = () =>
 {
-    const { name, email, phoneNumber } = useLocalSearchParams();
+    const { name, email, phoneNumber, setName, setPhoneNumber } = useApp();
 
-    const [ editName, setName ] = useState(name);
-    const [ editEmail, setEmail ] = useState(email);
-    const [ phone, setPhone ] = useState(phoneNumber?.slice(2,12));
+    const [ editName, setEditName ] = useState(name);
+    const [ editEmail, setEditEmail ] = useState(email);
+    const [ editPhone, setEditPhone ] = useState(phoneNumber?.slice(2,12));
     
     return(
         <KeyboardAvoidingView
@@ -24,20 +25,20 @@ const AccountEdit = () =>
                         <TextInput
                             placeholder="name"
                             value={editName}
-                            onChangeText={setName}
+                            onChangeText={setEditName}
                             style={ProfileStyles.input}
                         />
                         <TextInput
                             placeholder="email"
                             value={editEmail}
-                            onChangeText={setEmail}
+                            onChangeText={setEditEmail}
                             autoCapitalize='none'
                             style={ProfileStyles.input}
                         />
                         <TextInput
                             placeholder="phone number"
-                            value={phone}
-                            onChangeText={setPhone}
+                            value={editPhone}
+                            onChangeText={setEditPhone}
                             keyboardType="phone-pad"
                             style={ProfileStyles.input}
                         /> 
@@ -46,10 +47,12 @@ const AccountEdit = () =>
                         onPress={() => handleUpdateAttributes(
                             editEmail,
                             editName,
-                            phone.replace(/\D/g, '')
+                            editPhone.replace(/\D/g, ''),
+                            setName,
+                            setPhoneNumber
                         )}
                     >
-                        <Text>Change</Text>
+                        <Text style={{color: Colors.text}}>Change</Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>
