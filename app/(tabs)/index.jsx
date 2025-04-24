@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { fetchUserAttributes } from 'aws-amplify/auth';
 import { handleUpdatePhone } from '../../components/authComponents';
 import { useApp } from "../../components/context";
+import { Ionicons } from "@expo/vector-icons";
 
 // Home page after login
 const Index = () =>
@@ -47,22 +48,19 @@ const Index = () =>
         animationType='slide'
       >
         <KeyboardAvoidingView behavior='height' style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <View style={[AuthStyles.backgroundContainer, {height: '100%'}]}>
-            <View style={AuthStyles.background} />
-            <View style={AuthStyles.background} />
-            <View style={AuthStyles.background} />
-            <View style={AuthStyles.background} />
-          </View>
           <View style={AuthStyles.container}>
               <Text style={AuthStyles.title}>Add Phone Number</Text>
-              <TextInput
-                  style={AuthStyles.input}
-                  value={newPhoneNumber}
-                  onChangeText={setNewPhoneNumber}
-                  placeholder="Phone Number"
-                  keyboardType="phone-pad"
-                  textContentType="telephoneNumber"
-              />
+              <View style={AuthStyles.inputWrapper}>
+                <Ionicons name="call" size={20} style={AuthStyles.icon} />
+                <TextInput
+                    style={AuthStyles.input}
+                    value={newPhoneNumber}
+                    onChangeText={setNewPhoneNumber}
+                    placeholder="Phone Number"
+                    keyboardType="phone-pad"
+                    textContentType="telephoneNumber"
+                />
+              </View>
               <TouchableOpacity
                   onPress={() => handleSubmit()}
                   style={AuthStyles.actionButton}

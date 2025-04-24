@@ -8,9 +8,12 @@ const Colors = {
 };
 
 const Auth = {
-    primary: '#0099FF',
+    primary: '#33CC33',
+    //primary: '#F2F2F2',
+    //background: '#0099FF',
     background: '#F2F2F2',
-    container: 'white',
+    //container: 'white',
+    container: '#0099FF',
     text: 'black',
 };
 

@@ -33,7 +33,7 @@ const Styles = StyleSheet.create({
     hr: {
         borderBottomWidth: 1,
         borderColor: Auth.text,
-        width: 250,
+        width: 300,
     },
 // Phone Input page styles
     phonePage: {
@@ -52,15 +52,12 @@ const AuthStyles = StyleSheet.create({
         alignItems: 'center',
     },
     container: {
-        backgroundColor: Auth.container,
         justifyContent: 'center',
         alignItems: 'center',
-        width: '75%',
+        width: '100%',
         rowGap: 40,
         paddingTop: 20,
         paddingBottom: 20,
-        borderRadius: 15,
-        elevation: 5
     },
     confirmContainer: {
         width: '100%',
@@ -70,7 +67,7 @@ const AuthStyles = StyleSheet.create({
     },
     title: {
         color: Auth.text,
-        fontSize: 30
+        fontSize: 30,
     },
     description: {
         color: Colors.text,
@@ -93,21 +90,23 @@ const AuthStyles = StyleSheet.create({
     },
     input: {
         backgroundColor: Colors.background,
-        width: 225,
-        height: 40,
+        width: 300,
+        height: 50,
         paddingLeft: 40,
-        borderWidth: 1
+        borderWidth: 1,
+        borderRadius: 25,
     },
     actionButton: {
         backgroundColor: Auth.primary,
         padding: 10,
-        width: 100,
+        width: 300,
         borderRadius: 25
     },
     shiftButton: {
         borderWidth: 0,
         padding: 10,
         borderRadius: 25,
+        color: Auth.text
     },
     linkContainer: {
         flexDirection: 'row',
@@ -157,7 +156,7 @@ const HomeStyles = StyleSheet.create({
         backgroundColor: Colors.backgroundAccent,
         height: 45,
         width: 250,
-        paddingLeft: 10,
+        paddingLeft: 40,
         borderWidth: 1,
     },
     request: {
@@ -306,11 +305,14 @@ const ProfileStyles = StyleSheet.create({
     inputContainer: {
         rowGap: 20,
     },
+    inputWrapper: {
+        // CFEDSEWFWSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+    },
     input: {
         backgroundColor: Colors.background,
         height: 45,
         width: 250,
-        paddingLeft: 10,
+        paddingLeft: 40,
         borderWidth: 1,
     },
     // Vehicle List
