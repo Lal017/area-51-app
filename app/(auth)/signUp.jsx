@@ -4,6 +4,7 @@ import { handleSignUp, GoogleSignInButton, AmazonSignInButton } from "../../comp
 import { Link } from "expo-router";
 import { AuthStyles, Styles } from "../../constants/styles";
 import Colors from "../../constants/colors";
+import { Ionicons } from "@expo/vector-icons";
 
 const signUp = () =>
 {
@@ -18,53 +19,62 @@ const signUp = () =>
             behavior='padding'
             style={AuthStyles.page}
         >
-            <View style={AuthStyles.backgroundContainer}>
-                <View style={AuthStyles.background} />
-                <View style={AuthStyles.background} />
-                <View style={AuthStyles.background} />
-                <View style={AuthStyles.background} />
-            </View>
             <View style={AuthStyles.container}>
                 <Text style={AuthStyles.title}>Sign Up</Text>
                 <View style={AuthStyles.inputContainer}>
-                    <TextInput
-                        placeholder="full name"
-                        value={name}
-                        onChangeText={setName}
-                        style={AuthStyles.input}
-                    />
-                    <TextInput
-                        placeholder="phone number"
-                        value={phoneNumber}
-                        onChangeText={setPhoneNumber}
-                        autoCapitalize="none"
-                        keyboardType="phone-pad"
-                        style={AuthStyles.input}
-                    />
-                    <TextInput
-                        placeholder="email"
-                        value={email}
-                        onChangeText={setEmail}
-                        keyboardType="email-address"
-                        autoCapitalize="none"
-                        style={AuthStyles.input}
-                    />
-                    <TextInput
-                        placeholder="password"
-                        value={password}
-                        onChangeText={setPassword}
-                        autoCapitalize="none"
-                        secureTextEntry={true}
-                        style={AuthStyles.input}
-                    />
-                    <TextInput
-                        placeholder="confirm password"
-                        value={confPassword}
-                        onChangeText={setConfPassword}
-                        autoCapitalize="none"
-                        secureTextEntry={true}
-                        style={AuthStyles.input}
-                    />
+                    <View style={AuthStyles.inputWrapper}>
+                        <Ionicons name='person' size={20} style={AuthStyles.icon} />
+                        <TextInput
+                            placeholder="full name"
+                            value={name}
+                            onChangeText={setName}
+                            style={AuthStyles.input}
+                        />
+                    </View>
+                    <View style={AuthStyles.inputWrapper}>
+                        <Ionicons name='call' size={20} style={AuthStyles.icon} />
+                        <TextInput
+                            placeholder="phone number"
+                            value={phoneNumber}
+                            onChangeText={setPhoneNumber}
+                            autoCapitalize="none"
+                            keyboardType="phone-pad"
+                            style={AuthStyles.input}
+                        />
+                    </View>
+                    <View style={AuthStyles.inputWrapper}>
+                        <Ionicons name='at' size={20} style={AuthStyles.icon} />
+                        <TextInput
+                            placeholder="email"
+                            value={email}
+                            onChangeText={setEmail}
+                            keyboardType="email-address"
+                            autoCapitalize="none"
+                            style={AuthStyles.input}
+                        />
+                    </View>
+                    <View style={AuthStyles.inputWrapper}>
+                        <Ionicons name='key' size={20} style={AuthStyles.icon} />
+                        <TextInput
+                            placeholder="password"
+                            value={password}
+                            onChangeText={setPassword}
+                            autoCapitalize="none"
+                            secureTextEntry={true}
+                            style={AuthStyles.input}
+                        />
+                    </View>
+                    <View style={AuthStyles.inputWrapper}>
+                        <Ionicons name="lock-open" size={20} style={AuthStyles.icon} />
+                        <TextInput
+                            placeholder="confirm password"
+                            value={confPassword}
+                            onChangeText={setConfPassword}
+                            autoCapitalize="none"
+                            secureTextEntry={true}
+                            style={AuthStyles.input}
+                        />
+                    </View>
                 </View>
                 <TouchableOpacity
                     onPress={() => handleSignUp({name, email, password, confPassword, phoneNumber})}
@@ -77,7 +87,7 @@ const signUp = () =>
                     <GoogleSignInButton text='Sign Up'/>
                     <AmazonSignInButton text='Sign Up'/>
                 </View>
-                <Link href="/signIn" style={{color: Colors.text}}>Sign In</Link>
+                <Link href="/signIn" style={AuthStyles.shiftButton}>Sign In</Link>
             </View>
         </KeyboardAvoidingView>
     );

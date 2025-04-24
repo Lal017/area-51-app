@@ -3,6 +3,7 @@ import { AuthStyles } from "../../constants/styles";
 import { useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { handleConfirmResetPassword } from "../../components/authComponents";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 
 const resetPasswordConfirm = () =>
 {
@@ -13,39 +14,42 @@ const resetPasswordConfirm = () =>
 
     return (
         <KeyboardAvoidingView style={AuthStyles.page} >
-            <View style={AuthStyles.backgroundContainer}>
-                <View style={AuthStyles.background} />
-                <View style={AuthStyles.background} />
-                <View style={AuthStyles.background} />
-                <View style={AuthStyles.background} />
-            </View>
             <View style={AuthStyles.container}>
                 <Text style={AuthStyles.title}>Reset Password</Text>
-                <View style={AuthStyles.inputContainer}>    
-                    <TextInput
-                        placeholder="Verification Code"
-                        value={confirmationCode}
-                        onChangeText={setConfirmationCode}
-                        keyboardType="numeric"
-                        autoCapitalize="none"
-                        style={AuthStyles.input}
-                    />
-                    <TextInput
-                        placeholder="New Password"
-                        value={newPassword}
-                        onChangeText={setNewPassword}
-                        secureTextEntry
-                        autoCapitalize="none"
-                        style={AuthStyles.input}
-                    />
-                    <TextInput
-                        placeholder="Confirm New Password"
-                        value={confNewPassword}
-                        onChangeText={setConfNewPassword}
-                        secureTextEntry
-                        autoCapitalize="none"
-                        style={AuthStyles.input}
-                    />
+                <View style={AuthStyles.inputContainer}>
+                    <View style={AuthStyles.inputWrapper}>
+                        <MaterialIcons name='numbers' size={20} style={AuthStyles.icon} />
+                        <TextInput
+                            placeholder="Verification Code"
+                            value={confirmationCode}
+                            onChangeText={setConfirmationCode}
+                            keyboardType="numeric"
+                            autoCapitalize="none"
+                            style={AuthStyles.input}
+                        />
+                    </View>
+                    <View style={AuthStyles.inputWrapper}>
+                        <Ionicons name='key' size={20} style={AuthStyles.icon} />
+                        <TextInput
+                            placeholder="New Password"
+                            value={newPassword}
+                            onChangeText={setNewPassword}
+                            secureTextEntry
+                            autoCapitalize="none"
+                            style={AuthStyles.input}
+                        />
+                    </View>
+                    <View style={AuthStyles.inputWrapper}>
+                        <Ionicons name="lock-open" size={20} style={AuthStyles.icon} />
+                        <TextInput
+                            placeholder="Confirm New Password"
+                            value={confNewPassword}
+                            onChangeText={setConfNewPassword}
+                            secureTextEntry
+                            autoCapitalize="none"
+                            style={AuthStyles.input}
+                        />
+                    </View>
                 </View>
                 <TouchableOpacity
                     onPress={() => handleConfirmResetPassword({username, confirmationCode, newPassword, confNewPassword})}

@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import Colors from "./colors";
+import Colors, { Auth } from "./colors";
 
 const Styles = StyleSheet.create({
 // All page styles
@@ -32,7 +32,7 @@ const Styles = StyleSheet.create({
     },
     hr: {
         borderBottomWidth: 1,
-        borderColor: Colors.text,
+        borderColor: Auth.text,
         width: 250,
     },
 // Phone Input page styles
@@ -46,35 +46,21 @@ const Styles = StyleSheet.create({
 
 const AuthStyles = StyleSheet.create({
     page: {
-        backgroundColor: Colors.background,
+        backgroundColor: Auth.background,
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
     },
-    backgroundContainer: {
-        backgroundColor: Colors.background,
-        width: '100%',
-        height: '80%',
-        justifyContent: 'center',
-        alignItems: 'center',
-        position: 'absolute',
-        rowGap: 200,
-    },
-    background: {
-        backgroundColor: Colors.backgroundAccent,
-        width: '110%',
-        height: '1%',
-        transform: [{ rotate: '15deg' }]
-    },
     container: {
-        backgroundColor: Colors.secondary,
+        backgroundColor: Auth.container,
         justifyContent: 'center',
         alignItems: 'center',
         width: '75%',
         rowGap: 40,
         paddingTop: 20,
         paddingBottom: 20,
-        borderRadius: 15
+        borderRadius: 15,
+        elevation: 5
     },
     confirmContainer: {
         width: '100%',
@@ -83,7 +69,7 @@ const AuthStyles = StyleSheet.create({
         padding: 0
     },
     title: {
-        color: Colors.text,
+        color: Auth.text,
         fontSize: 30
     },
     description: {
@@ -95,17 +81,33 @@ const AuthStyles = StyleSheet.create({
     inputContainer: {
         rowGap: 20,
     },
+    inputWrapper: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        position: 'relative',
+    },
+    icon: {
+        position: 'absolute',
+        left: 10,
+        zIndex: 1,
+    },
     input: {
         backgroundColor: Colors.background,
         width: 225,
         height: 40,
-        paddingLeft: 10,
+        paddingLeft: 40,
         borderWidth: 1
     },
     actionButton: {
-        backgroundColor: Colors.tertiary,
+        backgroundColor: Auth.primary,
         padding: 10,
         width: 100,
+        borderRadius: 25
+    },
+    shiftButton: {
+        borderWidth: 0,
+        padding: 10,
+        borderRadius: 25,
     },
     linkContainer: {
         flexDirection: 'row',
@@ -336,6 +338,13 @@ const ProfileStyles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         width: '45%'
+    },
+    formContainer: {
+        backgroundColor: Colors.secondary,
+        padding: 25,
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 });
 

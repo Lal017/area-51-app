@@ -1,5 +1,6 @@
 import { View, Text, TextInput, KeyboardAvoidingView, TouchableOpacity } from "react-native";
 import { AuthStyles } from "../../constants/styles";
+import { Ionicons } from '@expo/vector-icons';
 import { useState } from "react";
 import { handleResetPassword } from "../../components/authComponents";
 
@@ -9,22 +10,19 @@ const resetPassword = () =>
 
     return (
         <KeyboardAvoidingView style={AuthStyles.page} >
-            <View style={AuthStyles.backgroundContainer}>
-                <View style={AuthStyles.background} />
-                <View style={AuthStyles.background} />
-                <View style={AuthStyles.background} />
-                <View style={AuthStyles.background} />
-            </View>
             <View style={AuthStyles.container}>
                 <Text style={AuthStyles.title}>Reset Password</Text>
-                <TextInput
-                    placeholder="email"
-                    value={username}
-                    onChangeText={setUsername}
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                    style={AuthStyles.input}
-                />
+                <View style={AuthStyles.inputWrapper}>
+                    <Ionicons name='mail' size={20} style={AuthStyles.icon} />
+                    <TextInput
+                        placeholder="email"
+                        value={username}
+                        onChangeText={setUsername}
+                        keyboardType="email-address"
+                        autoCapitalize="none"
+                        style={AuthStyles.input}
+                    />
+                </View>
                 <TouchableOpacity
                     onPress={() => handleResetPassword({username})}
                     style={AuthStyles.actionButton}

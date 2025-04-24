@@ -7,4 +7,12 @@ const Colors = {
     text: 'white',
 };
 
+const Auth = {
+    primary: '#0099FF',
+    background: '#F2F2F2',
+    container: 'white',
+    text: 'black',
+};
+
 export default Colors;
+export { Auth };

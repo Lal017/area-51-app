@@ -1,9 +1,10 @@
 import { View, Text, TouchableOpacity } from 'react-native';
-import { useEffect, useState } from 'react';
+import { router } from 'expo-router';
 import { useApp } from '../../../components/context';
 import { ProfileStyles } from '../../../constants/styles';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../../constants/colors';
+import { handleCreateVehicle } from '../../../components/vehicleComponents';
 
 const VehicleList = () =>
 {
@@ -27,7 +28,9 @@ const VehicleList = () =>
                     </View>
                 )}
 
-                <TouchableOpacity style={ProfileStyles.addVehicle}>
+                <TouchableOpacity
+                    onPress={() => router.push('addVehicle')}
+                    style={ProfileStyles.addVehicle}>
                     <Ionicons name="add-circle" size={50} color={Colors.text} />
                 </TouchableOpacity>
             </View>
