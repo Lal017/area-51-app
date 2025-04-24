@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import { ProfileStyles } from "../../../constants/styles";
-import { SettingsTab, websiteRedirect } from "../../../components/components";
+import { SettingsTab, socialRedirect } from "../../../components/components";
 import { handleSignOut } from "../../../components/authComponents";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
@@ -48,14 +48,10 @@ const Profile = () =>
                 </View>
             </View>
             <View style={ProfileStyles.tabContainer}>
-                <SettingsTab text="Account Settings" action={() => router.push({
-                    pathname: 'settings',
-                    params: {
-                        email: email
-                    }
-                })}/>
+                <SettingsTab text="Account Settings" action={() => router.push('settings')} />
+                <SettingsTab text="My Vehicles" action={() => router.push('vehicleList')} />
                 <SettingsTab text="Contact us" action={() => router.push('contact')}/>
-                <SettingsTab text="Website" action={websiteRedirect}/>
+                <SettingsTab text="Socials" action={socialRedirect}/>
             </View>
             <TouchableOpacity
                 onPress={() => handleSignOut()}

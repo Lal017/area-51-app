@@ -311,6 +311,32 @@ const ProfileStyles = StyleSheet.create({
         paddingLeft: 10,
         borderWidth: 1,
     },
+    // Vehicle List
+    vehicleContainer: {
+        backgroundColor: Colors.secondary,
+        padding: 25,
+        width: '100%',
+        justifyContent: 'flexStart',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: 10,
+    },
+    vehicleBox: {
+        borderWidth: 1,
+        borderColor: Colors.background,
+        padding: 25,
+        width: '45%',
+        minWidth: '40%',
+        margin: 5,
+        borderRadius: 25,
+        alignItems: 'center',
+        rowGap: 10
+    },
+    addVehicle: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '45%'
+    }
 });
 
 export { Styles, AuthStyles, HomeStyles, RequestStyles, ProfileStyles };

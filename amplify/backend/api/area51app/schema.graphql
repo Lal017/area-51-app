@@ -1,4 +1,4 @@
-type PushToken
+type User
   @model
   @auth(rules: [
     {allow: owner},
@@ -7,10 +7,26 @@ type PushToken
   ])
 {
   id: ID!
-  pushToken: String!
   access: String!
   name: String!
   email: AWSEmail!
   phone: AWSPhone!
+  pushToken: String!
+  vehicles: [Vehicle] @hasMany
 }
- 
+
+type Vehicle
+  @model
+  @auth(rules: [
+    {allow: owner},
+    {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]}
+  ])
+{
+  id: ID!
+  year: Int!
+  make: String!
+  model: String!
+  color: String
+  plate: String
+  vin: String
+}

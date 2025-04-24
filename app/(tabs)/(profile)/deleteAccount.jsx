@@ -1,12 +1,12 @@
 import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 import { useState } from 'react';
-import { useLocalSearchParams } from 'expo-router';
 import { handleDeleteUser } from '../../../components/authComponents';
 import { ProfileStyles } from '../../../constants/styles';
+import { useApp } from '../../../components/context';
 
 const DeleteAccount = () =>
 {
-    const { email } = useLocalSearchParams();
+    const { email } = useApp();
     const [ inputEmail, setInputEmail ] = useState();
 
     return (

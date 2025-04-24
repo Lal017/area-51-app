@@ -27,7 +27,7 @@ const signIn = () =>
                 <Text style={AuthStyles.title}>Sign In</Text>
                 <View style={AuthStyles.inputContainer}>
                     <TextInput
-                        placeholder='Email'
+                        placeholder='email'
                         value={email}
                         onChangeText={setEmail}
                         keyboardType='email-address'

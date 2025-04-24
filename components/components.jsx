@@ -30,13 +30,13 @@ const SettingsTab = ({text, action}) =>
 };
 
 //redirects to the trop locksmith website
-const websiteRedirect = () =>
+const socialRedirect = () =>
 {
-    Linking.openURL('https://troplocksmithlasvegas.com/');
+    Linking.openURL('https://www.instagram.com/area51motorsports/');
 };
 
 export {
     CustHeader,
     SettingsTab,
-    websiteRedirect,
+    socialRedirect,
 };

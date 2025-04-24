@@ -1,18 +1,22 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreatePushToken = /* GraphQL */ `
-  subscription OnCreatePushToken(
-    $filter: ModelSubscriptionPushTokenFilterInput
+export const onCreateUser = /* GraphQL */ `
+  subscription OnCreateUser(
+    $filter: ModelSubscriptionUserFilterInput
     $owner: String
   ) {
-    onCreatePushToken(filter: $filter, owner: $owner) {
+    onCreateUser(filter: $filter, owner: $owner) {
       id
-      pushToken
       access
       name
       email
       phone
+      pushToken
+      vehicles {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       owner
@@ -20,18 +24,22 @@ export const onCreatePushToken = /* GraphQL */ `
     }
   }
 `;
-export const onUpdatePushToken = /* GraphQL */ `
-  subscription OnUpdatePushToken(
-    $filter: ModelSubscriptionPushTokenFilterInput
+export const onUpdateUser = /* GraphQL */ `
+  subscription OnUpdateUser(
+    $filter: ModelSubscriptionUserFilterInput
     $owner: String
   ) {
-    onUpdatePushToken(filter: $filter, owner: $owner) {
+    onUpdateUser(filter: $filter, owner: $owner) {
       id
-      pushToken
       access
       name
       email
       phone
+      pushToken
+      vehicles {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       owner
@@ -39,20 +47,87 @@ export const onUpdatePushToken = /* GraphQL */ `
     }
   }
 `;
-export const onDeletePushToken = /* GraphQL */ `
-  subscription OnDeletePushToken(
-    $filter: ModelSubscriptionPushTokenFilterInput
+export const onDeleteUser = /* GraphQL */ `
+  subscription OnDeleteUser(
+    $filter: ModelSubscriptionUserFilterInput
     $owner: String
   ) {
-    onDeletePushToken(filter: $filter, owner: $owner) {
+    onDeleteUser(filter: $filter, owner: $owner) {
       id
-      pushToken
       access
       name
       email
       phone
+      pushToken
+      vehicles {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const onCreateVehicle = /* GraphQL */ `
+  subscription OnCreateVehicle(
+    $filter: ModelSubscriptionVehicleFilterInput
+    $owner: String
+  ) {
+    onCreateVehicle(filter: $filter, owner: $owner) {
+      id
+      year
+      make
+      model
+      color
+      plate
+      vin
+      createdAt
+      updatedAt
+      userVehiclesId
+      owner
+      __typename
+    }
+  }
+`;
+export const onUpdateVehicle = /* GraphQL */ `
+  subscription OnUpdateVehicle(
+    $filter: ModelSubscriptionVehicleFilterInput
+    $owner: String
+  ) {
+    onUpdateVehicle(filter: $filter, owner: $owner) {
+      id
+      year
+      make
+      model
+      color
+      plate
+      vin
+      createdAt
+      updatedAt
+      userVehiclesId
+      owner
+      __typename
+    }
+  }
+`;
+export const onDeleteVehicle = /* GraphQL */ `
+  subscription OnDeleteVehicle(
+    $filter: ModelSubscriptionVehicleFilterInput
+    $owner: String
+  ) {
+    onDeleteVehicle(filter: $filter, owner: $owner) {
+      id
+      year
+      make
+      model
+      color
+      plate
+      vin
+      createdAt
+      updatedAt
+      userVehiclesId
       owner
       __typename
     }

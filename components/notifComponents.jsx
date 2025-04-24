@@ -1,19 +1,22 @@
 import { Alert } from 'react-native';
-import { createPushToken, updatePushToken, deletePushToken } from '../src/graphql/mutations';
-import { listPushTokens, getPushToken } from '../src/graphql/queries';
+import { createUser, updateUser, deleteUser } from '../src/graphql/mutations';
+import { listUsers, getUser } from '../src/graphql/queries';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import Constants from 'expo-constants';
 
 // Expo notif functions
-const sendPushNotification = async (expoPushToken, notif_title, notif_body) =>
+const sendPushNotifications = async (expoPushToken, title, body, data) =>
 {
     const message = {
         to: expoPushToken,
         sound: 'default',
-        title: notif_title,
-        body: notif_body
+        title: title,
+        body: body,
+        data: { data }
     };
+
+    console.log(message);
 
     try {
         await fetch('https://exp.host/--/api/v2/push/send', {
@@ -25,6 +28,7 @@ const sendPushNotification = async (expoPushToken, notif_title, notif_body) =>
             },
             body: JSON.stringify(message),
         });
+        console.log('sent');
     } catch (error) {
         console.error('Error sending push notification:', error);
     }
@@ -80,13 +84,13 @@ const registerForPushNotifications = async () =>
 };
 
 // Amplify notif functions
-const handleCreatePushToken = async (client, user_id, token, user_access, name, email, phoneNumber) =>
+const handleCreateUser = async (client, user_id, token, user_access, name, email, phoneNumber) =>
 {
     try {
         const access_result = user_access.includes('Admins') ? 'Admins' : 'Customers';
 
         await client.graphql({
-            query: createPushToken,
+            query: createUser,
             variables: {
                 input: {
                     id: user_id,
@@ -103,13 +107,13 @@ const handleCreatePushToken = async (client, user_id, token, user_access, name, 
     }
 };
 
-const handleUpdatePushToken = async (client, user_id, token, user_access, name, email, phone_number) =>
+const handleUpdateUser = async (client, user_id, token, user_access, name, email, phone_number) =>
 {
     try {
         const access_result = user_access.includes('Admins') ? 'Admins' : 'Customers';
 
         await client.graphql({
-            query: updatePushToken,
+            query: updateUser,
             variables: {
                 input: {
                     id: user_id,
@@ -128,11 +132,11 @@ const handleUpdatePushToken = async (client, user_id, token, user_access, name, 
 };
 
 // used to delete the clients push token when they delete there account
-const handleDeletePushToken = async (client, user_id) =>
+const handleDeleteUser = async (client, user_id) =>
 {
     try {
         await client.graphql({
-            query: deletePushToken,
+            query: deleteUser,
             variables: {
                 input: {
                     id: user_id
@@ -150,38 +154,64 @@ const handleCleanupPushTokens = async () =>
     // code here
 };
 
-// Debuggin purposes
-const handleListPushToken = async (client) =>
+// check if user entry already exists
+const handleCheckUser = async (client, userId) =>
 {
-    try {
-        await client.graphql({ query: listPushTokens });
-    } catch (error) {
-        console.error('LIST ERROR:', error);
-    }
+    const exists = await client.graphql({
+        query: getUser,
+        variables: {
+            id: userId
+        }
+    });
+
+    var alreadyExists;
+
+    if (exists.data.getUser === null) { alreadyExists = false }
+    else { alreadyExists = true }
+
+    return alreadyExists;
 };
 
-const findEntry = async (client, user_email) =>
+const handleCustomerRequest = async (client, data) =>
+{
+    try {
+        const title = 'Towing Request';
+        const body = 'A customer is requesting a towing service';
+        const pushTokens = await handleGetAdmins(client);
+        console.log(pushTokens);
+        await sendPushNotifications(pushTokens, title, body, data);
+    } catch (error) {
+        console.log('CUSTOMER REQUEST ERROR:', error);
+    }
+}
+
+// gets push tokens from admins to send a request
+const handleGetAdmins = async (client) =>
 {
     try {
         const result = await client.graphql({
-            query: getPushToken,
+            query: listUsers,
             variables: {
-                email: user_email
+                filter: {
+                    access: {
+                        eq: 'Admins'
+                    }
+                }
             }
         });
 
-        console.log('RESULT:', result);
+        return result.data.listUsers.items.map(item => item.pushToken);
     } catch (error) {
-        console.log('FIND ERROR:', error);
+        console.log('GET ADMINS ERROR:', error);
     }
 };
 
 export {
     registerForPushNotifications,
-    sendPushNotification,
-    handleCreatePushToken,
-    handleUpdatePushToken,
-    handleDeletePushToken,
-    handleListPushToken,
-    findEntry
+    handleCustomerRequest,
+    handleCreateUser,
+    handleUpdateUser,
+    handleDeleteUser,
+    handleGetAdmins,
+    handleCheckUser
 };

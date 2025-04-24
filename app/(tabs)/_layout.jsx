@@ -7,23 +7,39 @@ import { AppProvider, useApp } from "../../components/context";
 import { useEffect, useRef } from 'react';
 import { generateClient } from "aws-amplify/api";
 import { addNotificationReceivedListener, addNotificationResponseReceivedListener, removeNotificationSubscription } from "expo-notifications";
-import { registerForPushNotifications, handleCreatePushToken, handleUpdatePushToken } from "../../components/notifComponents";
-import { listPushTokens } from "../../src/graphql/queries";
+import { registerForPushNotifications, handleCreateUser, handleUpdateUser, handleCheckUser } from "../../components/notifComponents";
 import Colors from "../../constants/colors";
 import { handleGetCurrentUser } from "../../components/authComponents";
 import { fetchUserAttributes } from "aws-amplify/auth";
+import { vehicleCheck } from "../../components/vehicleComponents";
 
 const TabsContent = () =>
 {
     // get setters from context
-    const { client, setClient, userId, setUserId, access, setAccess, setPushToken, setNotification, name, setName, email, setEmail, phoneNumber, setPhoneNumber } = useApp();
+    const {
+        client,
+        setClient,
+        userId,
+        setUserId,
+        access,
+        setAccess,
+        setPushToken,
+        setNotification,
+        name,
+        setName,
+        email,
+        setEmail,
+        phoneNumber,
+        setPhoneNumber,
+        setVehicles } = useApp();
 
     // notification listeners
     const notificationListener = useRef();
     const responseListener = useRef();
 
-    // get and set user attributes
+    // getters and setters
     useEffect(() => {
+        // get and set user attributes
         const fetchUserData = async() => {
             try {
                 const user = await fetchUserAttributes();
@@ -33,19 +49,22 @@ const TabsContent = () =>
             } catch (error) {
                 console.log(error);
             }
-        }
+        };
 
         fetchUserData();
+
+        // generate client
+        const genClient = generateClient();
+        setClient(genClient);
+
+        // get and set vehicle info
+        const vehicles = vehicleCheck(client);
+        setVehicles(vehicles._j);
     }, []);
 
-    // send PushToken to database
+    // Send to push token data base
     useEffect(() => {
-        const client = generateClient();
-        setClient(client);
-    }, []);
-
-    // listeners for notifications
-    useEffect(() => {
+        // get and set cognito info
         const handleSetUserId = async () =>
         {
             try {
@@ -63,17 +82,13 @@ const TabsContent = () =>
                 const token = await registerForPushNotifications();
                 setPushToken(token);
 
-                // check if client already has an entry in database
-                const exists = await client.graphql({
-                    query: listPushTokens,
-                });
-
-                const alreadyExists = exists.data.listPushTokens.items.length > 0;
+                // check if User already has entry in database
+                const alreadyExists = await handleCheckUser(client, userId);
 
                 if (!alreadyExists) {
-                    await handleCreatePushToken(client, userId, token, access, name, email, phoneNumber);
+                    await handleCreateUser(client, userId, token, access, name, email, phoneNumber);
                 } else {
-                    await handleUpdatePushToken(client, userId, token, access, name, email, phoneNumber);
+                    await handleUpdateUser(client, userId, token, access, name, email, phoneNumber);
                 }
             } catch (error) {
                 console.error('Error registering for push notifications:', error);
@@ -89,6 +104,7 @@ const TabsContent = () =>
 
     }, [phoneNumber, name, email]);
 
+    // Listeners for push notifications
     useEffect(() => {
         // triggered when the notification is actually received. foreground and background
         notificationListener.current = addNotificationReceivedListener(notification => {
@@ -97,7 +113,7 @@ const TabsContent = () =>
 
         // triggered when the user taps on the notification
         responseListener.current = addNotificationResponseReceivedListener(response => {
-            console.log(response);
+            console.log('RESPONSE:', response);
         });
 
         return () => {
@@ -126,7 +142,7 @@ const TabsContent = () =>
                 }}
             />
             <Tabs.Screen
-                name="request"
+                name="(request)"
                 options={{
                     title: "Schedule maintenance",
                     tabBarHideOnKeyboard: true,

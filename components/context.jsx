@@ -11,6 +11,7 @@ const AppProvider = ({ children }) => {
   const [ email, setEmail ] = useState();
   const [ name, setName ] = useState();
   const [ phoneNumber, setPhoneNumber ] = useState();
+  const [ vehicles, setVehicles ] = useState();
 
   return (
     <AppContext.Provider value={{
@@ -29,7 +30,9 @@ const AppProvider = ({ children }) => {
         name,
         setName,
         phoneNumber,
-        setPhoneNumber
+        setPhoneNumber,
+        vehicles,
+        setVehicles
         }}>
       {children}
     </AppContext.Provider>
