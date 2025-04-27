@@ -1,36 +1,39 @@
+import { router } from 'expo-router';
 import { createVehicle } from '../src/graphql/mutations';
+import { Alert } from 'react-native';
 
 const handleCreateVehicle = async (client, vehicle, userId) =>
 {
-    await client.graphql({
-        query: createVehicle,
-        variables: {
-            input: {
-                year: vehicle.year,
-                make: vehicle.make,
-                model: vehicle.model,
-                color: vehicle.color,
-                plate: vehicle.plate,
-                vin: vehicle.vin,
-                userVehiclesId: userId
+    try {
+        await client.graphql({
+            query: createVehicle,
+            variables: {
+                input: {
+                    year: vehicle.year,
+                    make: vehicle.make,
+                    model: vehicle.model,
+                    color: vehicle.color,
+                    plate: vehicle.plate,
+                    vin: vehicle.vin,
+                    userVehiclesId: userId
+                }
             }
-        }
-    });
-};
+        });
 
-const vehicleCheck = async (client) =>
-{
-    // const user = await client.graphql({ query: getUser });
+        router.replace('loading');
 
-    const vehicles = [
-        { year: '2010', make: 'Scion', model: 'Tc'},
-        { year: '2022', make: 'Toyota', model: 'Corolla' }
-    ];
-
-    return vehicles;
+        Alert.alert(
+            'Success',
+            'Vehicle created successfully',
+            [
+                { text: 'OK' }
+            ]
+        );
+    } catch (error) {
+        console.log('Error creating vehicle', error);
+    }
 };
 
 export {
     handleCreateVehicle,
-    vehicleCheck
 };

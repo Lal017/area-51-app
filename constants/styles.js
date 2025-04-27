@@ -4,11 +4,16 @@ import Colors, { Auth } from "./colors";
 const Styles = StyleSheet.create({
 // All page styles
     HeaderContainer: {
-        backgroundColor: Colors.backgroundAccent,
-        flexDirection: 'row',
-        height: 150,
-        justifyContent: 'flex-start',
+        backgroundColor: Colors.background,
+        height: 95,
+        justifyContent: 'flex-end',
         alignItems: 'center',
+        elevation: 14,
+        paddingBottom: 20,
+    },
+    HeaderTitle: {
+        fontSize: 30,
+        fontWeight: '400',
     },
     LogoImg: {
         width: 200,
@@ -17,8 +22,8 @@ const Styles = StyleSheet.create({
         marginTop: 50,
     },
     tabBarStyle: {
-        backgroundColor: Colors.backgroundAccent,
-        elevation: 0,
+        backgroundColor: Colors.background,
+        elevation: 14,
         shadowOpacity: 0,
         borderTopWidth: 0,
     },
@@ -85,14 +90,14 @@ const AuthStyles = StyleSheet.create({
     },
     icon: {
         position: 'absolute',
-        left: 10,
+        left: 15,
         zIndex: 1,
     },
     input: {
         backgroundColor: Colors.background,
         width: 300,
         height: 50,
-        paddingLeft: 40,
+        paddingLeft: 45,
         borderWidth: 1,
         borderRadius: 25,
     },
@@ -223,11 +228,20 @@ const RequestStyles = StyleSheet.create({
 const ProfileStyles = StyleSheet.create({
     page: {
         flex: 1,
-        backgroundColor: Colors.background,
-        paddingTop: 75,
+        backgroundColor: Auth.background,
         justifyContent: 'flexStart',
         alignItems: 'center',
         rowGap: 50,
+    },
+    tabWrapper: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        position: 'relative',
+    },
+    icon: {
+        position: 'absolute',
+        left: 25,
+        zIndex: 1,
     },
     tabContainer: {
         width: '100%',
@@ -237,39 +251,54 @@ const ProfileStyles = StyleSheet.create({
     tab: {
         width: '100%',
         alignItems: 'center',
-        marginTop: 10,
     },
     tabButton: {
-        width: '90%',
-        borderTopColor: Colors.tertiary,
-        borderBottomColor: Colors.tertiary,
-        borderTopWidth: 1,
-        borderBottomWidth: 1,
-        padding: 10,
+        backgroundColor: Colors.background,
+        width: '100%',
+        justifyContent: 'center',
+        height: 75,
+        elevation: 10,
+        paddingLeft: 75,
     },
-    tabText: {
-        textAlign: 'center',
+    socialContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        width: '100%',
+        alignItems: 'center',
+        marginTop: 50,
+    },
+    socialBox: {
+        elevation: 10,
+        alignItems: 'center',
+        color: '#1877f2',
+        width: 150,
+        padding: 25,
+        borderRadius: 25,
     },
     actionButton: {
-        backgroundColor: Colors.tertiary,
+        backgroundColor: Colors.secondary,
+        borderRadius: 25,
+        elevation: 5,
         padding: 10,
-        width: 100,
+        width: 250,
     },
     // Index
     accountCard: {
-        backgroundColor: Colors.secondary,
-        flexDirection: 'row',
-        width: '90%',
-        height: '125',
-        borderRadius: 15,
-        columnGap: 100,
-        marginTop: 10,
-        justifyContent: 'flexStart',
-        alignItems: 'center',
+        width: '100%',
+        marginTop: 50,
+        justifyContent: 'center',
+        alignItems: 'flex-start',
         paddingLeft: 35
     },
+    accountInfo: {
+        rowGap: 20
+    },
     accountText: {
-        rowGap: 10
+        rowGap: 5
+    },
+    name: {
+        fontSize: 25,
+        fontWeight: 'bold',
     },
     editAccount: {
         height: '75%',
@@ -285,39 +314,51 @@ const ProfileStyles = StyleSheet.create({
     },
     // Change Password / attributes
     textContainer: {
-        backgroundColor: Colors.secondary,
-        padding: 25,
-        borderRadius: 15,
-        alignItems: 'center',
+        paddingTop: 100,
+        width: '80%',
+        alignItems: 'flex-start',
+        justifyContent: 'center',
         rowGap: 20,
     },
     title: {
-        color: Colors.text,
         fontSize: 25,
-        textAlign: 'center',
+        fontWeight: 100,
     },
     subTitle: {
-        color: Colors.text,
-        fontSize: 15,
-        fontWeight: 'bold',
+        fontSize: 20,
+    },
+    description: {
+        fontSize: 20,
         textAlign: 'center'
     },
     inputContainer: {
         rowGap: 20,
     },
     inputWrapper: {
-        // CFEDSEWFWSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+        flexDirection: 'row',
+        alignItems: 'center',
+        position: 'relative',
+    },
+    icon: {
+        position: 'absolute',
+        left: 15,
+        zIndex: 1,
+    },
+    arrowIcon: {
+        position: 'absolute',
+        right: 20,
+        zIndex: 1,
     },
     input: {
         backgroundColor: Colors.background,
-        height: 45,
-        width: 250,
+        width: 300,
+        height: 50,
         paddingLeft: 40,
         borderWidth: 1,
+        borderRadius: 25,
     },
     // Vehicle List
     vehicleContainer: {
-        backgroundColor: Colors.secondary,
         padding: 25,
         width: '100%',
         justifyContent: 'flexStart',
@@ -327,7 +368,9 @@ const ProfileStyles = StyleSheet.create({
     },
     vehicleBox: {
         borderWidth: 1,
-        borderColor: Colors.background,
+        borderColor: Colors.backgroundAccent,
+        backgroundColor: Colors.background,
+        elevation: 8,
         padding: 25,
         width: '45%',
         minWidth: '40%',
@@ -342,9 +385,9 @@ const ProfileStyles = StyleSheet.create({
         width: '45%'
     },
     formContainer: {
-        backgroundColor: Colors.secondary,
-        padding: 25,
+        paddingTop: 50,
         width: '100%',
+        rowGap: 20,
         justifyContent: 'center',
         alignItems: 'center'
     }

@@ -4,6 +4,7 @@ import { handleUpdateAttributes } from "../../../components/authComponents";
 import { useState } from "react";
 import { useApp } from "../../../components/context";
 import Colors from "../../../constants/colors";
+import { Ionicons } from "@expo/vector-icons";
 
 const AccountEdit = () =>
 {
@@ -18,16 +19,19 @@ const AccountEdit = () =>
             behavior="padding"
             style={ProfileStyles.page}
         >
-            <ScrollView>
-                <View style={ProfileStyles.textContainer}>
-                    <Text style={ProfileStyles.title}>Edit account</Text>
-                    <View style={ProfileStyles.inputContainer}>
+            <View style={ProfileStyles.formContainer}>
+                <View style={ProfileStyles.inputContainer}>
+                    <View style={ProfileStyles.inputWrapper}>
+                        <Ionicons name="person" size={20} style={ProfileStyles.icon} />
                         <TextInput
                             placeholder="name"
                             value={editName}
                             onChangeText={setEditName}
                             style={ProfileStyles.input}
                         />
+                    </View>
+                    <View style={ProfileStyles.inputWrapper}>
+                        <Ionicons name="mail" size={20} style={ProfileStyles.icon} />
                         <TextInput
                             placeholder="email"
                             value={editEmail}
@@ -35,27 +39,31 @@ const AccountEdit = () =>
                             autoCapitalize='none'
                             style={ProfileStyles.input}
                         />
+                    </View>
+                    <View style={ProfileStyles.inputWrapper}>
+                        <Ionicons name="call" size={20} style={ProfileStyles.icon} />
                         <TextInput
                             placeholder="phone number"
                             value={editPhone}
                             onChangeText={setEditPhone}
                             keyboardType="phone-pad"
                             style={ProfileStyles.input}
-                        /> 
+                        />
                     </View>
-                    <TouchableOpacity
-                        onPress={() => handleUpdateAttributes(
-                            editEmail,
-                            editName,
-                            editPhone.replace(/\D/g, ''),
-                            setName,
-                            setPhoneNumber
-                        )}
-                    >
-                        <Text style={{color: Colors.text}}>Change</Text>
-                    </TouchableOpacity>
                 </View>
-            </ScrollView>
+                <TouchableOpacity
+                    onPress={() => handleUpdateAttributes(
+                        editEmail,
+                        editName,
+                        editPhone.replace(/\D/g, ''),
+                        setName,
+                        setPhoneNumber
+                    )}
+                    style={ProfileStyles.actionButton}
+                >
+                    <Text style={{color: 'white', textAlign: 'center'}}>Change</Text>
+                </TouchableOpacity>
+            </View>
         </KeyboardAvoidingView>
     );
 };

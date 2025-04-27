@@ -20,6 +20,7 @@ const Index = () =>
     const checkPhone = async () => {
       try {
         const user = await fetchUserAttributes();
+        console.log(!user.phone_number);
         setShowModal(!user.phone_number);
       } catch (error) {
         console.log('fetch user error: ', error);
@@ -70,11 +71,6 @@ const Index = () =>
           </View>
         </KeyboardAvoidingView>
       </Modal>
-      <TouchableOpacity
-        style={HomeStyles.request}
-      >
-        <Text style={{color: 'white', textAlign: 'center'}}>Send to database</Text>
-      </TouchableOpacity>
     </View>
   );
 }

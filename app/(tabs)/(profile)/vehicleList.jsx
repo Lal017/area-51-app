@@ -16,22 +16,22 @@ const VehicleList = () =>
                 {vehicles?.length > 0 ? (
                     vehicles.map((vehicle, index) => (
                         <View key={index} style={ProfileStyles.vehicleBox}>
-                            <Text style={{color: Colors.text}}>
+                            <Text style={{textAlign: 'center'}}>
                                 {vehicle.year} {vehicle.make} {vehicle.model}
                             </Text>
-                            <Ionicons name='car' size={30} color={Colors.text} />
+                            <Ionicons name='car-sport' size={30} />
                         </View>
                     ))
                 ) : (
                     <View style={ProfileStyles.vehicleBox}>
-                        <Text style={{color: Colors.text}}>No Vehicles</Text>
+                        <Text>No Vehicles</Text>
                     </View>
                 )}
 
                 <TouchableOpacity
                     onPress={() => router.push('addVehicle')}
                     style={ProfileStyles.addVehicle}>
-                    <Ionicons name="add-circle" size={50} color={Colors.text} />
+                    <Ionicons name="add-circle" size={50} />
                 </TouchableOpacity>
             </View>
         </View>

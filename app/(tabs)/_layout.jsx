@@ -11,7 +11,7 @@ import { registerForPushNotifications, handleCreateUser, handleUpdateUser, handl
 import Colors from "../../constants/colors";
 import { handleGetCurrentUser } from "../../components/authComponents";
 import { fetchUserAttributes } from "aws-amplify/auth";
-import { vehicleCheck } from "../../components/vehicleComponents";
+import { listVehicles } from "../../src/graphql/queries";
 
 const TabsContent = () =>
 {
@@ -24,6 +24,7 @@ const TabsContent = () =>
         access,
         setAccess,
         setPushToken,
+        token,
         setNotification,
         name,
         setName,
@@ -37,52 +38,62 @@ const TabsContent = () =>
     const notificationListener = useRef();
     const responseListener = useRef();
 
-    // getters and setters
     useEffect(() => {
-        // get and set user attributes
-        const fetchUserData = async() => {
-            try {
-                const user = await fetchUserAttributes();
-                setEmail(user?.email);
-                setName(user?.name);
-                setPhoneNumber(user?.phone_number);
-            } catch (error) {
-                console.log(error);
-            }
-        };
+        const handleGenClient = async () =>
+        {
+            // generate client
+            const genClient = generateClient();
+            await setClient(genClient);
+        }
 
-        fetchUserData();
-
-        // generate client
-        const genClient = generateClient();
-        setClient(genClient);
-
-        // get and set vehicle info
-        const vehicles = vehicleCheck(client);
-        setVehicles(vehicles._j);
+        handleGenClient();
     }, []);
 
-    // Send to push token data base
     useEffect(() => {
-        // get and set cognito info
-        const handleSetUserId = async () =>
+        const handleGetVehicles = async () =>
         {
+            // get vehicles info from database
+            const vehiclesInfo = await client.graphql({
+                query: listVehicles,
+            });
+        
+            setVehicles(vehiclesInfo.data.listVehicles.items);
+        }
+
+        if (client) { handleGetVehicles(); }
+    }, [client])
+
+    // getters and setters
+    useEffect(() => {
+        const fetchUserData = async() => {
             try {
-                const user = await handleGetCurrentUser();
-                setAccess(user.accessToken.payload["cognito:groups"]);
-                setUserId(user.accessToken.payload.sub);
+                // get and set user attributes
+                const userAtt = await fetchUserAttributes();
+                setEmail(userAtt?.email);
+                setName(userAtt?.name);
+                setPhoneNumber(userAtt?.phone_number);
+
+                // get and set cognito info
+                const userInfo = await handleGetCurrentUser();
+                setAccess(userInfo.accessToken.payload["cognito:groups"]);
+                setUserId(userInfo.accessToken.payload.sub);
+
+                // get push token for notifications
+                const genToken = await registerForPushNotifications();
+                setPushToken(genToken);
             } catch (error) {
-                console.error('Error getting current user:', error);
+                console.log('Error fetching data:', error);
             }
         };
+        
+        fetchUserData();
+    }, []);
 
+    // Send to database
+    useEffect(() => {
         const handleRegisterPushNotifications = async () => {
             try {
-                // get push token for notifications
-                const token = await registerForPushNotifications();
-                setPushToken(token);
-
-                // check if User already has entry in database
+                // check if user already has entry in database
                 const alreadyExists = await handleCheckUser(client, userId);
 
                 if (!alreadyExists) {
@@ -96,13 +107,11 @@ const TabsContent = () =>
             }
         };
 
-        handleSetUserId();
-
         if (client && userId) {
             handleRegisterPushNotifications();
         }
 
-    }, [phoneNumber, name, email]);
+    }, [client, userId, phoneNumber, name, email, access]);
 
     // Listeners for push notifications
     useEffect(() => {
@@ -125,16 +134,18 @@ const TabsContent = () =>
     return (
         <Tabs
             screenOptions={{
-                header: () => <CustHeader/>,
+                headerShown: false,
                 tabBarStyle: Styles.tabBarStyle,
                 tabBarActiveTintColor: Colors.primary,
-                tabBarInactiveTintColor: Colors.tertiary,
+                tabBarInactiveTintColor: Colors.backgroundAccent,
                 tabBarShowLabel: false,
             }}>
             <Tabs.Screen
                 name="index"
                 options={{
                 title: 'Home',
+                headerShown: true,
+                header: () => <CustHeader title="Home"/>,
                 tabBarHideOnKeyboard: true,
                 tabBarIcon: ({ color, size }) => (
                     <Ionicons name="home" size={size} color={color}/>
@@ -145,11 +156,13 @@ const TabsContent = () =>
                 name="(request)"
                 options={{
                     title: "Schedule maintenance",
+                    headerShown: true,
+                    header: () => <CustHeader title="Schedule"/>,
                     tabBarHideOnKeyboard: true,
                     tabBarIcon: ({ color, size, focused }) => (
                         <View style={Styles.KeyIconContainer}>
                             <Ionicons
-                                name="car"
+                                name="car-sport"
                                 size={size} 
                                 color={focused ? color: "white"} 
                             />

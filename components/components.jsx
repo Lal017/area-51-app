@@ -1,16 +1,14 @@
-import { View, Text, Image, TouchableOpacity, Linking } from 'react-native';
+import { View, Text, TouchableOpacity, Linking } from 'react-native';
 import { Styles, ProfileStyles } from '../constants/styles';
 
 // custom header component to replace default header
-const CustHeader = () =>
+const CustHeader = ({title}) =>
 {
-    return(
+    return (
         <View style={Styles.HeaderContainer}>
-            <Image
-                source={require('../assets/images/a51-title-logo.png')}
-                style={Styles.LogoImg}
-            />
+            <Text style={Styles.HeaderTitle}>{title}</Text>
         </View>
+   
     );
 };
 
@@ -30,9 +28,9 @@ const SettingsTab = ({text, action}) =>
 };
 
 //redirects to the trop locksmith website
-const socialRedirect = () =>
+const socialRedirect = (link) =>
 {
-    Linking.openURL('https://www.instagram.com/area51motorsports/');
+    Linking.openURL(link);
 };
 
 export {

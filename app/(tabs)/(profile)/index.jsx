@@ -3,55 +3,52 @@ import { ProfileStyles } from "../../../constants/styles";
 import { SettingsTab, socialRedirect } from "../../../components/components";
 import { handleSignOut } from "../../../components/authComponents";
 import { router } from "expo-router";
-import { useEffect, useState } from "react";
 import { useApp } from "../../../components/context";
-import Colors from '../../../constants/colors';
+import { AntDesign, Ionicons, MaterialIcons } from "@expo/vector-icons";
 
 // Profile page
 const Profile = () =>
 {
-    const { email, name, phoneNumber } = useApp();
-
-    // Set a readable phone number for the user
-    const [ phoneNumberDisplay, setPhoneNumberDisplay ] = useState();
-
-    useEffect(() => {
-        const countryCode = phoneNumber.slice(0, 2);
-        const areaCode = phoneNumber.slice(2,5);
-        const firstPart = phoneNumber.slice(5, 8);
-        const secondPart = phoneNumber.slice(8, 12);
-        setPhoneNumberDisplay(`${countryCode} (${areaCode}) ${firstPart} - ${secondPart}`)
-    }, [phoneNumber]);
+    const { email, name } = useApp();
 
     return(
         <View style={ProfileStyles.page}>
             <View style={ProfileStyles.accountCard}>
                 <View style={ProfileStyles.accountText}>
-                    <Text style={{color: Colors.text}}>{name}</Text>
-                    <Text style={{color: Colors.text}}>{email}</Text>
-                    <Text style={{color: Colors.text}}>{phoneNumberDisplay}</Text>
-                </View>
-                <View style={ProfileStyles.editAccount}>
-                    <TouchableOpacity
-                        onPress={() => router.push({
-                            pathname: 'accountEdit',
-                            params: {
-                                name: name,
-                                email: email,
-                                phoneNumber: phoneNumber
-                            }
-                        })}
-                        style={ProfileStyles.editButton}
-                    >
-                        <Text style={{textAlign: 'center'}}>Edit</Text>
-                    </TouchableOpacity>
+                    <Text style={ProfileStyles.name}>{name}</Text>
+                    <Text>{email}</Text>
                 </View>
             </View>
             <View style={ProfileStyles.tabContainer}>
-                <SettingsTab text="Account Settings" action={() => router.push('settings')} />
-                <SettingsTab text="My Vehicles" action={() => router.push('vehicleList')} />
-                <SettingsTab text="Contact us" action={() => router.push('contact')}/>
-                <SettingsTab text="Socials" action={socialRedirect}/>
+                <View style={ProfileStyles.tabWrapper}>
+                    <Ionicons name="settings" size={30} style={ProfileStyles.icon} />
+                    <SettingsTab text="Account Settings" action={() => router.push('settings')} />
+                    <AntDesign name="right" size={25} style={ProfileStyles.arrowIcon} />
+                </View>
+                <View style={ProfileStyles.tabWrapper}>
+                    <Ionicons name="car-sport" size={30} style={ProfileStyles.icon} />
+                    <SettingsTab text="My Vehicles" action={() => router.push('vehicleList')} />
+                    <AntDesign name="right" size={25} style={ProfileStyles.arrowIcon} />
+                </View>
+                <View style={ProfileStyles.tabWrapper}>
+                    <MaterialIcons name="contact-support" size={30} style={ProfileStyles.icon} />
+                    <SettingsTab text="Contact us" action={() => router.push('contact')}/>
+                    <AntDesign name="right" size={25} style={ProfileStyles.arrowIcon} />
+                </View>
+                <View style={ProfileStyles.socialContainer}>
+                    <TouchableOpacity
+                        style={[ProfileStyles.socialBox, {backgroundColor: '#1877f2'}]}
+                        onPress={() => socialRedirect('https://www.facebook.com/Area51MotorsportsLv/')}
+                    >
+                        <AntDesign name="facebook-square" size={30} color='white' />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={[ProfileStyles.socialBox, {backgroundColor: 'black'}]}
+                        onPress={() => socialRedirect('https://www.instagram.com/area51motorsports/')}
+                    >
+                        <AntDesign name="instagram" size={30} color='white' />
+                    </TouchableOpacity>
+                </View>
             </View>
             <TouchableOpacity
                 onPress={() => handleSignOut()}
