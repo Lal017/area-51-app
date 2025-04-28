@@ -1,6 +1,6 @@
 import { Stack } from 'expo-router';
 
-const requestLayout = () =>
+const scheduleLayout = () =>
 {
     return(
         <Stack screenOptions={{headerShown: false}}>
@@ -9,4 +9,4 @@ const requestLayout = () =>
     )
 };
 
-export default requestLayout;
+export default scheduleLayout;

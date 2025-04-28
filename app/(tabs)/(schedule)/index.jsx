@@ -5,7 +5,7 @@ import { handleCustomerRequest } from "../../../components/notifComponents";
 import Colors from "../../../constants/colors";
 import { useApp } from "../../../components/context";
 
-const Request = () =>
+const Schedule = () =>
 {
   const { client, notification } = useApp();
 
@@ -40,4 +40,4 @@ const Request = () =>
   )
 }
 
-export default Request;
+export default Schedule;

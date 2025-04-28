@@ -141,7 +141,7 @@ const TabsContent = () =>
                 }}
             />
             <Tabs.Screen
-                name="(request)"
+                name="(schedule)"
                 options={{
                     title: "Schedule maintenance",
                     headerShown: true,
