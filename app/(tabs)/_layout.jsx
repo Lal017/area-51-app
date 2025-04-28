@@ -23,8 +23,8 @@ const TabsContent = () =>
         setUserId,
         access,
         setAccess,
+        pushToken,
         setPushToken,
-        token,
         setNotification,
         name,
         setName,
@@ -39,14 +39,29 @@ const TabsContent = () =>
     const responseListener = useRef();
 
     useEffect(() => {
-        const handleGenClient = async () =>
+        const initializeApp = async () =>
         {
             // generate client
             const genClient = generateClient();
             await setClient(genClient);
+
+            // get push token for notifications
+            const genPushToken = await registerForPushNotifications();
+            await setPushToken(genPushToken);
+
+            // get and set user attributes
+            const userAtt = await fetchUserAttributes();
+            await setEmail(userAtt?.email);
+            await setName(userAtt?.name);
+            await setPhoneNumber(userAtt?.phone_number);
+
+            // get and set cognito info
+            const userInfo = await handleGetCurrentUser();
+            await setAccess(userInfo.accessToken.payload["cognito:groups"]);
+            await setUserId(userInfo.accessToken.payload.sub);
         }
 
-        handleGenClient();
+        initializeApp();
     }, []);
 
     useEffect(() => {
@@ -63,32 +78,6 @@ const TabsContent = () =>
         if (client) { handleGetVehicles(); }
     }, [client])
 
-    // getters and setters
-    useEffect(() => {
-        const fetchUserData = async() => {
-            try {
-                // get and set user attributes
-                const userAtt = await fetchUserAttributes();
-                setEmail(userAtt?.email);
-                setName(userAtt?.name);
-                setPhoneNumber(userAtt?.phone_number);
-
-                // get and set cognito info
-                const userInfo = await handleGetCurrentUser();
-                setAccess(userInfo.accessToken.payload["cognito:groups"]);
-                setUserId(userInfo.accessToken.payload.sub);
-
-                // get push token for notifications
-                const genToken = await registerForPushNotifications();
-                setPushToken(genToken);
-            } catch (error) {
-                console.log('Error fetching data:', error);
-            }
-        };
-        
-        fetchUserData();
-    }, []);
-
     // Send to database
     useEffect(() => {
         const handleRegisterPushNotifications = async () => {
@@ -97,21 +86,20 @@ const TabsContent = () =>
                 const alreadyExists = await handleCheckUser(client, userId);
 
                 if (!alreadyExists) {
-                    await handleCreateUser(client, userId, token, access, name, email, phoneNumber);
+                    await handleCreateUser(client, userId, pushToken, access, name, email, phoneNumber);
                 } else {
-                    await handleUpdateUser(client, userId, token, access, name, email, phoneNumber);
+                    await handleUpdateUser(client, userId, pushToken, access, name, email, phoneNumber);
                 }
             } catch (error) {
                 console.error('Error registering for push notifications:', error);
-                setPushToken(error.message);
             }
         };
 
-        if (client && userId) {
+        if (client && userId && pushToken && access && name && email && phoneNumber) {
             handleRegisterPushNotifications();
         }
 
-    }, [client, userId, phoneNumber, name, email, access]);
+    }, [client, userId, pushToken, phoneNumber, name, email, access]);
 
     // Listeners for push notifications
     useEffect(() => {

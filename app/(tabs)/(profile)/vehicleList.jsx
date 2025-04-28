@@ -3,24 +3,28 @@ import { router } from 'expo-router';
 import { useApp } from '../../../components/context';
 import { ProfileStyles } from '../../../constants/styles';
 import { Ionicons } from '@expo/vector-icons';
-import Colors from '../../../constants/colors';
-import { handleCreateVehicle } from '../../../components/vehicleComponents';
 
 const VehicleList = () =>
 {
-    const { client, vehicles, setVehicles } = useApp();
+    const { vehicles } = useApp();
 
     return(
         <View style={ProfileStyles.page}>
             <View style={ProfileStyles.vehicleContainer}>
                 {vehicles?.length > 0 ? (
                     vehicles.map((vehicle, index) => (
-                        <View key={index} style={ProfileStyles.vehicleBox}>
+                        <TouchableOpacity
+                            key={index}
+                            onPress={() => router.push({
+                                pathname: 'vehicleEdit',
+                                params: { vehicleId: vehicle.id }
+                            })}
+                            style={ProfileStyles.vehicleBox}>
                             <Text style={{textAlign: 'center'}}>
                                 {vehicle.year} {vehicle.make} {vehicle.model}
                             </Text>
                             <Ionicons name='car-sport' size={30} />
-                        </View>
+                        </TouchableOpacity>
                     ))
                 ) : (
                     <View style={ProfileStyles.vehicleBox}>
@@ -29,7 +33,7 @@ const VehicleList = () =>
                 )}
 
                 <TouchableOpacity
-                    onPress={() => router.push('addVehicle')}
+                    onPress={() => router.push('vehicleAdd')}
                     style={ProfileStyles.addVehicle}>
                     <Ionicons name="add-circle" size={50} />
                 </TouchableOpacity>

@@ -20,7 +20,8 @@ const Index = () =>
     const checkPhone = async () => {
       try {
         const user = await fetchUserAttributes();
-        console.log(!user.phone_number);
+
+        // False if phone number exists || true if phone number doesn't exist
         setShowModal(!user.phone_number);
       } catch (error) {
         console.log('fetch user error: ', error);

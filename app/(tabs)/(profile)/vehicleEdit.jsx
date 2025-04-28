@@ -1,13 +1,16 @@
-import { TextInput, View, Text, TouchableOpacity } from 'react-native';
-import { useState } from 'react';
+import { TextInput, View, Text, TouchableOpacity, Alert } from 'react-native';
+import { useEffect, useState } from 'react';
 import { ProfileStyles } from '../../../constants/styles';
 import { AntDesign, FontAwesome, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { handleCreateVehicle } from '../../../components/vehicleComponents';
+import { handleDeleteVehicle, handleUpdateVehicle } from '../../../components/vehicleComponents';
+import { getVehicle } from '../../../src/graphql/queries';
 import { useApp } from '../../../components/context';
+import { useLocalSearchParams } from 'expo-router';
 
-const addVehicle = () =>
+const editVehicle = () =>
 {   
-    const { client, userId } = useApp();
+    const { vehicleId } = useLocalSearchParams();
+    const { client, userId, setVehicles } = useApp();
 
     const [ year, setYear ] = useState();
     const [ make, setMake ] = useState();
@@ -15,6 +18,25 @@ const addVehicle = () =>
     const [ color, setColor ] = useState();
     const [ plate, setPlate ] = useState();
     const [ vin, setVin ] = useState();
+
+    useEffect(() => {
+        const handleGetVehicle = async () =>
+        {
+            const currVehicle = await client.graphql({
+                query: getVehicle,
+                variables: { id: vehicleId }
+            });
+
+            setYear(currVehicle.data.getVehicle.year?.toString());
+            setMake(currVehicle.data.getVehicle.make);
+            setModel(currVehicle.data.getVehicle.model);
+            setColor(currVehicle.data.getVehicle.color);
+            setPlate(currVehicle.data.getVehicle?.plate);
+            setVin(currVehicle.data.getVehicle?.vin);
+        };
+
+        handleGetVehicle();
+    }, []);
 
     return (
         <View style={ProfileStyles.page}>
@@ -79,13 +101,31 @@ const addVehicle = () =>
                 </View>
                 <TouchableOpacity
                     style={ProfileStyles.actionButton}
-                    onPress={() => handleCreateVehicle(client, {year, make, model, color, plate, vin}, userId)}
+                    onPress={() => handleUpdateVehicle(client, {year, make, model, color, plate, vin}, vehicleId, setVehicles)}
                 >
-                    <Text style={{textAlign: 'center', color: 'white'}}>Add</Text>
+                    <Text style={{textAlign: 'center', color: 'white'}}>Update</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={[ProfileStyles.actionButton, {backgroundColor: 'red'}]}
+                    onPress={() => Alert.alert(
+                        'Confirm',
+                        'Are you sure you want to delete this vehicle?',
+                        [
+                            {
+                                text: 'Yes',
+                                onPress: () => handleDeleteVehicle(client, vehicleId, setVehicles)
+                            },
+                            {
+                                text: 'No',
+                            }
+                        ]
+                    )}
+                >
+                    <Text style={{textAlign: 'center', color: 'white'}}>Delete</Text>
                 </TouchableOpacity>
             </View>
         </View>
     );
 };
 
-export default addVehicle;
+export default editVehicle;

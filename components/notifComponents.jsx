@@ -178,7 +178,6 @@ const handleCustomerRequest = async (client, data) =>
         const title = 'Towing Request';
         const body = 'A customer is requesting a towing service';
         const pushTokens = await handleGetAdmins(client);
-        console.log(pushTokens);
         await sendPushNotifications(pushTokens, title, body, data);
     } catch (error) {
         console.log('CUSTOMER REQUEST ERROR:', error);

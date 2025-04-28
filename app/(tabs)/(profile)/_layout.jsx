@@ -13,7 +13,8 @@ const ProfileLayout = () =>
             <Stack.Screen name="contact" options={{title: "Contact Us", header: () => <CustHeader title="Contact Us" />}}/>
             <Stack.Screen name="deleteAccount" options={{title: "Account Deletion", header: () => <CustHeader title="Account Deletion" />}}/>
             <Stack.Screen name="vehicleList" options={{title: "My Vehicles", header: () => <CustHeader title="Vehicles" />}}/>
-            <Stack.Screen name="addVehicle" options={{title: "New Vehicle", header: () => <CustHeader title="New Vehicle" />}}/>
+            <Stack.Screen name="vehicleAdd" options={{title: "New Vehicle", header: () => <CustHeader title="New Vehicle" />}}/>
+            <Stack.Screen name="vehicleEdit" options={{title: "Edit Vehicle", header: () => <CustHeader title="Edit Vehicle" />}}/>
         </Stack>
     );
 }
