@@ -50,7 +50,7 @@ export const expo = {
     typedRoutes: true
   },
   extra: {
-    amplifyConfig: process.env.AMPLIFY_CONFIG ?? '../src/amplifyconfiguration.json',
+    amplifyConfig: process.env.AMPLIFY_CONFIG,
     router: {
       origin: false
     },

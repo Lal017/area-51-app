@@ -1,12 +1,14 @@
 import { Amplify } from 'aws-amplify';
-// import Constants from "expo-constants";
+import Constants from 'expo-constants';
 import amplifyconfig from '../src/amplifyconfiguration.json';
 import { Stack } from 'expo-router';
 import { setNotificationHandler } from 'expo-notifications';
 
-// const amplifyConfigFile = Constants.expoConfig?.extra?.amplifyConfig;
-
-Amplify.configure( amplifyconfig );
+if (Constants.expoConfig.extra.amplifyConfig === null){
+  Amplify.configure(Constants.expoConfig.extra.amplifyConfig);
+} else {
+  Amplify.configure(amplifyconfig);
+}
 
 setNotificationHandler({
   handleNotification: async () => ({
