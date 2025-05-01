@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import { Tabs} from "expo-router";
+import { router, Tabs} from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { CustHeader } from "../../components/components";
 import { Styles } from "../../constants/styles";
@@ -12,6 +12,7 @@ import Colors from "../../constants/colors";
 import { handleGetCurrentUser } from "../../components/authComponents";
 import { fetchUserAttributes } from "aws-amplify/auth";
 import { listVehicles } from "../../src/graphql/queries";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const TabsContent = () =>
 {
@@ -32,6 +33,7 @@ const TabsContent = () =>
         setEmail,
         phoneNumber,
         setPhoneNumber,
+        setRequest,
         setVehicles } = useApp();
 
     // notification listeners
@@ -59,6 +61,13 @@ const TabsContent = () =>
             const userInfo = await handleGetCurrentUser();
             await setAccess(userInfo.accessToken.payload["cognito:groups"]);
             await setUserId(userInfo.accessToken.payload.sub);
+
+            const savedNotif = await AsyncStorage.getItem('notification');
+            const savedRequest = await AsyncStorage.getItem('request');
+            if (savedNotif !== null) {
+                setNotification(JSON.parse(savedNotif));
+                setRequest(JSON.parse(savedRequest));
+            }
         }
 
         initializeApp();
@@ -105,12 +114,13 @@ const TabsContent = () =>
     useEffect(() => {
         // triggered when the notification is actually received. foreground and background
         notificationListener.current = addNotificationReceivedListener(notification => {
-            setNotification(notification);
+            console.log(notification.request.content);
+            setNotification(notification.request.content);
         });
 
         // triggered when the user taps on the notification
         responseListener.current = addNotificationResponseReceivedListener(response => {
-            console.log('RESPONSE:', response);
+            router.push('(home)');
         });
 
         return () => {
@@ -129,7 +139,7 @@ const TabsContent = () =>
                 tabBarShowLabel: false,
             }}>
             <Tabs.Screen
-                name="index"
+                name="(home)"
                 options={{
                 title: 'Home',
                 headerShown: true,

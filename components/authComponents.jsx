@@ -209,13 +209,13 @@ const GoogleSignInButton = ({text}) =>
     return(
         <TouchableOpacity
             onPress={() => handleSignInWithRedirect({providerName: 'Google'})}
-            style={AuthStyles.googleSignIn}
+            style={AuthStyles.providerSignIn}
         >
             <Image
                 source={require('../assets/images/google-icon.png')}
                 style={AuthStyles.signInImg}
             />
-            <Text style={AuthStyles.signInText}>{text}</Text>
+            <Text>{text}</Text>
         </TouchableOpacity>
     );
 };
@@ -225,13 +225,13 @@ const AmazonSignInButton = ({text}) =>
     return(
         <TouchableOpacity
             onPress={() => handleSignInWithRedirect({providerName: 'Amazon'})}
-            style={AuthStyles.amazonSignIn}
+            style={AuthStyles.providerSignIn}
         >
             <Image
                 source={require('../assets/images/amazon-icon.png')}
                 style={AuthStyles.signInImg}
             />
-            <Text style={AuthStyles.signInText}>{text}</Text>
+            <Text>{text}</Text>
         </TouchableOpacity>
     );
 };

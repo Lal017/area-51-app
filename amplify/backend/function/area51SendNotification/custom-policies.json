@@ -1,0 +1,10 @@
+[
+  {
+    "Action": [
+      "lambda:*"
+    ],
+    "Resource": [
+      "*"
+    ]
+  }
+]

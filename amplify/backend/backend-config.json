@@ -89,6 +89,21 @@
     }
   },
   "function": {
+    "area51SendNotification": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ],
+          "category": "api",
+          "resourceName": "area51app"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "troplocksmithappPostConfirmation": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -118,6 +133,22 @@
         {
           "category": "analytics",
           "resourceName": "Pinpoint"
+        }
+      ]
+    },
+    "AMPLIFY_function_area51SendNotification_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "area51SendNotification"
+        }
+      ]
+    },
+    "AMPLIFY_function_area51SendNotification_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "area51SendNotification"
         }
       ]
     },

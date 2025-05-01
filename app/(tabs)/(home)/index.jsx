@@ -1,15 +1,18 @@
-import { View, Text, TouchableOpacity, Modal, KeyboardAvoidingView, TextInput, StatusBar } from "react-native";
-import { HomeStyles, AuthStyles } from "../../constants/styles";
+import { View, Text, TouchableOpacity, Modal, KeyboardAvoidingView, TextInput, StatusBar, ScrollView } from "react-native";
+import { HomeStyles, AuthStyles, ScheduleStyles } from "../../../constants/styles";
 import { useState, useEffect } from "react";
 import { fetchUserAttributes } from 'aws-amplify/auth';
-import { handleUpdatePhone } from '../../components/authComponents';
-import { useApp } from "../../components/context";
+import { handleUpdatePhone } from '../../../components/authComponents';
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useApp } from "../../../components/context";
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
+import LottieView from "lottie-react-native";
 
 // Home page after login
 const Index = () =>
 {
-  const { setPhoneNumber } = useApp();
+  const { setPhoneNumber, request, notification, clearNotification } = useApp();
 
   const [newPhoneNumber, setNewPhoneNumber] = useState();
   const [showModal, setShowModal] = useState(false);
@@ -43,7 +46,7 @@ const Index = () =>
   };
 
   return (
-    <View style={HomeStyles.page}>
+    <ScrollView contentContainerStyle={HomeStyles.page}>
       <StatusBar hidden={true}/>
       <Modal
         visible={showModal}
@@ -72,7 +75,45 @@ const Index = () =>
           </View>
         </KeyboardAvoidingView>
       </Modal>
-    </View>
+      <View style={HomeStyles.main}>
+        { !request ? (
+          <TouchableOpacity
+            onPress={() => router.push('towRequest')}
+            style={HomeStyles.towButton}
+          >
+            <Text style={[HomeStyles.title, {color: 'white'}]}>Request a tow</Text>
+            <LottieView
+              source={require('../../../assets/animations/ufo.json')}
+              loop
+              autoPlay
+              style={{width: 100, height: 100}}
+              speed={0.5}
+            />
+          </TouchableOpacity>
+        ) : (
+          <View style={HomeStyles.notifWrapper}>
+            <View style={HomeStyles.titleWrapper}>
+              <Text style={HomeStyles.subTitle}>Tow Request</Text>
+              <LottieView
+                source={require('../../../assets/animations/gear.json')}
+                loop
+                autoPlay
+                style={{width: 50, height: 50}}
+              />
+            </View>
+            <Text style={HomeStyles.text}>
+              Your request is being processed.
+              We'll notify you with a price and estimated wait time shortly.
+            </Text>
+            <TouchableOpacity
+              onPress={clearNotification}
+            >
+              <Text>remove notification</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </View>
+    </ScrollView>
   );
 }
 

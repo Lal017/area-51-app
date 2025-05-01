@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "api": {
+      "area51app": [
+        "Query",
+        "Mutation"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}

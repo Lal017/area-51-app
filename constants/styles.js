@@ -105,7 +105,8 @@ const AuthStyles = StyleSheet.create({
         backgroundColor: Auth.primary,
         padding: 10,
         width: 300,
-        borderRadius: 25
+        borderRadius: 25,
+        elevation: 5,
     },
     shiftButton: {
         borderWidth: 0,
@@ -127,101 +128,178 @@ const AuthStyles = StyleSheet.create({
         width: 25,
         height: 25,
     },
-    googleSignIn: {
+    providerSignIn: {
         backgroundColor: 'white',
         borderWidth: 1,
-        padding: 5,
-        borderRadius: 20,
+        width: '35%',
+        padding: 10,
+        paddingLeft: 10,
+        paddingRight: 10,
+        borderRadius: 25,
         flexDirection: 'row',
         columnGap: 0,
         alignItems: 'center',
+        justifyContent: 'center',
+        elevation: 4,
     },
-    amazonSignIn: {
-        backgroundColor: 'white',
-        borderWidth: 1,
-        padding: 5,
-        borderRadius: 20,
-        flexDirection: 'row',
-        columnGap: 0,
-        alignItems: 'center',
-    },
-    signInText: {
-        padding: 5,
-    }
 });
 
 const HomeStyles = StyleSheet.create({
     page: {
-        flex: 1,
-        backgroundColor: Colors.background,
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-    },
-    input: {
-        backgroundColor: Colors.backgroundAccent,
-        height: 45,
-        width: 250,
-        paddingLeft: 40,
-        borderWidth: 1,
-    },
-    request: {
-        backgroundColor: Colors.secondary,
-        width: 250,
-        height: 50,
+        backgroundColor: Auth.background,
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 10,
-        marginTop: 20,
+        rowGap: 50,
+        paddingTop: 25,
+        paddingBottom: 50,
+    },
+    main: {
+        paddingBottom: 50,
+        width: '100%',
+        rowGap: 20,
+    },
+    towButton: {
+        backgroundColor: Colors.secondary,
+        width: '100%',
+        elevation: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 25,
+        rowGap: 20,
+    },
+    title: {
+        fontSize: 25,
+        textAlign: 'center',
+        width: '75%'
+    },
+    subTitle: {
+        fontSize: 20,
+        textAlign: 'left',
+    },
+    text: {
+        fontSize: 20,
+        textAlign: 'left',
+        fontWeight: '100',
+    },
+    selectionContainer: {
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        rowGap: 35,
+        elevation: 10,
+    },
+    vehicleSelectContainer: {
+        width: '100%',
+    },
+    vehicleSelect: {
+        backgroundColor: Colors.background,
+        width: '100%',
+        alignItems: 'center',
+        height: 75,
+        elevation: 10,
+        paddingLeft: 75,
+        flexDirection: 'row',
+        position: 'relative',
+    },
+    vehicleWrapper: {
+        flexDirection: 'row',
+        position: 'relative',
+    },
+    icon: {
+        position: 'absolute',
+        left: 15,
+        zIndex: 1,
+    },
+    circle: {
+        right: 20,
+        zIndex: 1,
+        position: 'absolute',
+    },
+    inputContainer: {
+        width: '100%',
+        alignItems: 'center',
+        rowGap: 25,
+        paddingLeft: 50,
+        paddingRight: 50,
+    },
+    inputWrapper: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        position: 'relative',
+    },
+    icon: {
+        position: 'absolute',
+        left: 15,
+        top: 15,
+        zIndex: 1,
+    },
+    input: {
+        backgroundColor: Colors.background,
+        width: 350,
+        height: 150,
+        paddingLeft: 50,
+        borderWidth: 1,
+        borderRadius: 25,
+        textAlign: 'left',
+        textAlignVertical: 'top',
+        paddingTop: 15,
+    },
+    actionButton: {
+        backgroundColor: Colors.secondary,
+        borderRadius: 25,
+        elevation: 5,
+        padding: 10,
+        width: 250,
+    },
+    descriptionContainer: {
+        width: '100%',
+        justifyContent: 'center',
+        paddingLeft: 50,
+        paddingRight: 50,
+        rowGap: 20,
+    },
+    notifWrapper: {
+        width: '100%',
+        elevation: 10,
+        backgroundColor: Colors.background,
+        padding: 20,
+        rowGap: 20,
+        alignItems: 'left',
+    },
+    titleWrapper: {
+        flexDirection: 'row',
+        alignItems: 'center',
     }
 });
 
-const RequestStyles = StyleSheet.create({
+const ScheduleStyles = StyleSheet.create({
     page: {
-        backgroundColor: Colors.background,
-        alignItems: 'center',
-        justifyContent: 'space-evenly',
+        backgroundColor: Auth.background,
+        justifyContent: 'center',
         rowGap: 20,
         paddingTop: 50,
         paddingBottom: 50,
     },
-    container: {
-        backgroundColor: Colors.secondary,
-        borderRadius: 15,
-        justifyContent: 'center',
-        alignItems: 'center',
+    calendarContainer: {
+        backgroundColor: Colors.background,
+        width: '100%',
+        elevation: 10,
+    },
+    timeContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-evenly',
+        width: '100%',
         paddingTop: 50,
-        paddingBottom: 50,
-        width: '75%',
-        rowGap: 50,
+        rowGap: 25,
     },
-    title: {
-        color: Colors.text,
-        fontSize: 25,
-        textAlign: 'center',
-    },
-    messageContainer: {
-        rowGap: 10,
-    },
-    inputTitle: {
+    timeBox: {
         backgroundColor: Colors.background,
+        elevation: 10,
+        padding: 25,
+        width: '45%',
         borderWidth: 1,
-        width: '75%',
-        height: 40,
-        paddingLeft: 10,
-    },
-    inputMessage: {
-        backgroundColor: Colors.background,
-        borderWidth: 1,
-        width: '75%',
-        height: 200,
-        paddingLeft: 10,
-        paddingTop: 10,
-        textAlignVertical: 'top',
-    },
-    actionButton: {
-        backgroundColor: Colors.tertiary,
-        padding: 10,
-        width: 100,
+        borderRadius: 25,
     }
 });
 
@@ -393,4 +471,4 @@ const ProfileStyles = StyleSheet.create({
     }
 });
 
-export { Styles, AuthStyles, HomeStyles, RequestStyles, ProfileStyles };
+export { Styles, AuthStyles, HomeStyles, ScheduleStyles, ProfileStyles };

@@ -17,8 +17,21 @@ export const onCreateUser = /* GraphQL */ `
         nextToken
         __typename
       }
+      appointment {
+        id
+        date
+        time
+        service
+        notes
+        createdAt
+        updatedAt
+        appointmentVehicleId
+        owner
+        __typename
+      }
       createdAt
       updatedAt
+      userAppointmentId
       owner
       __typename
     }
@@ -40,8 +53,21 @@ export const onUpdateUser = /* GraphQL */ `
         nextToken
         __typename
       }
+      appointment {
+        id
+        date
+        time
+        service
+        notes
+        createdAt
+        updatedAt
+        appointmentVehicleId
+        owner
+        __typename
+      }
       createdAt
       updatedAt
+      userAppointmentId
       owner
       __typename
     }
@@ -63,8 +89,21 @@ export const onDeleteUser = /* GraphQL */ `
         nextToken
         __typename
       }
+      appointment {
+        id
+        date
+        time
+        service
+        notes
+        createdAt
+        updatedAt
+        appointmentVehicleId
+        owner
+        __typename
+      }
       createdAt
       updatedAt
+      userAppointmentId
       owner
       __typename
     }
@@ -128,6 +167,105 @@ export const onDeleteVehicle = /* GraphQL */ `
       createdAt
       updatedAt
       userVehiclesId
+      owner
+      __typename
+    }
+  }
+`;
+export const onCreateAppointment = /* GraphQL */ `
+  subscription OnCreateAppointment(
+    $filter: ModelSubscriptionAppointmentFilterInput
+    $owner: String
+  ) {
+    onCreateAppointment(filter: $filter, owner: $owner) {
+      id
+      date
+      time
+      service
+      notes
+      vehicle {
+        id
+        year
+        make
+        model
+        color
+        plate
+        vin
+        createdAt
+        updatedAt
+        userVehiclesId
+        owner
+        __typename
+      }
+      createdAt
+      updatedAt
+      appointmentVehicleId
+      owner
+      __typename
+    }
+  }
+`;
+export const onUpdateAppointment = /* GraphQL */ `
+  subscription OnUpdateAppointment(
+    $filter: ModelSubscriptionAppointmentFilterInput
+    $owner: String
+  ) {
+    onUpdateAppointment(filter: $filter, owner: $owner) {
+      id
+      date
+      time
+      service
+      notes
+      vehicle {
+        id
+        year
+        make
+        model
+        color
+        plate
+        vin
+        createdAt
+        updatedAt
+        userVehiclesId
+        owner
+        __typename
+      }
+      createdAt
+      updatedAt
+      appointmentVehicleId
+      owner
+      __typename
+    }
+  }
+`;
+export const onDeleteAppointment = /* GraphQL */ `
+  subscription OnDeleteAppointment(
+    $filter: ModelSubscriptionAppointmentFilterInput
+    $owner: String
+  ) {
+    onDeleteAppointment(filter: $filter, owner: $owner) {
+      id
+      date
+      time
+      service
+      notes
+      vehicle {
+        id
+        year
+        make
+        model
+        color
+        plate
+        vin
+        createdAt
+        updatedAt
+        userVehiclesId
+        owner
+        __typename
+      }
+      createdAt
+      updatedAt
+      appointmentVehicleId
       owner
       __typename
     }

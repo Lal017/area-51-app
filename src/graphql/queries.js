@@ -14,8 +14,21 @@ export const getUser = /* GraphQL */ `
         nextToken
         __typename
       }
+      appointment {
+        id
+        date
+        time
+        service
+        notes
+        createdAt
+        updatedAt
+        appointmentVehicleId
+        owner
+        __typename
+      }
       createdAt
       updatedAt
+      userAppointmentId
       owner
       __typename
     }
@@ -37,6 +50,7 @@ export const listUsers = /* GraphQL */ `
         pushToken
         createdAt
         updatedAt
+        userAppointmentId
         owner
         __typename
       }
@@ -81,6 +95,60 @@ export const listVehicles = /* GraphQL */ `
         createdAt
         updatedAt
         userVehiclesId
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getAppointment = /* GraphQL */ `
+  query GetAppointment($id: ID!) {
+    getAppointment(id: $id) {
+      id
+      date
+      time
+      service
+      notes
+      vehicle {
+        id
+        year
+        make
+        model
+        color
+        plate
+        vin
+        createdAt
+        updatedAt
+        userVehiclesId
+        owner
+        __typename
+      }
+      createdAt
+      updatedAt
+      appointmentVehicleId
+      owner
+      __typename
+    }
+  }
+`;
+export const listAppointments = /* GraphQL */ `
+  query ListAppointments(
+    $filter: ModelAppointmentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAppointments(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        date
+        time
+        service
+        notes
+        createdAt
+        updatedAt
+        appointmentVehicleId
         owner
         __typename
       }

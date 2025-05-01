@@ -1,38 +1,9 @@
 import { Alert } from 'react-native';
 import { createUser, updateUser, deleteUser } from '../src/graphql/mutations';
-import { listUsers, getUser } from '../src/graphql/queries';
+import { getUser } from '../src/graphql/queries';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import Constants from 'expo-constants';
-
-// Expo notif functions
-const sendPushNotifications = async (expoPushToken, title, body, data) =>
-{
-    const message = {
-        to: expoPushToken,
-        sound: 'default',
-        title: title,
-        body: body,
-        data: { data }
-    };
-
-    console.log(message);
-
-    try {
-        await fetch('https://exp.host/--/api/v2/push/send', {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Accept-Encoding': 'gzip, deflate',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(message),
-        });
-        console.log('sent');
-    } catch (error) {
-        console.error('Error sending push notification:', error);
-    }
-};
 
 const handleRegistrationError = (errMessage) =>
 {
@@ -148,12 +119,6 @@ const handleDeleteUser = async (client, user_id) =>
     }
 };
 
-// cleanup unregistered devices in the database
-const handleCleanupPushTokens = async () =>
-{
-    // code here
-};
-
 // check if user entry already exists
 const handleCheckUser = async (client, userId) =>
 {
@@ -172,36 +137,37 @@ const handleCheckUser = async (client, userId) =>
     return alreadyExists;
 };
 
-const handleCustomerRequest = async (client, data) =>
+const handleCustomerRequest = async (notes, vehicle, customer, setRequest) =>
 {
     try {
-        const title = 'Towing Request';
-        const body = 'A customer is requesting a towing service';
-        const pushTokens = await handleGetAdmins(client);
-        await sendPushNotifications(pushTokens, title, body, data);
-    } catch (error) {
-        console.log('CUSTOMER REQUEST ERROR:', error);
-    }
-}
-
-// gets push tokens from admins to send a request
-const handleGetAdmins = async (client) =>
-{
-    try {
-        const result = await client.graphql({
-            query: listUsers,
-            variables: {
-                filter: {
-                    access: {
-                        eq: 'Admins'
-                    }
-                }
-            }
+        const response = await fetch('https://a7ti3pg5r5kuu34bdl3osmwotq0gajtp.lambda-url.us-east-2.on.aws/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                title: 'Towing Request',
+                content: 'A customer has requested a tow',
+                data: {
+                    notes: notes,
+                    vehicle: vehicle,
+                    userId: customer.userId,
+                    name: customer.name,
+                    email: customer.email,
+                    phoneNumber: customer.phoneNumber
+                }})
         });
 
-        return result.data.listUsers.items.map(item => item.pushToken);
+        const result = await response.json();
+
+        if (result?.data?.listUsers?.items?.length > 0) {
+            console.log('REQUEST SENT SUCCESSFULLY:', result);
+            setRequest(true);
+        } else {
+            console.log('REQUEST FAILED:', result);
+        }
     } catch (error) {
-        console.log('GET ADMINS ERROR:', error);
+        console.log('CUSTOMER REQUEST ERROR:', error);
     }
 };
 
@@ -211,6 +177,5 @@ export {
     handleCreateUser,
     handleUpdateUser,
     handleDeleteUser,
-    handleGetAdmins,
     handleCheckUser
 };

@@ -23,6 +23,13 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "function": {
+    "area51SendNotification": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
     "troplocksmithappPostConfirmation": {
       "Arn": "string",
       "LambdaExecutionRole": "string",

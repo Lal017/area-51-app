@@ -39,6 +39,10 @@
           "GROUP": "Customers",
           "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
           "s3Key": "amplify-builds/troplocksmithappPostConfirmation-68475271663638536762-build.zip"
+        },
+        "area51SendNotification": {
+          "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
+          "s3Key": "amplify-builds/area51SendNotification-6f31776c46327a387945-build.zip"
         }
       }
     }

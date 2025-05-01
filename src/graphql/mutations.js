@@ -19,6 +19,7 @@ export const createUser = /* GraphQL */ `
       }
       createdAt
       updatedAt
+      userAppointmentId
       owner
       __typename
     }
@@ -42,6 +43,7 @@ export const updateUser = /* GraphQL */ `
       }
       createdAt
       updatedAt
+      userAppointmentId
       owner
       __typename
     }
@@ -65,6 +67,7 @@ export const deleteUser = /* GraphQL */ `
       }
       createdAt
       updatedAt
+      userAppointmentId
       owner
       __typename
     }
@@ -128,6 +131,105 @@ export const deleteVehicle = /* GraphQL */ `
       createdAt
       updatedAt
       userVehiclesId
+      owner
+      __typename
+    }
+  }
+`;
+export const createAppointment = /* GraphQL */ `
+  mutation CreateAppointment(
+    $input: CreateAppointmentInput!
+    $condition: ModelAppointmentConditionInput
+  ) {
+    createAppointment(input: $input, condition: $condition) {
+      id
+      date
+      time
+      service
+      notes
+      vehicle {
+        id
+        year
+        make
+        model
+        color
+        plate
+        vin
+        createdAt
+        updatedAt
+        userVehiclesId
+        owner
+        __typename
+      }
+      createdAt
+      updatedAt
+      appointmentVehicleId
+      owner
+      __typename
+    }
+  }
+`;
+export const updateAppointment = /* GraphQL */ `
+  mutation UpdateAppointment(
+    $input: UpdateAppointmentInput!
+    $condition: ModelAppointmentConditionInput
+  ) {
+    updateAppointment(input: $input, condition: $condition) {
+      id
+      date
+      time
+      service
+      notes
+      vehicle {
+        id
+        year
+        make
+        model
+        color
+        plate
+        vin
+        createdAt
+        updatedAt
+        userVehiclesId
+        owner
+        __typename
+      }
+      createdAt
+      updatedAt
+      appointmentVehicleId
+      owner
+      __typename
+    }
+  }
+`;
+export const deleteAppointment = /* GraphQL */ `
+  mutation DeleteAppointment(
+    $input: DeleteAppointmentInput!
+    $condition: ModelAppointmentConditionInput
+  ) {
+    deleteAppointment(input: $input, condition: $condition) {
+      id
+      date
+      time
+      service
+      notes
+      vehicle {
+        id
+        year
+        make
+        model
+        color
+        plate
+        vin
+        createdAt
+        updatedAt
+        userVehiclesId
+        owner
+        __typename
+      }
+      createdAt
+      updatedAt
+      appointmentVehicleId
       owner
       __typename
     }
