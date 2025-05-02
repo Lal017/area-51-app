@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "paths": {
+    "/sendCustomerNotif": {
+      "name": "/sendCustomerNotif",
+      "lambdaFunction": "area51SendNotification",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "read"
+        ]
+      }
+    }
+  }
+}

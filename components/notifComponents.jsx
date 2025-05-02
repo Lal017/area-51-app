@@ -1,6 +1,7 @@
 import { Alert } from 'react-native';
 import { createUser, updateUser, deleteUser } from '../src/graphql/mutations';
 import { getUser } from '../src/graphql/queries';
+import { post } from 'aws-amplify/api';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import Constants from 'expo-constants';
@@ -70,7 +71,8 @@ const handleCreateUser = async (client, user_id, token, user_access, name, email
                     name: name,
                     email: email,
                     phone: phoneNumber
-                } }
+                }
+            }
         });
         console.log('token created');
     } catch (error) {
@@ -102,7 +104,7 @@ const handleUpdateUser = async (client, user_id, token, user_access, name, email
     }
 };
 
-// used to delete the clients push token when they delete there account
+// used to delete the clients database entry when they delete there account
 const handleDeleteUser = async (client, user_id) =>
 {
     try {
@@ -140,31 +142,34 @@ const handleCheckUser = async (client, userId) =>
 const handleCustomerRequest = async (notes, vehicle, customer, setRequest) =>
 {
     try {
-        const response = await fetch('https://a7ti3pg5r5kuu34bdl3osmwotq0gajtp.lambda-url.us-east-2.on.aws/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                title: 'Towing Request',
-                content: 'A customer has requested a tow',
-                data: {
-                    notes: notes,
-                    vehicle: vehicle,
-                    userId: customer.userId,
-                    name: customer.name,
-                    email: customer.email,
-                    phoneNumber: customer.phoneNumber
-                }})
+        const restOperation = post({
+            apiName: 'area51RestApi',
+            path: '/sendCustomerNotif',
+            authMode: 'AWS_IAM',
+            options: {
+                body: {
+                    title: 'Towing Request',
+                    content: 'A customer has requested a tow',
+                    data: {
+                        notes: notes,
+                        vehicle: vehicle,
+                        userId: customer.userId,
+                        name: customer.name,
+                        email: customer.email,
+                        phoneNumber: customer.phoneNumber
+                    }
+                }
+            }
         });
 
-        const result = await response.json();
+        const { body } = await restOperation.response;
+        const response = await body.json();
 
-        if (result?.data?.listUsers?.items?.length > 0) {
-            console.log('REQUEST SENT SUCCESSFULLY:', result);
+        if (response?.data?.listUsers?.items?.length > 0) {
+            console.log('REQUEST SENT SUCCESSFULLY:', response);
             setRequest(true);
         } else {
-            console.log('REQUEST FAILED:', result);
+            console.log('REQUEST FAILED:', response);
         }
     } catch (error) {
         console.log('CUSTOMER REQUEST ERROR:', error);

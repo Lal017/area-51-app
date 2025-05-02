@@ -5,7 +5,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { Link } from 'expo-router';
 import { AuthStyles, Styles } from '../../constants/styles';
 import { GoogleSignInButton, AmazonSignInButton } from '../../components/authComponents';
-import Colors from '../../constants/colors';
 
 const signIn = () =>
 {

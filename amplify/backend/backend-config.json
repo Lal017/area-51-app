@@ -1,6 +1,20 @@
 {
   "analytics": {},
   "api": {
+    "area51RestApi": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "area51SendNotification"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    },
     "area51app": {
       "dependsOn": [
         {

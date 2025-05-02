@@ -37,6 +37,7 @@ type Appointment
   @auth(rules: [
     {allow: owner},
     {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]},
+    {allow: private, provider: iam}
   ])
 {
   id: ID!
