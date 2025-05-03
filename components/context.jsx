@@ -20,7 +20,6 @@ const AppProvider = ({ children }) => {
     try {
       if (requestBool) {
         await AsyncStorage.setItem('request', requestBool.toString());
-        console.log('set');
       } else {
         await AsyncStorage.removeItem('request');
         console.log('deleted');
@@ -49,6 +48,7 @@ const AppProvider = ({ children }) => {
   {
     try {
       await AsyncStorage.removeItem('notification');
+      await AsyncStorage.removeItem('request');
       setNotification(null);
       setRequest(false);
     } catch (error) {

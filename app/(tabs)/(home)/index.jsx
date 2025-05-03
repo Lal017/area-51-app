@@ -3,9 +3,8 @@ import { HomeStyles, AuthStyles, ScheduleStyles } from "../../../constants/style
 import { useState, useEffect } from "react";
 import { fetchUserAttributes } from 'aws-amplify/auth';
 import { handleUpdatePhone } from '../../../components/authComponents';
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useApp } from "../../../components/context";
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import LottieView from "lottie-react-native";
 
@@ -90,6 +89,22 @@ const Index = () =>
               speed={0.5}
             />
           </TouchableOpacity>
+        ) : request && notification ? (
+          <View style={HomeStyles.notifWrapper}>
+            <View style={[HomeStyles.titleWrapper, {columnGap: 10}]}>
+              <Text style={HomeStyles.subTitle}>Tow Request</Text>
+              <FontAwesome name="check" size={25} color='black'/>
+            </View>
+            <Text style={HomeStyles.subTitle}>Price:</Text>
+            <Text style={HomeStyles.text}>{notification.data.price}</Text>
+            <Text style={HomeStyles.subTitle}>Wait Time:</Text>
+            <Text style={HomeStyles.text}>{notification.data.waitTime}</Text>
+            <TouchableOpacity
+              onPress={clearNotification}
+            >
+              <Text>remove notification</Text>
+            </TouchableOpacity>
+          </View>
         ) : (
           <View style={HomeStyles.notifWrapper}>
             <View style={HomeStyles.titleWrapper}>

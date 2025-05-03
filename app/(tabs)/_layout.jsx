@@ -64,10 +64,9 @@ const TabsContent = () =>
 
             const savedNotif = await AsyncStorage.getItem('notification');
             const savedRequest = await AsyncStorage.getItem('request');
-            if (savedNotif !== null) {
-                setNotification(JSON.parse(savedNotif));
-                setRequest(JSON.parse(savedRequest));
-            }
+            
+            setNotification(JSON.parse(savedNotif));
+            setRequest(JSON.parse(savedRequest));
         }
 
         initializeApp();
