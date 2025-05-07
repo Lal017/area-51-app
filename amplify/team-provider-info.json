@@ -40,11 +40,15 @@
         "troplocksmithappPostConfirmation": {
           "GROUP": "Customers",
           "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
-          "s3Key": "amplify-builds/troplocksmithappPostConfirmation-68475271663638536762-build.zip"
+          "s3Key": "amplify-builds/troplocksmithappPostConfirmation-797373555a7967487a42-build.zip"
         },
         "area51SendNotification": {
           "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
-          "s3Key": "amplify-builds/area51SendNotification-6f31776c46327a387945-build.zip"
+          "s3Key": "amplify-builds/area51SendNotification-4d755a68353972737067-build.zip"
+        },
+        "area51GetAppointments": {
+          "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
+          "s3Key": "amplify-builds/area51GetAppointments-4e684f4c49534b595665-build.zip"
         }
       }
     }

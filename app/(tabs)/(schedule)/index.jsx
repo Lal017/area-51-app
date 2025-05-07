@@ -1,47 +1,41 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView } from "react-native";
-import { ScheduleStyles } from "../../../constants/styles";
+import { ScheduleStyles, HomeStyles } from "../../../constants/styles";
 import { Calendar } from "react-native-calendars";
+import { handleGetAppointments, handleSetDay, handleCreateAppointment } from '../../../components/scheduleComponents';
 import Colors from '../../../constants/colors';
-
-const TIME_SLOTS = [
-{
-  time: '09:00 AM',
-  value: '09:00:00'
-},
-{
-  time: '10:00 AM',
-  value: '10:00:00'
-},
-{
-  time: '11:00 AM',
-  value: '11:00:00'
-},
-{
-  time: '12:00 PM',
-  value: '12:00:00'
-},
-{
-  time: '01:00 PM',
-  value: '13:00:00'
-},
-{
-  time: '02:00 PM',
-  value: '14:00:00'
-},
-{
-  time: '03:00 PM',
-  value: '15:00:00'
-},
-{
-  time: '04:00 PM',
-  value: '16:00:00'
-}
-];
+import { Picker } from '@react-native-picker/picker';
+import { MaterialIcons, Ionicons, FontAwesome } from '@expo/vector-icons';
+import { useApp } from '../../../components/context';
 
 const Schedule = () =>
 {
-  const [selected, setSelected] = useState();
+  const { client, vehicles, userId } = useApp();
+
+  const [selectedDay, setSelectedDay] = useState();
+  const [selectedTime, setSelectedTime] = useState();
+  const [selectedService, setSelectedService] = useState();
+  const [selectedVehicle, setSelectedVehicle] = useState();
+  const [scheduledAppointments, setScheduledAppointments] = useState();
+  const [availableAppointments, setAvailableAppointments] = useState();
+  const [notes, setNotes] = useState();
+
+  useEffect(() => {
+    const initializeAppointments = async () =>
+    {
+      const scheduled = await handleGetAppointments();
+      setScheduledAppointments(scheduled);
+    };
+
+    initializeAppointments();
+  }, []);
+
+  const handleDayPress = async (day) =>
+  {
+    setSelectedDay(day.dateString);
+    const getDay = await handleSetDay(scheduledAppointments, day.dateString);
+    setAvailableAppointments(getDay);
+  }
 
   return (
     <ScrollView contentContainerStyle={ScheduleStyles.page}>
@@ -51,25 +45,99 @@ const Schedule = () =>
             todayTextColor: 'black'
           }}
           minDate={new Date().toDateString()}
-          onDayPress={day => { setSelected(day.dateString); }}
+          onDayPress={day => handleDayPress(day)}
           enableSwipeMonths={true}
           markedDates={{
-            [selected]: {
+            [selectedDay]: {
               selected: true,
               selectedColor: Colors.primary,
             }
           }}
         />
       </View>
-      <View style={ScheduleStyles.timeContainer}>
-        {TIME_SLOTS.map((time, index) => (
+      <ScrollView
+        contentContainerStyle={ScheduleStyles.timeContainer}
+        horizontal={true}
+      >
+        {availableAppointments?.map((time, index) => (
           <TouchableOpacity
             key={index}
-            style={ScheduleStyles.timeBox}
+            onPress={() => setSelectedTime(time)}
+            style={[
+              ScheduleStyles.timeBox,
+              selectedTime === time && {
+                backgroundColor: Colors.secondary
+              }
+            ]}
           >
-            <Text style={{textAlign: 'center'}}>{time.time}</Text>
+            <Text style={[
+              selectedTime === time && {
+                color: 'white'
+              }
+            ]}
+            >{time.time}</Text>
           </TouchableOpacity>
         ))}
+      </ScrollView>
+      <View style={ScheduleStyles.scheduleContainer}>
+        <View style={HomeStyles.vehicleSelectContainer}>
+          {vehicles?.map((vehicle, index) => (
+            <TouchableOpacity
+              key={index}
+              style={[
+                HomeStyles.vehicleSelect,
+                selectedVehicle === vehicle && {
+                  backgroundColor: Colors.secondary,
+                }
+              ]}
+              onPress={() => setSelectedVehicle(vehicle)}
+            >
+              <Ionicons
+                name="car-sport"
+                size={30}
+                style={HomeStyles.icon}
+                color={selectedVehicle === vehicle ? 'white' : 'black'}
+              />
+              <Text style={selectedVehicle === vehicle && {
+                color: Colors.background
+              }}>{vehicle.year} {vehicle.make} {vehicle.model}</Text>
+              <FontAwesome
+                name={selectedVehicle === vehicle ? "circle" : "circle-o"}
+                size={30}
+                style={HomeStyles.circle}
+              />
+            </TouchableOpacity>
+          ))}
+        </View>
+        <View style={ScheduleStyles.picker}>
+          <Picker
+            selectedValue={selectedService}
+            onValueChange={service => setSelectedService(service)}
+          >
+            <Picker.Item label='Select a service' value={0} enabled={false} color='gray'/>
+            <Picker.Item label='Oil Change' value={'Oil Change'} />
+            <Picker.Item label='Tuning' value={'Tuning'} />
+            <Picker.Item label='Diagnosis' value={'Diagnosis'} />
+            <Picker.Item label='Other' value={'Other'} />
+          </Picker>
+        </View>
+        <View style={ScheduleStyles.inputContainer}>
+          <View style={ScheduleStyles.inputWrapper}>
+            <MaterialIcons name='notes' size={30} style={ScheduleStyles.icon} />
+            <TextInput
+              placeholder='description'
+              value={notes}
+              onChangeText={setNotes}
+              style={ScheduleStyles.input}
+            />
+          </View>
+        </View>
+        <TouchableOpacity
+          onPress={() => handleCreateAppointment(client, selectedDay, selectedTime.value, selectedService, notes, userId, selectedVehicle.id)}
+          style={ScheduleStyles.actionButton}
+        >
+          <Text style={{textAlign: 'center', color: 'white'}}>Schedule</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   )

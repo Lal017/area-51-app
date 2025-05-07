@@ -17,21 +17,12 @@ export const onCreateUser = /* GraphQL */ `
         nextToken
         __typename
       }
-      appointment {
-        id
-        date
-        time
-        service
-        notes
-        createdAt
-        updatedAt
-        appointmentVehicleId
-        owner
+      appointments {
+        nextToken
         __typename
       }
       createdAt
       updatedAt
-      userAppointmentId
       owner
       __typename
     }
@@ -53,21 +44,12 @@ export const onUpdateUser = /* GraphQL */ `
         nextToken
         __typename
       }
-      appointment {
-        id
-        date
-        time
-        service
-        notes
-        createdAt
-        updatedAt
-        appointmentVehicleId
-        owner
+      appointments {
+        nextToken
         __typename
       }
       createdAt
       updatedAt
-      userAppointmentId
       owner
       __typename
     }
@@ -89,21 +71,12 @@ export const onDeleteUser = /* GraphQL */ `
         nextToken
         __typename
       }
-      appointment {
-        id
-        date
-        time
-        service
-        notes
-        createdAt
-        updatedAt
-        appointmentVehicleId
-        owner
+      appointments {
+        nextToken
         __typename
       }
       createdAt
       updatedAt
-      userAppointmentId
       owner
       __typename
     }
@@ -122,9 +95,21 @@ export const onCreateVehicle = /* GraphQL */ `
       color
       plate
       vin
+      userId
+      user {
+        id
+        access
+        name
+        email
+        phone
+        pushToken
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
       createdAt
       updatedAt
-      userVehiclesId
       owner
       __typename
     }
@@ -143,9 +128,21 @@ export const onUpdateVehicle = /* GraphQL */ `
       color
       plate
       vin
+      userId
+      user {
+        id
+        access
+        name
+        email
+        phone
+        pushToken
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
       createdAt
       updatedAt
-      userVehiclesId
       owner
       __typename
     }
@@ -164,9 +161,21 @@ export const onDeleteVehicle = /* GraphQL */ `
       color
       plate
       vin
+      userId
+      user {
+        id
+        access
+        name
+        email
+        phone
+        pushToken
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
       createdAt
       updatedAt
-      userVehiclesId
       owner
       __typename
     }
@@ -183,6 +192,20 @@ export const onCreateAppointment = /* GraphQL */ `
       time
       service
       notes
+      userId
+      user {
+        id
+        access
+        name
+        email
+        phone
+        pushToken
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      vehicleId
       vehicle {
         id
         year
@@ -191,15 +214,14 @@ export const onCreateAppointment = /* GraphQL */ `
         color
         plate
         vin
+        userId
         createdAt
         updatedAt
-        userVehiclesId
         owner
         __typename
       }
       createdAt
       updatedAt
-      appointmentVehicleId
       owner
       __typename
     }
@@ -216,6 +238,20 @@ export const onUpdateAppointment = /* GraphQL */ `
       time
       service
       notes
+      userId
+      user {
+        id
+        access
+        name
+        email
+        phone
+        pushToken
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      vehicleId
       vehicle {
         id
         year
@@ -224,15 +260,14 @@ export const onUpdateAppointment = /* GraphQL */ `
         color
         plate
         vin
+        userId
         createdAt
         updatedAt
-        userVehiclesId
         owner
         __typename
       }
       createdAt
       updatedAt
-      appointmentVehicleId
       owner
       __typename
     }
@@ -249,6 +284,20 @@ export const onDeleteAppointment = /* GraphQL */ `
       time
       service
       notes
+      userId
+      user {
+        id
+        access
+        name
+        email
+        phone
+        pushToken
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      vehicleId
       vehicle {
         id
         year
@@ -257,15 +306,14 @@ export const onDeleteAppointment = /* GraphQL */ `
         color
         plate
         vin
+        userId
         createdAt
         updatedAt
-        userVehiclesId
         owner
         __typename
       }
       createdAt
       updatedAt
-      appointmentVehicleId
       owner
       __typename
     }

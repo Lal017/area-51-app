@@ -21,7 +21,7 @@ const SettingsTab = ({text, action}) =>
                 style={ProfileStyles.tabButton}
                 onPress={action}
             >
-                <Text style={ProfileStyles.tabText}>{text}</Text>            
+                <Text>{text}</Text>            
             </TouchableOpacity>
         </View>
     )

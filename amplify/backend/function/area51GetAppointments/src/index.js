@@ -16,49 +16,24 @@ const AWS_REGION = process.env.AWS_REGION || 'us-east-1';
 const { Sha256 } = crypto;
 
 const query = /* GraphQL */ `
-  query LIST_ADMINS {
-    listUsers( filter: { access: { eq: "Admins"}}) {
+  query LIST_APPOINTMENTS($filter: ModelAppointmentFilterInput) {
+    listAppointments(filter: $filter) {
       items {
-        id
-        pushToken
+        date
+        time
       }
     }
   }
 `;
-
-// Expo notif functions
-const sendPushNotifications = async (expoPushToken, title, body, data) =>
-{
-  const message = {
-      to: expoPushToken,
-      sound: 'default',
-      title: title,
-      body: body,
-      data: { data }
-  };
-
-  try {
-    await fetch('https://exp.host/--/api/v2/push/send', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Accept-Encoding': 'gzip, deflate',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(message),
-    });
-    console.log('sent');
-  } catch (error) {
-    console.error('Error sending push notification:', error);
-  }
-};
-
 /**
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
  */
 
  export const handler = async (event) => {
   console.log(`EVENT: ${JSON.stringify(event)}`);
+
+  const bodyData = JSON.parse(event.body);
+  const today = bodyData.date;
 
   const endpoint = new URL(GRAPHQL_ENDPOINT);
 
@@ -76,7 +51,14 @@ const sendPushNotifications = async (expoPushToken, title, body, data) =>
       host: endpoint.host
     },
     hostname: endpoint.host,
-    body: JSON.stringify({ query }),
+    body: JSON.stringify({
+      query,
+      variables: {
+        filter: {
+          date: { ge: today }
+        }
+      }
+    }),
     path: endpoint.pathname
   });
 
@@ -92,9 +74,8 @@ const sendPushNotifications = async (expoPushToken, title, body, data) =>
     body = await response.json();
     if (body.errors) statusCode = 400;
     else {
-      const { title, content, data } = JSON.parse(event.body);
-      const pushTokens = body.data.listUsers.items.map((user) => user.pushToken);
-      await sendPushNotifications(pushTokens, title, content, data);
+      const appointments = body.data.listAppointments.items;
+      body = appointments;
     }
   } catch (error) {
     statusCode = 500;

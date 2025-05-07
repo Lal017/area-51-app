@@ -16,6 +16,14 @@
     "s3Key": {
       "Type": "String"
     },
+    "apiarea51RestApiApiName": {
+      "Type": "String",
+      "Default": "apiarea51RestApiApiName"
+    },
+    "apiarea51RestApiApiId": {
+      "Type": "String",
+      "Default": "apiarea51RestApiApiId"
+    },
     "apiarea51appGraphQLAPIIdOutput": {
       "Type": "String",
       "Default": "apiarea51appGraphQLAPIIdOutput"
@@ -55,12 +63,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "area51SendNotification",
+            "area51GetAppointments",
             {
               "Fn::Join": [
                 "",
                 [
-                  "area51SendNotification",
+                  "area51GetAppointments",
                   "-",
                   {
                     "Ref": "env"
@@ -77,6 +85,12 @@
             },
             "REGION": {
               "Ref": "AWS::Region"
+            },
+            "API_AREA51RESTAPI_APINAME": {
+              "Ref": "apiarea51RestApiApiName"
+            },
+            "API_AREA51RESTAPI_APIID": {
+              "Ref": "apiarea51RestApiApiId"
             },
             "API_AREA51APP_GRAPHQLAPIIDOUTPUT": {
               "Ref": "apiarea51appGraphQLAPIIdOutput"
@@ -103,12 +117,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "area51appLambdaRole07b212f7",
+            "area51appLambdaRole54b1606e",
             {
               "Fn::Join": [
                 "",
                 [
-                  "area51appLambdaRole07b212f7",
+                  "area51appLambdaRole54b1606e",
                   "-",
                   {
                     "Ref": "env"

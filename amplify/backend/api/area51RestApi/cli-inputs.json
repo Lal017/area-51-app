@@ -10,6 +10,16 @@
           "read"
         ]
       }
+    },
+    "/getAppointments": {
+      "name": "/getAppointments",
+      "lambdaFunction": "area51GetAppointments",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "read"
+        ]
+      }
     }
   }
 }

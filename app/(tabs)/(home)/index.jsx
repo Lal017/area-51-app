@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Modal, KeyboardAvoidingView, TextInput, StatusBar, ScrollView } from "react-native";
-import { HomeStyles, AuthStyles, ScheduleStyles } from "../../../constants/styles";
+import { HomeStyles, AuthStyles } from "../../../constants/styles";
 import { useState, useEffect } from "react";
 import { fetchUserAttributes } from 'aws-amplify/auth';
 import { handleUpdatePhone } from '../../../components/authComponents';

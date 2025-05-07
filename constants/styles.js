@@ -269,6 +269,9 @@ const HomeStyles = StyleSheet.create({
     titleWrapper: {
         flexDirection: 'row',
         alignItems: 'center',
+    },
+    serviceModal: {
+        width: '50%',
     }
 });
 
@@ -276,8 +279,6 @@ const ScheduleStyles = StyleSheet.create({
     page: {
         backgroundColor: Auth.background,
         justifyContent: 'center',
-        rowGap: 20,
-        paddingTop: 50,
         paddingBottom: 50,
     },
     calendarContainer: {
@@ -287,19 +288,71 @@ const ScheduleStyles = StyleSheet.create({
     },
     timeContainer: {
         flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'space-evenly',
-        width: '100%',
-        paddingTop: 50,
-        rowGap: 25,
+        padding: 15,
+        gap: 10,
     },
     timeBox: {
         backgroundColor: Colors.background,
         elevation: 10,
-        padding: 25,
-        width: '45%',
         borderWidth: 1,
         borderRadius: 25,
+        padding: 10,
+    },
+    scheduleContainer: {
+        rowGap: 50,
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    descriptionContainer: {
+        width: '100%',
+        justifyContent: 'center',
+        paddingLeft: 50,
+        paddingRight: 50,
+        rowGap: 20,
+    },
+    input: {
+        backgroundColor: Colors.background,
+        width: 350,
+        height: 150,
+        paddingLeft: 50,
+        borderWidth: 1,
+        borderRadius: 25,
+        textAlign: 'left',
+        textAlignVertical: 'top',
+        paddingTop: 15,
+    },
+    inputContainer: {
+        width: '100%',
+        alignItems: 'center',
+        rowGap: 25,
+        paddingLeft: 50,
+        paddingRight: 50,
+    },
+    inputWrapper: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        position: 'relative',
+    },
+    icon: {
+        position: 'absolute',
+        left: 15,
+        top: 15,
+        zIndex: 1,
+    },
+    actionButton: {
+        backgroundColor: Colors.secondary,
+        borderRadius: 25,
+        elevation: 5,
+        padding: 10,
+        width: 250,
+    },
+    picker: {
+        width: '85%',
+        backgroundColor: Colors.background,
+        borderWidth: 1,
+        borderRadius: 25,
+        paddingLeft: 20
     }
 });
 

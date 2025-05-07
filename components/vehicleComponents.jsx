@@ -16,7 +16,7 @@ const handleCreateVehicle = async (client, vehicle, userId, setVehicles) =>
                     color: vehicle.color,
                     plate: vehicle.plate,
                     vin: vehicle.vin,
-                    userVehiclesId: userId
+                    userId: userId
                 }
             }
         });

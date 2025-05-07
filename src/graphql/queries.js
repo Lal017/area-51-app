@@ -14,21 +14,12 @@ export const getUser = /* GraphQL */ `
         nextToken
         __typename
       }
-      appointment {
-        id
-        date
-        time
-        service
-        notes
-        createdAt
-        updatedAt
-        appointmentVehicleId
-        owner
+      appointments {
+        nextToken
         __typename
       }
       createdAt
       updatedAt
-      userAppointmentId
       owner
       __typename
     }
@@ -50,7 +41,6 @@ export const listUsers = /* GraphQL */ `
         pushToken
         createdAt
         updatedAt
-        userAppointmentId
         owner
         __typename
       }
@@ -69,9 +59,21 @@ export const getVehicle = /* GraphQL */ `
       color
       plate
       vin
+      userId
+      user {
+        id
+        access
+        name
+        email
+        phone
+        pushToken
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
       createdAt
       updatedAt
-      userVehiclesId
       owner
       __typename
     }
@@ -92,9 +94,43 @@ export const listVehicles = /* GraphQL */ `
         color
         plate
         vin
+        userId
         createdAt
         updatedAt
-        userVehiclesId
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const vehiclesByUserId = /* GraphQL */ `
+  query VehiclesByUserId(
+    $userId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelVehicleFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    vehiclesByUserId(
+      userId: $userId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        year
+        make
+        model
+        color
+        plate
+        vin
+        userId
+        createdAt
+        updatedAt
         owner
         __typename
       }
@@ -111,6 +147,20 @@ export const getAppointment = /* GraphQL */ `
       time
       service
       notes
+      userId
+      user {
+        id
+        access
+        name
+        email
+        phone
+        pushToken
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      vehicleId
       vehicle {
         id
         year
@@ -119,15 +169,14 @@ export const getAppointment = /* GraphQL */ `
         color
         plate
         vin
+        userId
         createdAt
         updatedAt
-        userVehiclesId
         owner
         __typename
       }
       createdAt
       updatedAt
-      appointmentVehicleId
       owner
       __typename
     }
@@ -146,9 +195,43 @@ export const listAppointments = /* GraphQL */ `
         time
         service
         notes
+        userId
+        vehicleId
         createdAt
         updatedAt
-        appointmentVehicleId
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const appointmentsByUserId = /* GraphQL */ `
+  query AppointmentsByUserId(
+    $userId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelAppointmentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    appointmentsByUserId(
+      userId: $userId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        date
+        time
+        service
+        notes
+        userId
+        vehicleId
+        createdAt
+        updatedAt
         owner
         __typename
       }

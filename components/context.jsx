@@ -22,7 +22,6 @@ const AppProvider = ({ children }) => {
         await AsyncStorage.setItem('request', requestBool.toString());
       } else {
         await AsyncStorage.removeItem('request');
-        console.log('deleted');
       }
       setRequest(requestBool);
     } catch (error) {

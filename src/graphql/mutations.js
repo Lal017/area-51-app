@@ -17,9 +17,12 @@ export const createUser = /* GraphQL */ `
         nextToken
         __typename
       }
+      appointments {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
-      userAppointmentId
       owner
       __typename
     }
@@ -41,9 +44,12 @@ export const updateUser = /* GraphQL */ `
         nextToken
         __typename
       }
+      appointments {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
-      userAppointmentId
       owner
       __typename
     }
@@ -65,9 +71,12 @@ export const deleteUser = /* GraphQL */ `
         nextToken
         __typename
       }
+      appointments {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
-      userAppointmentId
       owner
       __typename
     }
@@ -86,9 +95,9 @@ export const createVehicle = /* GraphQL */ `
       color
       plate
       vin
+      userId
       createdAt
       updatedAt
-      userVehiclesId
       owner
       __typename
     }
@@ -107,9 +116,9 @@ export const updateVehicle = /* GraphQL */ `
       color
       plate
       vin
+      userId
       createdAt
       updatedAt
-      userVehiclesId
       owner
       __typename
     }
@@ -128,9 +137,9 @@ export const deleteVehicle = /* GraphQL */ `
       color
       plate
       vin
+      userId
       createdAt
       updatedAt
-      userVehiclesId
       owner
       __typename
     }
@@ -147,23 +156,10 @@ export const createAppointment = /* GraphQL */ `
       time
       service
       notes
-      vehicle {
-        id
-        year
-        make
-        model
-        color
-        plate
-        vin
-        createdAt
-        updatedAt
-        userVehiclesId
-        owner
-        __typename
-      }
+      userId
+      vehicleId
       createdAt
       updatedAt
-      appointmentVehicleId
       owner
       __typename
     }
@@ -180,23 +176,10 @@ export const updateAppointment = /* GraphQL */ `
       time
       service
       notes
-      vehicle {
-        id
-        year
-        make
-        model
-        color
-        plate
-        vin
-        createdAt
-        updatedAt
-        userVehiclesId
-        owner
-        __typename
-      }
+      userId
+      vehicleId
       createdAt
       updatedAt
-      appointmentVehicleId
       owner
       __typename
     }
@@ -213,23 +196,10 @@ export const deleteAppointment = /* GraphQL */ `
       time
       service
       notes
-      vehicle {
-        id
-        year
-        make
-        model
-        color
-        plate
-        vin
-        createdAt
-        updatedAt
-        userVehiclesId
-        owner
-        __typename
-      }
+      userId
+      vehicleId
       createdAt
       updatedAt
-      appointmentVehicleId
       owner
       __typename
     }

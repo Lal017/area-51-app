@@ -10,6 +10,14 @@
           ],
           "category": "function",
           "resourceName": "area51SendNotification"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "area51GetAppointments"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -103,6 +111,21 @@
     }
   },
   "function": {
+    "area51GetAppointments": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ],
+          "category": "api",
+          "resourceName": "area51app"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "area51SendNotification": {
       "build": true,
       "dependsOn": [
@@ -147,6 +170,22 @@
         {
           "category": "analytics",
           "resourceName": "Pinpoint"
+        }
+      ]
+    },
+    "AMPLIFY_function_area51GetAppointments_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "area51GetAppointments"
+        }
+      ]
+    },
+    "AMPLIFY_function_area51GetAppointments_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "area51GetAppointments"
         }
       ]
     },

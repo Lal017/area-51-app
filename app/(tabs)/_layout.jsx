@@ -11,7 +11,7 @@ import { registerForPushNotifications, handleCreateUser, handleUpdateUser, handl
 import Colors from "../../constants/colors";
 import { handleGetCurrentUser } from "../../components/authComponents";
 import { fetchUserAttributes } from "aws-amplify/auth";
-import { listVehicles } from "../../src/graphql/queries";
+import { vehiclesByUserId } from "../../src/graphql/queries";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const TabsContent = () =>
@@ -75,16 +75,23 @@ const TabsContent = () =>
     useEffect(() => {
         const handleGetVehicles = async () =>
         {
-            // get vehicles info from database
-            const vehiclesInfo = await client.graphql({
-                query: listVehicles,
-            });
-        
-            setVehicles(vehiclesInfo.data.listVehicles.items);
+            try {
+                // get vehicles info from database
+                const vehiclesInfo = await client.graphql({
+                    query: vehiclesByUserId,
+                    variables: {
+                        userId: userId,
+                    }
+                });
+                
+                setVehicles(vehiclesInfo.data.vehiclesByUserId.items);
+            } catch (error) {
+                console.log('Error getting vehicles:', error);
+            }
         }
 
-        if (client) { handleGetVehicles(); }
-    }, [client])
+        if (client && userId) { handleGetVehicles(); }
+    }, [client, userId])
 
     // Send to database
     useEffect(() => {

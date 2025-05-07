@@ -3,7 +3,7 @@ type User
   @auth(rules: [
     {allow: owner},
     {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]},
-    {allow: private, provider: iam}
+    {allow: private, provider: iam, operations: [read]}
   ])
 {
   id: ID!
@@ -12,8 +12,8 @@ type User
   email: AWSEmail!
   phone: AWSPhone!
   pushToken: String!
-  vehicles: [Vehicle] @hasMany
-  appointment: Appointment @hasOne
+  vehicles: [Vehicle] @hasMany(indexName: "byUser", fields: ["id"])
+  appointments: [Appointment] @hasMany(indexName: "byUser", fields: ["id"])
 }
 
 type Vehicle
@@ -30,6 +30,8 @@ type Vehicle
   color: String
   plate: String
   vin: String
+  userId: ID! @index(name: "byUser")
+  user: User @belongsTo(fields: ["userId"])
 }
 
 type Appointment
@@ -37,7 +39,7 @@ type Appointment
   @auth(rules: [
     {allow: owner},
     {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]},
-    {allow: private, provider: iam}
+    {allow: private, provider: iam, operations: [read]}
   ])
 {
   id: ID!
@@ -45,5 +47,8 @@ type Appointment
   time: AWSTime!
   service: String!
   notes: String
-  vehicle: Vehicle @hasOne
+  userId: ID! @index(name: "byUser")
+  user: User @belongsTo(fields: ["userId"])
+  vehicleId: ID!
+  vehicle: Vehicle @hasOne(fields: ["vehicleId"])
 }
