@@ -1,10 +1,10 @@
 import { StyleSheet } from "react-native";
-import Colors, { Auth } from "./colors";
+import Colors from "./colors";
 
 const Styles = StyleSheet.create({
     // Header/Tab Styles
     HeaderContainer: {
-        backgroundColor: Colors.background,
+        backgroundColor: Colors.backDrop,
         height: 95,
         justifyContent: 'flex-end',
         alignItems: 'center',
@@ -13,7 +13,7 @@ const Styles = StyleSheet.create({
     },
     HeaderTitle: {
         fontSize: 30,
-        fontWeight: '400',
+        fontWeight: 300,
     },
     LogoImg: {
         width: 200,
@@ -22,34 +22,30 @@ const Styles = StyleSheet.create({
         marginTop: 50,
     },
     tabBarStyle: {
-        backgroundColor: Colors.background,
+        backgroundColor: Colors.backDrop,
         elevation: 14,
         shadowOpacity: 0,
         borderTopWidth: 0,
     },
-    KeyIconContainer: {
+    carIconContainer: {
         width: 75,
         height: 75,
-        backgroundColor: Colors.secondary,
+        backgroundColor: Colors.backDropAccent,
         borderRadius: 100,
         justifyContent: 'center',
         alignItems: 'center',
     },
-    // Reusable Styling components
+// Reusable Styling components
     hr: {
         borderBottomWidth: 1,
-        borderColor: Auth.text,
-        width: 300,
+        borderColor: Colors.textAlt,
+        width: 350,
     },
+    // Tab Select
     tabWrapper: {
         flexDirection: 'row',
         alignItems: 'center',
         position: 'relative',
-    },
-    icon: {
-        position: 'absolute',
-        left: 25,
-        zIndex: 1,
     },
     rightIcon: {
         position: 'absolute',
@@ -66,21 +62,94 @@ const Styles = StyleSheet.create({
         alignItems: 'center',
     },
     tabButton: {
-        backgroundColor: Colors.background,
+        backgroundColor: Colors.backDrop,
         width: '100%',
         justifyContent: 'center',
         height: 75,
         elevation: 10,
         paddingLeft: 75,
     },
-});
-
-const AuthStyles = StyleSheet.create({
+    // Input
+    inputContainer: {
+        rowGap: 20
+    },
+    inputWrapper: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative',
+    },
+    input: {
+        backgroundColor: Colors.backDrop,
+        width: 300,
+        height: 50,
+        paddingLeft: 50,
+        borderWidth: 1,
+        borderRadius: 25,
+    },
+    inputAlt: {
+        backgroundColor: Colors.backDrop,
+        width: 300,
+        height: 150,
+        paddingLeft: 50,
+        borderWidth: 1,
+        borderRadius: 15,
+        textAlignVertical: 'top',
+        paddingTop: 15,
+    },
+    // button
+    actionButton: {
+        backgroundColor: Colors.primary,
+        padding: 10,
+        width: 300,
+        borderRadius: 25,
+        elevation: 5,
+    },
+    actionText: {
+        color: Colors.text,
+        textAlign: 'center',
+    },
+    // Text
+    title: {
+        fontSize: 35,
+        fontWeight: 300,
+        textAlign: 'center',
+        width: '75%'
+    },
+    subTitle: {
+        fontSize: 20,
+        textAlign: 'left',
+    },
+    text: {
+        fontSize: 20,
+        textAlign: 'left',
+        fontWeight: '100',
+    },
+    // icons
+    icon: {
+        position: 'absolute',
+        left: 20,
+        zIndex: 1,
+    },
+    iconAlt: {
+        position: 'absolute',
+        left: 20,
+        top: 15,
+        zIndex: 1,
+    },
+    // container
     page: {
-        backgroundColor: Auth.background,
         flex: 1,
+        backgroundColor: Colors.background,
         justifyContent: 'center',
         alignItems: 'center',
+        rowGap: 35,
+    },
+    scrollPage: {
+        backgroundColor: Colors.background,
+        justifyContent: 'center',
+        alignItems: 'center',
+        rowGap: 25,
     },
     container: {
         justifyContent: 'center',
@@ -90,15 +159,13 @@ const AuthStyles = StyleSheet.create({
         paddingTop: 20,
         paddingBottom: 20,
     },
+});
+
+const AuthStyles = StyleSheet.create({
     confirmContainer: {
         width: '100%',
         alignItems: 'center',
         rowGap: 10,
-        padding: 0
-    },
-    title: {
-        color: Auth.text,
-        fontSize: 30,
     },
     description: {
         color: Colors.text,
@@ -106,49 +173,11 @@ const AuthStyles = StyleSheet.create({
         textAlign: 'center',
         width: '75%',
     },
-    inputContainer: {
-        rowGap: 20,
-    },
-    inputWrapper: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        position: 'relative',
-    },
-    icon: {
-        position: 'absolute',
-        left: 15,
-        zIndex: 1,
-    },
-    input: {
-        backgroundColor: Colors.background,
-        width: 300,
-        height: 50,
-        paddingLeft: 45,
-        borderWidth: 1,
-        borderRadius: 25,
-    },
-    actionButton: {
-        backgroundColor: Auth.primary,
-        padding: 10,
-        width: 300,
-        borderRadius: 25,
-        elevation: 5,
-    },
-    shiftButton: {
-        borderWidth: 0,
-        padding: 10,
-        borderRadius: 25,
-        color: Auth.text
-    },
-    linkContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-evenly',
-        gap: 50
-    },
     providerContainer: {
         flexDirection: 'row',
-        justifyContent: 'space-evenly',
-        gap: 25
+        justifyContent: 'center',
+        gap: 25,
+        width: '100%',
     },
     signInImg: {
         width: 25,
@@ -171,19 +200,6 @@ const AuthStyles = StyleSheet.create({
 });
 
 const HomeStyles = StyleSheet.create({
-    page: {
-        backgroundColor: Auth.background,
-        justifyContent: 'center',
-        alignItems: 'center',
-        rowGap: 50,
-        paddingTop: 25,
-        paddingBottom: 50,
-    },
-    main: {
-        paddingBottom: 50,
-        width: '100%',
-        rowGap: 20,
-    },
     towButton: {
         backgroundColor: Colors.secondary,
         width: '100%',
@@ -193,20 +209,6 @@ const HomeStyles = StyleSheet.create({
         padding: 25,
         rowGap: 20,
     },
-    title: {
-        fontSize: 25,
-        textAlign: 'center',
-        width: '75%'
-    },
-    subTitle: {
-        fontSize: 20,
-        textAlign: 'left',
-    },
-    text: {
-        fontSize: 20,
-        textAlign: 'left',
-        fontWeight: '100',
-    },
     selectionContainer: {
         width: '100%',
         alignItems: 'center',
@@ -214,80 +216,17 @@ const HomeStyles = StyleSheet.create({
         rowGap: 35,
         elevation: 10,
     },
-    vehicleSelectContainer: {
-        width: '100%',
-    },
-    vehicleSelect: {
-        backgroundColor: Colors.background,
-        width: '100%',
-        alignItems: 'center',
-        height: 75,
-        elevation: 10,
-        paddingLeft: 75,
-        flexDirection: 'row',
-        position: 'relative',
-    },
-    vehicleWrapper: {
-        flexDirection: 'row',
-        position: 'relative',
-    },
-    icon: {
-        position: 'absolute',
-        left: 15,
-        zIndex: 1,
-    },
-    circle: {
-        right: 20,
-        zIndex: 1,
-        position: 'absolute',
-    },
-    inputContainer: {
-        width: '100%',
-        alignItems: 'center',
-        rowGap: 25,
-        paddingLeft: 50,
-        paddingRight: 50,
-    },
-    inputWrapper: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        position: 'relative',
-    },
-    icon: {
-        position: 'absolute',
-        left: 15,
-        top: 15,
-        zIndex: 1,
-    },
-    input: {
-        backgroundColor: Colors.background,
-        width: 350,
-        height: 150,
-        paddingLeft: 50,
-        borderWidth: 1,
-        borderRadius: 25,
-        textAlign: 'left',
-        textAlignVertical: 'top',
-        paddingTop: 15,
-    },
-    actionButton: {
-        backgroundColor: Colors.secondary,
-        borderRadius: 25,
-        elevation: 5,
-        padding: 10,
-        width: 250,
-    },
     descriptionContainer: {
         width: '100%',
         justifyContent: 'center',
-        paddingLeft: 50,
-        paddingRight: 50,
+        paddingLeft: 45,
+        paddingRight: 45,
         rowGap: 20,
     },
     notifWrapper: {
         width: '100%',
         elevation: 10,
-        backgroundColor: Colors.background,
+        backgroundColor: Colors.backDrop,
         padding: 20,
         rowGap: 20,
         alignItems: 'left',
@@ -295,87 +234,40 @@ const HomeStyles = StyleSheet.create({
     titleWrapper: {
         flexDirection: 'row',
         alignItems: 'center',
-    },
-    serviceModal: {
-        width: '50%',
     }
 });
 
 const ScheduleStyles = StyleSheet.create({
-    page: {
-        backgroundColor: Auth.background,
-        justifyContent: 'center',
-        paddingBottom: 50,
-    },
     calendarContainer: {
-        backgroundColor: Colors.background,
+        backgroundColor: Colors.backDrop,
         width: '100%',
-        elevation: 10,
+        elevation: 0,
+    },
+    container: {
+        width: '100%',
+        rowGap: 10,
     },
     timeContainer: {
         flexDirection: 'row',
         padding: 15,
+        paddingTop: 0,
         gap: 10,
     },
     timeBox: {
-        backgroundColor: Colors.background,
-        elevation: 10,
+        backgroundColor: Colors.backDrop,
         borderWidth: 1,
         borderRadius: 25,
-        padding: 10,
+        padding: 15,
     },
-    scheduleContainer: {
-        rowGap: 50,
+    infoContainer: {
+        rowGap: 25,
         width: '100%',
         justifyContent: 'center',
         alignItems: 'center'
     },
-    descriptionContainer: {
-        width: '100%',
-        justifyContent: 'center',
-        paddingLeft: 50,
-        paddingRight: 50,
-        rowGap: 20,
-    },
-    input: {
-        backgroundColor: Colors.background,
-        width: 350,
-        height: 150,
-        paddingLeft: 50,
-        borderWidth: 1,
-        borderRadius: 25,
-        textAlign: 'left',
-        textAlignVertical: 'top',
-        paddingTop: 15,
-    },
-    inputContainer: {
-        width: '100%',
-        alignItems: 'center',
-        rowGap: 25,
-        paddingLeft: 50,
-        paddingRight: 50,
-    },
-    inputWrapper: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        position: 'relative',
-    },
-    icon: {
-        position: 'absolute',
-        left: 15,
-        top: 15,
-        zIndex: 1,
-    },
-    actionButton: {
-        backgroundColor: Colors.secondary,
-        borderRadius: 25,
-        elevation: 5,
-        padding: 10,
-        width: 250,
-    },
     picker: {
-        width: '85%',
-        backgroundColor: Colors.background,
+        width: 300,
+        backgroundColor: Colors.backDrop,
         borderWidth: 1,
         borderRadius: 25,
         paddingLeft: 20
@@ -383,13 +275,7 @@ const ScheduleStyles = StyleSheet.create({
 });
 
 const ProfileStyles = StyleSheet.create({
-    page: {
-        flex: 1,
-        backgroundColor: Auth.background,
-        justifyContent: 'flexStart',
-        alignItems: 'center',
-        rowGap: 50,
-    },
+    // Social Media links
     socialContainer: {
         flexDirection: 'row',
         justifyContent: 'space-evenly',
@@ -405,14 +291,7 @@ const ProfileStyles = StyleSheet.create({
         padding: 25,
         borderRadius: 25,
     },
-    actionButton: {
-        backgroundColor: Colors.secondary,
-        borderRadius: 25,
-        elevation: 5,
-        padding: 10,
-        width: 250,
-    },
-    // Index
+    // Account info
     accountCard: {
         width: '100%',
         marginTop: 50,
@@ -430,57 +309,11 @@ const ProfileStyles = StyleSheet.create({
         fontSize: 25,
         fontWeight: 'bold',
     },
-    editAccount: {
-        height: '75%',
-    },
-    editButton: {
-        backgroundColor: Colors.tertiary,
-        borderWidth: 1,
-        borderRadius: 10,
-        width: 50,
-        height: 30,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    // Change Password / attributes
     textContainer: {
-        paddingTop: 100,
         width: '80%',
         alignItems: 'flex-start',
         justifyContent: 'center',
         rowGap: 20,
-    },
-    title: {
-        fontSize: 25,
-        fontWeight: 100,
-    },
-    subTitle: {
-        fontSize: 20,
-    },
-    description: {
-        fontSize: 20,
-        textAlign: 'center'
-    },
-    inputContainer: {
-        rowGap: 20,
-    },
-    inputWrapper: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        position: 'relative',
-    },
-    icon: {
-        position: 'absolute',
-        left: 15,
-        zIndex: 1,
-    },
-    input: {
-        backgroundColor: Colors.background,
-        width: 300,
-        height: 50,
-        paddingLeft: 40,
-        borderWidth: 1,
-        borderRadius: 25,
     },
     // Vehicle List
     vehicleContainer: {
@@ -493,8 +326,8 @@ const ProfileStyles = StyleSheet.create({
     },
     vehicleBox: {
         borderWidth: 1,
-        borderColor: Colors.backgroundAccent,
-        backgroundColor: Colors.background,
+        borderColor: Colors.backDropAccent,
+        backgroundColor: Colors.backDrop,
         elevation: 8,
         padding: 25,
         width: '45%',

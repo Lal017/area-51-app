@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Linking } from 'react-native';
-import { Styles, ProfileStyles } from '../constants/styles';
+import { Styles } from '../constants/styles';
 import Colors from '../constants/colors';
 
 // custom header component to replace default header

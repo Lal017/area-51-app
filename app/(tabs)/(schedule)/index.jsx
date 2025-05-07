@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView } from "react-native";
-import { ScheduleStyles, HomeStyles, Styles } from "../../../constants/styles";
+import { ScheduleStyles, Styles } from "../../../constants/styles";
 import { Calendar } from "react-native-calendars";
 import { handleGetAppointments, handleSetDay, handleCreateAppointment } from '../../../components/scheduleComponents';
 import Colors from '../../../constants/colors';
 import { Picker } from '@react-native-picker/picker';
 import { Select } from '../../../components/components';
-import { MaterialIcons, Ionicons, FontAwesome, AntDesign } from '@expo/vector-icons';
+import { MaterialIcons, Ionicons, FontAwesome } from '@expo/vector-icons';
 import { useApp } from '../../../components/context';
 
 const Schedule = () =>
@@ -39,48 +39,52 @@ const Schedule = () =>
   }
 
   return (
-    <ScrollView contentContainerStyle={ScheduleStyles.page}>
-      <View style={ScheduleStyles.calendarContainer}>
-        <Calendar
-          theme={{
-            todayTextColor: 'black'
-          }}
-          minDate={new Date().toDateString()}
-          onDayPress={day => handleDayPress(day)}
-          enableSwipeMonths={true}
-          markedDates={{
-            [selectedDay]: {
-              selected: true,
-              selectedColor: Colors.primary,
-            }
-          }}
-        />
+    <ScrollView contentContainerStyle={[Styles.scrollPage, {paddingBottom: 35}]}>
+      <View style={ScheduleStyles.container}>
+        <View style={ScheduleStyles.calendarContainer}>
+          <Calendar
+            theme={{
+              todayTextColor: 'black'
+            }}
+            minDate={new Date().toDateString()}
+            onDayPress={day => handleDayPress(day)}
+            enableSwipeMonths={true}
+            markedDates={{
+              [selectedDay]: {
+                selected: true,
+                selectedColor: Colors.primary,
+              }
+            }}
+          />
+        </View>
+        <ScrollView
+          contentContainerStyle={ScheduleStyles.timeContainer}
+          horizontal={true}
+        >
+          {availableAppointments?.map((time, index) => (
+            <TouchableOpacity
+              key={index}
+              onPress={() => setSelectedTime(time)}
+              style={[
+                ScheduleStyles.timeBox,
+                selectedTime === time && {
+                  backgroundColor: Colors.secondary
+                }
+              ]}
+            >
+              <Text style={[
+                selectedTime === time && {
+                  color: 'white'
+                }
+              ]}
+              >{time.time}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       </View>
-      <ScrollView
-        contentContainerStyle={ScheduleStyles.timeContainer}
-        horizontal={true}
-      >
-        {availableAppointments?.map((time, index) => (
-          <TouchableOpacity
-            key={index}
-            onPress={() => setSelectedTime(time)}
-            style={[
-              ScheduleStyles.timeBox,
-              selectedTime === time && {
-                backgroundColor: Colors.secondary
-              }
-            ]}
-          >
-            <Text style={[
-              selectedTime === time && {
-                color: 'white'
-              }
-            ]}
-            >{time.time}</Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-      <View style={ScheduleStyles.scheduleContainer}>
+      <View style={Styles.hr} />
+      <View style={ScheduleStyles.infoContainer}>
+        <Text style={Styles.subTitle}>Select a Vehicle</Text>
         <View style={Styles.tabContainer}>
           {vehicles?.map((vehicle, index) => (
             <TouchableOpacity
@@ -91,7 +95,7 @@ const Schedule = () =>
                   name="car-sport"
                   size={30}
                   style={Styles.icon}
-                  color={selectedVehicle === vehicle ? Colors.background : null}
+                  color={selectedVehicle === vehicle ? Colors.backDrop : null}
                 />
                 <Select
                   text={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
@@ -102,11 +106,13 @@ const Schedule = () =>
                   name={selectedVehicle === vehicle ? "circle" : "circle-o"}
                   size={25}
                   style={Styles.rightIcon}
-                  color={selectedVehicle === vehicle ? Colors.background : null}  
+                  color={selectedVehicle === vehicle ? Colors.backDrop : null}  
                 />
             </TouchableOpacity>
           ))}
         </View>
+        <View style={Styles.hr}/>
+        <Text style={Styles.subTitle}>Select a service</Text>
         <View style={ScheduleStyles.picker}>
           <Picker
             selectedValue={selectedService}
@@ -119,22 +125,22 @@ const Schedule = () =>
             <Picker.Item label='Other' value={'Other'} />
           </Picker>
         </View>
-        <View style={ScheduleStyles.inputContainer}>
-          <View style={ScheduleStyles.inputWrapper}>
-            <MaterialIcons name='notes' size={30} style={ScheduleStyles.icon} />
+        <View style={Styles.inputContainer}>
+          <View style={Styles.inputWrapper}>
+            <MaterialIcons name='notes' size={30} style={Styles.iconAlt} />
             <TextInput
               placeholder='description'
               value={notes}
               onChangeText={setNotes}
-              style={ScheduleStyles.input}
+              style={Styles.inputAlt}
             />
           </View>
         </View>
         <TouchableOpacity
           onPress={() => handleCreateAppointment(client, selectedDay, selectedTime.value, selectedService, notes, userId, selectedVehicle.id)}
-          style={ScheduleStyles.actionButton}
+          style={Styles.actionButton}
         >
-          <Text style={{textAlign: 'center', color: 'white'}}>Schedule</Text>
+          <Text style={Styles.actionText}>Schedule</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

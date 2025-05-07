@@ -23,7 +23,7 @@ const Settings = () =>
     const readableNumber = formatNumber(phoneNumber);
 
     return(
-        <View style={ProfileStyles.page}>
+        <View style={[Styles.page, {justifyContent: 'flex-start'}]}>
             <View style={ProfileStyles.accountCard}>
                 <View style={ProfileStyles.accountInfo}>
                     <Text style={ProfileStyles.name}>{name}</Text>

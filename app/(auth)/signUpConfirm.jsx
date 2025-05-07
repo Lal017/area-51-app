@@ -1,7 +1,7 @@
-import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, StatusBar} from 'react-native';
 import { useState } from 'react';
 import { useLocalSearchParams } from 'expo-router';
-import { AuthStyles } from '../../constants/styles';
+import { AuthStyles, Styles } from '../../constants/styles';
 import { handleSignUpConfirm, handleResendSignUpCode } from '../../components/authComponents';
 import Colors from '../../constants/colors';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -14,34 +14,34 @@ const signUpConfirm = () =>
     return (
         <KeyboardAvoidingView
             behavior='padding'
-            style={AuthStyles.page}
+            style={Styles.page}
         >
-            <View style={AuthStyles.container}>
-                <Text style={AuthStyles.title}>Confirm Sign Up</Text>
-                <View style={AuthStyles.confirmContainer}>
-                    <Text style={AuthStyles.description}>Check your email for your trop locksmith verification code!</Text>
-                    <View style={AuthStyles.inputWrapper}>
-                        <MaterialIcons name='numbers' size={20} style={AuthStyles.icon} />
-                        <TextInput
-                            placeholder='Verification Code'
-                            value={confirmationCode}
-                            onChangeText={setCode}
-                            autoCapitalize='none'
-                            keyboardType='number-pad'
-                            style={AuthStyles.input}
-                        />
-                    </View>
+            <StatusBar barStyle="light-content" hidden={true}/>
+            <View style={Styles.container}>
+                <Text style={Styles.title}>Confirm Sign Up</Text>
+                <Text style={[Styles.text, {width: '85%', textAlign: 'center'}]}>Check your email for your verification code!</Text>
+                <View style={Styles.inputWrapper}>
+                    <MaterialIcons name='numbers' size={20} style={Styles.icon} />
+                    <TextInput
+                        placeholder='Verification Code'
+                        value={confirmationCode}
+                        onChangeText={setCode}
+                        autoCapitalize='none'
+                        keyboardType='number-pad'
+                        style={Styles.input}
+                    />
                 </View>
                 <TouchableOpacity
                     onPress={() => handleSignUpConfirm({username, confirmationCode})}
-                    style={AuthStyles.actionButton}
+                    style={Styles.actionButton}
                 >
-                    <Text style={{color: 'white', textAlign: 'center'}}>Confirm</Text>
+                    <Text style={Styles.actionText}>Confirm</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={() => handleResendSignUpCode({username})}
+                    style={[Styles.actionButton, {backgroundColor: Colors.secondary}]}
                 >
-                    <Text style={{textAlign: 'center', color: Colors.text}}>Resend Code</Text>
+                    <Text style={Styles.actionText}>Resend Code</Text>
                 </TouchableOpacity>
             </View>
         </KeyboardAvoidingView>

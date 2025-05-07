@@ -1,9 +1,8 @@
-import { View, Text, TextInput, KeyboardAvoidingView, ScrollView, TouchableOpacity } from "react-native";
-import { ProfileStyles } from "../../../constants/styles";
+import { View, Text, TextInput, KeyboardAvoidingView, TouchableOpacity } from "react-native";
+import { ProfileStyles, Styles } from "../../../constants/styles";
 import { handleUpdateAttributes } from "../../../components/authComponents";
 import { useState } from "react";
 import { useApp } from "../../../components/context";
-import Colors from "../../../constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 
 const AccountEdit = () =>
@@ -17,37 +16,37 @@ const AccountEdit = () =>
     return(
         <KeyboardAvoidingView
             behavior="padding"
-            style={ProfileStyles.page}
+            style={Styles.page}
         >
             <View style={ProfileStyles.formContainer}>
-                <View style={ProfileStyles.inputContainer}>
-                    <View style={ProfileStyles.inputWrapper}>
-                        <Ionicons name="person" size={20} style={ProfileStyles.icon} />
+                <View style={Styles.inputContainer}>
+                    <View style={Styles.inputWrapper}>
+                        <Ionicons name="person" size={20} style={Styles.icon} />
                         <TextInput
                             placeholder="name"
                             value={editName}
                             onChangeText={setEditName}
-                            style={ProfileStyles.input}
+                            style={Styles.input}
                         />
                     </View>
-                    <View style={ProfileStyles.inputWrapper}>
-                        <Ionicons name="mail" size={20} style={ProfileStyles.icon} />
+                    <View style={Styles.inputWrapper}>
+                        <Ionicons name="mail" size={20} style={Styles.icon} />
                         <TextInput
                             placeholder="email"
                             value={editEmail}
                             onChangeText={setEditEmail}
                             autoCapitalize='none'
-                            style={ProfileStyles.input}
+                            style={Styles.input}
                         />
                     </View>
-                    <View style={ProfileStyles.inputWrapper}>
-                        <Ionicons name="call" size={20} style={ProfileStyles.icon} />
+                    <View style={Styles.inputWrapper}>
+                        <Ionicons name="call" size={20} style={Styles.icon} />
                         <TextInput
                             placeholder="phone number"
                             value={editPhone}
                             onChangeText={setEditPhone}
                             keyboardType="phone-pad"
-                            style={ProfileStyles.input}
+                            style={Styles.input}
                         />
                     </View>
                 </View>
@@ -59,9 +58,9 @@ const AccountEdit = () =>
                         setName,
                         setPhoneNumber
                     )}
-                    style={ProfileStyles.actionButton}
+                    style={Styles.actionButton}
                 >
-                    <Text style={{color: 'white', textAlign: 'center'}}>Change</Text>
+                    <Text style={Styles.actionText}>Change</Text>
                 </TouchableOpacity>
             </View>
         </KeyboardAvoidingView>

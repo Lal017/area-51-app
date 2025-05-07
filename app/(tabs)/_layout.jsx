@@ -140,8 +140,8 @@ const TabsContent = () =>
             screenOptions={{
                 headerShown: false,
                 tabBarStyle: Styles.tabBarStyle,
-                tabBarActiveTintColor: Colors.primary,
-                tabBarInactiveTintColor: Colors.backgroundAccent,
+                tabBarActiveTintColor: Colors.secondary,
+                tabBarInactiveTintColor: Colors.backDropAccent,
                 tabBarShowLabel: false,
             }}>
             <Tabs.Screen
@@ -164,7 +164,7 @@ const TabsContent = () =>
                     header: () => <CustHeader title="Schedule"/>,
                     tabBarHideOnKeyboard: true,
                     tabBarIcon: ({ color, size, focused }) => (
-                        <View style={Styles.KeyIconContainer}>
+                        <View style={Styles.carIconContainer}>
                             <Ionicons
                                 name="car-sport"
                                 size={size} 

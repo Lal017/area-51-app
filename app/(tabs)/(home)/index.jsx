@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Modal, KeyboardAvoidingView, TextInput, StatusBar, ScrollView } from "react-native";
-import { HomeStyles, AuthStyles } from "../../../constants/styles";
+import { HomeStyles, Styles } from "../../../constants/styles";
 import { useState, useEffect } from "react";
 import { fetchUserAttributes } from 'aws-amplify/auth';
 import { handleUpdatePhone } from '../../../components/authComponents';
@@ -45,19 +45,19 @@ const Index = () =>
   };
 
   return (
-    <ScrollView contentContainerStyle={HomeStyles.page}>
+    <ScrollView contentContainerStyle={[Styles.page, {justifyContent: 'flex-start'}]}>
       <StatusBar hidden={true}/>
       <Modal
         visible={showModal}
         animationType='slide'
       >
         <KeyboardAvoidingView behavior='height' style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <View style={AuthStyles.container}>
-              <Text style={AuthStyles.title}>Add Phone Number</Text>
-              <View style={AuthStyles.inputWrapper}>
-                <Ionicons name="call" size={20} style={AuthStyles.icon} />
+          <View style={Styles.container}>
+              <Text style={Styles.title}>Add Phone Number</Text>
+              <View style={Styles.inputWrapper}>
+                <Ionicons name="call" size={20} style={Styles.icon} />
                 <TextInput
-                    style={AuthStyles.input}
+                    style={Styles.input}
                     value={newPhoneNumber}
                     onChangeText={setNewPhoneNumber}
                     placeholder="Phone Number"
@@ -67,67 +67,65 @@ const Index = () =>
               </View>
               <TouchableOpacity
                   onPress={() => handleSubmit()}
-                  style={AuthStyles.actionButton}
+                  style={Styles.actionButton}
               >
-                  <Text style={{color: 'white', textAlign: 'center'}}>Submit</Text>
+                  <Text style={Styles.actionText}>Submit</Text>
               </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>
       </Modal>
-      <View style={HomeStyles.main}>
-        { !request ? (
+      { !request ? (
+        <TouchableOpacity
+          onPress={() => router.push('towRequest')}
+          style={HomeStyles.towButton}
+        >
+          <Text style={[Styles.title, {color: 'white'}]}>Request a tow</Text>
+          <LottieView
+            source={require('../../../assets/animations/ufo.json')}
+            loop
+            autoPlay
+            style={{width: 100, height: 100}}
+            speed={0.5}
+          />
+        </TouchableOpacity>
+      ) : request && notification ? (
+        <View style={HomeStyles.notifWrapper}>
+          <View style={[HomeStyles.titleWrapper, {columnGap: 10}]}>
+            <Text style={Styles.subTitle}>Tow Request</Text>
+            <FontAwesome name="check" size={25} color='black'/>
+          </View>
+          <Text style={Styles.subTitle}>Price:</Text>
+          <Text style={Styles.text}>{notification.data.price}</Text>
+          <Text style={Styles.subTitle}>Wait Time:</Text>
+          <Text style={Styles.text}>{notification.data.waitTime}</Text>
           <TouchableOpacity
-            onPress={() => router.push('towRequest')}
-            style={HomeStyles.towButton}
+            onPress={clearNotification}
           >
-            <Text style={[HomeStyles.title, {color: 'white'}]}>Request a tow</Text>
+            <Text>remove notification</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <View style={HomeStyles.notifWrapper}>
+          <View style={HomeStyles.titleWrapper}>
+            <Text style={Styles.subTitle}>Tow Request</Text>
             <LottieView
-              source={require('../../../assets/animations/ufo.json')}
+              source={require('../../../assets/animations/gear.json')}
               loop
               autoPlay
-              style={{width: 100, height: 100}}
-              speed={0.5}
+              style={{width: 50, height: 50}}
             />
+          </View>
+          <Text style={Styles.text}>
+            Your request is being processed.
+            We'll notify you with a price and estimated wait time shortly.
+          </Text>
+          <TouchableOpacity
+            onPress={clearNotification}
+          >
+            <Text>remove notification</Text>
           </TouchableOpacity>
-        ) : request && notification ? (
-          <View style={HomeStyles.notifWrapper}>
-            <View style={[HomeStyles.titleWrapper, {columnGap: 10}]}>
-              <Text style={HomeStyles.subTitle}>Tow Request</Text>
-              <FontAwesome name="check" size={25} color='black'/>
-            </View>
-            <Text style={HomeStyles.subTitle}>Price:</Text>
-            <Text style={HomeStyles.text}>{notification.data.price}</Text>
-            <Text style={HomeStyles.subTitle}>Wait Time:</Text>
-            <Text style={HomeStyles.text}>{notification.data.waitTime}</Text>
-            <TouchableOpacity
-              onPress={clearNotification}
-            >
-              <Text>remove notification</Text>
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <View style={HomeStyles.notifWrapper}>
-            <View style={HomeStyles.titleWrapper}>
-              <Text style={HomeStyles.subTitle}>Tow Request</Text>
-              <LottieView
-                source={require('../../../assets/animations/gear.json')}
-                loop
-                autoPlay
-                style={{width: 50, height: 50}}
-              />
-            </View>
-            <Text style={HomeStyles.text}>
-              Your request is being processed.
-              We'll notify you with a price and estimated wait time shortly.
-            </Text>
-            <TouchableOpacity
-              onPress={clearNotification}
-            >
-              <Text>remove notification</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      </View>
+        </View>
+      )}
     </ScrollView>
   );
 }

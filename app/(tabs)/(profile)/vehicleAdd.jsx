@@ -1,6 +1,6 @@
 import { TextInput, View, Text, TouchableOpacity } from 'react-native';
 import { useState } from 'react';
-import { ProfileStyles } from '../../../constants/styles';
+import { ProfileStyles, Styles } from '../../../constants/styles';
 import { AntDesign, FontAwesome, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { handleCreateVehicle } from '../../../components/vehicleComponents';
 import { useApp } from '../../../components/context';
@@ -17,71 +17,71 @@ const addVehicle = () =>
     const [ vin, setVin ] = useState();
 
     return (
-        <View style={ProfileStyles.page}>
+        <View style={[Styles.page, {justifyContent: 'flex-start'}]}>
             <View style={ProfileStyles.formContainer}>
-                <View style={ProfileStyles.inputContainer}>
-                    <View style={ProfileStyles.inputWrapper}>
-                        <Ionicons name='calendar' size={20} style={ProfileStyles.icon} />
+                <View style={Styles.inputContainer}>
+                    <View style={Styles.inputWrapper}>
+                        <Ionicons name='calendar' size={20} style={Styles.icon} />
                         <TextInput
                             placeholder='Year'
                             value={year}
                             onChangeText={setYear}
                             keyboardType='numeric'
-                            style={ProfileStyles.input}
+                            style={Styles.input}
                         />
                     </View>
-                    <View style={ProfileStyles.inputWrapper}>
-                        <MaterialCommunityIcons name='car-convertible' size={20} style={ProfileStyles.icon} />
+                    <View style={Styles.inputWrapper}>
+                        <MaterialCommunityIcons name='car-convertible' size={20} style={Styles.icon} />
                         <TextInput
                             placeholder='Make'
                             value={make}
                             onChangeText={setMake}
-                            style={ProfileStyles.input}
+                            style={Styles.input}
                         />
                     </View>
-                    <View style={ProfileStyles.inputWrapper}>
-                        <AntDesign name='tags' size={20} style={ProfileStyles.icon} />
+                    <View style={Styles.inputWrapper}>
+                        <AntDesign name='tags' size={20} style={Styles.icon} />
                         <TextInput
                             placeholder='Model'
                             value={model}
                             onChangeText={setModel}
-                            style={ProfileStyles.input}
+                            style={Styles.input}
                         />
                     </View>
-                    <View style={ProfileStyles.inputWrapper}>
-                        <Ionicons name='color-palette' size={20} style={ProfileStyles.icon} />
+                    <View style={Styles.inputWrapper}>
+                        <Ionicons name='color-palette' size={20} style={Styles.icon} />
                         <TextInput
                             placeholder='Color'
                             value={color}
                             onChangeText={setColor}
-                            style={ProfileStyles.input}
+                            style={Styles.input}
                         />
                     </View>
-                    <Text style={ProfileStyles.subTitle}>Optional</Text>
-                    <View style={ProfileStyles.inputWrapper}>
-                        <FontAwesome name='id-card' size={20} style={ProfileStyles.icon} />
+                    <Text style={Styles.subTitle}>Optional</Text>
+                    <View style={Styles.inputWrapper}>
+                        <FontAwesome name='id-card' size={20} style={Styles.icon} />
                         <TextInput
                             placeholder='License Plate #'
                             value={plate}
                             onChangeText={setPlate}
-                            style={ProfileStyles.input}
+                            style={Styles.input}
                         />
                     </View>
-                    <View style={ProfileStyles.inputWrapper}>
-                        <FontAwesome name='barcode' size={20} style={ProfileStyles.icon} />
+                    <View style={Styles.inputWrapper}>
+                        <FontAwesome name='barcode' size={20} style={Styles.icon} />
                         <TextInput
                             placeholder='VIN #'
                             value={vin}
                             onChangeText={setVin}
-                            style={ProfileStyles.input}
+                            style={Styles.input}
                         />
                     </View>
                 </View>
                 <TouchableOpacity
-                    style={ProfileStyles.actionButton}
+                    style={Styles.actionButton}
                     onPress={() => handleCreateVehicle(client, {year, make, model, color, plate, vin}, userId, setVehicles)}
                 >
-                    <Text style={{textAlign: 'center', color: 'white'}}>Add</Text>
+                    <Text style={Styles.actionText}>Add</Text>
                 </TouchableOpacity>
             </View>
         </View>

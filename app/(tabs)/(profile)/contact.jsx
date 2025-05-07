@@ -1,20 +1,19 @@
 import { Text, View } from 'react-native';
 import { ProfileStyles, Styles } from '../../../constants/styles';
-import Colors from '../../../constants/colors';
 
 const Contact = () =>
 {
     return(
-        <View style={ProfileStyles.page}>
+        <View style={Styles.page}>
             <View style={ProfileStyles.textContainer}>
-                <Text style={ProfileStyles.title}> Email </Text>
-                <Text style={ProfileStyles.subTitle}>info@Area51MotorsportsLv.com</Text>
+                <Text style={Styles.subTitle}> Email </Text>
+                <Text style={Styles.text}>info@Area51MotorsportsLv.com</Text>
                 <View style={Styles.hr} />
-                <Text style={ProfileStyles.title}> Phone Number </Text>
-                <Text style={ProfileStyles.subTitle}> (702) 578 - 4809 </Text>
+                <Text style={Styles.subTitle}> Phone Number </Text>
+                <Text style={Styles.text}> (702) 578 - 4809 </Text>
                 <View style={Styles.hr}/>
-                <Text style={ProfileStyles.title}> Location </Text>
-                <Text style={ProfileStyles.subTitle}> 3120 W Sirius Ave. #103 Las Vegas, NV 89102 </Text>
+                <Text style={Styles.subTitle}> Location </Text>
+                <Text style={Styles.text}> 3120 W Sirius Ave. #103 Las Vegas, NV 89102 </Text>
             </View>
         </View>
     );

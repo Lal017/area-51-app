@@ -12,7 +12,7 @@ const Profile = () =>
     const { email, name } = useApp();
 
     return(
-        <View style={ProfileStyles.page}>
+        <View style={[Styles.page, {justifyContent: 'flex-start'}]}>
             <View style={ProfileStyles.accountCard}>
                 <View style={ProfileStyles.accountText}>
                     <Text style={ProfileStyles.name}>{name}</Text>
@@ -52,9 +52,9 @@ const Profile = () =>
             </View>
             <TouchableOpacity
                 onPress={() => handleSignOut()}
-                style={ProfileStyles.actionButton}
+                style={Styles.actionButton}
             >
-                <Text style={{color: 'white' , textAlign: 'center'}}>Sign Out</Text>
+                <Text style={Styles.actionText}>Sign Out</Text>
             </TouchableOpacity>
         </View>
     );

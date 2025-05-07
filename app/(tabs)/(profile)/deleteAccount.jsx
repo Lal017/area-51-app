@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 import { useState } from 'react';
 import { handleDeleteUser } from '../../../components/authComponents';
-import { ProfileStyles } from '../../../constants/styles';
+import { ProfileStyles, Styles } from '../../../constants/styles';
 import { useApp } from '../../../components/context';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -11,28 +11,30 @@ const DeleteAccount = () =>
     const [ inputEmail, setInputEmail ] = useState();
 
     return (
-        <View style={ProfileStyles.page}>
+        <View style={Styles.page}>
             <View style={[ProfileStyles.textContainer, {alignItems: 'center'}]}>
-                <Text style={ProfileStyles.description}>
+                <Text style={Styles.subTitle}>NOTICE</Text>
+                <Text style={[Styles.text, {textAlign: 'center'}]}>
+                    Deleting your account will remove all your data and settings.
                     Are you sure you want to delete your account?
                 </Text>
-                <Text style={ProfileStyles.description}>This action cannot be undone</Text>
-                <View style={ProfileStyles.inputWrapper}>
-                    <Ionicons name='mail' size={20} style={ProfileStyles.icon} />
+                <Text style={[Styles.text, {fontWeight: 'bold'}]}>This action cannot be undone</Text>
+                <View style={Styles.inputWrapper}>
+                    <Ionicons name='mail' size={20} style={Styles.icon} />
                     <TextInput
                         placeholder='Enter your email'
                         value={inputEmail}
                         onChangeText={setInputEmail}
                         autoCapitalize='none'
-                        style={ProfileStyles.input}
+                        style={Styles.input}
                     />
                 </View>
             </View>
             <TouchableOpacity
                 onPress={() => handleDeleteUser({email, inputEmail})}
-                style={ProfileStyles.actionButton}    
+                style={Styles.actionButton}    
             >
-                <Text style={{color: 'white', textAlign: 'center'}}>Delete</Text>
+                <Text style={Styles.actionText}>Delete</Text>
             </TouchableOpacity>
         </View>
     )

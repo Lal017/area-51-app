@@ -1,5 +1,5 @@
-import { View, Text, TextInput, KeyboardAvoidingView, TouchableOpacity } from "react-native";
-import { AuthStyles } from "../../constants/styles";
+import { View, Text, TextInput, KeyboardAvoidingView, TouchableOpacity, StatusBar } from "react-native";
+import { AuthStyles, Styles } from "../../constants/styles";
 import { useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { handleConfirmResetPassword } from "../../components/authComponents";
@@ -13,49 +13,51 @@ const resetPasswordConfirm = () =>
     const [confNewPassword, setConfNewPassword] = useState();
 
     return (
-        <KeyboardAvoidingView style={AuthStyles.page} >
-            <View style={AuthStyles.container}>
-                <Text style={AuthStyles.title}>Reset Password</Text>
-                <View style={AuthStyles.inputContainer}>
-                    <View style={AuthStyles.inputWrapper}>
-                        <MaterialIcons name='numbers' size={20} style={AuthStyles.icon} />
+        <KeyboardAvoidingView style={Styles.page} >
+            <StatusBar barStyle="light-content" hidden={true}/>
+            <View style={Styles.container}>
+                <Text style={Styles.title}>Reset Password</Text>
+                <Text style={[Styles.text, {width: '85%', textAlign: 'center'}]}>Check your email for your verification code!</Text>
+                <View style={Styles.inputContainer}>
+                    <View style={Styles.inputWrapper}>
+                        <MaterialIcons name='numbers' size={20} style={Styles.icon} />
                         <TextInput
                             placeholder="Verification Code"
                             value={confirmationCode}
                             onChangeText={setConfirmationCode}
                             keyboardType="numeric"
                             autoCapitalize="none"
-                            style={AuthStyles.input}
+                            style={Styles.input}
                         />
                     </View>
-                    <View style={AuthStyles.inputWrapper}>
-                        <Ionicons name='key' size={20} style={AuthStyles.icon} />
+                    <View style={Styles.inputWrapper}>
+                        <Ionicons name='key' size={20} style={Styles.icon} />
                         <TextInput
                             placeholder="New Password"
                             value={newPassword}
                             onChangeText={setNewPassword}
                             secureTextEntry
                             autoCapitalize="none"
-                            style={AuthStyles.input}
+                            style={Styles.input}
                         />
                     </View>
-                    <View style={AuthStyles.inputWrapper}>
-                        <Ionicons name="lock-open" size={20} style={AuthStyles.icon} />
+                    <View style={Styles.inputWrapper}>
+                        <Ionicons name="lock-open" size={20} style={Styles.icon} />
                         <TextInput
                             placeholder="Confirm New Password"
                             value={confNewPassword}
                             onChangeText={setConfNewPassword}
                             secureTextEntry
                             autoCapitalize="none"
-                            style={AuthStyles.input}
+                            style={Styles.input}
                         />
                     </View>
                 </View>
                 <TouchableOpacity
                     onPress={() => handleConfirmResetPassword({username, confirmationCode, newPassword, confNewPassword})}
-                    style={AuthStyles.actionButton}
+                    style={Styles.actionButton}
                 >
-                    <Text style={{color: 'white', textAlign: 'center'}}>Confirm</Text>
+                    <Text style={Styles.actionText}>Confirm</Text>
                 </TouchableOpacity>
             </View>
         </KeyboardAvoidingView>

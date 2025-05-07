@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
 import { useApp } from '../../../components/context';
-import { ProfileStyles } from '../../../constants/styles';
+import { ProfileStyles, Styles } from '../../../constants/styles';
 import { Ionicons } from '@expo/vector-icons';
 
 const VehicleList = () =>
@@ -9,7 +9,7 @@ const VehicleList = () =>
     const { vehicles } = useApp();
 
     return(
-        <View style={ProfileStyles.page}>
+        <View style={[Styles.page, {justifyContent: 'flex-start'}]}>
             <View style={ProfileStyles.vehicleContainer}>
                 {vehicles?.length > 0 ? (
                     vehicles.map((vehicle, index) => (
@@ -17,7 +17,7 @@ const VehicleList = () =>
                             key={index}
                             onPress={() => router.push({
                                 pathname: 'vehicleEdit',
-                                params: { vehicleId: vehicle.id }
+                                params: { vehicle: JSON.stringify(vehicle) }
                             })}
                             style={ProfileStyles.vehicleBox}>
                             <Text style={{textAlign: 'center'}}>
