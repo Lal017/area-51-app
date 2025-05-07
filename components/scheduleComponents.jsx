@@ -7,8 +7,6 @@ const handleGetAppointments = async () =>
     try {
         const today = new Date().toLocaleDateString('sv-SE');
 
-        console.log(today);
-
         const restOperation = post({
             apiName: 'area51RestApi',
             path: '/getAppointments',
@@ -23,7 +21,6 @@ const handleGetAppointments = async () =>
         const { body } = await restOperation.response;
         const str = await body.json();
 
-        console.log(str);
         return str;
     } catch (error) {
         console.log('Error getting appointments', error);
@@ -41,7 +38,6 @@ const handleSetDay = async (appointments, day) =>
         )
     });
 
-    console.log('Available time slots:', filteredSlots);
     return filteredSlots;
 };
 

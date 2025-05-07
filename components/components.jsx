@@ -1,5 +1,6 @@
 import { View, Text, TouchableOpacity, Linking } from 'react-native';
 import { Styles, ProfileStyles } from '../constants/styles';
+import Colors from '../constants/colors';
 
 // custom header component to replace default header
 const CustHeader = ({title}) =>
@@ -12,16 +13,31 @@ const CustHeader = ({title}) =>
     );
 };
 
-// reusable tab component for settings section
-const SettingsTab = ({text, action}) =>
+// reusable tab component for tabs
+const Tab = ({text, action}) =>
 {
     return(
-        <View style={ProfileStyles.tab}>
+        <View style={Styles.tab}>
             <TouchableOpacity
-                style={ProfileStyles.tabButton}
+                style={Styles.tabButton}
                 onPress={action}
             >
                 <Text>{text}</Text>            
+            </TouchableOpacity>
+        </View>
+    )
+};
+
+// reusable tab component for Selections
+const Select = ({text, selected, action}) =>
+{
+    return(
+        <View style={Styles.tab}>
+            <TouchableOpacity
+                style={[Styles.tabButton, selected ? {backgroundColor: Colors.secondary} : null]}
+                onPress={action}
+            >
+                <Text style={selected ? {color: Colors.text} : null}>{text}</Text>            
             </TouchableOpacity>
         </View>
     )
@@ -35,6 +51,7 @@ const socialRedirect = (link) =>
 
 export {
     CustHeader,
-    SettingsTab,
+    Tab,
+    Select,
     socialRedirect,
 };

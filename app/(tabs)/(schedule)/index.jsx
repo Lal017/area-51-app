@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView } from "react-native";
-import { ScheduleStyles, HomeStyles } from "../../../constants/styles";
+import { ScheduleStyles, HomeStyles, Styles } from "../../../constants/styles";
 import { Calendar } from "react-native-calendars";
 import { handleGetAppointments, handleSetDay, handleCreateAppointment } from '../../../components/scheduleComponents';
 import Colors from '../../../constants/colors';
 import { Picker } from '@react-native-picker/picker';
-import { MaterialIcons, Ionicons, FontAwesome } from '@expo/vector-icons';
+import { Select } from '../../../components/components';
+import { MaterialIcons, Ionicons, FontAwesome, AntDesign } from '@expo/vector-icons';
 import { useApp } from '../../../components/context';
 
 const Schedule = () =>
@@ -80,32 +81,29 @@ const Schedule = () =>
         ))}
       </ScrollView>
       <View style={ScheduleStyles.scheduleContainer}>
-        <View style={HomeStyles.vehicleSelectContainer}>
+        <View style={Styles.tabContainer}>
           {vehicles?.map((vehicle, index) => (
             <TouchableOpacity
               key={index}
-              style={[
-                HomeStyles.vehicleSelect,
-                selectedVehicle === vehicle && {
-                  backgroundColor: Colors.secondary,
-                }
-              ]}
-              onPress={() => setSelectedVehicle(vehicle)}
+              style={Styles.tabWrapper}
             >
-              <Ionicons
-                name="car-sport"
-                size={30}
-                style={HomeStyles.icon}
-                color={selectedVehicle === vehicle ? 'white' : 'black'}
-              />
-              <Text style={selectedVehicle === vehicle && {
-                color: Colors.background
-              }}>{vehicle.year} {vehicle.make} {vehicle.model}</Text>
-              <FontAwesome
-                name={selectedVehicle === vehicle ? "circle" : "circle-o"}
-                size={30}
-                style={HomeStyles.circle}
-              />
+                <Ionicons
+                  name="car-sport"
+                  size={30}
+                  style={Styles.icon}
+                  color={selectedVehicle === vehicle ? Colors.background : null}
+                />
+                <Select
+                  text={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
+                  selected={vehicle === selectedVehicle ? true : false}
+                  action={() => setSelectedVehicle(vehicle)}
+                />
+                <FontAwesome
+                  name={selectedVehicle === vehicle ? "circle" : "circle-o"}
+                  size={25}
+                  style={Styles.rightIcon}
+                  color={selectedVehicle === vehicle ? Colors.background : null}  
+                />
             </TouchableOpacity>
           ))}
         </View>

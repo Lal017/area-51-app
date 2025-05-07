@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import { ProfileStyles } from "../../../constants/styles";
-import { SettingsTab, socialRedirect } from "../../../components/components";
+import { ProfileStyles, Styles } from "../../../constants/styles";
+import { Tab, socialRedirect } from "../../../components/components";
 import { handleSignOut } from "../../../components/authComponents";
 import { router } from "expo-router";
 import { useApp } from "../../../components/context";
@@ -19,21 +19,21 @@ const Profile = () =>
                     <Text>{email}</Text>
                 </View>
             </View>
-            <View style={ProfileStyles.tabContainer}>
-                <View style={ProfileStyles.tabWrapper}>
-                    <Ionicons name="settings" size={30} style={ProfileStyles.icon} />
-                    <SettingsTab text="Account Settings" action={() => router.push('settings')} />
-                    <AntDesign name="right" size={25} style={ProfileStyles.arrowIcon} />
+            <View style={Styles.tabContainer}>
+                <View style={Styles.tabWrapper}>
+                    <Ionicons name="settings" size={30} style={Styles.icon} />
+                    <Tab text="Account Settings" action={() => router.push('settings')} />
+                    <AntDesign name="right" size={25} style={Styles.rightIcon} />
                 </View>
-                <View style={ProfileStyles.tabWrapper}>
-                    <Ionicons name="car-sport" size={30} style={ProfileStyles.icon} />
-                    <SettingsTab text="My Vehicles" action={() => router.push('vehicleList')} />
-                    <AntDesign name="right" size={25} style={ProfileStyles.arrowIcon} />
+                <View style={Styles.tabWrapper}>
+                    <Ionicons name="car-sport" size={30} style={Styles.icon} />
+                    <Tab text="My Vehicles" action={() => router.push('vehicleList')} />
+                    <AntDesign name="right" size={25} style={Styles.rightIcon} />
                 </View>
-                <View style={ProfileStyles.tabWrapper}>
-                    <MaterialIcons name="contact-support" size={30} style={ProfileStyles.icon} />
-                    <SettingsTab text="Contact us" action={() => router.push('contact')}/>
-                    <AntDesign name="right" size={25} style={ProfileStyles.arrowIcon} />
+                <View style={Styles.tabWrapper}>
+                    <MaterialIcons name="contact-support" size={30} style={Styles.icon} />
+                    <Tab text="Contact us" action={() => router.push('contact')}/>
+                    <AntDesign name="right" size={25} style={Styles.rightIcon} />
                 </View>
                 <View style={ProfileStyles.socialContainer}>
                     <TouchableOpacity

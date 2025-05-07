@@ -6,6 +6,7 @@ import { router } from "expo-router";
 import Colors from "../../../constants/colors";
 import { FontAwesome, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { handleCustomerRequest } from "../../../components/notifComponents";
+import { Select } from "../../../components/components";
 
 const towRequest = () =>
 {
@@ -29,31 +30,28 @@ const towRequest = () =>
                 <View style={Styles.hr} />
                 <View style={HomeStyles.selectionContainer}>
                     <Text style={HomeStyles.subTitle}>Select the vehicle to be towed</Text>
-                    <View style={HomeStyles.vehicleSelectContainer}>
-                        {vehicles.map((vehicle, index) => (
+                    <View style={Styles.tabContainer}>
+                        {vehicles?.map((vehicle, index) => (
                             <TouchableOpacity
-                                key={index}
-                                style={[
-                                    HomeStyles.vehicleSelect,
-                                    selectedVehicle === vehicle && {
-                                        backgroundColor: Colors.secondary,
-                                    }
-                                ]}
-                                onPress={() => setSelectedVehicle(vehicle)}
+                            key={index}
+                            style={Styles.tabWrapper}
                             >
                                 <Ionicons
                                     name="car-sport"
                                     size={30}
-                                    style={HomeStyles.icon}
-                                    color={selectedVehicle === vehicle ? 'white' : 'black'}
+                                    style={Styles.icon}
+                                    color={selectedVehicle === vehicle ? Colors.background : null}
                                 />
-                                <Text style={selectedVehicle === vehicle && {
-                                    color: Colors.background
-                                }}>{vehicle.year} {vehicle.make} {vehicle.model}</Text>
+                                <Select
+                                    text={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
+                                    selected={vehicle === selectedVehicle ? true : false}
+                                    action={() => setSelectedVehicle(vehicle)}
+                                />
                                 <FontAwesome
                                     name={selectedVehicle === vehicle ? "circle" : "circle-o"}
-                                    size={30}
-                                    style={HomeStyles.circle}
+                                    size={25}
+                                    style={Styles.rightIcon}
+                                    color={selectedVehicle === vehicle ? Colors.background : null}  
                                 />
                             </TouchableOpacity>
                         ))}

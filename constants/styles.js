@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 import Colors, { Auth } from "./colors";
 
 const Styles = StyleSheet.create({
-// All page styles
+    // Header/Tab Styles
     HeaderContainer: {
         backgroundColor: Colors.background,
         height: 95,
@@ -35,17 +35,43 @@ const Styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    // Reusable Styling components
     hr: {
         borderBottomWidth: 1,
         borderColor: Auth.text,
         width: 300,
     },
-// Phone Input page styles
-    phonePage: {
-        flex: 1,
-        backgroundColor: Colors.backgroundAccent,
+    tabWrapper: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        position: 'relative',
+    },
+    icon: {
+        position: 'absolute',
+        left: 25,
+        zIndex: 1,
+    },
+    rightIcon: {
+        position: 'absolute',
+        right: 20,
+        zIndex: 1,
+    },
+    tabContainer: {
+        width: '100%',
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    tab: {
+        width: '100%',
+        alignItems: 'center',
+    },
+    tabButton: {
+        backgroundColor: Colors.background,
+        width: '100%',
+        justifyContent: 'center',
+        height: 75,
+        elevation: 10,
+        paddingLeft: 75,
     },
 });
 
@@ -364,33 +390,6 @@ const ProfileStyles = StyleSheet.create({
         alignItems: 'center',
         rowGap: 50,
     },
-    tabWrapper: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        position: 'relative',
-    },
-    icon: {
-        position: 'absolute',
-        left: 25,
-        zIndex: 1,
-    },
-    tabContainer: {
-        width: '100%',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    tab: {
-        width: '100%',
-        alignItems: 'center',
-    },
-    tabButton: {
-        backgroundColor: Colors.background,
-        width: '100%',
-        justifyContent: 'center',
-        height: 75,
-        elevation: 10,
-        paddingLeft: 75,
-    },
     socialContainer: {
         flexDirection: 'row',
         justifyContent: 'space-evenly',
@@ -473,11 +472,6 @@ const ProfileStyles = StyleSheet.create({
     icon: {
         position: 'absolute',
         left: 15,
-        zIndex: 1,
-    },
-    arrowIcon: {
-        position: 'absolute',
-        right: 20,
         zIndex: 1,
     },
     input: {
