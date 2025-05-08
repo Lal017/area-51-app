@@ -1,7 +1,7 @@
 import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, StatusBar} from 'react-native';
 import { useState } from 'react';
 import { useLocalSearchParams } from 'expo-router';
-import { AuthStyles, Styles } from '../../constants/styles';
+import { Styles } from '../../constants/styles';
 import { handleSignUpConfirm, handleResendSignUpCode } from '../../components/authComponents';
 import Colors from '../../constants/colors';
 import { MaterialIcons } from '@expo/vector-icons';

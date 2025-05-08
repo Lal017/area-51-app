@@ -1,20 +1,16 @@
-import { View } from "react-native";
-import { router, Tabs} from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
+import { Stack, router } from "expo-router";
 import { CustHeader } from "../../components/components";
-import { Styles } from "../../constants/styles";
 import { AppProvider, useApp } from "../../components/context";
 import { useEffect, useRef } from 'react';
 import { generateClient } from "aws-amplify/api";
 import { addNotificationReceivedListener, addNotificationResponseReceivedListener, removeNotificationSubscription } from "expo-notifications";
 import { registerForPushNotifications, handleCreateUser, handleUpdateUser, handleCheckUser } from "../../components/notifComponents";
-import Colors from "../../constants/colors";
 import { handleGetCurrentUser } from "../../components/authComponents";
 import { fetchUserAttributes } from "aws-amplify/auth";
 import { vehiclesByUserId } from "../../src/graphql/queries";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const TabsContent = () =>
+const AdminContent = () =>
 {
     // get setters from context
     const {
@@ -126,7 +122,7 @@ const TabsContent = () =>
 
         // triggered when the user taps on the notification
         responseListener.current = addNotificationResponseReceivedListener(response => {
-            router.push('/(tabs)/(home)');
+            router.push('/index');
         });
 
         return () => {
@@ -136,65 +132,19 @@ const TabsContent = () =>
     }, []);
 
     return (
-        <Tabs
-            screenOptions={{
-                headerShown: false,
-                tabBarStyle: Styles.tabBarStyle,
-                tabBarActiveTintColor: Colors.secondary,
-                tabBarInactiveTintColor: Colors.backDropAccent,
-                tabBarShowLabel: false,
-            }}>
-            <Tabs.Screen
-                name="(home)"
-                options={{
-                title: 'Home',
-                headerShown: true,
-                header: () => <CustHeader title="Home"/>,
-                tabBarHideOnKeyboard: true,
-                tabBarIcon: ({ color, size }) => (
-                    <Ionicons name="home" size={size} color={color}/>
-                ),
-                }}
-            />
-            <Tabs.Screen
-                name="(schedule)"
-                options={{
-                    title: "Schedule maintenance",
-                    headerShown: true,
-                    header: () => <CustHeader title="Schedule"/>,
-                    tabBarHideOnKeyboard: true,
-                    tabBarIcon: ({ color, size, focused }) => (
-                        <View style={Styles.carIconContainer}>
-                            <Ionicons
-                                name="car-sport"
-                                size={size} 
-                                color={focused ? color: "white"} 
-                            />
-                        </View>
-                    ),
-                }}
-            />
-            <Tabs.Screen
-                name="(profile)"
-                options={{
-                title: "Profile",
-                tabBarHideOnKeyboard: true,
-                tabBarIcon: ({ color, size }) => (
-                    <Ionicons name="person" size={size} color={color}/>
-                ),
-                }}
-            />
-        </Tabs>
+        <Stack>
+            <Stack.Screen name='index' options={{title: 'Admin Console', header: () => <CustHeader title="Console"/>}}/>
+        </Stack>
     );
-};
+}
 
-const TabsLayout = () =>
+const AdminLayout = () =>
 {
     return (
         <AppProvider>
-            <TabsContent/>
+            <AdminContent />
         </AppProvider>
-    )
+    );
 };
 
-export default TabsLayout;
+export default AdminLayout;

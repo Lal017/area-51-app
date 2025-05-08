@@ -351,4 +351,16 @@ const ProfileStyles = StyleSheet.create({
     }
 });
 
-export { Styles, AuthStyles, HomeStyles, ScheduleStyles, ProfileStyles };
+const AdminStyles = StyleSheet.create({
+    consoleBubble: {
+        width: '95%',
+        height: 175,
+        borderRadius: 50,
+        elevation: 10,
+        backgroundColor: Colors.tertiary,
+        alignItems: 'center',
+        position: 'relative',
+    }
+});
+
+export { Styles, AuthStyles, HomeStyles, ScheduleStyles, ProfileStyles, AdminStyles };

@@ -1,5 +1,5 @@
 import { View, Text, TextInput, KeyboardAvoidingView, TouchableOpacity } from "react-native";
-import { AuthStyles, Styles } from "../../constants/styles";
+import { Styles } from "../../constants/styles";
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from "react";
 import { handleResetPassword } from "../../components/authComponents";

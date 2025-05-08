@@ -1,5 +1,5 @@
 import { View, Text, TextInput, KeyboardAvoidingView, TouchableOpacity, StatusBar } from "react-native";
-import { AuthStyles, Styles } from "../../constants/styles";
+import { Styles } from "../../constants/styles";
 import { useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { handleConfirmResetPassword } from "../../components/authComponents";

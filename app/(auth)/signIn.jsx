@@ -62,8 +62,8 @@ const signIn = () =>
                     <AmazonSignInButton text='Sign In'/>
                 </View>
                 <View style={[AuthStyles.providerContainer, {gap: 125}]}>
-                    <Link href="/resetPassword">Forgot Password?</Link>
-                    <Link href="/signUp">Sign Up</Link>
+                    <Link href="/(auth)/resetPassword">Forgot Password?</Link>
+                    <Link href="/(auth)/signUp">Sign Up</Link>
                 </View>
             </View>
         </KeyboardAvoidingView>

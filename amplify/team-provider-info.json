@@ -48,7 +48,7 @@
         },
         "area51GetAppointments": {
           "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
-          "s3Key": "amplify-builds/area51GetAppointments-4e684f4c49534b595665-build.zip"
+          "s3Key": "amplify-builds/area51GetAppointments-5166774c477735434c33-build.zip"
         }
       }
     }

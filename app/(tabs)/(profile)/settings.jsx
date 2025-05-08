@@ -34,17 +34,17 @@ const Settings = () =>
             <View style={Styles.tabContainer}>
                 <View style={Styles.tabWrapper}>
                     <Ionicons name='person' size={30} style={Styles.icon} />
-                    <Tab text="Edit Profile" action={() => router.push('accountEdit')} />
+                    <Tab text="Edit Profile" action={() => router.push('/(tabs)/(profile)/accountEdit')} />
                     <AntDesign name="right" size={25} style={Styles.rightIcon} />
                 </View>
                 <View style={Styles.tabWrapper}>
                     <MaterialIcons name='lock-reset' size={30} style={Styles.icon} />
-                    <Tab text="Change password" action={() => router.push('changePassword')} />
+                    <Tab text="Change password" action={() => router.push('/(tabs)/(profile)/changePassword')} />
                     <AntDesign name="right" size={25} style={Styles.rightIcon} />
                 </View>
                 <View style={Styles.tabWrapper}>
                     <AntDesign name='deleteuser' size={30} style={Styles.icon} />
-                    <Tab text="Delete Account" action={() => router.push('deleteAccount')} />
+                    <Tab text="Delete Account" action={() => router.push('/(tabs)/(profile)/deleteAccount')} />
                     <AntDesign name="right" size={25} style={Styles.rightIcon} />
                 </View>
             </View>

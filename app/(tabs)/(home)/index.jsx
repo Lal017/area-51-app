@@ -30,7 +30,7 @@ const Index = () =>
       }
     };
 
-    checkPhone();
+    if (isPhoneUpdated){ checkPhone(); }
   }, [isPhoneUpdated]);
 
   // function to set phone number attribute and remove modal if successful
@@ -76,7 +76,7 @@ const Index = () =>
       </Modal>
       { !request ? (
         <TouchableOpacity
-          onPress={() => router.push('towRequest')}
+          onPress={() => router.push('/(tabs)/(home)/towRequest')}
           style={HomeStyles.towButton}
         >
           <Text style={[Styles.title, {color: 'white'}]}>Request a tow</Text>

@@ -86,7 +86,7 @@ const signUp = () =>
                     <GoogleSignInButton text='Sign Up'/>
                     <AmazonSignInButton text='Sign Up'/>
                 </View>
-                <Link href="/signIn" style={AuthStyles.shiftButton}>Sign In</Link>
+                <Link href="/(auth)/signIn" style={AuthStyles.shiftButton}>Sign In</Link>
             </View>
         </KeyboardAvoidingView>
     );

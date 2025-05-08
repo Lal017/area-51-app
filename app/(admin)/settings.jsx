@@ -1,9 +1,9 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import { ProfileStyles, Styles } from "../../../constants/styles";
-import { Tab, socialRedirect } from "../../../components/components";
-import { handleSignOut } from "../../../components/authComponents";
+import { ProfileStyles, Styles } from "../../constants/styles";
+import { Tab, socialRedirect } from "../../components/components";
+import { handleSignOut } from "../../components/authComponents";
 import { router } from "expo-router";
-import { useApp } from "../../../components/context";
+import { useApp } from "../../components/context";
 import { AntDesign, Ionicons, MaterialIcons } from "@expo/vector-icons";
 
 // Profile page
@@ -20,19 +20,19 @@ const Profile = () =>
                 </View>
             </View>
             <View style={Styles.tabContainer}>
-                <View style={Styles.tabWrapper}>
-                    <Ionicons name="settings" size={30} style={Styles.icon} />
-                    <Tab text="Account Settings" action={() => router.push('/(tabs)/(profile)/settings')} />
+            <View style={Styles.tabWrapper}>
+                    <Ionicons name='person' size={30} style={Styles.icon} />
+                    <Tab text="Edit Profile" action={() => router.push('/(admin)/accountEdit')} />
                     <AntDesign name="right" size={25} style={Styles.rightIcon} />
                 </View>
                 <View style={Styles.tabWrapper}>
-                    <Ionicons name="car-sport" size={30} style={Styles.icon} />
-                    <Tab text="My Vehicles" action={() => router.push('/(tabs)/(profile)/vehicleList')} />
+                    <MaterialIcons name='lock-reset' size={30} style={Styles.icon} />
+                    <Tab text="Change password" action={() => router.push('/(admin)/changePassword')} />
                     <AntDesign name="right" size={25} style={Styles.rightIcon} />
                 </View>
                 <View style={Styles.tabWrapper}>
-                    <MaterialIcons name="contact-support" size={30} style={Styles.icon} />
-                    <Tab text="Contact us" action={() => router.push('/(tabs)/(profile)/contact')}/>
+                    <AntDesign name='deleteuser' size={30} style={Styles.icon} />
+                    <Tab text="Delete Account" action={() => router.push('/(admin)/deleteAccount')} />
                     <AntDesign name="right" size={25} style={Styles.rightIcon} />
                 </View>
                 <View style={ProfileStyles.socialContainer}>
@@ -51,7 +51,7 @@ const Profile = () =>
                 </View>
             </View>
             <TouchableOpacity
-                onPress={() => handleSignOut()}
+                onPress={handleSignOut}
                 style={Styles.actionButton}
             >
                 <Text style={Styles.actionText}>Sign Out</Text>

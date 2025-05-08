@@ -172,10 +172,13 @@ const handleSignIn = async ({username, password}) =>
     }
 };
 
-const signInConfirm = ({username, isSignedIn, nextStep}) =>
+const signInConfirm = async ({username, isSignedIn, nextStep}) =>
 {
     if (isSignedIn && nextStep.signInStep === 'DONE') {
-        router.replace('(tabs)');
+        const user = await handleGetCurrentUser();
+        const isAdmin = user?.accessToken?.payload["cognito:groups"]?.includes('Admins');
+        if (isAdmin) { router.replace('/(admin)'); }
+        else { router.replace('/(tabs)'); }
     }
     else if (nextStep.signInStep === 'CONFIRM_SIGN_UP') {
         handleResendSignUpCode({username});
@@ -243,7 +246,7 @@ const handleSignOut = async () =>
     try {
         await signOut({global: true });
         clearLocalStorage();
-        router.replace('(auth)');
+        router.replace('/');
     } catch (error) {
         console.log('error signing out', error);
         Alert.alert(

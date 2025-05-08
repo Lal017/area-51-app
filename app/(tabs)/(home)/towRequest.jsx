@@ -76,7 +76,7 @@ const towRequest = () =>
                         style={Styles.actionButton}
                         onPress={() => {
                             handleCustomerRequest(notes, selectedVehicle, { userId, name, email, phoneNumber }, setRequest)
-                            router.replace('(tabs)');
+                            router.replace('/(tabs)');
                         }}
                     >
                         <Text style={Styles.actionText}>Request</Text>
