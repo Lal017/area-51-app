@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { Styles, AdminStyles } from "../../constants/styles";
 import { router } from 'expo-router';
 import LottieView from 'lottie-react-native';

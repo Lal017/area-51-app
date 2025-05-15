@@ -5,7 +5,7 @@ import { useState } from "react";
 import { router } from "expo-router";
 import Colors from "../../../constants/colors";
 import { FontAwesome, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { handleCustomerRequest } from "../../../components/notifComponents";
+import { handleSendAdminNotif } from "../../../components/notifComponents";
 import { Select } from "../../../components/components";
 import { handleCreateTowRequest } from "../../../components/scheduleComponents";
 
@@ -76,8 +76,13 @@ const towRequest = () =>
                     <TouchableOpacity
                         style={Styles.actionButton}
                         onPress={() => {
-                            handleCustomerRequest(notes, selectedVehicle.id, userId)
-                            handleCreateTowRequest(client, userId, selectedVehicle.id, "N/A", notes, setTowRequest)
+                            const data = {
+                                notes: notes,
+                                vehicleId: selectedVehicle.id,
+                                userId: userId
+                            };
+                            handleSendAdminNotif('Towing Request', 'A customer has requested a tow', data);
+                            handleCreateTowRequest(client, userId, selectedVehicle.id, "N/A", notes, setTowRequest);
                             router.replace('/(tabs)');
                         }}
                     >

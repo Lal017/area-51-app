@@ -10,7 +10,6 @@ const TowRequests = () =>
 {
     const { client } = useApp();
     const [ requests, setRequests ] = useState();
-    const [ readableNumber, setReadableNumber ] = useState();
 
     useEffect(() => {
         const handleGetTowRequests = async () =>

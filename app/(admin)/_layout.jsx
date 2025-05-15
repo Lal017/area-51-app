@@ -8,7 +8,6 @@ import { addNotificationReceivedListener, addNotificationResponseReceivedListene
 import { registerForPushNotifications, handleCreateUser, handleUpdateUser, handleCheckUser } from "../../components/notifComponents";
 import { handleGetCurrentUser } from "../../components/authComponents";
 import { fetchUserAttributes } from "aws-amplify/auth";
-import { vehiclesByUserId } from "../../src/graphql/queries";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AdminContent = () =>

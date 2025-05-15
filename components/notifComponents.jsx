@@ -2,7 +2,6 @@ import { Alert } from 'react-native';
 import { createUser, updateUser, deleteUser } from '../src/graphql/mutations';
 import { getUser } from '../src/graphql/queries';
 import { post } from 'aws-amplify/api';
-import { handleCreateTowRequest } from './scheduleComponents';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import Constants from 'expo-constants';
@@ -140,7 +139,7 @@ const handleCheckUser = async (client, userId) =>
     return alreadyExists;
 };
 
-const handleCustomerRequest = async (notes, vehicleId, userId) =>
+const handleSendAdminNotif = async (title, content, data) =>
 {
     try {
         const restOperation = post({
@@ -149,13 +148,9 @@ const handleCustomerRequest = async (notes, vehicleId, userId) =>
             authMode: 'AWS_IAM',
             options: {
                 body: {
-                    title: 'Towing Request',
-                    content: 'A customer has requested a tow',
-                    data: {
-                        notes: notes,
-                        vehicleId: vehicleId,
-                        userId: userId,
-                    }
+                    title: title,
+                    content: content,
+                    data: data
                 }
             }
         });
@@ -175,7 +170,7 @@ const handleCustomerRequest = async (notes, vehicleId, userId) =>
 
 export {
     registerForPushNotifications,
-    handleCustomerRequest,
+    handleSendAdminNotif,
     handleCreateUser,
     handleUpdateUser,
     handleDeleteUser,

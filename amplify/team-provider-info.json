@@ -44,7 +44,7 @@
         },
         "area51SendNotification": {
           "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
-          "s3Key": "amplify-builds/area51SendNotification-4d755a68353972737067-build.zip"
+          "s3Key": "amplify-builds/area51SendNotification-332f6b79307432765171-build.zip"
         },
         "area51GetAppointments": {
           "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",

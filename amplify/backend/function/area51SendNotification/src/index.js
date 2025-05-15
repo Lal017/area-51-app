@@ -34,7 +34,7 @@ const sendPushNotifications = async (expoPushToken, title, body, data) =>
       sound: 'default',
       title: title,
       body: body,
-      data: { data }
+      data: data
   };
 
   try {

@@ -1,4 +1,4 @@
-import { createAppointment, createTowRequest } from '../src/graphql/mutations';
+import { createAppointment, createTowRequest, updateTowRequest } from '../src/graphql/mutations';
 import { post } from 'aws-amplify/api';
 import { Alert } from 'react-native';
 import { towRequestsByUserId } from '../src/graphql/queries';
@@ -127,7 +127,27 @@ const handleNotifUpdateTowRequest = async (client, userId, setTowRequest) =>
     } catch (error) {
         console.log('Error updating tow request:', error);
     }
-}
+},
+
+handleUpdateTowRequestReply = async (client, towId, status, setTowRequest) =>
+{
+    try {
+        const update = await client.graphql({
+            query: updateTowRequest,
+            variables: {
+                input: {
+                    id: towId,
+                    status: status
+                }
+            }
+        });
+        
+        setTowRequest(update);
+        console.log('Updated!');
+    } catch (error) {
+        console.log('Error updating tow request:', error);
+    }
+};
 
 export {
     handleGetAppointments,
@@ -135,5 +155,6 @@ export {
     handleCreateAppointment,
     handleCreateTowRequest,
     handleGetTowRequest,
-    handleNotifUpdateTowRequest
+    handleNotifUpdateTowRequest,
+    handleUpdateTowRequestReply
 }

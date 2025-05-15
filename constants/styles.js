@@ -93,7 +93,7 @@ const Styles = StyleSheet.create({
     },
     // button
     actionButton: {
-        backgroundColor: Colors.primary,
+        backgroundColor: Colors.secondary,
         padding: 10,
         width: 300,
         borderRadius: 25,
@@ -228,6 +228,11 @@ const HomeStyles = StyleSheet.create({
     titleWrapper: {
         flexDirection: 'row',
         alignItems: 'center',
+    },
+    buttonContainer: {
+        width: '100%',
+        alignItems: 'center',
+        rowGap: 20
     }
 });
 
