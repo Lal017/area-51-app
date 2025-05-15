@@ -51,7 +51,7 @@ const Profile = () =>
                 </View>
             </View>
             <TouchableOpacity
-                onPress={() => handleSignOut()}
+                onPress={handleSignOut}
                 style={Styles.actionButton}
             >
                 <Text style={Styles.actionText}>Sign Out</Text>

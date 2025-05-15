@@ -21,6 +21,10 @@ export const createUser = /* GraphQL */ `
         nextToken
         __typename
       }
+      towRequests {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       owner
@@ -48,6 +52,10 @@ export const updateUser = /* GraphQL */ `
         nextToken
         __typename
       }
+      towRequests {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       owner
@@ -72,6 +80,10 @@ export const deleteUser = /* GraphQL */ `
         __typename
       }
       appointments {
+        nextToken
+        __typename
+      }
+      towRequests {
         nextToken
         __typename
       }
@@ -198,6 +210,69 @@ export const deleteAppointment = /* GraphQL */ `
       notes
       userId
       vehicleId
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const createTowRequest = /* GraphQL */ `
+  mutation CreateTowRequest(
+    $input: CreateTowRequestInput!
+    $condition: ModelTowRequestConditionInput
+  ) {
+    createTowRequest(input: $input, condition: $condition) {
+      id
+      userId
+      vehicleId
+      status
+      location
+      notes
+      price
+      waitTime
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const updateTowRequest = /* GraphQL */ `
+  mutation UpdateTowRequest(
+    $input: UpdateTowRequestInput!
+    $condition: ModelTowRequestConditionInput
+  ) {
+    updateTowRequest(input: $input, condition: $condition) {
+      id
+      userId
+      vehicleId
+      status
+      location
+      notes
+      price
+      waitTime
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const deleteTowRequest = /* GraphQL */ `
+  mutation DeleteTowRequest(
+    $input: DeleteTowRequestInput!
+    $condition: ModelTowRequestConditionInput
+  ) {
+    deleteTowRequest(input: $input, condition: $condition) {
+      id
+      userId
+      vehicleId
+      status
+      location
+      notes
+      price
+      waitTime
       createdAt
       updatedAt
       owner

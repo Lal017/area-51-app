@@ -18,6 +18,10 @@ export const getUser = /* GraphQL */ `
         nextToken
         __typename
       }
+      towRequests {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       owner
@@ -39,6 +43,16 @@ export const listUsers = /* GraphQL */ `
         email
         phone
         pushToken
+        vehicles {
+          items {
+            year
+            make
+            model
+            color
+            plate
+            vin
+          }
+        }
         createdAt
         updatedAt
         owner
@@ -230,6 +244,125 @@ export const appointmentsByUserId = /* GraphQL */ `
         notes
         userId
         vehicleId
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getTowRequest = /* GraphQL */ `
+  query GetTowRequest($id: ID!) {
+    getTowRequest(id: $id) {
+      id
+      userId
+      user {
+        id
+        access
+        name
+        email
+        phone
+        pushToken
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      vehicleId
+      vehicle {
+        id
+        year
+        make
+        model
+        color
+        plate
+        vin
+        userId
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      status
+      location
+      notes
+      price
+      waitTime
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const listTowRequests = /* GraphQL */ `
+  query ListTowRequests(
+    $filter: ModelTowRequestFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listTowRequests(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        userId
+        user {
+          id
+          name
+          email
+          phone
+          pushToken
+        }
+        vehicleId
+        vehicle {
+          year
+          make
+          model
+          color
+          plate
+          vin
+        }
+        status
+        location
+        notes
+        price
+        waitTime
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const towRequestsByUserId = /* GraphQL */ `
+  query TowRequestsByUserId(
+    $userId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelTowRequestFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    towRequestsByUserId(
+      userId: $userId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        vehicleId
+        status
+        location
+        notes
+        price
+        waitTime
         createdAt
         updatedAt
         owner

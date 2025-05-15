@@ -96,7 +96,7 @@ const editVehicle = () =>
                 </View>
                 <TouchableOpacity
                     style={Styles.actionButton}
-                    onPress={() => handleUpdateVehicle(client, {year, make, model, color, plate, vin}, vehicleId, setVehicles)}
+                    onPress={() => handleUpdateVehicle(client, {year, make, model, color, plate, vin}, vehicle.Id, setVehicles)}
                 >
                     <Text style={Styles.actionText}>Update</Text>
                 </TouchableOpacity>
@@ -107,11 +107,11 @@ const editVehicle = () =>
                         'Are you sure you want to delete this vehicle?',
                         [
                             {
+                                text: 'No',
+                            },
+                                                        {
                                 text: 'Yes',
                                 onPress: () => handleDeleteVehicle(client, vehicleId, setVehicles)
-                            },
-                            {
-                                text: 'No',
                             }
                         ]
                     )}

@@ -5,15 +5,11 @@ const Styles = StyleSheet.create({
     // Header/Tab Styles
     HeaderContainer: {
         backgroundColor: Colors.backDrop,
-        height: 95,
+        height: 100,
         justifyContent: 'flex-end',
         alignItems: 'center',
         elevation: 14,
         paddingBottom: 20,
-    },
-    HeaderTitle: {
-        fontSize: 30,
-        fontWeight: 300,
     },
     LogoImg: {
         width: 200,
@@ -24,8 +20,6 @@ const Styles = StyleSheet.create({
     tabBarStyle: {
         backgroundColor: Colors.backDrop,
         elevation: 14,
-        shadowOpacity: 0,
-        borderTopWidth: 0,
     },
     carIconContainer: {
         width: 75,
@@ -360,6 +354,65 @@ const AdminStyles = StyleSheet.create({
         backgroundColor: Colors.tertiary,
         alignItems: 'center',
         position: 'relative',
+    },
+    userContainer: {
+        width: '100%',
+        alignItems: 'center',
+        rowGap: 5
+    },
+    userCard: {
+        width: '95%',
+        backgroundColor: Colors.backDrop,
+        elevation: 10,
+        borderRadius: 25,
+        padding: 25,
+        rowGap: 10
+    },
+    userInfo: {
+        gap: 2
+    },
+    vehicleInfo: {
+        width: '100%',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-evenly',
+        padding: 10,
+        backgroundColor: Colors.background,
+        borderRadius: 25
+    },
+    customerBox: {
+        width: '100%',
+        padding: 30,
+        rowGap: 10,
+        backgroundColor: Colors.backDrop,
+        elevation: 10
+    },
+    vehicleBox: {
+        width: '100%',
+        justifyContent: 'center',
+        columnGap: 10,
+        flexDirection: 'row',
+        backgroundColor: Colors.backDrop,
+        elevation: 10,
+        paddingTop: 25,
+        paddingBottom: 25,
+    },
+    notesBox: {
+        paddingLeft: 30,
+        paddingRight: 30,
+        width: '100%',
+        alignItems: 'flex-start'
+    },
+    infoContainer: {
+        width: '100%',
+        alignItems: 'center',
+        rowGap: 25,
+        paddingBottom: 25
+    },
+    responseContainer: {
+        width: '100%',
+        alignItems: 'center',
+        rowGap: 25,
     }
 });
 

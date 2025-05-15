@@ -7,10 +7,11 @@ import Colors from "../../../constants/colors";
 import { FontAwesome, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { handleCustomerRequest } from "../../../components/notifComponents";
 import { Select } from "../../../components/components";
+import { handleCreateTowRequest } from "../../../components/scheduleComponents";
 
 const towRequest = () =>
 {
-    const { vehicles, userId, name, email, phoneNumber, setRequest } = useApp();
+    const { client, vehicles, userId, setTowRequest } = useApp();
 
     const [ selectedVehicle, setSelectedVehicle ] = useState();
     const [ notes, setNotes ] = useState();
@@ -75,7 +76,8 @@ const towRequest = () =>
                     <TouchableOpacity
                         style={Styles.actionButton}
                         onPress={() => {
-                            handleCustomerRequest(notes, selectedVehicle, { userId, name, email, phoneNumber }, setRequest)
+                            handleCustomerRequest(notes, selectedVehicle.id, userId)
+                            handleCreateTowRequest(client, userId, selectedVehicle.id, "N/A", notes, setTowRequest)
                             router.replace('/(tabs)');
                         }}
                     >

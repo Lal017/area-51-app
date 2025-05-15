@@ -14,6 +14,7 @@ type User
   pushToken: String!
   vehicles: [Vehicle] @hasMany(indexName: "byUser", fields: ["id"])
   appointments: [Appointment] @hasMany(indexName: "byUser", fields: ["id"])
+  towRequests: [TowRequest] @hasMany(indexName: "byUser", fields: ["id"])
 }
 
 type Vehicle
@@ -51,4 +52,31 @@ type Appointment
   user: User @belongsTo(fields: ["userId"])
   vehicleId: ID!
   vehicle: Vehicle @hasOne(fields: ["vehicleId"])
+}
+
+enum TowRequestStatus {
+  REQUESTED
+  PENDING
+  CANCELLED
+  IN_PROGRESS
+  COMPLETED
+}
+
+type TowRequest
+  @model
+  @auth(rules: [
+    {allow: owner},
+    {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]}
+  ])
+{
+  id: ID!
+  userId: ID! @index(name: "byUser")
+  user: User @belongsTo(fields: ["userId"])
+  vehicleId: ID!
+  vehicle: Vehicle @hasOne(fields: ["vehicleId"])
+  status: TowRequestStatus!
+  location: String!
+  notes: String
+  price: String
+  waitTime: String
 }

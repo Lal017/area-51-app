@@ -35,7 +35,7 @@ const Index = () =>
     if (!user) {
         return <Redirect href={{ pathname: '(auth)' }} />;
     }
-    else if (user && user.accessToken.payload["cognito:groups"]?.includes('Admins')) {
+    else if (user?.accessToken?.payload["cognito:groups"]?.includes('Admins')) {
         return <Redirect href={{ pathname: '(admin)' }} />;
     }
     return <Redirect href={{ pathname: '(tabs)' }} />;

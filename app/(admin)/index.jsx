@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import { Styles, AdminStyles } from "../../constants/styles";
 import { router } from 'expo-router';
 import LottieView from 'lottie-react-native';
@@ -8,7 +8,10 @@ const AdminConsole = () =>
 {
     return (
         <View style={[Styles.page, {rowGap: 5}]}>
-            <TouchableOpacity style={AdminStyles.consoleBubble}>
+            <TouchableOpacity
+                style={AdminStyles.consoleBubble}
+                onPress={() => router.push('/(admin)/userList')}
+            >
                 <Text style={[Styles.title, {position: 'absolute', top: 50, color: 'white'}]}>Users List</Text>
                 <LottieView
                     source={require('../../assets/animations/astronaut.json')}
@@ -28,7 +31,10 @@ const AdminConsole = () =>
                     speed={0.5}
                 />
             </TouchableOpacity>
-            <TouchableOpacity style={[AdminStyles.consoleBubble, {backgroundColor: Colors.primary}]}>
+            <TouchableOpacity
+                style={[AdminStyles.consoleBubble, {backgroundColor: Colors.primary}]}
+                onPress={() => router.push('/(admin)/towRequests')}
+            >
                 <Text style={[Styles.title, {position: 'absolute', top: 50, color: 'white'}]}>Tow Requests</Text>
                 <LottieView
                     source={require('../../assets/animations/planet.json')}

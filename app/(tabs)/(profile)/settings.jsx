@@ -1,6 +1,6 @@
 import { View, Text } from 'react-native';
 import { ProfileStyles, Styles } from '../../../constants/styles'
-import { Tab } from '../../../components/components';
+import { Tab, formatNumber } from '../../../components/components';
 import { router } from 'expo-router';
 import { useApp } from '../../../components/context';
 import { AntDesign, Ionicons, MaterialIcons } from '@expo/vector-icons';
@@ -9,18 +9,7 @@ const Settings = () =>
 {
     const { email, name, phoneNumber } = useApp();
 
-    const formatNumber = (phone) =>
-    {
-        const clean = phone.replace(/\D/g, '').slice(-10);
-        const match = clean.match(/^(\d{3})(\d{3})(\d{4})$/);
-
-        if (match) {
-            return `(${match[1]}) ${match[2]} - ${match[3]}`;
-        }
-        return phone;
-    };
-
-    const readableNumber = formatNumber(phoneNumber);
+    const readableNumber = phoneNumber ? formatNumber(phoneNumber) : null;
 
     return(
         <View style={[Styles.page, {justifyContent: 'flex-start'}]}>

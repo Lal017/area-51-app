@@ -15,6 +15,10 @@ try {
 
 import { Stack } from 'expo-router';
 import { setNotificationHandler } from 'expo-notifications';
+import { Hub } from 'aws-amplify/utils';
+import { useEffect } from 'react';
+import { router } from 'expo-router';
+import { handleGetCurrentUser } from '../components/authComponents';
 
 setNotificationHandler({
   handleNotification: async () => ({
@@ -28,6 +32,33 @@ setNotificationHandler({
 
 const RootLayout = () =>
 {
+  useEffect(() => {
+    const listener = Hub.listen('auth', async (data) => {
+      const { payload } = data;
+      
+      // Handle authentication events
+      switch (payload.event) {
+        case 'signedIn':
+          // Redirect to home screen or dashboard after successful sign in
+          const user = await handleGetCurrentUser();
+          const isAdmin = user?.accessToken?.payload["cognito:groups"]?.includes('Admins');
+          if (isAdmin) { router.replace('(admin)'); }
+          else { router.replace('(tabs)'); }
+          break;
+        case 'signedOut':
+          // Redirect to login screen after sign out
+          router.replace('(auth)');
+          break;
+        case 'signedIn_failure':
+          // Handle failed sign in
+          router.replace('(auth)');
+          break;
+      }
+    });
+
+    return listener; // Clean up the listener on unmount
+  }, []);
+  
   return (
     <Stack screenOptions={{headerShown: false}}>
       <Stack.Screen name='index' options={{title: 'Home'}}/>

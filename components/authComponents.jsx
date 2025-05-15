@@ -99,6 +99,13 @@ const handleSignUpConfirm = async ({username, confirmationCode}) =>
         }
         else if(nextStep.signUpStep === 'DONE') {
             router.replace('(auth)');
+            Alert.alert(
+                "Success",
+                "Sign up successful!",
+                [
+                    { text: "Ok" }
+                ]
+            );
         }
         else {
             console.log('error, could not auto sign in');
@@ -175,10 +182,7 @@ const handleSignIn = async ({username, password}) =>
 const signInConfirm = async ({username, isSignedIn, nextStep}) =>
 {
     if (isSignedIn && nextStep.signInStep === 'DONE') {
-        const user = await handleGetCurrentUser();
-        const isAdmin = user?.accessToken?.payload["cognito:groups"]?.includes('Admins');
-        if (isAdmin) { router.replace('/(admin)'); }
-        else { router.replace('/(tabs)'); }
+        await handleRedirect();
     }
     else if (nextStep.signInStep === 'CONFIRM_SIGN_UP') {
         handleResendSignUpCode({username});
@@ -246,7 +250,7 @@ const handleSignOut = async () =>
     try {
         await signOut({global: true });
         clearLocalStorage();
-        router.replace('/');
+        router.replace('(auth)');
     } catch (error) {
         console.log('error signing out', error);
         Alert.alert(
@@ -384,7 +388,7 @@ const handleUpdatePassword = async ({oldPassword, newPassword, confNewPassword})
                 { text: 'Ok'}
             ]
         );
-        router.replace('(profile)');
+        await handleRedirect();
     } catch (error) {
         console.log('error updating password', error);
         Alert.alert(
@@ -410,7 +414,7 @@ const handleDeleteUser = async ({email, inputEmail}) =>
                 { text: 'Ok'}
             ]
         );
-        router.replace('(tabs');
+        await handleRedirect();
         return;
     }
     try {
@@ -533,7 +537,7 @@ const handleUpdateAttributesNextSteps = (nextStep) =>
                 { text: 'Ok'}
             ]
         );
-        router.replace('(tabs)');
+        handleRedirect();
     }
     else if (nextStep === 'CONFIRM_ATTRIBUTE_WITH_CODE') {
         router.push('/confirmAttribute');
@@ -544,7 +548,7 @@ const handleConfirmUserAttribute = async ({ userAttributeKey, confirmationCode }
 {
     try {
         await confirmUserAttribute({ userAttributeKey, confirmationCode });
-        router.replace('(tabs)');
+        await handleRedirect();
         Alert.alert(
             "Success",
             "Email confirmed!",
@@ -561,6 +565,20 @@ const handleConfirmUserAttribute = async ({ userAttributeKey, confirmationCode }
                 { text: 'Ok'}
             ]
         );
+    }
+};
+
+const handleRedirect = async () =>
+{
+    try {
+        const { tokens } = await fetchAuthSession();
+        if (tokens?.accessToken.payload["cognito:groups"]?.includes("Admins")) {
+            router.replace('(admin)');
+        } else {
+            router.replace('(tabs)');
+        }
+    } catch (error) {
+        console.log(error);
     }
 };
 

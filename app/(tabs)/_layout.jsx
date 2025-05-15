@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { View, Alert } from "react-native";
 import { router, Tabs} from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { CustHeader } from "../../components/components";
@@ -13,6 +13,7 @@ import { handleGetCurrentUser } from "../../components/authComponents";
 import { fetchUserAttributes } from "aws-amplify/auth";
 import { vehiclesByUserId } from "../../src/graphql/queries";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { handleGetTowRequest, handleNotifUpdateTowRequest } from "../../components/scheduleComponents";
 
 const TabsContent = () =>
 {
@@ -33,8 +34,9 @@ const TabsContent = () =>
         setEmail,
         phoneNumber,
         setPhoneNumber,
-        setRequest,
-        setVehicles } = useApp();
+        setVehicles,
+        setTowRequest
+    } = useApp();
 
     // notification listeners
     const notificationListener = useRef();
@@ -63,10 +65,20 @@ const TabsContent = () =>
             await setUserId(userInfo.accessToken.payload.sub);
 
             const savedNotif = await AsyncStorage.getItem('notification');
-            const savedRequest = await AsyncStorage.getItem('request');
-            
             setNotification(JSON.parse(savedNotif));
-            setRequest(JSON.parse(savedRequest));
+
+            if (!userAtt?.phone_number) {
+                Alert.alert(
+                    'NOTICE',
+                    'Please add a phone number before continuing',
+                    [
+                        {
+                            text: 'Settings',
+                            onPress: () => router.push('/(tabs)/(profile)/accountEdit')
+                        }
+                    ]
+                );
+            }
         }
 
         initializeApp();
@@ -84,13 +96,27 @@ const TabsContent = () =>
                     }
                 });
                 
-                setVehicles(vehiclesInfo.data.vehiclesByUserId.items);
+                await setVehicles(vehiclesInfo.data.vehiclesByUserId.items);
             } catch (error) {
                 console.log('Error getting vehicles:', error);
             }
         }
 
-        if (client && userId) { handleGetVehicles(); }
+        const handleGetRequests = async () =>
+        {
+            try {
+                // set active tow request
+                const getTowRequest = await handleGetTowRequest(client, userId);
+                await setTowRequest(getTowRequest);
+            } catch (error) {
+                console.log('Error getting tow request:', error);
+            }
+        }
+
+        if (client && userId) {
+            handleGetVehicles();
+            handleGetRequests();
+        }
     }, [client, userId])
 
     // Send to database
@@ -118,22 +144,28 @@ const TabsContent = () =>
 
     // Listeners for push notifications
     useEffect(() => {
+        // delay listener setup until client and userId is ready
+        if(!client || !userId) return;
+
         // triggered when the notification is actually received. foreground and background
         notificationListener.current = addNotificationReceivedListener(notification => {
-            console.log(notification.request.content);
             setNotification(notification.request.content);
+
+            if(notification.request.content.data.type === "TOW_RESPONSE"){
+                handleNotifUpdateTowRequest(client, userId, setTowRequest);
+            }
         });
 
         // triggered when the user taps on the notification
         responseListener.current = addNotificationResponseReceivedListener(response => {
-            router.push('/(tabs)/(home)');
+            router.push('/');
         });
 
         return () => {
             notificationListener.current && removeNotificationSubscription(notificationListener.current);
             responseListener.current && removeNotificationSubscription(responseListener.current);
         };
-    }, []);
+    }, [client, userId]);
 
     return (
         <Tabs
@@ -147,13 +179,13 @@ const TabsContent = () =>
             <Tabs.Screen
                 name="(home)"
                 options={{
-                title: 'Home',
-                headerShown: true,
-                header: () => <CustHeader title="Home"/>,
-                tabBarHideOnKeyboard: true,
-                tabBarIcon: ({ color, size }) => (
-                    <Ionicons name="home" size={size} color={color}/>
-                ),
+                    title: 'Home',
+                    headerShown: true,
+                    header: () => <CustHeader title="Home"/>,
+                    tabBarHideOnKeyboard: true,
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="home" size={size} color={color}/>
+                    ),
                 }}
             />
             <Tabs.Screen

@@ -1,6 +1,7 @@
-import { createAppointment } from '../src/graphql/mutations';
+import { createAppointment, createTowRequest } from '../src/graphql/mutations';
 import { post } from 'aws-amplify/api';
 import { Alert } from 'react-native';
+import { towRequestsByUserId } from '../src/graphql/queries';
 
 const handleGetAppointments = async () =>
 {
@@ -43,7 +44,6 @@ const handleSetDay = async (appointments, day) =>
 
 const handleCreateAppointment = async (client, date, time, service, notes, userId, vehicleId) =>
 {
-    console.log('Creating appointment...', date, time, service, notes, vehicleId);
     try {
         await client.graphql({
             query: createAppointment,
@@ -65,7 +65,6 @@ const handleCreateAppointment = async (client, date, time, service, notes, userI
             [
                 {
                     text: 'OK',
-                    onPress: () => console.log('Appointment created successfully!')
                 }
             ]
         );
@@ -74,8 +73,67 @@ const handleCreateAppointment = async (client, date, time, service, notes, userI
     }
 };
 
+const handleCreateTowRequest = async (client, userId, vehicleId, location, notes, setTowRequest) =>
+{
+    try {
+        await client.graphql({
+            query: createTowRequest,
+            variables: {
+                input: {
+                    userId: userId,
+                    vehicleId: vehicleId,
+                    status: "REQUESTED",
+                    location: location,
+                    notes: notes
+                }
+            }
+        });
+
+        const updatedRequest = await handleGetTowRequest(client, userId);
+        await setTowRequest(updatedRequest);
+    } catch (error) {
+        console.log('Error creating tow request: ', error);
+    }
+};
+
+const handleGetTowRequest = async (client, id) =>
+{
+    try {
+        const request = await client.graphql({
+            query: towRequestsByUserId,
+            variables: {
+                userId: id,
+                filter: {
+                    status: { ne: 'COMPLETED'}
+                }
+            }
+        });
+
+        return request.data.towRequestsByUserId.items[0];
+    } catch (error) {
+        console.log('Error getting tow request:', error);
+    }
+};
+
+// used to update the tow request after receiving a notification
+const handleNotifUpdateTowRequest = async (client, userId, setTowRequest) =>
+{
+    if (!client || !userId) return;
+
+    try {
+        const update = await handleGetTowRequest(client, userId);
+        setTowRequest(update);
+        console.log('UPDATED!');
+    } catch (error) {
+        console.log('Error updating tow request:', error);
+    }
+}
+
 export {
     handleGetAppointments,
     handleSetDay,
     handleCreateAppointment,
+    handleCreateTowRequest,
+    handleGetTowRequest,
+    handleNotifUpdateTowRequest
 }

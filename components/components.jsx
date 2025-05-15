@@ -7,7 +7,7 @@ const CustHeader = ({title}) =>
 {
     return (
         <View style={Styles.HeaderContainer}>
-            <Text style={Styles.HeaderTitle}>{title}</Text>
+            <Text style={Styles.title}>{title}</Text>
         </View>
    
     );
@@ -49,9 +49,22 @@ const socialRedirect = (link) =>
     Linking.openURL(link);
 };
 
+// format number to for readability
+const formatNumber = (phone) =>
+{
+    const clean = phone.replace(/\D/g, '').slice(-10);
+    const match = clean.match(/^(\d{3})(\d{3})(\d{4})$/);
+
+    if (match) {
+        return `(${match[1]}) ${match[2]} - ${match[3]}`;
+    }
+    return phone;
+};
+
 export {
     CustHeader,
     Tab,
     Select,
     socialRedirect,
+    formatNumber
 };

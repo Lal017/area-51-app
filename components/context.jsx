@@ -7,27 +7,13 @@ const AppProvider = ({ children }) => {
   const [ userId, setUserId ] = useState();
   const [ client, setClient ] = useState();
   const [ pushToken, setPushToken ] = useState();
-  const [ access, setAccess ] = useState('Customer');
+  const [ access, setAccess ] = useState();
   const [ notification, setNotification ] = useState();
   const [ email, setEmail ] = useState();
   const [ name, setName ] = useState();
   const [ phoneNumber, setPhoneNumber ] = useState();
   const [ vehicles, setVehicles ] = useState();
-  const [ request, setRequest ] = useState(false);
-
-  const handleSetRequest = async (requestBool) =>
-  {
-    try {
-      if (requestBool) {
-        await AsyncStorage.setItem('request', requestBool.toString());
-      } else {
-        await AsyncStorage.removeItem('request');
-      }
-      setRequest(requestBool);
-    } catch (error) {
-      console.error('error setting request:', error);
-    }
-  };
+  const [ towRequest, setTowRequest ] = useState();
 
   const updateNotification = async (newNotif) =>
   {
@@ -47,9 +33,7 @@ const AppProvider = ({ children }) => {
   {
     try {
       await AsyncStorage.removeItem('notification');
-      await AsyncStorage.removeItem('request');
       setNotification(null);
-      setRequest(false);
     } catch (error) {
       console.error('error clearing notification:', error);
     }
@@ -76,8 +60,8 @@ const AppProvider = ({ children }) => {
         setPhoneNumber,
         vehicles,
         setVehicles,
-        request,
-        setRequest: handleSetRequest
+        towRequest,
+        setTowRequest
         }}>
       {children}
     </AppContext.Provider>

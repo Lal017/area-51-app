@@ -1,7 +1,7 @@
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-import { Styles } from '../../../constants/styles';
+import { Styles } from '../../constants/styles';
 import { useState } from 'react';
-import { handleConfirmUserAttribute } from '../../../components/authComponents';
+import { handleConfirmUserAttribute } from '../../components/authComponents';
 import { MaterialIcons } from '@expo/vector-icons';
 
 const ConfirmAttribute = () =>

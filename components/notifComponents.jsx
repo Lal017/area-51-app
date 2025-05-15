@@ -2,6 +2,7 @@ import { Alert } from 'react-native';
 import { createUser, updateUser, deleteUser } from '../src/graphql/mutations';
 import { getUser } from '../src/graphql/queries';
 import { post } from 'aws-amplify/api';
+import { handleCreateTowRequest } from './scheduleComponents';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import Constants from 'expo-constants';
@@ -139,7 +140,7 @@ const handleCheckUser = async (client, userId) =>
     return alreadyExists;
 };
 
-const handleCustomerRequest = async (notes, vehicle, customer, setRequest) =>
+const handleCustomerRequest = async (notes, vehicleId, userId) =>
 {
     try {
         const restOperation = post({
@@ -152,11 +153,8 @@ const handleCustomerRequest = async (notes, vehicle, customer, setRequest) =>
                     content: 'A customer has requested a tow',
                     data: {
                         notes: notes,
-                        vehicle: vehicle,
-                        userId: customer.userId,
-                        name: customer.name,
-                        email: customer.email,
-                        phoneNumber: customer.phoneNumber
+                        vehicleId: vehicleId,
+                        userId: userId,
                     }
                 }
             }
@@ -166,8 +164,7 @@ const handleCustomerRequest = async (notes, vehicle, customer, setRequest) =>
         const response = await body.json();
 
         if (response?.data?.listUsers?.items?.length > 0) {
-            console.log('REQUEST SENT SUCCESSFULLY:', response);
-            setRequest(true);
+            console.log('REQUEST SENT SUCCESSFULLY');
         } else {
             console.log('REQUEST FAILED:', response);
         }

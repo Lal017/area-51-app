@@ -21,6 +21,10 @@ export const onCreateUser = /* GraphQL */ `
         nextToken
         __typename
       }
+      towRequests {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       owner
@@ -48,6 +52,10 @@ export const onUpdateUser = /* GraphQL */ `
         nextToken
         __typename
       }
+      towRequests {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       owner
@@ -72,6 +80,10 @@ export const onDeleteUser = /* GraphQL */ `
         __typename
       }
       appointments {
+        nextToken
+        __typename
+      }
+      towRequests {
         nextToken
         __typename
       }
@@ -312,6 +324,147 @@ export const onDeleteAppointment = /* GraphQL */ `
         owner
         __typename
       }
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const onCreateTowRequest = /* GraphQL */ `
+  subscription OnCreateTowRequest(
+    $filter: ModelSubscriptionTowRequestFilterInput
+    $owner: String
+  ) {
+    onCreateTowRequest(filter: $filter, owner: $owner) {
+      id
+      userId
+      user {
+        id
+        access
+        name
+        email
+        phone
+        pushToken
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      vehicleId
+      vehicle {
+        id
+        year
+        make
+        model
+        color
+        plate
+        vin
+        userId
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      status
+      location
+      notes
+      price
+      waitTime
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const onUpdateTowRequest = /* GraphQL */ `
+  subscription OnUpdateTowRequest(
+    $filter: ModelSubscriptionTowRequestFilterInput
+    $owner: String
+  ) {
+    onUpdateTowRequest(filter: $filter, owner: $owner) {
+      id
+      userId
+      user {
+        id
+        access
+        name
+        email
+        phone
+        pushToken
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      vehicleId
+      vehicle {
+        id
+        year
+        make
+        model
+        color
+        plate
+        vin
+        userId
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      status
+      location
+      notes
+      price
+      waitTime
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const onDeleteTowRequest = /* GraphQL */ `
+  subscription OnDeleteTowRequest(
+    $filter: ModelSubscriptionTowRequestFilterInput
+    $owner: String
+  ) {
+    onDeleteTowRequest(filter: $filter, owner: $owner) {
+      id
+      userId
+      user {
+        id
+        access
+        name
+        email
+        phone
+        pushToken
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      vehicleId
+      vehicle {
+        id
+        year
+        make
+        model
+        color
+        plate
+        vin
+        userId
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      status
+      location
+      notes
+      price
+      waitTime
       createdAt
       updatedAt
       owner

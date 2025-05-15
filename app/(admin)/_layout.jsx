@@ -2,6 +2,7 @@ import { Stack, router } from "expo-router";
 import { CustHeader } from "../../components/components";
 import { AppProvider, useApp } from "../../components/context";
 import { useEffect, useRef } from 'react';
+import { Alert } from "react-native";
 import { generateClient } from "aws-amplify/api";
 import { addNotificationReceivedListener, addNotificationResponseReceivedListener, removeNotificationSubscription } from "expo-notifications";
 import { registerForPushNotifications, handleCreateUser, handleUpdateUser, handleCheckUser } from "../../components/notifComponents";
@@ -29,8 +30,7 @@ const AdminContent = () =>
         setEmail,
         phoneNumber,
         setPhoneNumber,
-        setRequest,
-        setVehicles } = useApp();
+    } = useApp();
 
     // notification listeners
     const notificationListener = useRef();
@@ -59,35 +59,24 @@ const AdminContent = () =>
             await setUserId(userInfo.accessToken.payload.sub);
 
             const savedNotif = await AsyncStorage.getItem('notification');
-            const savedRequest = await AsyncStorage.getItem('request');
-            
             setNotification(JSON.parse(savedNotif));
-            setRequest(JSON.parse(savedRequest));
+
+            if (!userAtt?.phone_number) {
+                Alert.alert(
+                    'NOTICE',
+                    'Please add a phone number before continuing',
+                    [
+                        {
+                            text: 'Settings',
+                            onPress: () => router.push('/(admin)/accountEdit')
+                        }
+                    ]
+                );
+            }
         }
 
         initializeApp();
     }, []);
-
-    useEffect(() => {
-        const handleGetVehicles = async () =>
-        {
-            try {
-                // get vehicles info from database
-                const vehiclesInfo = await client.graphql({
-                    query: vehiclesByUserId,
-                    variables: {
-                        userId: userId,
-                    }
-                });
-                
-                setVehicles(vehiclesInfo.data.vehiclesByUserId.items);
-            } catch (error) {
-                console.log('Error getting vehicles:', error);
-            }
-        }
-
-        if (client && userId) { handleGetVehicles(); }
-    }, [client, userId])
 
     // Send to database
     useEffect(() => {
@@ -109,14 +98,12 @@ const AdminContent = () =>
         if (client && userId && pushToken && access && name && email && phoneNumber) {
             handleRegisterPushNotifications();
         }
-
     }, [client, userId, pushToken, phoneNumber, name, email, access]);
 
     // Listeners for push notifications
     useEffect(() => {
         // triggered when the notification is actually received. foreground and background
         notificationListener.current = addNotificationReceivedListener(notification => {
-            console.log(notification.request.content);
             setNotification(notification.request.content);
         });
 
@@ -134,6 +121,14 @@ const AdminContent = () =>
     return (
         <Stack>
             <Stack.Screen name='index' options={{title: 'Admin Console', header: () => <CustHeader title="Console"/>}}/>
+            <Stack.Screen name='userList' options={{title: 'Users', header: () => <CustHeader title="Users" />}}/>
+            <Stack.Screen name='settings' options={{title: 'Settings', header: () => <CustHeader title="Settings" />}}/>
+            <Stack.Screen name="accountEdit" options={{title: "Edit Account", header: () => <CustHeader title="Account Edit" />}}/>
+            <Stack.Screen name="changePassword" options={{title: "Change Password", header: () => <CustHeader title="Reset Password" />}}/>
+            <Stack.Screen name="confirmAttribute" options={{title: "Confirm Change", header: () => <CustHeader title="Reset Password" />}}/>
+            <Stack.Screen name="deleteAccount" options={{title: "Account Deletion", header: () => <CustHeader title="Account Deletion" />}}/>
+            <Stack.Screen name="towRequests" options={{title: "Tow Requests", header: () => <CustHeader title="Tow Requests"/>}}/>
+            <Stack.Screen name="towResponse" options={{title: "Tow Response", header: () => <CustHeader title="Tow Response"/>}}/>
         </Stack>
     );
 }
