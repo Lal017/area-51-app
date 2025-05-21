@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, TextInput, ScrollView, KeyboardAvoidingView } from "react-native";
-import { HomeStyles, Styles } from "../../../constants/styles"
+import { ServiceStyles, Styles } from "../../../constants/styles"
 import { useApp } from '../../../components/context';
 import { useState } from "react";
 import { router } from "expo-router";
@@ -18,8 +18,8 @@ const towRequest = () =>
 
     return (
         <KeyboardAvoidingView behavior="padding">
-            <ScrollView contentContainerStyle={[Styles.scrollPage, {paddingTop: 25, paddingBottom: 35}]}>
-                <View style={HomeStyles.descriptionContainer}>
+            <ScrollView contentContainerStyle={Styles.scrollPage}>
+                <View style={ServiceStyles.informationContainer}>
                     <Text style={Styles.subTitle}>How the request works?</Text>
                     <Text style={Styles.text}>
                         You won't be charged until after your vehicle has been towed.
@@ -28,10 +28,9 @@ const towRequest = () =>
                         You will be charged on arrival either through the app or in person.
                     </Text>
                 </View>
-                <View style={Styles.hr} />
-                <View style={HomeStyles.selectionContainer}>
-                    <Text style={Styles.subTitle}>Select the vehicle to be towed</Text>
-                    <View style={Styles.tabContainer}>
+                <View style={ServiceStyles.selectionContainer}>
+                    <Text style={[Styles.subTitle, {color: Colors.textAlt}]}>Select the vehicle to be towed</Text>
+                    <View style={[Styles.tabContainer, {rowGap: 5}]}>
                         {vehicles?.map((vehicle, index) => (
                             <TouchableOpacity
                             key={index}
@@ -57,20 +56,19 @@ const towRequest = () =>
                             </TouchableOpacity>
                         ))}
                     </View>
-                    <View style={Styles.hr} />
-                    <View style={HomeStyles.descriptionContainer}>
-                        <View style={Styles.inputContainer}>
-                            <Text style={[Styles.subTitle, {textAlign: 'center'}]}>Please give us a description of why the car needs to be towed</Text>
-                            <View style={Styles.inputWrapper}>
-                                <MaterialIcons name="notes" size={30} style={Styles.iconAlt} />
-                                <TextInput
-                                    placeholder="e.g. Flat tire, dead battery, etc."
-                                    style={Styles.inputAlt}
-                                    multiline={true}
-                                    value={notes}
-                                    onChangeText={setNotes}
-                                />
-                            </View>
+                </View>
+                <View style={ServiceStyles.descriptionContainer}>
+                    <View style={Styles.inputContainer}>
+                        <Text style={[Styles.subTitle, {textAlign: 'center', paddingLeft: 30, paddingRight: 30}]}>Please give us a description of why the car needs to be towed</Text>
+                        <View style={Styles.inputWrapper}>
+                            <MaterialIcons name="notes" size={30} style={Styles.iconAlt} />
+                            <TextInput
+                                placeholder="e.g. Flat tire, dead battery, etc."
+                                style={Styles.inputAlt}
+                                multiline={true}
+                                value={notes}
+                                onChangeText={setNotes}
+                            />
                         </View>
                     </View>
                     <TouchableOpacity

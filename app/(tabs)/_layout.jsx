@@ -189,11 +189,11 @@ const TabsContent = () =>
                 }}
             />
             <Tabs.Screen
-                name="(schedule)"
+                name="(service)"
                 options={{
-                    title: "Schedule maintenance",
+                    title: "Services",
                     headerShown: true,
-                    header: () => <CustHeader title="Schedule"/>,
+                    header: () => <CustHeader title="Service"/>,
                     tabBarHideOnKeyboard: true,
                     tabBarIcon: ({ color, size, focused }) => (
                         <View style={Styles.carIconContainer}>

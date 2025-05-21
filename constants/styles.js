@@ -4,11 +4,9 @@ import Colors from "./colors";
 const Styles = StyleSheet.create({
     // Header/Tab Styles
     HeaderContainer: {
-        backgroundColor: Colors.backDrop,
         height: 100,
         justifyContent: 'flex-end',
         alignItems: 'center',
-        elevation: 14,
         paddingBottom: 20,
     },
     LogoImg: {
@@ -34,6 +32,15 @@ const Styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderColor: Colors.textAlt,
         width: 350,
+    },
+    consoleBubble: {
+        width: '95%',
+        height: 175,
+        borderRadius: 50,
+        elevation: 10,
+        backgroundColor: Colors.tertiary,
+        alignItems: 'center',
+        position: 'relative',
     },
     // Tab Select
     tabWrapper: {
@@ -75,7 +82,7 @@ const Styles = StyleSheet.create({
     },
     input: {
         backgroundColor: Colors.backDrop,
-        width: 300,
+        width: '90%',
         height: 50,
         paddingLeft: 50,
         borderWidth: 1,
@@ -83,7 +90,7 @@ const Styles = StyleSheet.create({
     },
     inputAlt: {
         backgroundColor: Colors.backDrop,
-        width: 300,
+        width: '90%',
         height: 150,
         paddingLeft: 50,
         borderWidth: 1,
@@ -127,7 +134,7 @@ const Styles = StyleSheet.create({
     },
     iconAlt: {
         position: 'absolute',
-        left: 20,
+        left: 30,
         top: 15,
         zIndex: 1,
     },
@@ -143,7 +150,6 @@ const Styles = StyleSheet.create({
         backgroundColor: Colors.background,
         justifyContent: 'center',
         alignItems: 'center',
-        rowGap: 25,
     },
     container: {
         justifyContent: 'center',
@@ -194,36 +200,14 @@ const AuthStyles = StyleSheet.create({
 });
 
 const HomeStyles = StyleSheet.create({
-    towButton: {
-        backgroundColor: Colors.secondary,
-        width: '100%',
-        elevation: 10,
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 25,
-        rowGap: 20,
-    },
-    selectionContainer: {
-        width: '100%',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        rowGap: 35,
-        elevation: 10,
-    },
-    descriptionContainer: {
-        width: '100%',
-        justifyContent: 'center',
-        paddingLeft: 45,
-        paddingRight: 45,
-        rowGap: 20,
-    },
-    notifWrapper: {
+    requestWrapper: {
         width: '100%',
         elevation: 10,
         backgroundColor: Colors.backDrop,
         padding: 20,
         rowGap: 20,
         alignItems: 'left',
+        justifyContent: 'center'
     },
     titleWrapper: {
         flexDirection: 'row',
@@ -236,41 +220,81 @@ const HomeStyles = StyleSheet.create({
     }
 });
 
-const ScheduleStyles = StyleSheet.create({
-    calendarContainer: {
-        backgroundColor: Colors.backDrop,
-        width: '100%',
-        elevation: 0,
+const ServiceStyles = StyleSheet.create({
+    calendarHeaderContainer: {
+        width: '100%'
     },
-    container: {
+    picker: {
+        width: '85%',
+        backgroundColor: Colors.backDrop,
+        borderWidth: 1,
+        borderRadius: 50,
+        paddingLeft: 20
+    },
+    // schedule.jsx
+    calendarContainer: {
         width: '100%',
         rowGap: 10,
     },
     timeContainer: {
-        flexDirection: 'row',
-        padding: 15,
-        paddingTop: 0,
-        gap: 10,
+        width: '100%',
+        rowGap: 10,
+        justifyContent: 'space-evenly',
+        backgroundColor: Colors.background,
+        paddingTop: 25,
+        paddingBottom: 25,
+        flexWrap: 'wrap',
+        flexDirection: 'row'
     },
-    timeBox: {
+    timeBubble: {
         backgroundColor: Colors.backDrop,
-        borderWidth: 1,
-        borderRadius: 25,
+        elevation: 10,
+        borderRadius: 50,
         padding: 15,
+        width: '45%'
     },
-    infoContainer: {
+    vehicleContainer: {
         rowGap: 25,
         width: '100%',
         justifyContent: 'center',
         alignItems: 'center'
     },
-    picker: {
-        width: 300,
-        backgroundColor: Colors.backDrop,
-        borderWidth: 1,
+    continueButton: {
+        alignSelf: 'flex-end',
+        marginRight: 25,
+        marginBottom: 25,
+        backgroundColor: Colors.secondary,
         borderRadius: 25,
-        paddingLeft: 20
-    }
+        alignItems: 'center',
+        justifyContent: 'center',
+        columnGap: 15,
+        flexDirection: 'row',
+        width: 150,
+        height: 65,
+        elevation: 10,
+    },
+    // towRequest.jsx
+    informationContainer: {
+        width: '100%',
+        justifyContent: 'center',
+        padding: 30,
+        rowGap: 10,
+    },
+    selectionContainer: {
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        rowGap: 20,
+        padding: 30,
+    },
+    descriptionContainer: {
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 10,
+        paddingBottom: 40,
+        rowGap: 20,
+    },
 });
 
 const ProfileStyles = StyleSheet.create({
@@ -351,15 +375,6 @@ const ProfileStyles = StyleSheet.create({
 });
 
 const AdminStyles = StyleSheet.create({
-    consoleBubble: {
-        width: '95%',
-        height: 175,
-        borderRadius: 50,
-        elevation: 10,
-        backgroundColor: Colors.tertiary,
-        alignItems: 'center',
-        position: 'relative',
-    },
     userContainer: {
         width: '100%',
         alignItems: 'center',
@@ -421,4 +436,4 @@ const AdminStyles = StyleSheet.create({
     }
 });
 
-export { Styles, AuthStyles, HomeStyles, ScheduleStyles, ProfileStyles, AdminStyles };
+export { Styles, AuthStyles, HomeStyles, ServiceStyles, ProfileStyles, AdminStyles };

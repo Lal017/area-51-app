@@ -9,7 +9,7 @@ const AdminConsole = () =>
     return (
         <View style={[Styles.page, {rowGap: 5}]}>
             <TouchableOpacity
-                style={AdminStyles.consoleBubble}
+                style={Styles.consoleBubble}
                 onPress={() => router.push('/(admin)/userList')}
             >
                 <Text style={[Styles.title, {position: 'absolute', top: 50, color: 'white'}]}>Users List</Text>
@@ -21,7 +21,7 @@ const AdminConsole = () =>
                     speed={0.5}
                 />
             </TouchableOpacity>
-            <TouchableOpacity style={[AdminStyles.consoleBubble, {backgroundColor: Colors.secondary}]}>
+            <TouchableOpacity style={[Styles.consoleBubble, {backgroundColor: Colors.secondary}]}>
                 <Text style={[Styles.title, {position: 'absolute', top: 50, color: 'white'}]}>Appointments</Text>
                 <LottieView
                     source={require('../../assets/animations/calendar.json')}
@@ -32,7 +32,7 @@ const AdminConsole = () =>
                 />
             </TouchableOpacity>
             <TouchableOpacity
-                style={[AdminStyles.consoleBubble, {backgroundColor: Colors.primary}]}
+                style={[Styles.consoleBubble, {backgroundColor: Colors.primary}]}
                 onPress={() => router.push('/(admin)/towRequests')}
             >
                 <Text style={[Styles.title, {position: 'absolute', top: 50, color: 'white'}]}>Tow Requests</Text>
@@ -45,7 +45,7 @@ const AdminConsole = () =>
                 />
             </TouchableOpacity>
             <TouchableOpacity
-                style={[AdminStyles.consoleBubble, {backgroundColor: 'grey'}]}
+                style={[Styles.consoleBubble, {backgroundColor: 'grey'}]}
                 onPress={() => router.push('/(admin)/settings')}
             >
                 <Text style={[Styles.title, {position: 'absolute', top: 50, color: 'white'}]}>Settings</Text>

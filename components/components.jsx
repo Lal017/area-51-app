@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Linking } from 'react-native';
-import { Styles } from '../constants/styles';
+import { Styles, ScheduleStyles } from '../constants/styles';
 import Colors from '../constants/colors';
 
 // custom header component to replace default header
@@ -10,6 +10,18 @@ const CustHeader = ({title}) =>
             <Text style={Styles.title}>{title}</Text>
         </View>
    
+    );
+};
+
+// custom calendar header
+const CalendarHeader = ({date}) =>
+{
+    const d = new Date(date);
+    const month = d.toLocaleString('default', { month: 'long' });
+    return (
+        <View style={Styles.calendarHeaderContainer}>
+            <Text style={Styles.text}>{month}</Text>
+        </View>
     );
 };
 
@@ -34,7 +46,7 @@ const Select = ({text, selected, action}) =>
     return(
         <View style={Styles.tab}>
             <TouchableOpacity
-                style={[Styles.tabButton, selected ? {backgroundColor: Colors.secondary} : null]}
+                style={[Styles.tabButton, {borderRadius: 50}, selected ? {backgroundColor: Colors.secondary} : null]}
                 onPress={action}
             >
                 <Text style={selected ? {color: Colors.text} : null}>{text}</Text>            
@@ -63,6 +75,7 @@ const formatNumber = (phone) =>
 
 export {
     CustHeader,
+    CalendarHeader,
     Tab,
     Select,
     socialRedirect,
