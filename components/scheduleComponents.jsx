@@ -1,8 +1,9 @@
 import { createAppointment, createTowRequest, updateTowRequest } from '../src/graphql/mutations';
 import { post } from 'aws-amplify/api';
 import { Alert } from 'react-native';
-import { towRequestsByUserId } from '../src/graphql/queries';
+import { appointmentsByUserId, towRequestsByUserId } from '../src/graphql/queries';
 
+// get all appointments from ALL users
 const handleGetAppointments = async () =>
 {
     try {
@@ -72,6 +73,30 @@ const handleCreateAppointment = async (client, date, time, service, notes, userI
         console.log('Error creating appointment', error);
     }
 };
+
+// get all appointments from logged in user
+const handleGetMyAppointments = async (client, userId) =>
+{
+    try {
+        const today = new Date().toISOString().split('T')[0];
+
+        const appointments = await client.graphql({
+            query: appointmentsByUserId,
+            variables: {
+                userId: userId,
+                filter: {
+                    date: { ge: today }
+                }
+            }
+        });
+
+        console.log('APPOINTMENTS', appointments.data.appointmentsByUserId.items);
+
+        return appointments.data.appointmentsByUserId.items;
+    } catch (error) {
+        console.log('Error getting appointments', error);
+    }
+}
 
 const handleCreateTowRequest = async (client, userId, vehicleId, location, notes, setTowRequest) =>
 {
@@ -153,6 +178,7 @@ export {
     handleGetAppointments,
     handleSetDay,
     handleCreateAppointment,
+    handleGetMyAppointments,
     handleCreateTowRequest,
     handleGetTowRequest,
     handleNotifUpdateTowRequest,

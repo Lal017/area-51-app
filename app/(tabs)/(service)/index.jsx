@@ -35,7 +35,7 @@ const ServiceConsole = () =>
         />
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => router.push('/(tabs)/(service)/appointmentList')}
+        onPress={() => router.push('/(tabs)/(service)/myAppointments')}
         style={[Styles.consoleBubble, {backgroundColor: Colors.primary, height: 225}]}
       >
         <Text style={[Styles.title, {color: Colors.text, position: 'absolute', top: 50}]}>My Appointments</Text>

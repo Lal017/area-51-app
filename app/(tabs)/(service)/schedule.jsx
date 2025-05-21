@@ -1,5 +1,6 @@
 import { useEffect, useState} from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView } from "react-native";
+import { router } from 'expo-router';
 import { ServiceStyles, Styles } from "../../../constants/styles";
 import { Calendar } from "react-native-calendars";
 import { handleGetAppointments, handleSetDay, handleCreateAppointment } from '../../../components/scheduleComponents';
