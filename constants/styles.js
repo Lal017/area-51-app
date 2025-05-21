@@ -72,25 +72,27 @@ const Styles = StyleSheet.create({
     },
     // Input
     inputContainer: {
-        rowGap: 20
+        rowGap: 20,
+        alignItems: 'center'
     },
     inputWrapper: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
         position: 'relative',
+        width: '80%'
     },
     input: {
         backgroundColor: Colors.backDrop,
-        width: '90%',
         height: 50,
         paddingLeft: 50,
         borderWidth: 1,
         borderRadius: 25,
+        width: '100%'
     },
     inputAlt: {
         backgroundColor: Colors.backDrop,
-        width: '90%',
+        width: '100%',
         height: 150,
         paddingLeft: 50,
         borderWidth: 1,
@@ -120,11 +122,12 @@ const Styles = StyleSheet.create({
     subTitle: {
         fontSize: 20,
         textAlign: 'left',
+        fontWeight: 500
     },
     text: {
         fontSize: 20,
         textAlign: 'left',
-        fontWeight: '100',
+        fontWeight: 200,
     },
     // icons
     icon: {
@@ -134,7 +137,7 @@ const Styles = StyleSheet.create({
     },
     iconAlt: {
         position: 'absolute',
-        left: 30,
+        left: 15,
         top: 15,
         zIndex: 1,
     },
@@ -224,17 +227,58 @@ const ServiceStyles = StyleSheet.create({
     calendarHeaderContainer: {
         width: '100%'
     },
-    picker: {
-        width: '85%',
-        backgroundColor: Colors.backDrop,
-        borderWidth: 1,
-        borderRadius: 50,
-        paddingLeft: 20
+    progressBar: {
+        alignSelf: 'center',
+        width: '75%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        columnGap: 10,
+    },
+    progressBarLine: {
+        flex: 1,
+        height: 5,
+        backgroundColor: Colors.backDropAccent
+    },
+    descriptionContainer: {
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 10,
+        paddingBottom: 40,
+        rowGap: 20,
+    },
+    selectionContainer: {
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        rowGap: 20,
+        padding: 30,
+    },
+    buttonContainer: {
+        width: '100%',
+        height: 100,
+        alignItems: 'center',
+        justifyContent: 'center',
+        columnGap: 50,
+        flexDirection: 'row'
+    },
+    directionButton: {
+        backgroundColor: Colors.secondary,
+        borderRadius: 25,
+        alignItems: 'center',
+        justifyContent: 'center',
+        columnGap: 15,
+        flexDirection: 'row',
+        width: 150,
+        height: 65,
+        elevation: 10,
     },
     // schedule.jsx
     calendarContainer: {
         width: '100%',
         rowGap: 10,
+        marginTop: 75
     },
     timeContainer: {
         width: '100%',
@@ -253,47 +297,12 @@ const ServiceStyles = StyleSheet.create({
         padding: 15,
         width: '45%'
     },
-    vehicleContainer: {
-        rowGap: 25,
-        width: '100%',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    continueButton: {
-        alignSelf: 'flex-end',
-        marginRight: 25,
-        marginBottom: 25,
-        backgroundColor: Colors.secondary,
-        borderRadius: 25,
-        alignItems: 'center',
-        justifyContent: 'center',
-        columnGap: 15,
-        flexDirection: 'row',
-        width: 150,
-        height: 65,
-        elevation: 10,
-    },
     // towRequest.jsx
     informationContainer: {
         width: '100%',
         justifyContent: 'center',
         padding: 30,
         rowGap: 10,
-    },
-    selectionContainer: {
-        width: '100%',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        rowGap: 20,
-        padding: 30,
-    },
-    descriptionContainer: {
-        width: '100%',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 10,
-        paddingBottom: 40,
-        rowGap: 20,
     },
 });
 
