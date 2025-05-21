@@ -1,7 +1,8 @@
-import { createAppointment, createTowRequest, updateTowRequest } from '../src/graphql/mutations';
+import { createAppointment, createTowRequest, deleteAppointment, updateAppointment, updateTowRequest } from '../src/graphql/mutations';
 import { post } from 'aws-amplify/api';
 import { Alert } from 'react-native';
 import { appointmentsByUserId, towRequestsByUserId } from '../src/graphql/queries';
+import { router } from 'expo-router';
 
 // get all appointments from ALL users
 const handleGetAppointments = async () =>
@@ -31,12 +32,11 @@ const handleGetAppointments = async () =>
 
 const handleSetDay = async (appointments, day) =>
 {
-    const TIME_SLOTS = [
-    { time: '09:00 AM', value: '09:00:00' }, { time: '10:00 AM', value: '10:00:00' }, { time: '11:00 AM', value: '11:00:00' }, { time: '12:00 PM', value: '12:00:00' }, { time: '01:00 PM', value: '13:00:00' }, { time: '02:00 PM', value: '14:00:00' }, { time: '03:00 PM', value: '15:00:00' }, { time: '04:00 PM', value: '16:00:00' }];
+    const TIME_SLOTS = [ '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:00:00', '14:00:00', '15:00:00', '16:00:00' ];
 
     const filteredSlots = TIME_SLOTS.filter(slot => {
         return !appointments.some(
-            appointment => appointment.date === day && appointment.time === slot.value
+            appointment => appointment.date === day && appointment.time === slot
         )
     });
 
@@ -63,14 +63,61 @@ const handleCreateAppointment = async (client, date, time, service, notes, userI
         Alert.alert(
             'Appointment created successfully!',
             'Your appointment has been scheduled.',
-            [
-                {
-                    text: 'OK',
-                }
-            ]
+            [{ text: 'OK' }]
         );
     } catch (error) {
         console.log('Error creating appointment', error);
+    }
+};
+
+const handleUpdateAppointment = async (client, appointmentId, date, time, service, notes, userId, vehicleId) =>
+{
+    try {
+        await client.graphql({
+            query: updateAppointment,
+            variables: {
+                input: {
+                    id: appointmentId,
+                    date: date,
+                    time: time,
+                    service: service,
+                    notes: notes,
+                    userId: userId,
+                    vehicleId: vehicleId
+                }
+            }
+        });
+
+        Alert.alert(
+            'Appointment updated!',
+            'Your appointment has been rescheduled',
+            [{ text: 'OK' }]
+        )
+    } catch (error) {
+        console.log('Error updating appointment:', error);
+    }
+};
+
+const handleDeleteAppointment = async (client, appointmentId) =>
+{
+    try {
+        await client.graphql({
+            query: deleteAppointment,
+            variables: {
+                input: {
+                    id: appointmentId
+                }
+            }
+        });
+
+        router.replace('/(tabs)');
+        Alert.alert(
+            'Appointment cancelled',
+            'Your appointment has been cancelled',
+            [{ text: 'OK' }]
+        );
+    } catch (error) {
+        console.log('Error deleting appointment:', error);
     }
 };
 
@@ -89,8 +136,6 @@ const handleGetMyAppointments = async (client, userId) =>
                 }
             }
         });
-
-        console.log('APPOINTMENTS', appointments.data.appointmentsByUserId.items);
 
         return appointments.data.appointmentsByUserId.items;
     } catch (error) {
@@ -178,6 +223,8 @@ export {
     handleGetAppointments,
     handleSetDay,
     handleCreateAppointment,
+    handleUpdateAppointment,
+    handleDeleteAppointment,
     handleGetMyAppointments,
     handleCreateTowRequest,
     handleGetTowRequest,

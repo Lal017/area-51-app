@@ -1,9 +1,9 @@
 import { useEffect, useState} from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView } from "react-native";
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { ServiceStyles, Styles } from "../../../constants/styles";
 import { Calendar } from "react-native-calendars";
-import { handleGetAppointments, handleSetDay, handleCreateAppointment } from '../../../components/scheduleComponents';
+import { handleGetAppointments, handleSetDay, handleUpdateAppointment } from '../../../components/scheduleComponents';
 import Colors from '../../../constants/colors';
 import { Select, CalendarHeader, formatDate, formatTime } from '../../../components/components';
 import { MaterialIcons, Ionicons, FontAwesome, AntDesign, FontAwesome5, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -13,21 +13,26 @@ import { handleSendAdminNotif } from '../../../components/notifComponents';
 const Schedule = () =>
 {
   const { client, vehicles, userId } = useApp();
+  const { appointmentParam } = useLocalSearchParams();
+  const appointment = JSON.parse(appointmentParam);
 
-  const [selectedDay, setSelectedDay] = useState();
-  const [selectedTime, setSelectedTime] = useState();
-  const [selectedService, setSelectedService] = useState();
-  const [selectedVehicle, setSelectedVehicle] = useState();
+  const [selectedDay, setSelectedDay] = useState(appointment.date);
+  const [selectedTime, setSelectedTime] = useState(appointment.time);
+  const [selectedService, setSelectedService] = useState(appointment.service);
+  const [selectedVehicle, setSelectedVehicle] = useState(appointment.vehicle);
   const [scheduledAppointments, setScheduledAppointments] = useState();
   const [availableAppointments, setAvailableAppointments] = useState();
-  const [notes, setNotes] = useState();
+  const [notes, setNotes] = useState(appointment.notes);
   const [step, setStep] = useState(1);
 
   useEffect(() => {
     const initializeAppointments = async () =>
     {
       const scheduled = await handleGetAppointments();
-      setScheduledAppointments(scheduled);
+      const updatedScheduled = scheduled.filter(
+        (appt) => !(appt.date === appointment.date && appt.time === appointment.time)
+      );
+      setScheduledAppointments(updatedScheduled);
     };
 
     initializeAppointments();
@@ -94,7 +99,9 @@ const Schedule = () =>
                   ]}
                 >
                   <Text style={[
-                    Styles.subTitle, selectedTime === time && { color: 'white' }, {textAlign: 'center'}
+                    Styles.subTitle,
+                    {textAlign: 'center'},
+                    selectedTime === time ? {color: 'white'} : null
                   ]}
                   >{formatTime(time)}</Text>
                 </TouchableOpacity>
@@ -129,18 +136,18 @@ const Schedule = () =>
                       name="car-sport"
                       size={30}
                       style={Styles.icon}
-                      color={selectedVehicle === vehicle ? Colors.backDrop : null}
+                      color={selectedVehicle.id === vehicle.id ? Colors.backDrop : null}
                     />
                     <Select
                       text={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
-                      selected={vehicle === selectedVehicle ? true : false}
+                      selected={vehicle.id === selectedVehicle.id ? true : false}
                       action={() => setSelectedVehicle(vehicle)}
                     />
                     <FontAwesome
-                      name={selectedVehicle === vehicle ? "circle" : "circle-o"}
+                      name={selectedVehicle.id === vehicle.id ? "circle" : "circle-o"}
                       size={25}
                       style={Styles.rightIcon}
-                      color={selectedVehicle === vehicle ? Colors.backDrop : null}  
+                      color={selectedVehicle.id === vehicle.id ? Colors.backDrop : null}  
                     />
                 </TouchableOpacity>
               ))}
@@ -344,8 +351,8 @@ const Schedule = () =>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  handleSendAdminNotif('Appointment Scheduled', 'A customer has scheduled an appointment');
-                  handleCreateAppointment(client, selectedDay, selectedTime, selectedService, notes, userId, selectedVehicle.id);
+                  handleSendAdminNotif('Appointment Rescheduled', 'A customer has rescheduled an appointment');
+                  handleUpdateAppointment(client, appointment.id, selectedDay, selectedTime, selectedService, notes, userId, selectedVehicle.id);
                   router.replace('/(tabs)');
                 }}
                 style={[ServiceStyles.directionButton, {backgroundColor: Colors.primary}]}

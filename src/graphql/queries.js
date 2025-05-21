@@ -243,7 +243,12 @@ export const appointmentsByUserId = /* GraphQL */ `
         service
         notes
         userId
-        vehicleId
+        vehicle {
+          id
+          year
+          make
+          model
+        }
         createdAt
         updatedAt
         owner

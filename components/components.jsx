@@ -61,7 +61,7 @@ const socialRedirect = (link) =>
     Linking.openURL(link);
 };
 
-// format number to for readability
+// format number for readability
 const formatNumber = (phone) =>
 {
     const clean = phone.replace(/\D/g, '').slice(-10);
@@ -73,11 +73,38 @@ const formatNumber = (phone) =>
     return phone;
 };
 
+// format date for readability
+const formatDate = (dateString) =>
+{
+    const date = new Date(dateString);
+    
+    return date.toLocaleDateString('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric'
+    });
+};
+
+// format time for readability
+const formatTime = (timeString) =>
+{
+    const today = new Date().toISOString().split('T')[0];
+    const time = new Date(`${today}T${timeString}`);
+
+    return time.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+    })
+}
+
 export {
     CustHeader,
     CalendarHeader,
     Tab,
     Select,
     socialRedirect,
-    formatNumber
+    formatNumber,
+    formatDate,
+    formatTime
 };

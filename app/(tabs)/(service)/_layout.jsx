@@ -8,6 +8,7 @@ const scheduleLayout = () =>
             <Stack.Screen name='schedule' />
             <Stack.Screen name='towRequest' />
             <Stack.Screen name='myAppointments' />
+            <Stack.Screen name='editAppointment' />
         </Stack>
     )
 };

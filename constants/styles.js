@@ -304,6 +304,26 @@ const ServiceStyles = StyleSheet.create({
         padding: 30,
         rowGap: 10,
     },
+    // myAppointments.jsx
+    fieldContainer: {
+        width: '90%',
+        borderRadius: 25,
+        elevation: 10,
+        backgroundColor: Colors.backDrop,
+        padding: 25,
+        position: 'relative',
+    },
+    editButton: {
+        backgroundColor: Colors.secondary,
+        padding: 15,
+        paddingLeft: 25,
+        paddingRight: 25,
+        position: 'absolute',
+        top: 25,
+        right: 25,
+        borderRadius: 15,
+        justifyContent: 'center'
+    }
 });
 
 const ProfileStyles = StyleSheet.create({
