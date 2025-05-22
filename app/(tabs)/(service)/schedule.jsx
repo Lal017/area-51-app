@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingVi
 import { router } from 'expo-router';
 import { ServiceStyles, Styles } from "../../../constants/styles";
 import { Calendar } from "react-native-calendars";
-import { handleGetAppointments, handleSetDay, handleCreateAppointment } from '../../../components/scheduleComponents';
+import { handleGetAppointments, handleSetTimes, handleCreateAppointment } from '../../../components/scheduleComponents';
 import Colors from '../../../constants/colors';
 import { Select, CalendarHeader, formatDate, formatTime } from '../../../components/components';
 import { MaterialIcons, Ionicons, FontAwesome, AntDesign, FontAwesome5, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -37,7 +37,7 @@ const Schedule = () =>
   {
     setSelectedDay(day.dateString);
     setSelectedTime(undefined);
-    const getDay = await handleSetDay(scheduledAppointments, day.dateString);
+    const getDay = await handleSetTimes(scheduledAppointments, day.dateString);
     setAvailableAppointments(getDay);
   };
 
@@ -323,7 +323,7 @@ const Schedule = () =>
         </KeyboardAvoidingView>
       ) : step === 5 ? (
         <View style={Styles.page}>
-          <View style={ServiceStyles.informationContainer}>
+          <View style={Styles.infoContainer}>
             <Text style={Styles.subTitle}>Date</Text>
             <Text style={Styles.text}>{formatDate(selectedDay)}</Text>
             <Text style={Styles.subTitle}>Time</Text>

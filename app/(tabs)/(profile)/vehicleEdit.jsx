@@ -8,9 +8,9 @@ import { useLocalSearchParams } from 'expo-router';
 
 const editVehicle = () =>
 {   
-    const { vehicle } = useLocalSearchParams();
-    const parsedVehicle = JSON.parse(vehicle);
-    const { client, setVehicles } = useApp();
+    const { vehicleParam } = useLocalSearchParams();
+    const vehicle = JSON.parse(vehicleParam);
+    const { client, userId, setVehicles } = useApp();
 
     const [ year, setYear ] = useState();
     const [ make, setMake ] = useState();
@@ -22,12 +22,12 @@ const editVehicle = () =>
     useEffect(() => {
         const handleGetVehicle = async () =>
         {
-            setYear(parsedVehicle.year?.toString());
-            setMake(parsedVehicle.make);
-            setModel(parsedVehicle.model);
-            setColor(parsedVehicle.color);
-            setPlate(parsedVehicle?.plate);
-            setVin(parsedVehicle?.vin);
+            setYear(vehicle.year?.toString());
+            setMake(vehicle.make);
+            setModel(vehicle.model);
+            setColor(vehicle.color);
+            setPlate(vehicle?.plate);
+            setVin(vehicle?.vin);
         };
 
         handleGetVehicle();
@@ -96,7 +96,7 @@ const editVehicle = () =>
                 </View>
                 <TouchableOpacity
                     style={Styles.actionButton}
-                    onPress={() => handleUpdateVehicle(client, {year, make, model, color, plate, vin}, vehicle.Id, setVehicles)}
+                    onPress={() => handleUpdateVehicle(client, {year, make, model, color, plate, vin}, vehicle.id, userId, setVehicles)}
                 >
                     <Text style={Styles.actionText}>Update</Text>
                 </TouchableOpacity>
@@ -106,12 +106,10 @@ const editVehicle = () =>
                         'Confirm',
                         'Are you sure you want to delete this vehicle?',
                         [
+                            { text: 'No' },
                             {
-                                text: 'No',
-                            },
-                                                        {
                                 text: 'Yes',
-                                onPress: () => handleDeleteVehicle(client, vehicleId, setVehicles)
+                                onPress: () => handleDeleteVehicle(client, vehicle.id, setVehicles)
                             }
                         ]
                     )}

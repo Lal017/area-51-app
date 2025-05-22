@@ -1,5 +1,5 @@
-import { View, Text, TouchableOpacity } from 'react-native';
-import { Styles, AdminStyles } from "../../constants/styles";
+import { View, Text, TouchableOpacity, StatusBar } from 'react-native';
+import { Styles } from "../../constants/styles";
 import { router } from 'expo-router';
 import LottieView from 'lottie-react-native';
 import Colors from '../../constants/colors';
@@ -8,6 +8,7 @@ const AdminConsole = () =>
 {
     return (
         <View style={[Styles.page, {rowGap: 5}]}>
+            <StatusBar hidden={true} />
             <TouchableOpacity
                 style={Styles.consoleBubble}
                 onPress={() => router.push('/(admin)/userList')}
@@ -21,7 +22,10 @@ const AdminConsole = () =>
                     speed={0.5}
                 />
             </TouchableOpacity>
-            <TouchableOpacity style={[Styles.consoleBubble, {backgroundColor: Colors.secondary}]}>
+            <TouchableOpacity
+                style={[Styles.consoleBubble, {backgroundColor: Colors.secondary}]}
+                onPress={() => router.push('/(admin)/appointmentList')}    
+            >
                 <Text style={[Styles.title, {position: 'absolute', top: 50, color: 'white'}]}>Appointments</Text>
                 <LottieView
                     source={require('../../assets/animations/calendar.json')}

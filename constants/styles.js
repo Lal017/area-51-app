@@ -147,12 +147,18 @@ const Styles = StyleSheet.create({
         backgroundColor: Colors.background,
         justifyContent: 'center',
         alignItems: 'center',
-        rowGap: 35,
     },
     scrollPage: {
         backgroundColor: Colors.background,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    infoContainer: {
+        width: '100%',
+        justifyContent: 'center',
+        paddingRight: 30,
+        paddingLeft: 30,
+        rowGap: 10,
     },
     container: {
         justifyContent: 'center',
@@ -161,6 +167,11 @@ const Styles = StyleSheet.create({
         rowGap: 40,
         paddingTop: 20,
         paddingBottom: 20,
+    },
+    block: {
+        paddingTop: 10,
+        paddingBottom: 10,
+        rowGap: 5,
     },
 });
 
@@ -179,7 +190,7 @@ const AuthStyles = StyleSheet.create({
     providerContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
-        gap: 25,
+        columnGap: 25,
         width: '100%',
     },
     signInImg: {
@@ -195,7 +206,7 @@ const AuthStyles = StyleSheet.create({
         paddingRight: 10,
         borderRadius: 25,
         flexDirection: 'row',
-        columnGap: 0,
+        columnGap: 5,
         alignItems: 'center',
         justifyContent: 'center',
         elevation: 4,
@@ -208,13 +219,13 @@ const HomeStyles = StyleSheet.create({
         elevation: 10,
         backgroundColor: Colors.backDrop,
         padding: 20,
-        rowGap: 20,
+        rowGap: 10,
         alignItems: 'left',
         justifyContent: 'center'
     },
     titleWrapper: {
         flexDirection: 'row',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     buttonContainer: {
         width: '100%',
@@ -297,13 +308,6 @@ const ServiceStyles = StyleSheet.create({
         padding: 15,
         width: '45%'
     },
-    // towRequest.jsx
-    informationContainer: {
-        width: '100%',
-        justifyContent: 'center',
-        padding: 30,
-        rowGap: 10,
-    },
     // myAppointments.jsx
     fieldContainer: {
         width: '90%',
@@ -327,13 +331,14 @@ const ServiceStyles = StyleSheet.create({
 });
 
 const ProfileStyles = StyleSheet.create({
-    // Social Media links
+    // index.jsx
     socialContainer: {
         flexDirection: 'row',
         justifyContent: 'space-evenly',
         width: '100%',
         alignItems: 'center',
-        marginTop: 50,
+        paddingTop: 25,
+        paddingBottom: 25
     },
     socialBox: {
         elevation: 10,
@@ -343,23 +348,13 @@ const ProfileStyles = StyleSheet.create({
         padding: 25,
         borderRadius: 25,
     },
-    // Account info
-    accountCard: {
-        width: '100%',
-        marginTop: 50,
-        justifyContent: 'center',
-        alignItems: 'flex-start',
-        paddingLeft: 35
+    name: {
+        fontSize: 30,
+        fontWeight: 'bold',
     },
+    // Account info
     accountInfo: {
         rowGap: 20
-    },
-    accountText: {
-        rowGap: 5
-    },
-    name: {
-        fontSize: 25,
-        fontWeight: 'bold',
     },
     textContainer: {
         width: '80%',
@@ -404,64 +399,32 @@ const ProfileStyles = StyleSheet.create({
 });
 
 const AdminStyles = StyleSheet.create({
-    userContainer: {
-        width: '100%',
-        alignItems: 'center',
-        rowGap: 5
-    },
-    userCard: {
-        width: '95%',
-        backgroundColor: Colors.backDrop,
-        elevation: 10,
-        borderRadius: 25,
-        padding: 25,
-        rowGap: 10
-    },
-    userInfo: {
-        gap: 2
-    },
-    vehicleInfo: {
-        width: '100%',
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'space-evenly',
-        padding: 10,
-        backgroundColor: Colors.background,
-        borderRadius: 25
-    },
     customerBox: {
         width: '100%',
         padding: 30,
         rowGap: 10,
         backgroundColor: Colors.backDrop,
-        elevation: 10
+        elevation: 12
     },
-    vehicleBox: {
+    block: {
+        paddingTop: 10,
+        paddingBottom: 10,
+        rowGap: 5,
+    },
+    // userView.jsx
+    vehicleContainer: {
         width: '100%',
-        justifyContent: 'center',
-        columnGap: 10,
-        flexDirection: 'row',
         backgroundColor: Colors.backDrop,
-        elevation: 10,
-        paddingTop: 25,
-        paddingBottom: 25,
-    },
-    notesBox: {
-        paddingLeft: 30,
-        paddingRight: 30,
-        width: '100%',
-        alignItems: 'flex-start'
-    },
-    infoContainer: {
-        width: '100%',
+        elevation: 5,
+        borderRadius: 25,
+        padding: 25,
         alignItems: 'center',
-        rowGap: 25,
-        paddingBottom: 25
+        rowGap: 5
     },
-    responseContainer: {
-        width: '100%',
-        alignItems: 'center',
-        rowGap: 25,
+    labelContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%'
     }
 });
 

@@ -330,7 +330,7 @@ const Schedule = () =>
         </KeyboardAvoidingView>
       ) : step === 5 ? (
         <View style={Styles.page}>
-          <View style={ServiceStyles.informationContainer}>
+          <View style={Styles.infoContainer}>
             <Text style={Styles.subTitle}>Date</Text>
             <Text style={Styles.text}>{formatDate(selectedDay)}</Text>
             <Text style={Styles.subTitle}>Time</Text>

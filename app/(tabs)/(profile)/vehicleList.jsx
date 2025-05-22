@@ -17,7 +17,7 @@ const VehicleList = () =>
                             key={index}
                             onPress={() => router.push({
                                 pathname: 'vehicleEdit',
-                                params: { vehicle: JSON.stringify(vehicle) }
+                                params: { vehicleParam: JSON.stringify(vehicle) }
                             })}
                             style={ProfileStyles.vehicleBox}>
                             <Text style={{textAlign: 'center'}}>

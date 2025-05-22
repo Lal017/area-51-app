@@ -35,7 +35,7 @@ const MyAppointments = () => {
                     >
                         <Text style={Styles.actionText}>Edit</Text>
                     </TouchableOpacity>
-                    <View style={ServiceStyles.informationContainer}>
+                    <View style={Styles.infoContainer}>
                         <Text style={Styles.subTitle}>Date</Text>
                         <Text style={Styles.text}>{formatDate(appointment.date)}</Text>
                         <Text style={Styles.subTitle}>Time</Text>

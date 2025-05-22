@@ -209,8 +209,19 @@ export const listAppointments = /* GraphQL */ `
         time
         service
         notes
-        userId
-        vehicleId
+        user {
+          name
+          email
+          phone
+        }
+        vehicle {
+          year
+          make
+          model
+          color
+          plate
+          vin
+        }
         createdAt
         updatedAt
         owner

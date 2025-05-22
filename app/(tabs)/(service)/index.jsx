@@ -3,13 +3,21 @@ import { Styles } from "../../../constants/styles";
 import LottieView from "lottie-react-native";
 import Colors from "../../../constants/colors";
 import { router } from "expo-router";
+import { useApp } from "../../../components/context";
 
 const ServiceConsole = () =>
 {
+  const { towRequest } = useApp();
+
   return (
     <View style={[Styles.page, {rowGap: 5}]}>
       <TouchableOpacity
-        onPress={() => router.push('/(tabs)/(service)/towRequest')}
+        onPress={() => {
+          if (towRequest) {
+            router.push('/(tabs)/(service)/towStatus');
+          } else {
+            router.push('/(tabs)/(service)/towRequest')
+          }}}
         style={[Styles.consoleBubble, {backgroundColor: Colors.secondary, height: 225}]}
       >
         <Text style={[Styles.title, {color: Colors.text, position: 'absolute', top: 50}]}>Request a tow</Text>

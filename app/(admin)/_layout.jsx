@@ -121,6 +121,9 @@ const AdminContent = () =>
         <Stack>
             <Stack.Screen name='index' options={{title: 'Admin Console', header: () => <CustHeader title="Console"/>}}/>
             <Stack.Screen name='userList' options={{title: 'Users', header: () => <CustHeader title="Users" />}}/>
+            <Stack.Screen name='userView' options={{title: 'User List', header: () => <CustHeader title="User" />}}/>
+            <Stack.Screen name='appointmentList' options={{title: 'Appointments', header: () => <CustHeader title="Appointments" />}}/>
+            <Stack.Screen name='appointmentView' options={{title: 'Appointment', header: () => <CustHeader title="Appointment" />}}/>
             <Stack.Screen name='settings' options={{title: 'Settings', header: () => <CustHeader title="Settings" />}}/>
             <Stack.Screen name="accountEdit" options={{title: "Edit Account", header: () => <CustHeader title="Account Edit" />}}/>
             <Stack.Screen name="changePassword" options={{title: "Change Password", header: () => <CustHeader title="Reset Password" />}}/>

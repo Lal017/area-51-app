@@ -30,7 +30,7 @@ const handleGetAppointments = async () =>
     }
 };
 
-const handleSetDay = async (appointments, day) =>
+const handleSetTimes = async (appointments, day) =>
 {
     const TIME_SLOTS = [ '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:00:00', '14:00:00', '15:00:00', '16:00:00' ];
 
@@ -146,7 +146,7 @@ const handleGetMyAppointments = async (client, userId) =>
 const handleCreateTowRequest = async (client, userId, vehicleId, location, notes, setTowRequest) =>
 {
     try {
-        await client.graphql({
+        const result = await client.graphql({
             query: createTowRequest,
             variables: {
                 input: {
@@ -159,8 +159,14 @@ const handleCreateTowRequest = async (client, userId, vehicleId, location, notes
             }
         });
 
-        const updatedRequest = await handleGetTowRequest(client, userId);
-        await setTowRequest(updatedRequest);
+        await setTowRequest(result.data.createTowRequest);
+
+        router.replace('/(tabs)/(service)/towStatus');
+        Alert.alert(
+            'Success',
+            'Your tow request has been sent!',
+            [{ text: 'OK' }]
+        );
     } catch (error) {
         console.log('Error creating tow request: ', error);
     }
@@ -193,13 +199,12 @@ const handleNotifUpdateTowRequest = async (client, userId, setTowRequest) =>
     try {
         const update = await handleGetTowRequest(client, userId);
         setTowRequest(update);
-        console.log('UPDATED!');
     } catch (error) {
         console.log('Error updating tow request:', error);
     }
 },
 
-handleUpdateTowRequestReply = async (client, towId, status, setTowRequest) =>
+handleUpdateTowRequestStatus = async (client, towId, status, setTowRequest) =>
 {
     try {
         const update = await client.graphql({
@@ -212,8 +217,7 @@ handleUpdateTowRequestReply = async (client, towId, status, setTowRequest) =>
             }
         });
         
-        setTowRequest(update);
-        console.log('Updated!');
+        setTowRequest(update.data.updateTowRequest);
     } catch (error) {
         console.log('Error updating tow request:', error);
     }
@@ -221,7 +225,7 @@ handleUpdateTowRequestReply = async (client, towId, status, setTowRequest) =>
 
 export {
     handleGetAppointments,
-    handleSetDay,
+    handleSetTimes,
     handleCreateAppointment,
     handleUpdateAppointment,
     handleDeleteAppointment,
@@ -229,5 +233,5 @@ export {
     handleCreateTowRequest,
     handleGetTowRequest,
     handleNotifUpdateTowRequest,
-    handleUpdateTowRequestReply
+    handleUpdateTowRequestStatus
 }

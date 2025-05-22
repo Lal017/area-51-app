@@ -38,7 +38,7 @@ const handleCreateVehicle = async (client, vehicle, userId, setVehicles) =>
     }
 };
 
-const handleUpdateVehicle = async (client, vehicle, vehicleId, setVehicles) =>
+const handleUpdateVehicle = async (client, vehicle, vehicleId, userId, setVehicles) =>
 {
     try {
         await client.graphql({
@@ -52,6 +52,7 @@ const handleUpdateVehicle = async (client, vehicle, vehicleId, setVehicles) =>
                     color: vehicle.color,
                     plate: vehicle.plate,
                     vin: vehicle.vin,
+                    userId: userId
                 }
             }
         });

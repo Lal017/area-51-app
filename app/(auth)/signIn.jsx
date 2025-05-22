@@ -61,7 +61,7 @@ const signIn = () =>
                     <GoogleSignInButton text='Sign In'/>
                     <AmazonSignInButton text='Sign In'/>
                 </View>
-                <View style={[AuthStyles.providerContainer, {gap: 125}]}>
+                <View style={[AuthStyles.providerContainer, {columnGap: 125}]}>
                     <Link href="/(auth)/resetPassword">Forgot Password?</Link>
                     <Link href="/(auth)/signUp">Sign Up</Link>
                 </View>

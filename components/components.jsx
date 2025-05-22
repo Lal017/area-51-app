@@ -76,7 +76,14 @@ const formatNumber = (phone) =>
 // format date for readability
 const formatDate = (dateString) =>
 {
-    const date = new Date(dateString);
+    let date;
+
+    if (dateString.includes('T')) {
+        date = new Date(dateString);
+    } else {
+        const [year, month, day] = dateString.split('-');
+        date = new Date(year, month - 1, day);
+    }
     
     return date.toLocaleDateString('en-US', {
         month: 'long',

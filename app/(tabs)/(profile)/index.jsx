@@ -13,11 +13,9 @@ const Profile = () =>
 
     return(
         <View style={[Styles.page, {justifyContent: 'flex-start'}]}>
-            <View style={ProfileStyles.accountCard}>
-                <View style={ProfileStyles.accountText}>
-                    <Text style={ProfileStyles.name}>{name}</Text>
-                    <Text>{email}</Text>
-                </View>
+            <View style={[Styles.infoContainer, {paddingTop: 10, paddingBottom: 30}]}>
+                <Text style={ProfileStyles.name}>{name}</Text>
+                <Text style={[Styles.text, {fontSize: 17}]}>{email}</Text>
             </View>
             <View style={Styles.tabContainer}>
                 <View style={Styles.tabWrapper}>
@@ -35,20 +33,20 @@ const Profile = () =>
                     <Tab text="Contact us" action={() => router.push('/(tabs)/(profile)/contact')}/>
                     <AntDesign name="right" size={25} style={Styles.rightIcon} />
                 </View>
-                <View style={ProfileStyles.socialContainer}>
-                    <TouchableOpacity
-                        style={[ProfileStyles.socialBox, {backgroundColor: '#1877f2'}]}
-                        onPress={() => socialRedirect('https://www.facebook.com/Area51MotorsportsLv/')}
-                    >
-                        <AntDesign name="facebook-square" size={30} color='white' />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={[ProfileStyles.socialBox, {backgroundColor: 'black'}]}
-                        onPress={() => socialRedirect('https://www.instagram.com/area51motorsports/')}
-                    >
-                        <AntDesign name="instagram" size={30} color='white' />
-                    </TouchableOpacity>
-                </View>
+            </View>
+            <View style={ProfileStyles.socialContainer}>
+                <TouchableOpacity
+                    style={[ProfileStyles.socialBox, {backgroundColor: '#1877f2'}]}
+                    onPress={() => socialRedirect('https://www.facebook.com/Area51MotorsportsLv/')}
+                >
+                    <AntDesign name="facebook-square" size={30} color='white' />
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={[ProfileStyles.socialBox, {backgroundColor: 'black'}]}
+                    onPress={() => socialRedirect('https://www.instagram.com/area51motorsports/')}
+                >
+                    <AntDesign name="instagram" size={30} color='white' />
+                </TouchableOpacity>
             </View>
             <TouchableOpacity
                 onPress={handleSignOut}

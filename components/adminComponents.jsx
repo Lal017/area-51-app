@@ -65,8 +65,10 @@ const handleListTowRequestUsers = async (client, userArr) =>
     }
 };
 
-const handleUpdateTowRequest = async (client, towId, status, price, waitTime) =>
+const handleUpdateTowRequest = async (client, towId, status, priceParam, waitTime) =>
 {
+    let price = '$ ' + priceParam;
+
     try {
         await client.graphql({
             query: updateTowRequest,

@@ -2,7 +2,6 @@ import { View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView } from "r
 import { ServiceStyles, Styles } from "../../../constants/styles"
 import { useApp } from '../../../components/context';
 import { useState } from "react";
-import { router } from "expo-router";
 import Colors from "../../../constants/colors";
 import { Entypo, FontAwesome, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { handleSendAdminNotif } from "../../../components/notifComponents";
@@ -28,7 +27,7 @@ const TowRequest = () =>
             </View>
             <KeyboardAvoidingView behavior='padding' style={Styles.page}>
                 { step === 1 ? (
-                    <View style={ServiceStyles.informationContainer}>
+                    <View style={Styles.infoContainer}>
                         <Text style={Styles.subTitle}>How the request works?</Text>
                         <Text style={Styles.text}>
                             You'll start by filling out a form with details about your tow request. Based on this information, we'll provide you with a price and an estimated wait time.
@@ -132,7 +131,7 @@ const TowRequest = () =>
                         </View>
                     </View>
                 ) : step === 4 ? (
-                    <View style={ServiceStyles.informationContainer}>
+                    <View style={Styles.infoContainer}>
                         <Text style={Styles.subTitle}>Vehicle</Text>
                         <Text style={Styles.text}>{`${selectedVehicle.year} ${selectedVehicle.make} ${selectedVehicle.model}`}</Text>
                         <Text style={Styles.subTitle}>Description</Text>
@@ -155,7 +154,6 @@ const TowRequest = () =>
                                     };
                                     handleSendAdminNotif('Towing Request', 'A customer has requested a tow', data);
                                     handleCreateTowRequest(client, userId, selectedVehicle.id, "N/A", notes, setTowRequest);
-                                    router.replace('/(tabs)');
                                 }}
                             >
                                 <Text style={Styles.actionText}>Submit</Text>
