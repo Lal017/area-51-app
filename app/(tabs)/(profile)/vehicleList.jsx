@@ -1,43 +1,41 @@
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View } from 'react-native';
 import { router } from 'expo-router';
+import { Tab } from '../../../components/components';
 import { useApp } from '../../../components/context';
-import { ProfileStyles, Styles } from '../../../constants/styles';
-import { Ionicons } from '@expo/vector-icons';
+import { Styles } from '../../../constants/styles';
+import { Ionicons, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 
 const VehicleList = () =>
 {
     const { vehicles } = useApp();
 
     return(
-        <View style={[Styles.page, {justifyContent: 'flex-start'}]}>
-            <View style={ProfileStyles.vehicleContainer}>
-                {vehicles?.length > 0 ? (
-                    vehicles.map((vehicle, index) => (
-                        <TouchableOpacity
-                            key={index}
-                            onPress={() => router.push({
-                                pathname: 'vehicleEdit',
-                                params: { vehicleParam: JSON.stringify(vehicle) }
-                            })}
-                            style={ProfileStyles.vehicleBox}>
-                            <Text style={{textAlign: 'center'}}>
-                                {vehicle.year} {vehicle.make} {vehicle.model}
-                            </Text>
-                            <Ionicons name='car-sport' size={30} />
-                        </TouchableOpacity>
-                    ))
-                ) : (
-                    <View style={ProfileStyles.vehicleBox}>
-                        <Text>No Vehicles</Text>
-                    </View>
-                )}
-
-                <TouchableOpacity
-                    onPress={() => router.push('vehicleAdd')}
-                    style={ProfileStyles.addVehicle}>
-                    <Ionicons name="add-circle" size={50} />
-                </TouchableOpacity>
-            </View>
+        <View style={Styles.page}>
+            {vehicles?.length > 0 ? (
+                vehicles.map((vehicle, index) => (
+                    <Tab
+                        text={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
+                        action={() => router.push({
+                            pathname: 'vehicleEdit',
+                            params: { vehicleParam: JSON.stringify(vehicle) }
+                        })}
+                        leftIcon={<Ionicons name='car-sport' size={30} style={Styles.icon} />}
+                        rightIcon={<AntDesign name="right" size={25} style={Styles.rightIcon} />}
+                        key={index}
+                    />
+                ))
+            ) : (
+                <Tab
+                    text='No Vehicles'
+                    leftIcon={<MaterialCommunityIcons name="cancel" size={30} style={Styles.icon} />}    
+                />
+            )}
+            <Tab
+                text='Add'
+                action={() => router.push('vehicleAdd')}
+                leftIcon={<Ionicons name="add-circle" size={30} style={Styles.icon} />}
+                rightIcon={<AntDesign name="right" size={25} style={Styles.rightIcon} />}  
+            />
         </View>
     );
 };

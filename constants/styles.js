@@ -44,31 +44,19 @@ const Styles = StyleSheet.create({
     },
     // Tab Select
     tabWrapper: {
-        flexDirection: 'row',
+        backgroundColor: Colors.backDrop,
+        width: '100%',
+        paddingLeft: 75,
         alignItems: 'center',
+        flexDirection: 'row',
         position: 'relative',
+        height: 75,
+        elevation: 10,
     },
     rightIcon: {
         position: 'absolute',
         right: 20,
         zIndex: 1,
-    },
-    tabContainer: {
-        width: '100%',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    tab: {
-        width: '100%',
-        alignItems: 'center',
-    },
-    tabButton: {
-        backgroundColor: Colors.backDrop,
-        width: '100%',
-        justifyContent: 'center',
-        height: 75,
-        elevation: 10,
-        paddingLeft: 75,
     },
     // Input
     inputContainer: {
@@ -145,12 +133,10 @@ const Styles = StyleSheet.create({
     page: {
         flex: 1,
         backgroundColor: Colors.background,
-        justifyContent: 'center',
         alignItems: 'center',
     },
     scrollPage: {
         backgroundColor: Colors.background,
-        justifyContent: 'center',
         alignItems: 'center',
     },
     infoContainer: {
@@ -169,8 +155,8 @@ const Styles = StyleSheet.create({
         paddingBottom: 20,
     },
     block: {
-        paddingTop: 10,
-        paddingBottom: 10,
+        paddingTop: 15,
+        paddingBottom: 15,
         rowGap: 5,
     },
 });
@@ -235,9 +221,11 @@ const HomeStyles = StyleSheet.create({
 });
 
 const ServiceStyles = StyleSheet.create({
+    // components.jsx
     calendarHeaderContainer: {
         width: '100%'
     },
+    // (service)
     progressBar: {
         alignSelf: 'center',
         width: '75%',
@@ -251,20 +239,9 @@ const ServiceStyles = StyleSheet.create({
         height: 5,
         backgroundColor: Colors.backDropAccent
     },
-    descriptionContainer: {
-        width: '100%',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 10,
-        paddingBottom: 40,
-        rowGap: 20,
-    },
     selectionContainer: {
         width: '100%',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        rowGap: 20,
-        padding: 30,
+        rowGap: 0,
     },
     buttonContainer: {
         width: '100%',
@@ -316,18 +293,9 @@ const ServiceStyles = StyleSheet.create({
         backgroundColor: Colors.backDrop,
         padding: 25,
         position: 'relative',
+        rowGap: 10,
+        alignItems: 'center'
     },
-    editButton: {
-        backgroundColor: Colors.secondary,
-        padding: 15,
-        paddingLeft: 25,
-        paddingRight: 25,
-        position: 'absolute',
-        top: 25,
-        right: 25,
-        borderRadius: 15,
-        justifyContent: 'center'
-    }
 });
 
 const ProfileStyles = StyleSheet.create({
@@ -352,42 +320,28 @@ const ProfileStyles = StyleSheet.create({
         fontSize: 30,
         fontWeight: 'bold',
     },
-    // Account info
-    accountInfo: {
-        rowGap: 20
-    },
-    textContainer: {
-        width: '80%',
-        alignItems: 'flex-start',
-        justifyContent: 'center',
-        rowGap: 20,
-    },
     // Vehicle List
     vehicleContainer: {
-        padding: 25,
         width: '100%',
-        justifyContent: 'flexStart',
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        gap: 10,
+        alignItems: 'center',
     },
     vehicleBox: {
-        borderWidth: 1,
-        borderColor: Colors.backDropAccent,
         backgroundColor: Colors.backDrop,
-        elevation: 8,
+        elevation: 10,
         padding: 25,
-        width: '45%',
-        minWidth: '40%',
-        margin: 5,
-        borderRadius: 25,
+        width: '100%',
         alignItems: 'center',
-        rowGap: 10
+        flexDirection: 'row',
+        columnGap: 25,
     },
-    addVehicle: {
+    addVehicleButton: {
         justifyContent: 'center',
         alignItems: 'center',
-        width: '45%'
+        backgroundColor: Colors.backDrop,
+        elevation: 10,
+        padding: 25,
+        width: '100%',
+        alignItems: 'center'
     },
     formContainer: {
         paddingTop: 50,
@@ -405,11 +359,6 @@ const AdminStyles = StyleSheet.create({
         rowGap: 10,
         backgroundColor: Colors.backDrop,
         elevation: 12
-    },
-    block: {
-        paddingTop: 10,
-        paddingBottom: 10,
-        rowGap: 5,
     },
     // userView.jsx
     vehicleContainer: {

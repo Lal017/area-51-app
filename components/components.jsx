@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Linking } from 'react-native';
-import { Styles, ScheduleStyles } from '../constants/styles';
+import { Styles } from '../constants/styles';
 import Colors from '../constants/colors';
 
 // custom header component to replace default header
@@ -26,32 +26,32 @@ const CalendarHeader = ({date}) =>
 };
 
 // reusable tab component for tabs
-const Tab = ({text, action}) =>
+const Tab = ({text, action, leftIcon, rightIcon}) =>
 {
     return(
-        <View style={Styles.tab}>
-            <TouchableOpacity
-                style={Styles.tabButton}
-                onPress={action}
-            >
-                <Text>{text}</Text>            
-            </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+            style={Styles.tabWrapper}
+            onPress={action}
+        >
+            {leftIcon}
+            <Text style={Styles.text}>{text}</Text>
+            {rightIcon}
+        </TouchableOpacity>
     )
 };
 
 // reusable tab component for Selections
-const Select = ({text, selected, action}) =>
+const Select = ({text, selected, action, leftIcon, rightIcon}) =>
 {
     return(
-        <View style={Styles.tab}>
-            <TouchableOpacity
-                style={[Styles.tabButton, {borderRadius: 50}, selected ? {backgroundColor: Colors.secondary} : null]}
-                onPress={action}
-            >
-                <Text style={selected ? {color: Colors.text} : null}>{text}</Text>            
-            </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+            style={[Styles.tabWrapper, selected ? {backgroundColor: Colors.secondary} : null]}
+            onPress={action}
+        >
+            {leftIcon}
+            <Text style={[Styles.text, selected ? {color: Colors.text} : null]}>{text}</Text>
+            {rightIcon}         
+        </TouchableOpacity>
     )
 };
 

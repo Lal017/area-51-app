@@ -12,28 +12,29 @@ const Profile = () =>
     const { email, name } = useApp();
 
     return(
-        <View style={[Styles.page, {justifyContent: 'flex-start'}]}>
+        <View style={Styles.page}>
             <View style={[Styles.infoContainer, {paddingTop: 10, paddingBottom: 30}]}>
                 <Text style={ProfileStyles.name}>{name}</Text>
                 <Text style={[Styles.text, {fontSize: 17}]}>{email}</Text>
             </View>
-            <View style={Styles.tabContainer}>
-                <View style={Styles.tabWrapper}>
-                    <Ionicons name="settings" size={30} style={Styles.icon} />
-                    <Tab text="Account Settings" action={() => router.push('/(tabs)/(profile)/settings')} />
-                    <AntDesign name="right" size={25} style={Styles.rightIcon} />
-                </View>
-                <View style={Styles.tabWrapper}>
-                    <Ionicons name="car-sport" size={30} style={Styles.icon} />
-                    <Tab text="My Vehicles" action={() => router.push('/(tabs)/(profile)/vehicleList')} />
-                    <AntDesign name="right" size={25} style={Styles.rightIcon} />
-                </View>
-                <View style={Styles.tabWrapper}>
-                    <MaterialIcons name="contact-support" size={30} style={Styles.icon} />
-                    <Tab text="Contact us" action={() => router.push('/(tabs)/(profile)/contact')}/>
-                    <AntDesign name="right" size={25} style={Styles.rightIcon} />
-                </View>
-            </View>
+            <Tab
+                text="Account Settings"
+                action={() => router.push('/(tabs)/(profile)/settings')}
+                leftIcon={<Ionicons name="settings" size={30} style={Styles.icon} />}
+                rightIcon={<AntDesign name="right" size={25} style={Styles.rightIcon} />}
+            />
+            <Tab
+                text="My Vehicles"
+                action={() => router.push('/(tabs)/(profile)/vehicleList')}
+                leftIcon={<Ionicons name="car-sport" size={30} style={Styles.icon} />}
+                rightIcon={<AntDesign name="right" size={25} style={Styles.rightIcon} />}
+            />
+            <Tab
+                text="Contact us"
+                action={() => router.push('/(tabs)/(profile)/contact')}
+                leftIcon={<MaterialIcons name="contact-support" size={30} style={Styles.icon} />}
+                rightIcon={<AntDesign name="right" size={25} style={Styles.rightIcon} />}
+            />
             <View style={ProfileStyles.socialContainer}>
                 <TouchableOpacity
                     style={[ProfileStyles.socialBox, {backgroundColor: '#1877f2'}]}

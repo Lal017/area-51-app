@@ -12,31 +12,30 @@ const Settings = () =>
     const readableNumber = phoneNumber ? formatNumber(phoneNumber) : null;
 
     return(
-        <View style={[Styles.page, {justifyContent: 'flex-start'}]}>
-            <View style={ProfileStyles.accountCard}>
-                <View style={ProfileStyles.accountInfo}>
-                    <Text style={ProfileStyles.name}>{name}</Text>
-                    <Text style={ProfileStyles.subTitle}>{email}</Text>
-                    <Text style={ProfileStyles.subTitle}>{readableNumber}</Text>
-                </View>
+        <View style={Styles.page}>
+            <View style={[Styles.infoContainer, {paddingTop: 10, paddingBottom: 30}]}>
+                <Text style={ProfileStyles.name}>{name}</Text>
+                <Text style={Styles.text}>{email}</Text>
+                <Text style={Styles.text}>{readableNumber}</Text>
             </View>
-            <View style={Styles.tabContainer}>
-                <View style={Styles.tabWrapper}>
-                    <Ionicons name='person' size={30} style={Styles.icon} />
-                    <Tab text="Edit Profile" action={() => router.push('/(tabs)/(profile)/accountEdit')} />
-                    <AntDesign name="right" size={25} style={Styles.rightIcon} />
-                </View>
-                <View style={Styles.tabWrapper}>
-                    <MaterialIcons name='lock-reset' size={30} style={Styles.icon} />
-                    <Tab text="Change password" action={() => router.push('/(tabs)/(profile)/changePassword')} />
-                    <AntDesign name="right" size={25} style={Styles.rightIcon} />
-                </View>
-                <View style={Styles.tabWrapper}>
-                    <AntDesign name='deleteuser' size={30} style={Styles.icon} />
-                    <Tab text="Delete Account" action={() => router.push('/(tabs)/(profile)/deleteAccount')} />
-                    <AntDesign name="right" size={25} style={Styles.rightIcon} />
-                </View>
-            </View>
+            <Tab
+                text="Edit Profile"
+                action={() => router.push('/(tabs)/(profile)/accountEdit')}
+                leftIcon={<Ionicons name='person' size={30} style={Styles.icon} />}
+                rightIcon={<AntDesign name="right" size={25} style={Styles.rightIcon} />}
+            />
+            <Tab
+                text="Change password"
+                action={() => router.push('/(tabs)/(profile)/changePassword')}
+                leftIcon={<MaterialIcons name='lock-reset' size={30} style={Styles.icon} />}
+                rightIcon={<AntDesign name="right" size={25} style={Styles.rightIcon} />}
+            />
+            <Tab
+                text="Delete Account"
+                action={() => router.push('/(tabs)/(profile)/deleteAccount')}
+                leftIcon={<AntDesign name='deleteuser' size={30} style={Styles.icon} />}
+                rightIcon={<AntDesign name="right" size={25} style={Styles.rightIcon} />}
+            />
         </View>
     );
 };

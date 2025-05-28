@@ -5,7 +5,7 @@ const Contact = () =>
 {
     return(
         <View style={Styles.page}>
-            <View style={ProfileStyles.textContainer}>
+            <View style={Styles.infoContainer}>
                 <Text style={Styles.subTitle}> Email </Text>
                 <Text style={Styles.text}>info@Area51MotorsportsLv.com</Text>
                 <View style={Styles.hr} />

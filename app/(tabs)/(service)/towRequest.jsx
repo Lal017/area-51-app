@@ -25,8 +25,8 @@ const TowRequest = () =>
                 <View style={[ServiceStyles.progressBarLine, {backgroundColor: step > 2 ? Colors.secondary : Colors.backDropAccent}]} />
                 <Entypo name="clipboard" size={30} color={step > 3 ? Colors.secondary : Colors.backDropAccent}/>
             </View>
-            <KeyboardAvoidingView behavior='padding' style={Styles.page}>
-                { step === 1 ? (
+            { step === 1 ? (
+                <View style={[Styles.page, {justifyContent: 'center'}]}>
                     <View style={Styles.infoContainer}>
                         <Text style={Styles.subTitle}>How the request works?</Text>
                         <Text style={Styles.text}>
@@ -45,123 +45,111 @@ const TowRequest = () =>
                         <View style={ServiceStyles.buttonContainer}>
                             <TouchableOpacity
                                 style={ServiceStyles.directionButton}
-                                onPress={() => setStep(2)}    
-                            >
-                                <Text style={Styles.actionText}>Continue</Text>
-                                <FontAwesome name='arrow-right' size={24} color='white' />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                ) : step === 2 ? (
-                    <View style={ServiceStyles.selectionContainer}>
-                        <Text style={[Styles.subTitle, {color: Colors.textAlt}]}>Select the vehicle to be towed</Text>
-                        <View style={[Styles.tabContainer, {rowGap: 5}]}>
-                            {vehicles?.map((vehicle, index) => (
-                                <TouchableOpacity
-                                key={index}
-                                style={Styles.tabWrapper}
-                                >
-                                    <Ionicons
-                                        name="car-sport"
-                                        size={30}
-                                        style={Styles.icon}
-                                        color={selectedVehicle === vehicle ? Colors.backDrop : null}
-                                    />
-                                    <Select
-                                        text={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
-                                        selected={vehicle === selectedVehicle ? true : false}
-                                        action={() => setSelectedVehicle(vehicle)}
-                                    />
-                                    <FontAwesome
-                                        name={selectedVehicle === vehicle ? "circle" : "circle-o"}
-                                        size={25}
-                                        style={Styles.rightIcon}
-                                        color={selectedVehicle === vehicle ? Colors.backDrop : null}  
-                                    />
-                                </TouchableOpacity>
-                            ))}
-                        </View>
-                        <View style={ServiceStyles.buttonContainer}>
-                            <TouchableOpacity
-                                style={ServiceStyles.directionButton}
-                                onPress={() => setStep(1)}
-                            >
-                                <FontAwesome name='arrow-left' size={24} color='white' />
-                                <Text style={Styles.actionText}>Back</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={ServiceStyles.directionButton}
-                                onPress={() => { if (selectedVehicle) setStep(3) }}    
-                            >
-                                <Text style={Styles.actionText}>Continue</Text>
-                                <FontAwesome name='arrow-right' size={24} color='white' />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                ) : step === 3 ? (
-                    <View style={ServiceStyles.descriptionContainer}>
-                        <View style={Styles.inputContainer}>
-                            <Text style={[Styles.subTitle, {textAlign: 'center', paddingLeft: 30, paddingRight: 30}]}>Please provide us with a description of why the car needs to be towed</Text>
-                            <View style={Styles.inputWrapper}>
-                                <MaterialIcons name="notes" size={30} style={Styles.iconAlt} />
-                                <TextInput
-                                    placeholder="e.g. Flat tire, dead battery, etc."
-                                    style={Styles.inputAlt}
-                                    multiline={true}
-                                    value={notes}
-                                    onChangeText={setNotes}
-                                />
-                            </View>
-                        </View>
-                        <View style={ServiceStyles.buttonContainer}>
-                            <TouchableOpacity
-                                style={ServiceStyles.directionButton}
                                 onPress={() => setStep(2)}
                             >
-                                <FontAwesome name='arrow-left' size={24} color='white' />
-                                <Text style={Styles.actionText}>Back</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={ServiceStyles.directionButton}
-                                onPress={() => { if (notes) setStep(4) }}
-                            >
                                 <Text style={Styles.actionText}>Continue</Text>
                                 <FontAwesome name='arrow-right' size={24} color='white' />
                             </TouchableOpacity>
                         </View>
                     </View>
-                ) : step === 4 ? (
+                </View>
+            ) : step === 2 ? (
+                <View style={[Styles.page, {justifyContent: 'center', rowGap: 20}]}>
+                    <Text style={[Styles.subTitle, {color: Colors.textAlt}]}>Select the vehicle to be towed</Text>
+                    <View style={ServiceStyles.selectionContainer}>
+                        {vehicles?.map((vehicle, index) => (
+                            <Select
+                                key={index}
+                                text={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
+                                selected={vehicle === selectedVehicle ? true : false}
+                                action={() => setSelectedVehicle(vehicle)}
+                                leftIcon={<Ionicons name="car-sport" size={30} style={Styles.icon} color={selectedVehicle === vehicle ? Colors.backDrop : null}/>}
+                                rightIcon={<FontAwesome name={selectedVehicle === vehicle ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedVehicle === vehicle ? Colors.backDrop : null}/>}
+                            />
+                        ))}
+                    </View>
+                    <View style={ServiceStyles.buttonContainer}>
+                        <TouchableOpacity
+                            style={ServiceStyles.directionButton}
+                            onPress={() => setStep(1)}
+                        >
+                            <FontAwesome name='arrow-left' size={24} color='white' />
+                            <Text style={Styles.actionText}>Back</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={ServiceStyles.directionButton}
+                            onPress={() => { if (selectedVehicle) setStep(3) }}    
+                        >
+                            <Text style={Styles.actionText}>Continue</Text>
+                            <FontAwesome name='arrow-right' size={24} color='white' />
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            ) : step === 3 ? (
+                <KeyboardAvoidingView behavior='padding' style={[Styles.page, {justifyContent: 'center'}]}>
+                    <View style={Styles.inputContainer}>
+                        <Text style={[Styles.subTitle, {textAlign: 'center', paddingLeft: 30, paddingRight: 30}]}>Please provide us with a description of why the car needs to be towed</Text>
+                        <View style={Styles.inputWrapper}>
+                            <MaterialIcons name="notes" size={30} style={Styles.iconAlt} />
+                            <TextInput
+                                placeholder="e.g. Flat tire, dead battery, etc."
+                                style={Styles.inputAlt}
+                                multiline={true}
+                                value={notes}
+                                onChangeText={setNotes}
+                            />
+                        </View>
+                    </View>
+                    <View style={ServiceStyles.buttonContainer}>
+                        <TouchableOpacity
+                            style={ServiceStyles.directionButton}
+                            onPress={() => setStep(2)}
+                        >
+                            <FontAwesome name='arrow-left' size={24} color='white' />
+                            <Text style={Styles.actionText}>Back</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={ServiceStyles.directionButton}
+                            onPress={() => { if (notes) setStep(4) }}
+                        >
+                            <Text style={Styles.actionText}>Continue</Text>
+                            <FontAwesome name='arrow-right' size={24} color='white' />
+                        </TouchableOpacity>
+                    </View>
+                </KeyboardAvoidingView>
+            ) : step === 4 ? (
+                <View style={[Styles.page, {justifyContent: 'center'}]}>
                     <View style={Styles.infoContainer}>
                         <Text style={Styles.subTitle}>Vehicle</Text>
                         <Text style={Styles.text}>{`${selectedVehicle.year} ${selectedVehicle.make} ${selectedVehicle.model}`}</Text>
                         <Text style={Styles.subTitle}>Description</Text>
                         <Text style={Styles.text}>{notes}</Text>
-                        <View style={ServiceStyles.buttonContainer}>
-                            <TouchableOpacity
-                                style={ServiceStyles.directionButton}
-                                onPress={() => setStep(3)}
-                            >
-                                <FontAwesome name='arrow-left' size={24} color='white' />
-                                <Text style={Styles.actionText}>Back</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={[ServiceStyles.directionButton, {backgroundColor: Colors.primary}]}
-                                onPress={() => {
-                                    const data = {
-                                        notes: notes,
-                                        vehicleId: selectedVehicle.id,
-                                        userId: userId
-                                    };
-                                    handleSendAdminNotif('Towing Request', 'A customer has requested a tow', data);
-                                    handleCreateTowRequest(client, userId, selectedVehicle.id, "N/A", notes, setTowRequest);
-                                }}
-                            >
-                                <Text style={Styles.actionText}>Submit</Text>
-                            </TouchableOpacity>
-                        </View>
                     </View>
-                ) : null }
-            </KeyboardAvoidingView>
+                    <View style={ServiceStyles.buttonContainer}>
+                        <TouchableOpacity
+                            style={ServiceStyles.directionButton}
+                            onPress={() => setStep(3)}
+                        >
+                            <FontAwesome name='arrow-left' size={24} color='white' />
+                            <Text style={Styles.actionText}>Back</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={[ServiceStyles.directionButton, {backgroundColor: Colors.primary}]}
+                            onPress={() => {
+                                const data = {
+                                    notes: notes,
+                                    vehicleId: selectedVehicle.id,
+                                    userId: userId
+                                };
+                                handleSendAdminNotif('Towing Request', 'A customer has requested a tow', data);
+                                handleCreateTowRequest(client, userId, selectedVehicle.id, "N/A", notes, setTowRequest);
+                            }}
+                        >
+                            <Text style={Styles.actionText}>Submit</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            ) : null }
         </>
     )
 };

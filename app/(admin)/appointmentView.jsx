@@ -11,7 +11,7 @@ const AppointmentView = () =>
     return (
         <View style={[Styles.page, {justifyContent: 'flex-start'}]}>
             <View style={Styles.infoContainer}>
-                <View style={AdminStyles.block}>
+                <View style={Styles.block}>
                     <Text style={[Styles.title, {textAlign: 'left'}]}>Customer</Text>
                     <View style={AdminStyles.labelContainer}>
                         <Text style={Styles.subTitle}>Name</Text>
@@ -26,7 +26,7 @@ const AppointmentView = () =>
                         <Text style={Styles.text}>{formatNumber(appointment.user.phone)}</Text>
                     </View>
                 </View>
-                <View style={AdminStyles.block}>
+                <View style={Styles.block}>
                     <Text style={[Styles.title, {textAlign: 'left'}]}>Details</Text>
                     <View style={AdminStyles.labelContainer}>
                         <Text style={Styles.subTitle}>Day</Text>

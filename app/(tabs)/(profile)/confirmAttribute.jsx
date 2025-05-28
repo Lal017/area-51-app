@@ -9,9 +9,9 @@ const ConfirmAttribute = () =>
     const [ code, setCode ] = useState();
 
     return(
-        <View style={Styles.page}>
-            <View style={Styles.container}>
-                <Text style={Styles.title}>Confirm email</Text>
+        <View style={[Styles.page, {rowGap: 25}]}>
+            <View style={[Styles.block, {paddingTop: '50%'}]}>
+                <Text style={Styles.subTitle}>Confirm email</Text>
                 <View style={Styles.inputWrapper}>
                     <MaterialIcons name='numbers' size={20} style={Styles.icon} />
                     <TextInput
@@ -22,15 +22,15 @@ const ConfirmAttribute = () =>
                         style={Styles.input}
                     />
                 </View>
-                <TouchableOpacity
-                    onPress={() => handleConfirmUserAttribute({
-                        userAttributeKey: 'email',
-                        confirmationCode: code
-                    })}
-                    style={Styles.actionButton}>
-                    <Text style={Styles.actionText}>Confirm</Text>
-                </TouchableOpacity>
             </View>
+            <TouchableOpacity
+                onPress={() => handleConfirmUserAttribute({
+                    userAttributeKey: 'email',
+                    confirmationCode: code
+                })}
+                style={Styles.actionButton}>
+                <Text style={Styles.actionText}>Confirm</Text>
+            </TouchableOpacity>
         </View>
     );
 };

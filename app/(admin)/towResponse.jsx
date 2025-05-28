@@ -25,7 +25,7 @@ const TowResponse = () =>
         <KeyboardAvoidingView behavior='height' style={{flex: 1}}>
             <ScrollView contentContainerStyle={[Styles.scrollPage, {justifyContent: 'flex-start', paddingBottom: 25}]}>
                 <View style={Styles.infoContainer}>
-                    <View style={AdminStyles.block}>
+                    <View style={Styles.block}>
                         <Text style={[Styles.title, {textAlign: 'left'}]}>Customer</Text>
                         <View style={AdminStyles.labelContainer}>
                             <Text style={Styles.subTitle}>Name</Text>
@@ -40,7 +40,7 @@ const TowResponse = () =>
                             <Text style={Styles.text}>{formatNumber(customer.user.phone)}</Text>
                         </View>
                     </View>
-                    <View style={AdminStyles.block}>
+                    <View style={Styles.block}>
                         <Text style={[Styles.title, {textAlign: 'left'}]}>Vehicle</Text>
                         <View style={AdminStyles.vehicleContainer}>
                             <View style={AdminStyles.labelContainer}>
@@ -75,7 +75,7 @@ const TowResponse = () =>
                             ) : null }
                         </View>
                     </View>
-                    <View style={AdminStyles.block}>
+                    <View style={Styles.block}>
                         <Text style={[Styles.title, {textAlign: 'left'}]}>Description</Text>
                         <Text style={Styles.text}>{customer.notes}</Text>
                     </View>

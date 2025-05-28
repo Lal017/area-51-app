@@ -26,15 +26,6 @@ const MyAppointments = () => {
         <ScrollView contentContainerStyle={[Styles.scrollPage, {rowGap: 25, paddingTop: 25, paddingBottom: 25}]}>
             {appointments?.map((appointment, index) => (
                 <View key={index} style={ServiceStyles.fieldContainer}>
-                    <TouchableOpacity
-                        style={ServiceStyles.editButton}
-                        onPress={() => {router.push({
-                            params: { appointmentParam: JSON.stringify(appointment) },
-                            pathname: '/(tabs)/(service)/editAppointment'
-                        })}}
-                    >
-                        <Text style={Styles.actionText}>Edit</Text>
-                    </TouchableOpacity>
                     <View style={Styles.infoContainer}>
                         <Text style={Styles.subTitle}>Date</Text>
                         <Text style={Styles.text}>{formatDate(appointment.date)}</Text>
@@ -47,6 +38,15 @@ const MyAppointments = () => {
                         <Text style={Styles.subTitle}>Description</Text>
                         <Text style={Styles.text}>{appointment.notes}</Text>
                     </View>
+                    <TouchableOpacity
+                        style={Styles.actionButton}
+                        onPress={() => {router.push({
+                            params: { appointmentParam: JSON.stringify(appointment) },
+                            pathname: '/(tabs)/(service)/editAppointment'
+                        })}}
+                    >
+                        <Text style={Styles.actionText}>Edit</Text>
+                    </TouchableOpacity>
                     <TouchableOpacity
                         style={[Styles.actionButton, {alignSelf: 'center', backgroundColor: 'red'}]}
                         onPress={() => {

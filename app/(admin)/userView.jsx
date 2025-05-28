@@ -11,7 +11,7 @@ const UserView = () =>
     return (
         <ScrollView contentContainerStyle={[Styles.scrollPage, {justifyContent: 'flex-start'}]}>
             <View style={[Styles.infoContainer, {rowGap: 15}]}>
-                <View style={AdminStyles.block}>
+                <View style={Styles.block}>
                     <Text style={[Styles.title, {textAlign: 'left'}]}>Customer</Text>
                     <View style={AdminStyles.labelContainer}>
                         <Text style={Styles.subTitle}>Name</Text>
@@ -30,7 +30,7 @@ const UserView = () =>
                         <Text style={Styles.text}>{formatDate(customer.createdAt)}</Text>
                     </View>
                 </View>
-                <View style={[AdminStyles.block, {marginBottom: 30}]}>
+                <View style={[Styles.block, {marginBottom: 30}]}>
                     <Text style={[Styles.title, {textAlign: 'left'}]}>Vehicles</Text>
                     { customer.vehicles.items.map((vehicle, index) => (
                         <View style={AdminStyles.vehicleContainer} key={index}>

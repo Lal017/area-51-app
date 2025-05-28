@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingVi
 import { router, useLocalSearchParams } from 'expo-router';
 import { ServiceStyles, Styles } from "../../../constants/styles";
 import { Calendar } from "react-native-calendars";
-import { handleGetAppointments, handleSetDay, handleUpdateAppointment } from '../../../components/scheduleComponents';
+import { handleGetAppointments, handleSetTimes, handleUpdateAppointment } from '../../../components/scheduleComponents';
 import Colors from '../../../constants/colors';
 import { Select, CalendarHeader, formatDate, formatTime } from '../../../components/components';
 import { MaterialIcons, Ionicons, FontAwesome, AntDesign, FontAwesome5, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -29,6 +29,8 @@ const Schedule = () =>
     const initializeAppointments = async () =>
     {
       const scheduled = await handleGetAppointments();
+      // Filter out the appointment being edited
+      console.log('appointment', appointment.date, appointment.time);
       const updatedScheduled = scheduled.filter(
         (appt) => !(appt.date === appointment.date && appt.time === appointment.time)
       );
@@ -42,7 +44,7 @@ const Schedule = () =>
   {
     setSelectedDay(day.dateString);
     setSelectedTime(undefined);
-    const getDay = await handleSetDay(scheduledAppointments, day.dateString);
+    const getDay = await handleSetTimes(scheduledAppointments, day.dateString);
     setAvailableAppointments(getDay);
   };
 
@@ -123,213 +125,133 @@ const Schedule = () =>
           </View>
         </ScrollView>
       ) : step === 2 ? (
-        <View style={Styles.page}>
+        <View style={[Styles.page, {justifyContent: 'center', rowGap: 20}]}>
+          <Text style={Styles.subTitle}>Select a Vehicle</Text>
           <View style={ServiceStyles.selectionContainer}>
-            <Text style={Styles.subTitle}>Select a Vehicle</Text>
-            <View style={[Styles.tabContainer, {rowGap: 5}]}>
-              {vehicles?.map((vehicle, index) => (
-                <TouchableOpacity
-                  key={index}
-                  style={Styles.tabWrapper}
-                >
-                    <Ionicons
-                      name="car-sport"
-                      size={30}
-                      style={Styles.icon}
-                      color={selectedVehicle.id === vehicle.id ? Colors.backDrop : null}
-                    />
-                    <Select
-                      text={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
-                      selected={vehicle.id === selectedVehicle.id ? true : false}
-                      action={() => setSelectedVehicle(vehicle)}
-                    />
-                    <FontAwesome
-                      name={selectedVehicle.id === vehicle.id ? "circle" : "circle-o"}
-                      size={25}
-                      style={Styles.rightIcon}
-                      color={selectedVehicle.id === vehicle.id ? Colors.backDrop : null}  
-                    />
-                </TouchableOpacity>
-              ))}
-            </View>
-            <View style={ServiceStyles.buttonContainer}>
-              <TouchableOpacity
-                style={ServiceStyles.directionButton}
-                onPress={() => setStep(1)}
-              >
-                <FontAwesome name='arrow-left' size={24} color='white' />
-                <Text style={Styles.actionText}>Back</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={ServiceStyles.directionButton}
-                onPress={() => {
-                  if (selectedVehicle) {
-                    setStep(3);
-                  }
-                }}
-              >
-                <Text style={Styles.actionText}>Continue</Text>
-                <FontAwesome name='arrow-right' size={24} color='white' />
-              </TouchableOpacity>
-            </View>
+            {vehicles?.map((vehicle, index) => (
+              <Select
+                key={index}
+                text={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
+                selected={vehicle === selectedVehicle ? true : false}
+                action={() => setSelectedVehicle(vehicle)}
+                leftIcon={<Ionicons name="car-sport" size={30} style={Styles.icon} color={selectedVehicle === vehicle ? Colors.backDrop : null}/>}
+                rightIcon={<FontAwesome name={selectedVehicle === vehicle ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedVehicle === vehicle ? Colors.backDrop : null}/>}
+              />
+            ))}
+          </View>
+          <View style={ServiceStyles.buttonContainer}>
+            <TouchableOpacity
+              style={ServiceStyles.directionButton}
+              onPress={() => setStep(1)}
+            >
+              <FontAwesome name='arrow-left' size={24} color='white' />
+              <Text style={Styles.actionText}>Back</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={ServiceStyles.directionButton}
+              onPress={() => {
+                if (selectedVehicle) {
+                  setStep(3);
+                }
+              }}
+            >
+              <Text style={Styles.actionText}>Continue</Text>
+              <FontAwesome name='arrow-right' size={24} color='white' />
+            </TouchableOpacity>
           </View>
         </View>
       ) : step === 3 ? (
-        <View style={Styles.page}>
+        <View style={[Styles.page, {justifyContent: 'center', rowGap: 20}]}>
+          <Text style={Styles.subTitle}>Select a service</Text>
           <View style={ServiceStyles.selectionContainer}>
-            <Text style={Styles.subTitle}>Select a service</Text>
-            <View style={[Styles.tabContainer, {rowGap: 5}]}>
-              <TouchableOpacity style={Styles.tabWrapper}>
-                <FontAwesome5
-                  name="oil-can"
-                  size={30}
-                  style={Styles.icon}
-                  color={selectedService === 'Oil Change' ? Colors.backDrop : null}
-                />
-                <Select
-                  text="Oil Change"
-                  selected={selectedService === 'Oil Change' ? true : false}
-                  action={() => setSelectedService('Oil Change')}
-                />
-                <FontAwesome
-                  name={selectedService === 'Oil Change' ? "circle" : "circle-o"}
-                  size={25}
-                  style={Styles.rightIcon}
-                  color={selectedService === 'Oil Change' ? Colors.backDrop : null}  
-                />
-              </TouchableOpacity>
-              <TouchableOpacity style={Styles.tabWrapper}>
-                <FontAwesome
-                  name="stethoscope"
-                  size={30}
-                  style={Styles.icon}
-                  color={selectedService === 'Diagnosis' ? Colors.backDrop : null}
-                />
-                <Select
-                  text="Diagnosis"
-                  selected={selectedService === 'Diagnosis' ? true : false}
-                  action={() => setSelectedService('Diagnosis')}
-                />
-                <FontAwesome
-                  name={selectedService === 'Diagnosis' ? "circle" : "circle-o"}
-                  size={25}
-                  style={Styles.rightIcon}
-                  color={selectedService === 'Diagnosis' ? Colors.backDrop : null}  
-                />
-              </TouchableOpacity>
-              <TouchableOpacity style={Styles.tabWrapper}>
-                <Entypo
-                  name="area-graph"
-                  size={30}
-                  style={Styles.icon}
-                  color={selectedService === 'Tuning' ? Colors.backDrop : null}
-                />
-                <Select
-                  text="Tuning"
-                  selected={selectedService === 'Tuning' ? true : false}
-                  action={() => setSelectedService('Tuning')}
-                />
-                <FontAwesome
-                  name={selectedService === 'Tuning' ? "circle" : "circle-o"}
-                  size={25}
-                  style={Styles.rightIcon}
-                  color={selectedService === 'Tuning' ? Colors.backDrop : null}  
-                />
-              </TouchableOpacity>
-              <TouchableOpacity style={Styles.tabWrapper}>
-                <MaterialIcons
-                  name="air"
-                  size={30}
-                  style={Styles.icon}
-                  color={selectedService === 'A/C' ? Colors.backDrop : null}
-                />
-                <Select
-                  text="A/C"
-                  selected={selectedService === 'A/C' ? true : false}
-                  action={() => setSelectedService('A/C')}
-                />
-                <FontAwesome
-                  name={selectedService === 'A/C' ? "circle" : "circle-o"}
-                  size={25}
-                  style={Styles.rightIcon}
-                  color={selectedService === 'A/C' ? Colors.backDrop : null}  
-                />
-              </TouchableOpacity>
-              <TouchableOpacity style={Styles.tabWrapper}>
-                <MaterialCommunityIcons
-                  name="dots-horizontal-circle"
-                  size={30}
-                  style={Styles.icon}
-                  color={selectedService === 'Other' ? Colors.backDrop : null}
-                />
-                <Select
-                  text="Other"
-                  selected={selectedService === 'Other' ? true : false}
-                  action={() => setSelectedService('Other')}
-                />
-                <FontAwesome
-                  name={selectedService === 'Other' ? "circle" : "circle-o"}
-                  size={25}
-                  style={Styles.rightIcon}
-                  color={selectedService === 'Other' ? Colors.backDrop : null}  
-                />
-              </TouchableOpacity>
-            </View>
-            <View style={ServiceStyles.buttonContainer}>
-              <TouchableOpacity
-                style={ServiceStyles.directionButton}
-                onPress={() => setStep(2)}
-              >
-                <FontAwesome name='arrow-left' size={24} color='white' />
-                <Text style={Styles.actionText}>Back</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={ServiceStyles.directionButton}
-                onPress={() => {
-                  if (selectedService) setStep(4);
-                }}
-              >
-                <Text style={Styles.actionText}>Continue</Text>
-                <FontAwesome name='arrow-right' size={24} color='white' />
-              </TouchableOpacity>
-            </View>
+            <Select
+              text="Oil Change"
+              selected={selectedService === 'Oil Change' ? true : false}
+              action={() => setSelectedService('Oil Change')}
+              leftIcon={<FontAwesome5 name="oil-can" size={30} style={Styles.icon} color={selectedService === 'Oil Change' ? Colors.backDrop : null} />}
+              rightIcon={<FontAwesome name={selectedService === 'Oil Change' ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedService === 'Oil Change' ? Colors.backDrop : null}/>}
+            />
+            <Select
+              text="Diagnosis"
+              selected={selectedService === 'Diagnosis' ? true : false}
+              action={() => setSelectedService('Diagnosis')}
+              leftIcon={<FontAwesome name="stethoscope" size={30} style={Styles.icon} color={selectedService === 'Diagnosis' ? Colors.backDrop : null}/>}
+              rightIcon={<FontAwesome name={selectedService === 'Diagnosis' ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedService === 'Diagnosis' ? Colors.backDrop : null}/>}
+            />
+            <Select
+              text="Tuning"
+              selected={selectedService === 'Tuning' ? true : false}
+              action={() => setSelectedService('Tuning')}
+              leftIcon={<Entypo name="area-graph" size={30} style={Styles.icon} color={selectedService === 'Tuning' ? Colors.backDrop : null}/>}
+              rightIcon={<FontAwesome name={selectedService === 'Tuning' ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedService === 'Tuning' ? Colors.backDrop : null}/>}
+            />
+            <Select
+              text="A/C"
+              selected={selectedService === 'A/C' ? true : false}
+              action={() => setSelectedService('A/C')}
+              leftIcon={<MaterialIcons name="air" size={30} style={Styles.icon} color={selectedService === 'A/C' ? Colors.backDrop : null}/>}
+              rightIcon={<FontAwesome name={selectedService === 'A/C' ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedService === 'A/C' ? Colors.backDrop : null}/>}
+            />
+            <Select
+              text="Other"
+              selected={selectedService === 'Other' ? true : false}
+              action={() => setSelectedService('Other')}
+              leftIcon={<MaterialCommunityIcons name="dots-horizontal-circle" size={30} style={Styles.icon} color={selectedService === 'Other' ? Colors.backDrop : null} />}
+              rightIcon={<FontAwesome name={selectedService === 'Other' ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedService === 'Other' ? Colors.backDrop : null}/>}
+            />
+          </View>
+          <View style={ServiceStyles.buttonContainer}>
+            <TouchableOpacity
+              style={ServiceStyles.directionButton}
+              onPress={() => setStep(2)}
+            >
+              <FontAwesome name='arrow-left' size={24} color='white' />
+              <Text style={Styles.actionText}>Back</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={ServiceStyles.directionButton}
+              onPress={() => {
+                if (selectedService) setStep(4);
+              }}
+            >
+              <Text style={Styles.actionText}>Continue</Text>
+              <FontAwesome name='arrow-right' size={24} color='white' />
+            </TouchableOpacity>
           </View>
         </View>
       ) : step === 4 ? (
-        <KeyboardAvoidingView behavior='padding' style={Styles.page}>
-          <View style={ServiceStyles.descriptionContainer}>
-            <View style={Styles.inputContainer}>
-              <Text style={[Styles.subTitle, {textAlign: 'center', paddingLeft: 30, paddingRight: 30}]}>Please provide any notes about the vehicle worth mentioning.</Text>
-              <View style={Styles.inputWrapper}>
-                <MaterialIcons name='notes' size={30} style={Styles.iconAlt} />
-                <TextInput
-                  placeholder='description'
-                  value={notes}
-                  onChangeText={setNotes}
-                  style={Styles.inputAlt}
-                />
-              </View>
+        <KeyboardAvoidingView behavior='padding' style={[Styles.page, {justifyContent: 'center'}]}>
+          <View style={Styles.inputContainer}>
+            <Text style={[Styles.subTitle, {textAlign: 'center', paddingLeft: 30, paddingRight: 30}]}>Please provide any notes about the vehicle worth mentioning.</Text>
+            <View style={Styles.inputWrapper}>
+              <MaterialIcons name='notes' size={30} style={Styles.iconAlt} />
+              <TextInput
+                placeholder='description'
+                value={notes}
+                onChangeText={setNotes}
+                style={Styles.inputAlt}
+              />
             </View>
-            <View style={ServiceStyles.buttonContainer}>
-              <TouchableOpacity
-                style={ServiceStyles.directionButton}
-                onPress={() => setStep(3)}
-              >
-                <FontAwesome name='arrow-left' size={24} color='white' />
-                <Text style={Styles.actionText}>Back</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => setStep(5)}
-                style={ServiceStyles.directionButton}
-              >
-                <Text style={Styles.actionText}>Continue</Text>
-                <FontAwesome name='arrow-right' size={24} color='white' />
-              </TouchableOpacity>
-            </View>
+          </View>
+          <View style={ServiceStyles.buttonContainer}>
+            <TouchableOpacity
+              style={ServiceStyles.directionButton}
+              onPress={() => setStep(3)}
+            >
+              <FontAwesome name='arrow-left' size={24} color='white' />
+              <Text style={Styles.actionText}>Back</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setStep(5)}
+              style={ServiceStyles.directionButton}
+            >
+              <Text style={Styles.actionText}>Continue</Text>
+              <FontAwesome name='arrow-right' size={24} color='white' />
+            </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>
       ) : step === 5 ? (
-        <View style={Styles.page}>
+        <View style={[Styles.page, {justifyContent: 'center'}]}>
           <View style={Styles.infoContainer}>
             <Text style={Styles.subTitle}>Date</Text>
             <Text style={Styles.text}>{formatDate(selectedDay)}</Text>
@@ -341,25 +263,25 @@ const Schedule = () =>
             <Text style={Styles.text}>{selectedService}</Text>
             <Text style={Styles.subTitle}>Notes</Text>
             <Text style={Styles.text}>{notes}</Text>
-            <View style={ServiceStyles.buttonContainer}>
-              <TouchableOpacity
-                style={ServiceStyles.directionButton}
-                onPress={() => setStep(4)}
-              >
-                <FontAwesome name='arrow-left' size={24} color='white'/>
-                <Text style={Styles.actionText}>Back</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  handleSendAdminNotif('Appointment Rescheduled', 'A customer has rescheduled an appointment');
-                  handleUpdateAppointment(client, appointment.id, selectedDay, selectedTime, selectedService, notes, userId, selectedVehicle.id);
-                  router.replace('/(tabs)');
-                }}
-                style={[ServiceStyles.directionButton, {backgroundColor: Colors.primary}]}
-              >
-                <Text style={Styles.actionText}>Schedule</Text>
-              </TouchableOpacity>
-            </View>
+          </View>
+          <View style={ServiceStyles.buttonContainer}>
+            <TouchableOpacity
+              style={ServiceStyles.directionButton}
+              onPress={() => setStep(4)}
+            >
+              <FontAwesome name='arrow-left' size={24} color='white'/>
+              <Text style={Styles.actionText}>Back</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                handleSendAdminNotif('Appointment Edited', 'A customer has edited an appointment');
+                handleUpdateAppointment(client, appointment.id, selectedDay, selectedTime, selectedService, notes, userId, selectedVehicle.id);
+                router.replace('/(tabs)');
+              }}
+              style={[ServiceStyles.directionButton, {backgroundColor: Colors.primary}]}
+            >
+              <Text style={Styles.actionText}>Schedule</Text>
+            </TouchableOpacity>
           </View>
         </View>
       ) : null }
