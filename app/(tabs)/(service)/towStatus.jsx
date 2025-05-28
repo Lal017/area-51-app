@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Alert } from "react-native";
-import { HomeStyles, Styles } from "../../../constants/styles";
+import { HomeStyles, Styles, ServiceStyles } from "../../../constants/styles";
 import { useApp } from "../../../components/context";
 import { FontAwesome } from "@expo/vector-icons";
 import LottieView from "lottie-react-native";
@@ -22,17 +22,16 @@ const TowStatus = () =>
                 <Text style={Styles.text}>{towRequest.price}</Text>
                 <Text style={Styles.subTitle}>Wait Time:</Text>
                 <Text style={Styles.text}>{towRequest.waitTime}</Text>
-                <View style={HomeStyles.buttonContainer}>
                 <TouchableOpacity
                     style={Styles.actionButton}
                     onPress={() => {
-                    handleSendAdminNotif('Tow Request', 'Customer has been confirmed for towing!');
-                    handleUpdateTowRequestStatus(client, towRequest.id, 'IN_PROGRESS', setTowRequest);
-                    Alert.alert(
-                        'Confirmed',
-                        'Your tow request has been confirmed',
-                        [{ text: 'OK' }]
-                    );
+                        handleSendAdminNotif('Tow Request Confirmed', 'Customer has been confirmed for towing!');
+                        handleUpdateTowRequestStatus(client, towRequest.id, 'IN_PROGRESS', setTowRequest);
+                        Alert.alert(
+                            'Confirmed',
+                            'Your tow request has been confirmed',
+                            [{ text: 'OK' }]
+                        );
                     }}
                 >
                     <Text style={Styles.actionText}>Accept</Text>
@@ -40,22 +39,22 @@ const TowStatus = () =>
                 <TouchableOpacity
                     style={[Styles.actionButton, {backgroundColor: 'red'}]}
                     onPress={() => {
-                    handleSendAdminNotif('Tow Request', 'Customer has cancelled the tow request');
-                    handleUpdateTowRequestStatus(client, towRequest.id, 'CANCELLED', setTowRequest);
-                    Alert.alert(
-                        'Cancelled',
-                        'Your tow request has been cancelled',
-                        [{ text: 'OK' }]
-                    );
+                        handleSendAdminNotif('Tow Request Cancelled', 'Customer has cancelled the tow request');
+                        handleUpdateTowRequestStatus(client, towRequest.id, 'CANCELLED', setTowRequest);
+                        Alert.alert(
+                            'Cancelled',
+                            'Your tow request has been cancelled',
+                            [{ text: 'OK' }]
+                        );
+                        router.replace('/(tabs)');
                     }}  
                 >
                     <Text style={Styles.actionText}>Cancel</Text>
                 </TouchableOpacity>
-                </View>
             </View>
             ) : towRequest && towRequest.status === "REQUESTED" ? (
-            <View style={HomeStyles.requestWrapper}>
-                <View style={HomeStyles.titleWrapper}>
+            <View style={ServiceStyles.requestWrapper}>
+                <View style={ServiceStyles.titleWrapper}>
                 <Text style={Styles.subTitle}>Tow Request</Text>
                 <LottieView
                     source={require('../../../assets/animations/gear.json')}
@@ -68,6 +67,21 @@ const TowStatus = () =>
                 Your request is being processed.
                 We'll notify you with a price and estimated wait time shortly.
                 </Text>
+                <TouchableOpacity
+                    style={[Styles.actionButton, {backgroundColor: 'red', alignSelf: 'center'}]}
+                    onPress={() => {
+                        handleSendAdminNotif('Tow Request Cancelled', 'Customer has cancelled the tow request');
+                        handleUpdateTowRequestStatus(client, towRequest.id, 'CANCELLED', setTowRequest);
+                        Alert.alert(
+                            'Cancelled',
+                            'Your tow request has been cancelled',
+                            [{ text: 'OK' }]
+                        );
+                        router.replace('/(tabs)');
+                    }}  
+                >
+                    <Text style={Styles.actionText}>Cancel</Text>
+                </TouchableOpacity>
             </View>
             ) : towRequest?.status === "IN_PROGRESS" ? (
             <View style={HomeStyles.requestWrapper}>

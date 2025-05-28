@@ -34,7 +34,6 @@ const TowRequest = () =>
                 latitude: getLocation.coords.latitude,
                 longitude: getLocation.coords.longitude
             })
-            console.log('location:', getLocation.coords);
         }
 
         getLocation();
@@ -118,28 +117,28 @@ const TowRequest = () =>
                         <View style={[Styles.infoContainer, {paddingTop: 20}]}>
                             <Text style={[Styles.subTitle, {textAlign: 'center'}]}>Drag and drop the pin to the pickup location</Text>
                         </View>
-                        <MapView
-                            provider={PROVIDER_GOOGLE}
-                            style={{width: '100%', height: '60%'}}
-                            showsUserLocation={true}
-                            zoomControlEnabled={true}
-                            initialRegion={{
-                                latitude: location?.latitude,
-                                longitude: location?.longitude,
-                                latitudeDelta: 0.01,
-                                longitudeDelta: 0.01
-                            }}
-                        >
-                            <Marker
-                                title="Pickup Location"
-                                description="This is where the tow truck will be sent"
-                                coordinate={marker}
-                                draggable={true}
-                                onDragEnd={(e) => {
-                                    console.log('Marker dragged to:', e.nativeEvent.coordinate);
-                                    setMarker(e.nativeEvent.coordinate)}}
-                            />
-                        </MapView>
+                        <View style={ServiceStyles.mapContainer}>
+                            <MapView
+                                provider={PROVIDER_GOOGLE}
+                                style={{width: '100%', height: '100%'}}
+                                showsUserLocation={true}
+                                zoomControlEnabled={true}
+                                region={{
+                                    latitude: location?.latitude,
+                                    longitude: location?.longitude,
+                                    latitudeDelta: 0.01,
+                                    longitudeDelta: 0.01
+                                }}
+                            >
+                                <Marker
+                                    title="Pickup Location"
+                                    description="This is where the tow truck will be sent"
+                                    coordinate={marker}
+                                    draggable={true}
+                                    onDragEnd={(e) => setMarker(e.nativeEvent.coordinate)}
+                                />
+                            </MapView>
+                        </View>
                         <View style={ServiceStyles.buttonContainer}>
                             <TouchableOpacity
                                 style={ServiceStyles.directionButton}
@@ -197,7 +196,30 @@ const TowRequest = () =>
                     </View>
                 </KeyboardAvoidingView>
             ) : step === 5 ? (
-                <View style={[Styles.page, {justifyContent: 'center'}]}>
+                <ScrollView contentContainerStyle={[Styles.scrollPage, {justifyContent: 'center', rowGap: 20, paddingTop: 25}]}>
+                        <View style={ServiceStyles.mapContainerAlt}>
+                            { marker ? (
+                                <MapView
+                                    provider={PROVIDER_GOOGLE}
+                                    style={{width: '100%', height: '100%'}}
+                                    region={{
+                                        latitude: marker?.latitude,
+                                        longitude: marker?.longitude,
+                                        latitudeDelta: 0.01,
+                                        longitudeDelta: 0.01
+                                    }}
+                                    liteMode={true}
+                                >
+                                    <Marker
+                                        title="Pickup Location"
+                                        description="This is where the tow truck will be sent"
+                                        coordinate={marker}
+                                    />
+                                </MapView>
+                            ) : (
+                                <ActivityIndicator size='large' color='#0000ff' />
+                            ) }
+                        </View>
                     <View style={Styles.infoContainer}>
                         <Text style={Styles.subTitle}>Vehicle</Text>
                         <Text style={Styles.text}>{`${selectedVehicle.year} ${selectedVehicle.make} ${selectedVehicle.model}`}</Text>
@@ -220,14 +242,14 @@ const TowRequest = () =>
                                     vehicleId: selectedVehicle.id,
                                     userId: userId
                                 };
-                                handleSendAdminNotif('Towing Request', 'A customer has requested a tow', data);
+                                handleSendAdminNotif('Towing Request', 'A customer is requesting a tow', data);
                                 handleCreateTowRequest(client, userId, selectedVehicle.id, marker, notes, setTowRequest);
                             }}
                         >
                             <Text style={Styles.actionText}>Submit</Text>
                         </TouchableOpacity>
                     </View>
-                </View>
+                </ScrollView>
             ) : null }
         </>
     )

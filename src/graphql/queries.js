@@ -303,7 +303,8 @@ export const getTowRequest = /* GraphQL */ `
         __typename
       }
       status
-      location
+      latitude
+      longitude
       notes
       price
       waitTime
@@ -341,7 +342,8 @@ export const listTowRequests = /* GraphQL */ `
           vin
         }
         status
-        location
+        latitude
+        longitude
         notes
         price
         waitTime
@@ -375,7 +377,8 @@ export const towRequestsByUserId = /* GraphQL */ `
         userId
         vehicleId
         status
-        location
+        latitude
+        longitude
         notes
         price
         waitTime

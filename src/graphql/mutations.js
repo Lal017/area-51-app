@@ -227,7 +227,8 @@ export const createTowRequest = /* GraphQL */ `
       userId
       vehicleId
       status
-      location
+      latitude
+      longitude
       notes
       price
       waitTime
@@ -248,7 +249,8 @@ export const updateTowRequest = /* GraphQL */ `
       userId
       vehicleId
       status
-      location
+      latitude
+      longitude
       notes
       price
       waitTime
@@ -269,7 +271,8 @@ export const deleteTowRequest = /* GraphQL */ `
       userId
       vehicleId
       status
-      location
+      latitude
+      longitude
       notes
       price
       waitTime

@@ -153,7 +153,8 @@ const handleCreateTowRequest = async (client, userId, vehicleId, location, notes
                     userId: userId,
                     vehicleId: vehicleId,
                     status: "REQUESTED",
-                    location: location,
+                    latitude: location.latitude,
+                    longitude: location.longitude,
                     notes: notes
                 }
             }

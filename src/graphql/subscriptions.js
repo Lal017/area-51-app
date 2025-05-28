@@ -367,7 +367,8 @@ export const onCreateTowRequest = /* GraphQL */ `
         __typename
       }
       status
-      location
+      latitude
+      longitude
       notes
       price
       waitTime
@@ -414,7 +415,8 @@ export const onUpdateTowRequest = /* GraphQL */ `
         __typename
       }
       status
-      location
+      latitude
+      longitude
       notes
       price
       waitTime
@@ -461,7 +463,8 @@ export const onDeleteTowRequest = /* GraphQL */ `
         __typename
       }
       status
-      location
+      latitude
+      longitude
       notes
       price
       waitTime

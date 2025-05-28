@@ -200,24 +200,7 @@ const AuthStyles = StyleSheet.create({
 });
 
 const HomeStyles = StyleSheet.create({
-    requestWrapper: {
-        width: '100%',
-        elevation: 10,
-        backgroundColor: Colors.backDrop,
-        padding: 20,
-        rowGap: 10,
-        alignItems: 'left',
-        justifyContent: 'center'
-    },
-    titleWrapper: {
-        flexDirection: 'row',
-        alignItems: 'center'
-    },
-    buttonContainer: {
-        width: '100%',
-        alignItems: 'center',
-        rowGap: 20
-    }
+
 });
 
 const ServiceStyles = StyleSheet.create({
@@ -294,6 +277,34 @@ const ServiceStyles = StyleSheet.create({
         padding: 25,
         position: 'relative',
         rowGap: 10,
+        alignItems: 'center'
+    },
+    // towRequest.jsx
+    mapContainer: {
+        elevation: 10,
+        backgroundColor: Colors.background,
+        width: '100%',
+        height: '60%'
+    },
+    mapContainerAlt: {
+        borderWidth: 4,
+        width: 325,
+        height: 325,
+        borderRadius: 500,
+        overflow: 'hidden'
+    },
+    // towStatus.jsx
+    requestWrapper: {
+        width: '100%',
+        elevation: 10,
+        backgroundColor: Colors.backDrop,
+        padding: 20,
+        rowGap: 20,
+        alignItems: 'left',
+        justifyContent: 'center'
+    },
+        titleWrapper: {
+        flexDirection: 'row',
         alignItems: 'center'
     },
 });

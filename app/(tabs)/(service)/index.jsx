@@ -13,7 +13,7 @@ const ServiceConsole = () =>
     <View style={[Styles.page, {rowGap: 5}]}>
       <TouchableOpacity
         onPress={() => {
-          if (towRequest) {
+          if (towRequest?.status !== 'CANCELLED') {
             router.push('/(tabs)/(service)/towStatus');
           } else {
             router.push('/(tabs)/(service)/towRequest')
