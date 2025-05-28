@@ -21,6 +21,11 @@ export const expo = {
     },
     package: "com.lalo17.troplocksmithapp",
     googleServicesFile: process.env.GOOGLE_SERVICES_JSON ?? './google-services.json',
+    config: {
+      googleMaps: {
+        apiKey: process.env.GOOGLE_MAPS_API_KEY
+      }
+    }
   },
   web: {
     bundler: "metro",
@@ -43,6 +48,12 @@ export const expo = {
       {
         "icon": "./assets/images/logo-large.png",
         "color": "#000000",
+      }
+    ],
+    [
+      "expo-location",
+      {
+        isAndroidForegroundServiceEnabled: false,
       }
     ]
   ],

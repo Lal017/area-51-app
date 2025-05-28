@@ -43,7 +43,7 @@ const editVehicle = () =>
                             placeholder='Year'
                             value={year}
                             onChangeText={setYear}
-                            keyboardType='numeric'
+                            keyboardType='number-pad'
                             style={Styles.input}
                         />
                     </View>

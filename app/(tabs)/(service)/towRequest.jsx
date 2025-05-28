@@ -1,12 +1,14 @@
-import { View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView } from "react-native";
+import { View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, ActivityIndicator, ScrollView } from "react-native";
 import { ServiceStyles, Styles } from "../../../constants/styles"
 import { useApp } from '../../../components/context';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Colors from "../../../constants/colors";
-import { Entypo, FontAwesome, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Entypo, FontAwesome, FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { handleSendAdminNotif } from "../../../components/notifComponents";
 import { Select } from "../../../components/components";
 import { handleCreateTowRequest } from "../../../components/scheduleComponents";
+import { requestForegroundPermissionsAsync, getCurrentPositionAsync } from 'expo-location';
+import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 
 const TowRequest = () =>
 {
@@ -14,7 +16,29 @@ const TowRequest = () =>
 
     const [ selectedVehicle, setSelectedVehicle ] = useState();
     const [ notes, setNotes ] = useState();
+    const [ location, setLocation ] = useState();
+    const [ marker, setMarker ] = useState();
     const [ step, setStep ] = useState(1);
+
+    useEffect(() => {
+        const getLocation = async () => {
+            let { status } = await requestForegroundPermissionsAsync();
+            if (status !== 'granted') {
+                console.log('Permission to access location was denied');
+                return;
+            }
+
+            let getLocation = await getCurrentPositionAsync({});
+            setLocation(getLocation.coords);
+            setMarker({
+                latitude: getLocation.coords.latitude,
+                longitude: getLocation.coords.longitude
+            })
+            console.log('location:', getLocation.coords);
+        }
+
+        getLocation();
+    }, [])
 
     return (
         <>
@@ -23,7 +47,9 @@ const TowRequest = () =>
                 <View style={[ServiceStyles.progressBarLine, {backgroundColor: step > 1 ? Colors.secondary : Colors.backDropAccent}]} />
                 <Ionicons name="car-sport" size={30} color={step > 2 ? Colors.secondary : Colors.backDropAccent}/>
                 <View style={[ServiceStyles.progressBarLine, {backgroundColor: step > 2 ? Colors.secondary : Colors.backDropAccent}]} />
-                <Entypo name="clipboard" size={30} color={step > 3 ? Colors.secondary : Colors.backDropAccent}/>
+                <FontAwesome5 name="map-marker-alt" size={30} color={step > 3 ? Colors.secondary : Colors.backDropAccent} />
+                <View style={[ServiceStyles.progressBarLine, {backgroundColor: step > 3 ? Colors.secondary : Colors.backDropAccent}]} />
+                <Entypo name="clipboard" size={30} color={step > 4 ? Colors.secondary : Colors.backDropAccent}/>
             </View>
             { step === 1 ? (
                 <View style={[Styles.page, {justifyContent: 'center'}]}>
@@ -86,6 +112,59 @@ const TowRequest = () =>
                     </View>
                 </View>
             ) : step === 3 ? (
+                <>
+                { location ? (
+                    <View style={[Styles.page, {rowGap: 20, flexGrow: 1}]}>
+                        <View style={[Styles.infoContainer, {paddingTop: 20}]}>
+                            <Text style={[Styles.subTitle, {textAlign: 'center'}]}>Drag and drop the pin to the pickup location</Text>
+                        </View>
+                        <MapView
+                            provider={PROVIDER_GOOGLE}
+                            style={{width: '100%', height: '60%'}}
+                            showsUserLocation={true}
+                            zoomControlEnabled={true}
+                            initialRegion={{
+                                latitude: location?.latitude,
+                                longitude: location?.longitude,
+                                latitudeDelta: 0.01,
+                                longitudeDelta: 0.01
+                            }}
+                        >
+                            <Marker
+                                title="Pickup Location"
+                                description="This is where the tow truck will be sent"
+                                coordinate={marker}
+                                draggable={true}
+                                onDragEnd={(e) => {
+                                    console.log('Marker dragged to:', e.nativeEvent.coordinate);
+                                    setMarker(e.nativeEvent.coordinate)}}
+                            />
+                        </MapView>
+                        <View style={ServiceStyles.buttonContainer}>
+                            <TouchableOpacity
+                                style={ServiceStyles.directionButton}
+                                onPress={() => setStep(2)}
+                            >
+                                <FontAwesome name='arrow-left' size={24} color='white' />
+                                <Text style={Styles.actionText}>Back</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={ServiceStyles.directionButton}
+                                onPress={() => { if (selectedVehicle) setStep(4) }}    
+                            >
+                                <Text style={Styles.actionText}>Continue</Text>
+                                <FontAwesome name='arrow-right' size={24} color='white' />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                ) : (
+                    <View style={[Styles.page, {justifyContent: 'center'}]}>
+                        <ActivityIndicator size="large" color="#0000ff" />
+                        <Text style={Styles.text}>Loading your location...</Text>
+                    </View>
+                )}
+                </>
+            ) : step === 4 ? (
                 <KeyboardAvoidingView behavior='padding' style={[Styles.page, {justifyContent: 'center'}]}>
                     <View style={Styles.inputContainer}>
                         <Text style={[Styles.subTitle, {textAlign: 'center', paddingLeft: 30, paddingRight: 30}]}>Please provide us with a description of why the car needs to be towed</Text>
@@ -103,21 +182,21 @@ const TowRequest = () =>
                     <View style={ServiceStyles.buttonContainer}>
                         <TouchableOpacity
                             style={ServiceStyles.directionButton}
-                            onPress={() => setStep(2)}
+                            onPress={() => setStep(3)}
                         >
                             <FontAwesome name='arrow-left' size={24} color='white' />
                             <Text style={Styles.actionText}>Back</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={ServiceStyles.directionButton}
-                            onPress={() => { if (notes) setStep(4) }}
+                            onPress={() => { if (notes) setStep(5) }}
                         >
                             <Text style={Styles.actionText}>Continue</Text>
                             <FontAwesome name='arrow-right' size={24} color='white' />
                         </TouchableOpacity>
                     </View>
                 </KeyboardAvoidingView>
-            ) : step === 4 ? (
+            ) : step === 5 ? (
                 <View style={[Styles.page, {justifyContent: 'center'}]}>
                     <View style={Styles.infoContainer}>
                         <Text style={Styles.subTitle}>Vehicle</Text>
@@ -128,7 +207,7 @@ const TowRequest = () =>
                     <View style={ServiceStyles.buttonContainer}>
                         <TouchableOpacity
                             style={ServiceStyles.directionButton}
-                            onPress={() => setStep(3)}
+                            onPress={() => setStep(4)}
                         >
                             <FontAwesome name='arrow-left' size={24} color='white' />
                             <Text style={Styles.actionText}>Back</Text>
@@ -142,7 +221,7 @@ const TowRequest = () =>
                                     userId: userId
                                 };
                                 handleSendAdminNotif('Towing Request', 'A customer has requested a tow', data);
-                                handleCreateTowRequest(client, userId, selectedVehicle.id, "N/A", notes, setTowRequest);
+                                handleCreateTowRequest(client, userId, selectedVehicle.id, marker, notes, setTowRequest);
                             }}
                         >
                             <Text style={Styles.actionText}>Submit</Text>
