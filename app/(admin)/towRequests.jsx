@@ -1,16 +1,20 @@
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import { useApp } from '../../components/context';
 import { AdminStyles, Styles } from '../../constants/styles';
 import { useEffect, useState } from 'react';
 import { listTowRequests } from '../../src/graphql/queries';
 import { formatNumber } from '../../components/components';
 import { router } from 'expo-router';
+import { Entypo } from '@expo/vector-icons';
+import { Picker } from '@react-native-picker/picker';
 import Colors from '../../constants/colors';
 
 const TowRequests = () =>
 {
     const { client } = useApp();
     const [ requests, setRequests ] = useState();
+    const [ search, setSearch ] = useState();
+    const [ statusFilter, setStatusFilter ] = useState('ALL');
 
     useEffect(() => {
         const handleGetTowRequests = async () =>
@@ -31,9 +35,40 @@ const TowRequests = () =>
 
     return (
         <ScrollView contentContainerStyle={Styles.scrollPage}>
+            <View style={[Styles.block, {rowGap: 20}]}>
+                <View style={Styles.inputWrapper}>
+                    <Entypo name='magnifying-glass' size={20} color='black' style={Styles.icon} />
+                    <TextInput
+                        placeholder="Search User"
+                        style={Styles.input}
+                        value={search}
+                        onChangeText={setSearch}
+                    />
+                </View>
+                <View style={AdminStyles.picker}>
+                    <Picker
+                        selectedValue={statusFilter}
+                        onValueChange={(itemvalue) => setStatusFilter(itemvalue)}
+                    >
+                        <Picker.Item label="All" value='ALL' />
+                        <Picker.Item label="Requested" value="REQUESTED" />
+                        <Picker.Item label="Pending" value="PENDING" />
+                        <Picker.Item label="In Progress" value="IN_PROGRESS" />
+                        <Picker.Item label="Cancelled" value="CANCELLED" />
+                        <Picker.Item label="Completed" value="COMPLETED" />
+                    </Picker>
+                </View>
+            </View>
             <View style={[Styles.container, {rowGap: 0}]}>
-                {requests ? (
-                    requests.map((request, index) => (
+                {requests && requests
+                    .filter(request => {
+                        const query = search?.toLowerCase() || '';
+                        const matchesSearch = !search || request.user?.name?.toLowerCase().includes(query);
+                        const matchesStatus = statusFilter === 'ALL' || request.status === statusFilter;
+
+                        return matchesSearch && matchesStatus;
+                    })
+                    .map((request, index) => (
                         <TouchableOpacity
                             key={index}
                             style={AdminStyles.customerBox}
@@ -49,7 +84,7 @@ const TowRequests = () =>
                                 request.status === 'REQUESTED' ? {color: Colors.primary} : request.status === 'PENDING' ? {color: Colors.secondary} : request.status === 'IN_PROGRESS' ? {color: 'black'} : request.status === 'CANCELLED' ? {color: 'red'} : request.status === 'COMPLETED' ? {color: '#b3b3b3'} : null
                                 ]}>{request.status === 'IN_PROGRESS' ? 'IN PROGRESS' : request.status}</Text>
                         </TouchableOpacity>
-                ))) : null}
+                ))}
             </View>
         </ScrollView>
     );

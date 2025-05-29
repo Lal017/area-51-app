@@ -371,6 +371,13 @@ const AdminStyles = StyleSheet.create({
         backgroundColor: Colors.backDrop,
         elevation: 12
     },
+    picker: {
+        backgroundColor: Colors.backDrop,
+        borderRadius: 25,
+        elevation: 10,
+        width: 200,
+        paddingLeft: 10
+    },
     // userView.jsx
     vehicleContainer: {
         width: '100%',
