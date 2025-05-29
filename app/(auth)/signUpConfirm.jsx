@@ -14,9 +14,8 @@ const signUpConfirm = () =>
     return (
         <KeyboardAvoidingView
             behavior='padding'
-            style={Styles.page}
+            style={[Styles.page, {justifyContent: 'center'}]}
         >
-            <StatusBar barStyle="light-content" hidden={true}/>
             <View style={Styles.container}>
                 <Text style={Styles.title}>Confirm Sign Up</Text>
                 <Text style={[Styles.text, {width: '85%', textAlign: 'center'}]}>Check your email for your verification code!</Text>

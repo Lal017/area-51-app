@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Alert } from "react-native";
-import { HomeStyles, Styles, ServiceStyles } from "../../../constants/styles";
+import { Styles, ServiceStyles } from "../../../constants/styles";
 import { useApp } from "../../../components/context";
 import { FontAwesome } from "@expo/vector-icons";
 import LottieView from "lottie-react-native";
@@ -11,10 +11,10 @@ const TowStatus = () =>
     const { towRequest, client, setTowRequest } = useApp();
 
     return (
-        <View>
+        <View style={Styles.page}>
             { towRequest && towRequest.status === "PENDING"? (
-            <View style={HomeStyles.requestWrapper}>
-                <View style={HomeStyles.titleWrapper}>
+            <View style={ServiceStyles.requestWrapper}>
+                <View style={ServiceStyles.titleWrapper}>
                 <Text style={[Styles.title, {textAlign: 'left'}]}>Tow Request</Text>
                 <FontAwesome name="check" size={25} color='black'/>
                 </View>
@@ -23,7 +23,7 @@ const TowStatus = () =>
                 <Text style={Styles.subTitle}>Wait Time:</Text>
                 <Text style={Styles.text}>{towRequest.waitTime}</Text>
                 <TouchableOpacity
-                    style={Styles.actionButton}
+                    style={[Styles.actionButton, {alignSelf: 'center'}]}
                     onPress={() => {
                         handleSendAdminNotif('Tow Request Confirmed', 'Customer has been confirmed for towing!');
                         handleUpdateTowRequestStatus(client, towRequest.id, 'IN_PROGRESS', setTowRequest);
@@ -37,7 +37,7 @@ const TowStatus = () =>
                     <Text style={Styles.actionText}>Accept</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    style={[Styles.actionButton, {backgroundColor: 'red'}]}
+                    style={[Styles.actionButton, {backgroundColor: 'red', alignSelf: 'center'}]}
                     onPress={() => {
                         handleSendAdminNotif('Tow Request Cancelled', 'Customer has cancelled the tow request');
                         handleUpdateTowRequestStatus(client, towRequest.id, 'CANCELLED', setTowRequest);
@@ -84,8 +84,8 @@ const TowStatus = () =>
                 </TouchableOpacity>
             </View>
             ) : towRequest?.status === "IN_PROGRESS" ? (
-            <View style={HomeStyles.requestWrapper}>
-                <View style={HomeStyles.titleWrapper}>
+            <View style={ServiceStyles.requestWrapper}>
+                <View style={ServiceStyles.titleWrapper}>
                 <Text style={Styles.subTitle}>Tow Request</Text>
                 <LottieView
                     source={require('../../../assets/animations/truck.json')}

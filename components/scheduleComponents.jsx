@@ -181,11 +181,15 @@ const handleGetTowRequest = async (client, id) =>
             variables: {
                 userId: id,
                 filter: {
-                    status: { ne: 'COMPLETED'}
+                    and: [
+                        { status: { ne: 'COMPLETED' }},
+                        { status: { ne: 'CANCELLED' }}
+                    ]
                 }
             }
         });
 
+        console.log('Tow request:', request.data.towRequestsByUserId.items);
         return request.data.towRequestsByUserId.items[0];
     } catch (error) {
         console.log('Error getting tow request:', error);

@@ -6,7 +6,7 @@ import { Link } from 'expo-router';
 import { AuthStyles, Styles } from '../../constants/styles';
 import { GoogleSignInButton, AmazonSignInButton } from '../../components/authComponents';
 
-const signIn = () =>
+const SignIn = () =>
 {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
@@ -14,13 +14,13 @@ const signIn = () =>
     return (
         <KeyboardAvoidingView
             behavior='padding'
-            style={Styles.page}
+            style={[Styles.page, {justifyContent: 'center'}]}
         >
             <StatusBar barStyle="light-content" hidden={true}/>
-            <View style={{height: '100', borderWidth: 0, justifyContent: 'center', alignItems: 'center'}}>
+            <View style={{height: 100, borderWidth: 0, justifyContent: 'center', alignItems: 'center'}}>
                 <Image
                     source={require('../../assets/images/icon.png')}
-                    style={{resizeMode: 'contain', height: '300', transform: [{ translateY: -30}]}}    
+                    style={{resizeMode: 'contain', height: 300, transform: [{ translateY: -30}]}}    
                 />
             </View>
             <View style={Styles.container}>
@@ -70,4 +70,4 @@ const signIn = () =>
     );
 };
 
-export default signIn;
+export default SignIn;

@@ -9,7 +9,7 @@ const resetPassword = () =>
     const [username, setUsername] = useState();
 
     return (
-        <KeyboardAvoidingView style={Styles.page} >
+        <KeyboardAvoidingView behavior="padding" style={[Styles.page, {justifyContent: 'center'}]} >
             <View style={Styles.container}>
                 <Text style={Styles.title}>Reset Password</Text>
                 <View style={Styles.inputWrapper}>

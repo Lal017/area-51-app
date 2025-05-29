@@ -16,7 +16,7 @@ const signUp = () =>
     return(
         <KeyboardAvoidingView
             behavior='padding'
-            style={Styles.page}
+            style={[Styles.page, {justifyContent: 'center'}]}
         >
             <View style={Styles.container}>
                 <Text style={Styles.title}>Sign Up</Text>

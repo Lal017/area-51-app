@@ -13,7 +13,7 @@ const resetPasswordConfirm = () =>
     const [confNewPassword, setConfNewPassword] = useState();
 
     return (
-        <KeyboardAvoidingView style={Styles.page} >
+        <KeyboardAvoidingView behavior="padding" style={[Styles.page, {justifyContent: 'center'}]} >
             <StatusBar barStyle="light-content" hidden={true}/>
             <View style={Styles.container}>
                 <Text style={Styles.title}>Reset Password</Text>

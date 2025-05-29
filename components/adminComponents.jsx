@@ -2,6 +2,7 @@ import { listUsers } from '../src/graphql/queries';
 import { updateTowRequest } from '../src/graphql/mutations';
 import { router } from 'expo-router';
 import { Alert } from 'react-native';
+import { reverseGeocodeAsync } from 'expo-location';
 
 // Expo notif functions
 const sendPushNotification = async (expoPushToken, title, body, data) =>
@@ -95,9 +96,24 @@ const handleUpdateTowRequest = async (client, towId, status, priceParam, waitTim
     }
 };
 
+const handleGetAddress = async (latitude, longitude) =>
+{
+    try {
+        const addressArray = await reverseGeocodeAsync({latitude, longitude});
+
+        if (addressArray.length > 0) {
+            const address = addressArray[0];
+            return `${address.name}, ${address.street}, ${address.city}, ${address.region}, ${address.postalCode}`;
+        }
+    } catch (error) {
+        console.log('Error getting address:', error);
+    }
+}
+
 export {
     handleListUsers,
     handleListTowRequestUsers,
     sendPushNotification,
-    handleUpdateTowRequest
+    handleUpdateTowRequest,
+    handleGetAddress
 }

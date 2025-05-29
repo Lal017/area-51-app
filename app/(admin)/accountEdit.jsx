@@ -18,51 +18,56 @@ const AccountEdit = () =>
             behavior="padding"
             style={Styles.page}
         >
-            <View style={ProfileStyles.formContainer}>
-                <View style={Styles.inputContainer}>
-                    <View style={Styles.inputWrapper}>
-                        <Ionicons name="person" size={20} style={Styles.icon} />
-                        <TextInput
-                            placeholder="name"
-                            value={editName}
-                            onChangeText={setEditName}
-                            style={Styles.input}
-                        />
-                    </View>
-                    <View style={Styles.inputWrapper}>
-                        <Ionicons name="mail" size={20} style={Styles.icon} />
-                        <TextInput
-                            placeholder="email"
-                            value={editEmail}
-                            onChangeText={setEditEmail}
-                            autoCapitalize='none'
-                            style={Styles.input}
-                        />
-                    </View>
-                    <View style={Styles.inputWrapper}>
-                        <Ionicons name="call" size={20} style={Styles.icon} />
-                        <TextInput
-                            placeholder="phone number"
-                            value={editPhone}
-                            onChangeText={setEditPhone}
-                            keyboardType="phone-pad"
-                            style={Styles.input}
-                        />
-                    </View>
+            <View style={[Styles.block, {paddingTop: '25%'}]}>
+                <Text style={Styles.subTitle}>Name</Text>
+                <View style={Styles.inputWrapper}>
+                    <Ionicons name="person" size={20} style={Styles.icon} />
+                    <TextInput
+                        placeholder="name"
+                        value={editName}
+                        onChangeText={setEditName}
+                        style={Styles.input}
+                    />
                 </View>
-                <TouchableOpacity
-                    onPress={() => handleUpdateAttributes(
-                        editEmail,
-                        editName,
-                        editPhone.replace(/\D/g, ''),
-                        setName,
-                        setPhoneNumber
-                    )}
-                    style={Styles.actionButton}
-                >
-                    <Text style={Styles.actionText}>Change</Text>
-                </TouchableOpacity>
             </View>
+            <View style={Styles.block}>
+                <Text style={Styles.subTitle}>Email</Text>
+                <View style={Styles.inputWrapper}>
+                    <Ionicons name="mail" size={20} style={Styles.icon} />
+                    <TextInput
+                        placeholder="email"
+                        value={editEmail}
+                        onChangeText={setEditEmail}
+                        autoCapitalize='none'
+                        style={Styles.input}
+                    />
+                </View>
+            </View>
+            <View style={[Styles.block, {paddingBottom: 30}]}>
+                <Text style={Styles.subTitle}>Phone Number</Text>
+                <View style={Styles.inputWrapper}>
+                    <Ionicons name="call" size={20} style={Styles.icon} />
+                    <TextInput
+                        placeholder="phone number"
+                        value={editPhone}
+                        onChangeText={setEditPhone}
+                        keyboardType="phone-pad"
+                        style={Styles.input}
+                    />
+                </View>
+            </View>
+            <TouchableOpacity
+                onPress={() => handleUpdateAttributes(
+                    editEmail,
+                    editName,
+                    editPhone.replace(/\D/g, ''),
+                    setName,
+                    setPhoneNumber
+                )}
+                style={Styles.actionButton}
+            >
+                <Text style={Styles.actionText}>Change</Text>
+            </TouchableOpacity>
         </KeyboardAvoidingView>
     );
 };

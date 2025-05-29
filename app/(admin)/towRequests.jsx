@@ -46,7 +46,7 @@ const TowRequests = () =>
                             <Text style={Styles.text}>{formatNumber(request.user.phone)}</Text>
                             <Text style={[
                                 Styles.subTitle,
-                                request.status === 'REQUESTED' ? {color: Colors.primary} : request.status === 'PENDING' ? {color: Colors.secondary} : request.status === 'IN_PROGRESS' ? {color: 'green'} : null
+                                request.status === 'REQUESTED' ? {color: Colors.primary} : request.status === 'PENDING' ? {color: Colors.secondary} : request.status === 'IN_PROGRESS' ? {color: 'black'} : request.status === 'CANCELLED' ? {color: 'red'} : request.status === 'COMPLETED' ? {color: '#b3b3b3'} : null
                                 ]}>{request.status === 'IN_PROGRESS' ? 'IN PROGRESS' : request.status}</Text>
                         </TouchableOpacity>
                 ))) : null}

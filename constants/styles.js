@@ -287,6 +287,8 @@ const ServiceStyles = StyleSheet.create({
         height: '60%'
     },
     mapContainerAlt: {
+        elevation: 10,
+        backgroundColor: Colors.background,
         borderWidth: 4,
         width: 325,
         height: 325,
@@ -296,8 +298,6 @@ const ServiceStyles = StyleSheet.create({
     // towStatus.jsx
     requestWrapper: {
         width: '100%',
-        elevation: 10,
-        backgroundColor: Colors.backDrop,
         padding: 20,
         rowGap: 20,
         alignItems: 'left',

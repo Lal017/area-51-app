@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 import { useState } from 'react';
 import { handleDeleteUser } from '../../../components/authComponents';
-import { ProfileStyles, Styles } from '../../../constants/styles';
+import { Styles } from '../../../constants/styles';
 import { useApp } from '../../../components/context';
 import { Ionicons } from '@expo/vector-icons';
 
