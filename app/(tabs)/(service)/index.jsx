@@ -13,9 +13,11 @@ const ServiceConsole = () =>
     <View style={[Styles.page, {rowGap: 5}]}>
       <TouchableOpacity
         onPress={() => {
-          if (towRequest) {
+          if (towRequest !== undefined) {
+            console.log(towRequest);
             router.push('/(tabs)/(service)/towStatus');
           } else {
+            console.log(towRequest);
             router.push('/(tabs)/(service)/towRequest')
           }}}
         style={[Styles.consoleBubble, {backgroundColor: Colors.secondary, height: 225}]}

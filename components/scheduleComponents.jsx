@@ -222,7 +222,7 @@ handleUpdateTowRequestStatus = async (client, towId, status, setTowRequest) =>
             }
         });
         
-        setTowRequest(update.data.updateTowRequest);
+        console.log('finishing update...');
     } catch (error) {
         console.log('Error updating tow request:', error);
     }

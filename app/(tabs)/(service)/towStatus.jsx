@@ -1,4 +1,5 @@
 import { View, Text, TouchableOpacity, Alert } from "react-native";
+import { router } from "expo-router";
 import { Styles, ServiceStyles } from "../../../constants/styles";
 import { useApp } from "../../../components/context";
 import { FontAwesome } from "@expo/vector-icons";
@@ -38,7 +39,7 @@ const TowStatus = () =>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={[Styles.actionButton, {backgroundColor: 'red', alignSelf: 'center'}]}
-                    onPress={() => {
+                    onPress={async () => {
                         handleSendAdminNotif('Tow Request Cancelled', 'Customer has cancelled the tow request');
                         handleUpdateTowRequestStatus(client, towRequest.id, 'CANCELLED', setTowRequest);
                         Alert.alert(
@@ -46,6 +47,7 @@ const TowStatus = () =>
                             'Your tow request has been cancelled',
                             [{ text: 'OK' }]
                         );
+                        setTowRequest(undefined);
                         router.replace('/(tabs)');
                     }}  
                 >
@@ -69,14 +71,15 @@ const TowStatus = () =>
                 </Text>
                 <TouchableOpacity
                     style={[Styles.actionButton, {backgroundColor: 'red', alignSelf: 'center'}]}
-                    onPress={() => {
+                    onPress={async () => {
                         handleSendAdminNotif('Tow Request Cancelled', 'Customer has cancelled the tow request');
-                        handleUpdateTowRequestStatus(client, towRequest.id, 'CANCELLED', setTowRequest);
+                        await handleUpdateTowRequestStatus(client, towRequest.id, 'CANCELLED', setTowRequest);
                         Alert.alert(
                             'Cancelled',
                             'Your tow request has been cancelled',
                             [{ text: 'OK' }]
                         );
+                        setTowRequest(undefined);
                         router.replace('/(tabs)');
                     }}  
                 >

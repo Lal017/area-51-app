@@ -13,7 +13,7 @@ const AppProvider = ({ children }) => {
   const [ name, setName ] = useState();
   const [ phoneNumber, setPhoneNumber ] = useState();
   const [ vehicles, setVehicles ] = useState();
-  const [ towRequest, setTowRequest ] = useState();
+  const [ towRequest, setTowRequest ] = useState(undefined);
 
   const updateNotification = async (newNotif) =>
   {

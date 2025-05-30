@@ -20,7 +20,7 @@ export const expo = {
       backgroundColor: "#000000"
     },
     package: "com.lalo17.troplocksmithapp",
-    googleServicesFile: process.env.GOOGLE_SERVICES_JSON ?? './google-services.json',
+    googleServicesFile: process.env.GOOGLE_SERVICES_JSON,
     config: {
       googleMaps: {
         apiKey: process.env.GOOGLE_MAPS_API_KEY
