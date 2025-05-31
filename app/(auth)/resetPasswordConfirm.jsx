@@ -1,9 +1,10 @@
-import { View, Text, TextInput, KeyboardAvoidingView, TouchableOpacity, StatusBar } from "react-native";
-import { Styles } from "../../constants/styles";
+import { View, Text, TextInput, KeyboardAvoidingView, TouchableOpacity, Image, ScrollView } from "react-native";
+import { Styles, AuthStyles } from "../../constants/styles";
 import { useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { handleConfirmResetPassword } from "../../components/authComponents";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import Colors from "../../constants/colors";
 
 const resetPasswordConfirm = () =>
 {
@@ -13,53 +14,65 @@ const resetPasswordConfirm = () =>
     const [confNewPassword, setConfNewPassword] = useState();
 
     return (
-        <KeyboardAvoidingView behavior="padding" style={[Styles.page, {justifyContent: 'center'}]} >
-            <StatusBar barStyle="light-content" hidden={true}/>
-            <View style={Styles.container}>
-                <Text style={Styles.title}>Reset Password</Text>
-                <Text style={[Styles.text, {width: '85%', textAlign: 'center'}]}>Check your email for your verification code!</Text>
-                <View style={Styles.inputContainer}>
-                    <View style={Styles.inputWrapper}>
-                        <MaterialIcons name='numbers' size={20} style={Styles.icon} />
-                        <TextInput
-                            placeholder="Verification Code"
-                            value={confirmationCode}
-                            onChangeText={setConfirmationCode}
-                            keyboardType="numeric"
-                            autoCapitalize="none"
-                            style={Styles.input}
-                        />
-                    </View>
-                    <View style={Styles.inputWrapper}>
-                        <Ionicons name='key' size={20} style={Styles.icon} />
-                        <TextInput
-                            placeholder="New Password"
-                            value={newPassword}
-                            onChangeText={setNewPassword}
-                            secureTextEntry
-                            autoCapitalize="none"
-                            style={Styles.input}
-                        />
-                    </View>
-                    <View style={Styles.inputWrapper}>
-                        <Ionicons name="lock-open" size={20} style={Styles.icon} />
-                        <TextInput
-                            placeholder="Confirm New Password"
-                            value={confNewPassword}
-                            onChangeText={setConfNewPassword}
-                            secureTextEntry
-                            autoCapitalize="none"
-                            style={Styles.input}
-                        />
-                    </View>
+        <KeyboardAvoidingView behavior='height' style={{flex: 1}} >
+            <ScrollView contentContainerStyle={Styles.scrollPage}>
+                <View style={AuthStyles.imgContainer}>
+                    <Image
+                        source={require('../../assets/images/a51-login-logo.png')}
+                        style={AuthStyles.logoImg}
+                    />
                 </View>
-                <TouchableOpacity
-                    onPress={() => handleConfirmResetPassword({username, confirmationCode, newPassword, confNewPassword})}
-                    style={Styles.actionButton}
-                >
-                    <Text style={Styles.actionText}>Confirm</Text>
-                </TouchableOpacity>
-            </View>
+                <View style={[Styles.block, {alignItems: 'center', rowGap: 25}]}>
+                    <View style={Styles.infoContainer}>
+                        <Text style={Styles.title}>Reset Password</Text>
+                        <Text style={Styles.text}>Check your email for your verification code!</Text>
+                    </View>
+                    <View style={Styles.inputContainer}>
+                        <View style={Styles.inputWrapper}>
+                            <MaterialIcons name='numbers' size={20} style={Styles.icon} />
+                            <TextInput
+                                placeholder="Verification Code"
+                                placeholderTextColor={Colors.text}
+                                value={confirmationCode}
+                                onChangeText={setConfirmationCode}
+                                keyboardType="numeric"
+                                autoCapitalize="none"
+                                style={Styles.input}
+                            />
+                        </View>
+                        <View style={Styles.inputWrapper}>
+                            <Ionicons name='key' size={20} style={Styles.icon} />
+                            <TextInput
+                                placeholder="New Password"
+                                placeholderTextColor={Colors.text}
+                                value={newPassword}
+                                onChangeText={setNewPassword}
+                                secureTextEntry
+                                autoCapitalize="none"
+                                style={Styles.input}
+                            />
+                        </View>
+                        <View style={Styles.inputWrapper}>
+                            <Ionicons name="lock-open" size={20} style={Styles.icon} />
+                            <TextInput
+                                placeholder="Confirm New Password"
+                                placeholderTextColor={Colors.text}
+                                value={confNewPassword}
+                                onChangeText={setConfNewPassword}
+                                secureTextEntry
+                                autoCapitalize="none"
+                                style={Styles.input}
+                            />
+                        </View>
+                    </View>
+                    <TouchableOpacity
+                        onPress={() => handleConfirmResetPassword({username, confirmationCode, newPassword, confNewPassword})}
+                        style={Styles.actionButton}
+                    >
+                        <Text style={Styles.actionText}>Confirm</Text>
+                    </TouchableOpacity>
+                </View>
+            </ScrollView>
         </KeyboardAvoidingView>
     );
 };

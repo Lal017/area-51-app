@@ -4,6 +4,7 @@ import { handleUpdateAttributes } from "../../../components/authComponents";
 import { useState } from "react";
 import { useApp } from "../../../components/context";
 import { Ionicons } from "@expo/vector-icons";
+import Colors from "../../../constants/colors";
 
 const AccountEdit = () =>
 {
@@ -18,37 +19,36 @@ const AccountEdit = () =>
             behavior="padding"
             style={Styles.page}
         >
-            <View style={[Styles.block, {paddingTop: '25%'}]}>
-                <Text style={Styles.subTitle}>Name</Text>
+            <View style={[Styles.block, {paddingTop: '25%', paddingBottom: 30}]}>
+                <Text style={[Styles.subTitle, {paddingLeft: 20}]}>Name</Text>
                 <View style={Styles.inputWrapper}>
                     <Ionicons name="person" size={20} style={Styles.icon} />
                     <TextInput
                         placeholder="name"
+                        placeholderTextColor={Colors.text}
                         value={editName}
                         onChangeText={setEditName}
                         style={Styles.input}
                     />
                 </View>
-            </View>
-            <View style={Styles.block}>
-                <Text style={Styles.subTitle}>Email</Text>
+                <Text style={[Styles.subTitle, {paddingLeft: 20}]}>Email</Text>
                 <View style={Styles.inputWrapper}>
                     <Ionicons name="mail" size={20} style={Styles.icon} />
                     <TextInput
                         placeholder="email"
+                        placeholderTextColor={Colors.text}
                         value={editEmail}
                         onChangeText={setEditEmail}
                         autoCapitalize='none'
                         style={Styles.input}
                     />
                 </View>
-            </View>
-            <View style={[Styles.block, {paddingBottom: 30}]}>
-                <Text style={Styles.subTitle}>Phone Number</Text>
+                <Text style={[Styles.subTitle, {paddingLeft: 20}]}>Phone Number</Text>
                 <View style={Styles.inputWrapper}>
                     <Ionicons name="call" size={20} style={Styles.icon} />
                     <TextInput
                         placeholder="phone number"
+                        placeholderTextColor={Colors.text}
                         value={editPhone}
                         onChangeText={setEditPhone}
                         keyboardType="phone-pad"

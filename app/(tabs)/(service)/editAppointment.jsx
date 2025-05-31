@@ -73,6 +73,7 @@ const Schedule = () =>
                 textDayFontSize: 18,
                 calendarBackground: Colors.background,
                 dayTextColor: Colors.secondary,
+                textDisabledColor: 'grey'
               }}
               minDate={new Date().toDateString()}
               onDayPress={day => handleDayPress(day)}
@@ -83,7 +84,7 @@ const Schedule = () =>
                   selectedColor: Colors.tertiary,
                 }
               }}
-              renderArrow={direction => <AntDesign name={direction === 'left' ? 'arrowleft' : 'arrowright'} size={24}/>}
+              renderArrow={direction => <AntDesign name={direction === 'left' ? 'arrowleft' : 'arrowright'} size={24} color={Colors.backDropAccent}/>}
               hideExtraDays={true}
               disableAllTouchEventsForDisabledDays={true}
               renderHeader={date => <CalendarHeader date={date} />}
@@ -101,9 +102,7 @@ const Schedule = () =>
                   ]}
                 >
                   <Text style={[
-                    Styles.subTitle,
-                    {textAlign: 'center'},
-                    selectedTime === time ? {color: 'white'} : null
+                    Styles.subTitle, { color: 'black' }, selectedTime === time && { color: 'white' }, {textAlign: 'center'}
                   ]}
                   >{formatTime(time)}</Text>
                 </TouchableOpacity>
@@ -132,10 +131,10 @@ const Schedule = () =>
               <Select
                 key={index}
                 text={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
-                selected={vehicle === selectedVehicle ? true : false}
+                selected={vehicle.id === selectedVehicle.id ? true : false}
                 action={() => setSelectedVehicle(vehicle)}
                 leftIcon={<Ionicons name="car-sport" size={30} style={Styles.icon} color={selectedVehicle === vehicle ? Colors.backDrop : null}/>}
-                rightIcon={<FontAwesome name={selectedVehicle === vehicle ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedVehicle === vehicle ? Colors.backDrop : null}/>}
+                rightIcon={<FontAwesome name={selectedVehicle.id === vehicle.id ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedVehicle === vehicle ? Colors.backDrop : null}/>}
               />
             ))}
           </View>
@@ -227,6 +226,7 @@ const Schedule = () =>
               <MaterialIcons name='notes' size={30} style={Styles.iconAlt} />
               <TextInput
                 placeholder='description'
+                placeholderTextColor={Colors.text}
                 value={notes}
                 onChangeText={setNotes}
                 style={Styles.inputAlt}

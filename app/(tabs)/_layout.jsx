@@ -200,7 +200,7 @@ const TabsContent = () =>
                             <Ionicons
                                 name="car-sport"
                                 size={size} 
-                                color={focused ? color: "white"} 
+                                color={focused ? color: "black"} 
                             />
                         </View>
                     ),

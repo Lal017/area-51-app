@@ -5,6 +5,7 @@ import { handleSignOut } from "../../../components/authComponents";
 import { router } from "expo-router";
 import { useApp } from "../../../components/context";
 import { AntDesign, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 
 // Profile page
 const Profile = () =>
@@ -43,10 +44,16 @@ const Profile = () =>
                     <AntDesign name="facebook-square" size={30} color='white' />
                 </TouchableOpacity>
                 <TouchableOpacity
-                    style={[ProfileStyles.socialBox, {backgroundColor: 'black'}]}
                     onPress={() => socialRedirect('https://www.instagram.com/area51motorsports/')}
                 >
-                    <AntDesign name="instagram" size={30} color='white' />
+                    <LinearGradient
+                        colors={['#feda75', '#fa7e1e', '#d62976', '#962fbf', '#4f5bd5']}
+                        style={ProfileStyles.socialBox}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 1 }}
+                    >
+                        <AntDesign name="instagram" size={30} color='white' />
+                    </LinearGradient>
                 </TouchableOpacity>
             </View>
             <TouchableOpacity

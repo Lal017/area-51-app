@@ -66,6 +66,7 @@ const Schedule = () =>
                 textDayFontSize: 18,
                 calendarBackground: Colors.background,
                 dayTextColor: Colors.secondary,
+                textDisabledColor: 'grey'
               }}
               minDate={new Date().toDateString()}
               onDayPress={day => handleDayPress(day)}
@@ -76,7 +77,7 @@ const Schedule = () =>
                   selectedColor: Colors.tertiary,
                 }
               }}
-              renderArrow={direction => <AntDesign name={direction === 'left' ? 'arrowleft' : 'arrowright'} size={24}/>}
+              renderArrow={direction => <AntDesign name={direction === 'left' ? 'arrowleft' : 'arrowright'} size={24} color={Colors.backDropAccent}/>}
               hideExtraDays={true}
               disableAllTouchEventsForDisabledDays={true}
               renderHeader={date => <CalendarHeader date={date} />}
@@ -94,7 +95,7 @@ const Schedule = () =>
                   ]}
                 >
                   <Text style={[
-                    Styles.subTitle, selectedTime === time && { color: 'white' }, {textAlign: 'center'}
+                    Styles.subTitle, { color: 'black' }, selectedTime === time && { color: 'white' }, {textAlign: 'center'}
                   ]}
                   >{formatTime(time)}</Text>
                 </TouchableOpacity>
@@ -218,6 +219,7 @@ const Schedule = () =>
               <MaterialIcons name='notes' size={30} style={Styles.iconAlt} />
               <TextInput
                 placeholder='description'
+                placeholderTextColor={Colors.text}
                 value={notes}
                 onChangeText={setNotes}
                 style={Styles.inputAlt}

@@ -4,6 +4,7 @@ import { handleDeleteUser } from '../../../components/authComponents';
 import { Styles } from '../../../constants/styles';
 import { useApp } from '../../../components/context';
 import { Ionicons } from '@expo/vector-icons';
+import Colors from '../../../constants/colors';
 
 const DeleteAccount = () =>
 {
@@ -13,7 +14,7 @@ const DeleteAccount = () =>
     return (
         <View style={[Styles.page, {rowGap: 25}]}>
             <View style={[Styles.infoContainer, {paddingTop: '25%'}]}>
-                <Text style={Styles.subTitle}>CAUTION</Text>
+                <Text style={[Styles.title, {textAlign: 'left', color: 'red', fontWeight: 'bold'}]}>CAUTION</Text>
                 <Text style={Styles.text}>
                     Deleting your account will remove all your data and settings.
                     Are you sure you want to delete your account?
@@ -25,19 +26,20 @@ const DeleteAccount = () =>
                     <Ionicons name='mail' size={20} style={Styles.icon} />
                     <TextInput
                         placeholder='Enter your email'
+                        placeholderTextColor={Colors.text}
                         value={inputEmail}
                         onChangeText={setInputEmail}
                         autoCapitalize='none'
                         style={Styles.input}
                     />
                 </View>
-                <TouchableOpacity
-                    onPress={() => handleDeleteUser({email, inputEmail})}
-                    style={[Styles.actionButton, {backgroundColor: 'red'}]}
-                >
-                    <Text style={Styles.actionText}>Delete</Text>
-                </TouchableOpacity>
             </View>
+            <TouchableOpacity
+                onPress={() => handleDeleteUser({email, inputEmail})}
+                style={[Styles.actionButton, {backgroundColor: 'red'}]}
+            >
+                <Text style={Styles.actionText}>Delete</Text>
+            </TouchableOpacity>
         </View>
     )
 };

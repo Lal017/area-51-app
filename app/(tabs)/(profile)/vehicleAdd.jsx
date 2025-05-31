@@ -4,6 +4,7 @@ import { ProfileStyles, Styles } from '../../../constants/styles';
 import { AntDesign, FontAwesome, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { handleCreateVehicle } from '../../../components/vehicleComponents';
 import { useApp } from '../../../components/context';
+import Colors from '../../../constants/colors';
 
 const addVehicle = () =>
 {   
@@ -24,6 +25,7 @@ const addVehicle = () =>
                         <Ionicons name='calendar' size={20} style={Styles.icon} />
                         <TextInput
                             placeholder='Year'
+                            placeholderTextColor={Colors.text}
                             value={year}
                             onChangeText={setYear}
                             keyboardType='number-pad'
@@ -34,6 +36,7 @@ const addVehicle = () =>
                         <MaterialCommunityIcons name='car-convertible' size={20} style={Styles.icon} />
                         <TextInput
                             placeholder='Make'
+                            placeholderTextColor={Colors.text}
                             value={make}
                             onChangeText={setMake}
                             style={Styles.input}
@@ -43,6 +46,7 @@ const addVehicle = () =>
                         <AntDesign name='tags' size={20} style={Styles.icon} />
                         <TextInput
                             placeholder='Model'
+                            placeholderTextColor={Colors.text}
                             value={model}
                             onChangeText={setModel}
                             style={Styles.input}
@@ -52,6 +56,7 @@ const addVehicle = () =>
                         <Ionicons name='color-palette' size={20} style={Styles.icon} />
                         <TextInput
                             placeholder='Color'
+                            placeholderTextColor={Colors.text}
                             value={color}
                             onChangeText={setColor}
                             style={Styles.input}
@@ -62,6 +67,7 @@ const addVehicle = () =>
                         <FontAwesome name='id-card' size={20} style={Styles.icon} />
                         <TextInput
                             placeholder='License Plate #'
+                            placeholderTextColor={Colors.text}
                             value={plate}
                             onChangeText={setPlate}
                             style={Styles.input}
@@ -71,6 +77,7 @@ const addVehicle = () =>
                         <FontAwesome name='barcode' size={20} style={Styles.icon} />
                         <TextInput
                             placeholder='VIN #'
+                            placeholderTextColor={Colors.text}
                             value={vin}
                             onChangeText={setVin}
                             style={Styles.input}

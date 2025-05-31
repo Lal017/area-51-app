@@ -80,7 +80,7 @@ const TowRequest = () =>
                 </View>
             ) : step === 2 ? (
                 <View style={[Styles.page, {justifyContent: 'center', rowGap: 20}]}>
-                    <Text style={[Styles.subTitle, {color: Colors.textAlt}]}>Select the vehicle to be towed</Text>
+                    <Text style={Styles.subTitle}>Select the vehicle to be towed</Text>
                     <View style={ServiceStyles.selectionContainer}>
                         {vehicles?.map((vehicle, index) => (
                             <Select
@@ -171,6 +171,7 @@ const TowRequest = () =>
                             <MaterialIcons name="notes" size={30} style={Styles.iconAlt} />
                             <TextInput
                                 placeholder="e.g. Flat tire, dead battery, etc."
+                                placeholderTextColor={Colors.text}
                                 style={Styles.inputAlt}
                                 multiline={true}
                                 value={notes}
@@ -196,7 +197,7 @@ const TowRequest = () =>
                     </View>
                 </KeyboardAvoidingView>
             ) : step === 5 ? (
-                <ScrollView contentContainerStyle={[Styles.scrollPage, {justifyContent: 'center', rowGap: 20, paddingTop: 25}]}>
+                <ScrollView contentContainerStyle={[Styles.scrollPage, {justifyContent: 'center', rowGap: 20, paddingTop: 25, flexGrow: 1}]}>
                         <View style={ServiceStyles.mapContainerAlt}>
                             { marker ? (
                                 <MapView

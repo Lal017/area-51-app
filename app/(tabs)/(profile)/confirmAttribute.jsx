@@ -3,6 +3,7 @@ import { Styles } from '../../../constants/styles';
 import { useState } from 'react';
 import { handleConfirmUserAttribute } from '../../../components/authComponents';
 import { MaterialIcons } from '@expo/vector-icons';
+import Colors from '../../../constants/colors';
 
 const ConfirmAttribute = () =>
 {
@@ -16,6 +17,7 @@ const ConfirmAttribute = () =>
                     <MaterialIcons name='numbers' size={20} style={Styles.icon} />
                     <TextInput
                         placeholder="code"
+                        placeholderTextColor={Colors.text}
                         value={code}
                         onChangeText={setCode}
                         keyboardType='number-pad'

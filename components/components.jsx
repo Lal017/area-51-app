@@ -7,7 +7,7 @@ const CustHeader = ({title}) =>
 {
     return (
         <View style={Styles.HeaderContainer}>
-            <Text style={Styles.title}>{title}</Text>
+            <Text style={[Styles.title, {textAlign: 'center'}]}>{title}</Text>
         </View>
    
     );

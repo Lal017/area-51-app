@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Styles } from '../../../constants/styles';
 import { handleUpdatePassword } from '../../../components/authComponents';
 import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import Colors from '../../../constants/colors';
 
 const changePassword = () =>
 {
@@ -17,11 +18,12 @@ const changePassword = () =>
             style={Styles.page}
         >
             <View style={[Styles.block, {paddingTop: '25%'}]}>
-                <Text style={Styles.subTitle}>Old Password</Text>
+                <Text style={[Styles.subTitle, {paddingLeft: 20}]}>Old Password</Text>
                 <View style={Styles.inputWrapper}>
                     <Ionicons name='lock-open' size={20} style={Styles.icon} />
                     <TextInput
                         placeholder='Old Password'
+                        placeholderTextColor={Colors.text}
                         value={oldPassword}
                         onChangeText={setOldPassword}
                         secureTextEntry
@@ -31,11 +33,12 @@ const changePassword = () =>
                 </View>
             </View>
             <View style={Styles.block}>
-                <Text style={Styles.subTitle}>New Password</Text>
+                <Text style={[Styles.subTitle, {paddingLeft: 20}]}>New Password</Text>
                 <View style={Styles.inputWrapper}>
                     <MaterialIcons name='lock-reset' size={20} style={Styles.icon} />
                     <TextInput
                         placeholder='New Password'
+                        placeholderTextColor={Colors.text}
                         value={newPassword}
                         onChangeText={setNewPassword}
                         secureTextEntry
@@ -45,11 +48,12 @@ const changePassword = () =>
                 </View>
             </View>
             <View style={[Styles.block, {paddingBottom: 30}]}>
-                <Text style={Styles.subTitle}>Confirm New Password</Text>
+                <Text style={[Styles.subTitle, {paddingLeft: 20}]}>Confirm New Password</Text>
                 <View style={Styles.inputWrapper}>
                     <MaterialCommunityIcons name='lock-check' size={20} style={Styles.icon} />
                     <TextInput
                         placeholder='Confirm New Password'
+                        placeholderTextColor={Colors.text}
                         value={confNewPassword}
                         onChangeText={setConfNewPassword}
                         secureTextEntry

@@ -68,6 +68,9 @@ const MyAppointments = () => {
                     >
                         <Text style={Styles.actionText}>Cancel</Text>
                     </TouchableOpacity>
+                    <View style={[Styles.block, {alignItems: 'center'}]}>
+                        {index < appointments.length - 1 && <View style={Styles.hr} />}
+                    </View>
                 </View>
             ))}
         </ScrollView>

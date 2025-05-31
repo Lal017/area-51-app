@@ -8,6 +8,7 @@ import { Hub } from 'aws-amplify/utils';
 import { useEffect } from 'react';
 import { router } from 'expo-router';
 import { handleGetCurrentUser } from '../components/authComponents';
+import { StatusBar } from 'expo-status-bar';
 
 setNotificationHandler({
   handleNotification: async () => ({
@@ -49,12 +50,15 @@ const RootLayout = () =>
   }, []);
   
   return (
-    <Stack screenOptions={{headerShown: false}}>
-      <Stack.Screen name='index' options={{title: 'Home'}}/>
-      <Stack.Screen name='(auth)' options={{title: 'Authentication'}}/>
-      <Stack.Screen name='(tabs)' options={{title: 'App'}}/>
-      <Stack.Screen name='(admin)' options={{title: 'Admin'}}/>
-    </Stack>
+    <>
+      <StatusBar hidden={true} />
+      <Stack screenOptions={{headerShown: false}}>
+        <Stack.Screen name='index' options={{title: 'Home'}}/>
+        <Stack.Screen name='(auth)' options={{title: 'Authentication'}}/>
+        <Stack.Screen name='(tabs)' options={{title: 'App'}}/>
+        <Stack.Screen name='(admin)' options={{title: 'Admin'}}/>
+      </Stack>
+    </>
   );
 }
 
