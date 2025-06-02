@@ -28,7 +28,7 @@ const Settings = () =>
             />
             <Tab
                 text="Change password"
-                action={() => router.push('/(tabs)/(profile)/changePassword')}
+                action={() => router.push('/(tabs)/(profile)/resetPassword')}
                 leftIcon={<MaterialIcons name='lock-reset' size={30} style={Styles.icon} />}
                 rightIcon={<AntDesign name="right" size={25} style={Styles.rightIcon} />}
             />

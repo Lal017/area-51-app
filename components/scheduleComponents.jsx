@@ -61,8 +61,8 @@ const handleCreateAppointment = async (client, date, time, service, notes, userI
         });
         
         Alert.alert(
-            'Appointment created successfully!',
-            'Your appointment has been scheduled.',
+            'Appointment created',
+            'Your appointment has been scheduled!',
             [{ text: 'OK' }]
         );
     } catch (error) {
@@ -89,8 +89,8 @@ const handleUpdateAppointment = async (client, appointmentId, date, time, servic
         });
 
         Alert.alert(
-            'Appointment updated!',
-            'Your appointment has been rescheduled',
+            'Appointment updated',
+            'Your appointment has been updated!',
             [{ text: 'OK' }]
         )
     } catch (error) {
@@ -164,7 +164,7 @@ const handleCreateTowRequest = async (client, userId, vehicleId, location, notes
 
         router.replace('/(tabs)/(service)/towStatus');
         Alert.alert(
-            'Success',
+            'Tow Request',
             'Your tow request has been sent!',
             [{ text: 'OK' }]
         );
@@ -211,7 +211,7 @@ const handleNotifUpdateTowRequest = async (client, userId, setTowRequest) =>
 handleUpdateTowRequestStatus = async (client, towId, status, setTowRequest) =>
 {
     try {
-        await client.graphql({
+        const result = await client.graphql({
             query: updateTowRequest,
             variables: {
                 input: {
@@ -221,6 +221,7 @@ handleUpdateTowRequestStatus = async (client, towId, status, setTowRequest) =>
             }
         });
         
+        setTowRequest(result.data.updateTowRequest);
     } catch (error) {
         console.log('Error updating tow request:', error);
     }

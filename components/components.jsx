@@ -2,15 +2,24 @@ import { View, Text, TouchableOpacity, Linking, ScrollView } from 'react-native'
 import { Styles } from '../constants/styles';
 import Colors from '../constants/colors';
 import { LinearGradient } from 'expo-linear-gradient';
+import { AntDesign } from '@expo/vector-icons';
+import { router } from 'expo-router';
 
 // custom header component to replace default header
-const CustHeader = ({title}) =>
+const CustHeader = ({title, index}) =>
 {
     return (
         <View style={Styles.HeaderContainer}>
+            { !index && router.canGoBack() ? (
+                <TouchableOpacity
+                    style={{position: 'absolute', left: 20, top: 45}}
+                    onPress={() => router.back()}
+                >
+                    <AntDesign name='left' size={30} color='white' />
+                </TouchableOpacity>
+            ) : null }
             <Text style={[Styles.title, {textAlign: 'center'}]}>{title}</Text>
         </View>
-   
     );
 };
 

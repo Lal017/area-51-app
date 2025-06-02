@@ -39,6 +39,7 @@ const TowRequests = () =>
                 <Entypo name='magnifying-glass' size={20} color='black' style={Styles.icon} />
                 <TextInput
                     placeholder="Search User"
+                    placeholderTextColor={Colors.text}
                     style={Styles.input}
                     value={search}
                     onChangeText={setSearch}

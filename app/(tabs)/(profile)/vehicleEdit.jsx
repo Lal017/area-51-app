@@ -20,6 +20,7 @@ const editVehicle = () =>
     const [ color, setColor ] = useState();
     const [ plate, setPlate ] = useState();
     const [ vin, setVin ] = useState();
+    const [ loading, setLoading ] = useState(false);
 
     useEffect(() => {
         const handleGetVehicle = async () =>
@@ -107,8 +108,14 @@ const editVehicle = () =>
                 </View>
                 <View style={[Styles.block, {alignItems: 'center'}]}>
                     <TouchableOpacity
-                        style={Styles.actionButton}
-                        onPress={() => handleUpdateVehicle(client, {year, make, model, color, plate, vin}, vehicle.id, userId, setVehicles)}
+                        style={[Styles.actionButton, loading && { opacity: 0.5 }]}
+                        disabled={loading}
+                        onPress={async () => {
+                            if (loading) return;
+                            setLoading(true);
+                            await handleUpdateVehicle(client, {year, make, model, color, plate, vin}, vehicle.id, userId, setVehicles);
+                            setLoading(false);
+                        }}
                     >
                         <Text style={Styles.actionText}>Update</Text>
                     </TouchableOpacity>

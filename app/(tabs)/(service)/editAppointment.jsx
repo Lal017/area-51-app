@@ -24,6 +24,7 @@ const Schedule = () =>
   const [availableAppointments, setAvailableAppointments] = useState();
   const [notes, setNotes] = useState(appointment.notes);
   const [step, setStep] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const initializeAppointments = async () =>
@@ -34,16 +35,18 @@ const Schedule = () =>
         (appt) => !(appt.date === appointment.date && appt.time === appointment.time)
       );
       setScheduledAppointments(updatedScheduled);
+      const getDay = await handleSetTimes(updatedScheduled, appointment.date);
+      setAvailableAppointments(getDay);
     };
 
     initializeAppointments();
   }, []);
 
-  const handleDayPress = async (day) =>
+  const handleDayPress = async (dateString) =>
   {
-    setSelectedDay(day.dateString);
+    setSelectedDay(dateString);
     setSelectedTime(undefined);
-    const getDay = await handleSetTimes(scheduledAppointments, day.dateString);
+    const getDay = await handleSetTimes(scheduledAppointments, dateString);
     setAvailableAppointments(getDay);
   };
 
@@ -77,7 +80,7 @@ const Schedule = () =>
                 textDisabledColor: 'grey'
               }}
               minDate={new Date().toDateString()}
-              onDayPress={day => handleDayPress(day)}
+              onDayPress={day => handleDayPress(day.dateString)}
               enableSwipeMonths={true}
               markedDates={{
                 [selectedDay]: {
@@ -137,10 +140,10 @@ const Schedule = () =>
                 <Select
                   key={index}
                   text={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
-                  selected={vehicle === selectedVehicle ? true : false}
+                  selected={vehicle.id === selectedVehicle.id ? true : false}
                   action={() => setSelectedVehicle(vehicle)}
-                  leftIcon={<Ionicons name="car-sport" size={30} style={Styles.icon} color={selectedVehicle === vehicle ? Colors.backDrop : null}/>}
-                  rightIcon={<FontAwesome name={selectedVehicle === vehicle ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedVehicle === vehicle ? Colors.backDrop : null}/>}
+                  leftIcon={<Ionicons name="car-sport" size={30} style={Styles.icon} color={selectedVehicle.id === vehicle.id ? Colors.backDrop : null}/>}
+                  rightIcon={<FontAwesome name={selectedVehicle.id === vehicle.id ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedVehicle === vehicle ? Colors.backDrop : null}/>}
                 />
               ))}
             </View>
@@ -288,11 +291,15 @@ const Schedule = () =>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
+                if (loading) return;
+                setLoading(true);
                 handleSendAdminNotif('Appointment Edited', 'A customer has edited an appointment');
                 handleUpdateAppointment(client, appointment.id, selectedDay, selectedTime, selectedService, notes, userId, selectedVehicle.id);
                 router.replace('/(tabs)');
+                setLoading(false);
               }}
-              style={[ServiceStyles.directionButton, {backgroundColor: Colors.primary}]}
+              style={[ServiceStyles.directionButton, loading && {opacity: 0.5}, {backgroundColor: Colors.primary}]}
+              disabled={loading}
             >
               <Text style={Styles.actionText}>Schedule</Text>
             </TouchableOpacity>

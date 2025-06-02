@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Background, formatNumber } from "../../components/components";
 import { router } from "expo-router";
 import { Entypo } from "@expo/vector-icons";
+import Colors from "../../constants/colors";
 
 const UserList = () =>
 {
@@ -30,6 +31,7 @@ const UserList = () =>
                 <Entypo name='magnifying-glass' size={20} color='black' style={Styles.icon} />
                 <TextInput
                     placeholder="Search User"
+                    placeholderTextColor={Colors.text}
                     style={Styles.input}
                     value={search}
                     onChangeText={setSearch}

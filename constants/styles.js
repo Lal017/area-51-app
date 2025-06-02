@@ -5,8 +5,10 @@ const Styles = StyleSheet.create({
     // Header/Tab Styles
     HeaderContainer: {
         height: 100,
-        justifyContent: 'flex-end',
-        alignItems: 'center',
+        justifyContent: 'center',
+        alignItems: 'flex-end',
+        flexDirection: 'row',
+        position: 'relative',
         paddingBottom: 20,
         backgroundColor: Colors.background,
     },
@@ -108,7 +110,6 @@ const Styles = StyleSheet.create({
         fontSize: 35,
         fontFamily: 'Roboto-Condensed-Light',
         color: Colors.text,
-        width: '100%',
     },
     subTitle: {
         fontSize: 25,
@@ -294,7 +295,8 @@ const ServiceStyles = StyleSheet.create({
     // towStatus.jsx
     titleWrapper: {
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        columnGap: 10
     },
 });
 

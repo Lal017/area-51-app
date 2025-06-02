@@ -124,7 +124,7 @@ const TowResponse = () =>
                     </View>
                 </View>
                 { customer.status === 'REQUESTED' ? (
-                    <View style={Styles.block}>
+                    <View style={[Styles.block, {alignItems: 'center', paddingBottom: 50}]}>
                             <View style={Styles.inputWrapper}>
                                 <FontAwesome5 name="dollar-sign" size={24} style={Styles.icon} />
                                 <TextInput

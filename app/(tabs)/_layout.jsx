@@ -180,8 +180,7 @@ const TabsContent = () =>
                 name="(home)"
                 options={{
                     title: 'Home',
-                    headerShown: true,
-                    header: () => <CustHeader title="Home"/>,
+                    headerShown: false,
                     tabBarHideOnKeyboard: true,
                     tabBarIcon: ({ color, size }) => (
                         <Ionicons name="home" size={size} color={color}/>
@@ -192,8 +191,7 @@ const TabsContent = () =>
                 name="(service)"
                 options={{
                     title: "Services",
-                    headerShown: true,
-                    header: () => <CustHeader title="Service"/>,
+                    headerShown: false,
                     tabBarHideOnKeyboard: true,
                     tabBarIcon: ({ color, size, focused }) => (
                         <View style={Styles.carIconContainer}>
@@ -209,11 +207,12 @@ const TabsContent = () =>
             <Tabs.Screen
                 name="(profile)"
                 options={{
-                title: "Profile",
-                tabBarHideOnKeyboard: true,
-                tabBarIcon: ({ color, size }) => (
-                    <Ionicons name="person" size={size} color={color}/>
-                ),
+                    title: "Profile",
+                    headerShown: false,
+                    tabBarHideOnKeyboard: true,
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="person" size={size} color={color}/>
+                    ),
                 }}
             />
         </Tabs>

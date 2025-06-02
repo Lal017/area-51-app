@@ -27,8 +27,8 @@ const handleCreateVehicle = async (client, vehicle, userId, setVehicles) =>
         router.replace('(profile)/vehicleList');
 
         Alert.alert(
-            'Success',
-            'Vehicle created successfully',
+            'Vehicle Created',
+            'Vehicle has been added to your account',
             [
                 { text: 'OK' }
             ]
@@ -63,8 +63,8 @@ const handleUpdateVehicle = async (client, vehicle, vehicleId, userId, setVehicl
         router.replace('(profile)/vehicleList');
 
         Alert.alert(
-            'Success',
-            'Vehicle updated successfully',
+            'Vehicle Updated',
+            'Vehicle information has been updated',
             [
                 { text: 'OK' }
             ]
@@ -92,8 +92,8 @@ const handleDeleteVehicle = async (client, vehicleId, setVehicles) =>
         router.replace('(profile)/vehicleList');
 
         Alert.alert(
-            'Success',
-            'Vehicle deleted successfully',
+            'Vehicle Deleted',
+            'Vehicle has been deleted from your account',
             [
                 { text: 'OK' }
             ]

@@ -19,6 +19,7 @@ const TowRequest = () =>
     const [ location, setLocation ] = useState();
     const [ marker, setMarker ] = useState();
     const [ step, setStep ] = useState(1);
+    const [ loading, setLoading ] = useState(false);
 
     useEffect(() => {
         const getLocation = async () => {
@@ -246,15 +247,19 @@ const TowRequest = () =>
                             <Text style={Styles.actionText}>Back</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            style={[ServiceStyles.directionButton, {backgroundColor: Colors.primary}]}
-                            onPress={() => {
+                            style={[ServiceStyles.directionButton, loading && { opacity: 0.5 }, {backgroundColor: Colors.primary}]}
+                            disabled={loading}
+                            onPress={async () => {
+                                if (loading) return;
+                                setLoading(true);
                                 const data = {
                                     notes: notes,
                                     vehicleId: selectedVehicle.id,
                                     userId: userId
                                 };
-                                handleSendAdminNotif('Towing Request', 'A customer is requesting a tow', data);
-                                handleCreateTowRequest(client, userId, selectedVehicle.id, marker, notes, setTowRequest);
+                                await handleSendAdminNotif('Towing Request', 'A customer is requesting a tow', data);
+                                await handleCreateTowRequest(client, userId, selectedVehicle.id, marker, notes, setTowRequest);
+                                setLoading(false);
                             }}
                         >
                             <Text style={Styles.actionText}>Submit</Text>

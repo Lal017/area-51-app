@@ -22,6 +22,7 @@ const Schedule = () =>
   const [availableAppointments, setAvailableAppointments] = useState();
   const [notes, setNotes] = useState();
   const [step, setStep] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const initializeAppointments = async () =>
@@ -281,12 +282,16 @@ const Schedule = () =>
               <Text style={Styles.actionText}>Back</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => {
-                handleSendAdminNotif('Appointment Scheduled', 'A customer has scheduled an appointment');
-                handleCreateAppointment(client, selectedDay, selectedTime, selectedService, notes, userId, selectedVehicle.id);
+              onPress={async () => {
+                if (loading) return;
+                setLoading(true);
+                await handleSendAdminNotif('Appointment Scheduled', 'A customer has scheduled an appointment');
+                await handleCreateAppointment(client, selectedDay, selectedTime, selectedService, notes, userId, selectedVehicle.id);
                 router.replace('/(tabs)');
+                setLoading(false);
               }}
-              style={[ServiceStyles.directionButton, {backgroundColor: Colors.primary}]}
+              style={[ServiceStyles.directionButton, loading && { opacity: 0.5 }, {backgroundColor: Colors.primary}]}
+              disabled={loading}
             >
               <Text style={Styles.actionText}>Schedule</Text>
             </TouchableOpacity>

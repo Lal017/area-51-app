@@ -68,6 +68,13 @@ const handleSignUp = async ({name, email, password, confPassword, phoneNumber}) 
                 pathname: '/signUpConfirm',
                 params: {username: email}
             });
+            Alert.alert(
+                'Verification',
+                'Check your email for your verification code',
+                [
+                    { text: 'Ok' }
+                ]
+            );
         }
     } catch (error) {
         console.log('error signing up:', error);
@@ -92,7 +99,7 @@ const handleSignUpConfirm = async ({username, confirmationCode}) =>
         if (nextStep.signUpStep === 'COMPLETE_AUTO_SIGN_IN') {
             handleAutoSignIn({username});
             Alert.alert(
-                "Success",
+                "Account Created",
                 "Sign up successful!",
                 [
                     { text: "Ok" }
@@ -102,7 +109,7 @@ const handleSignUpConfirm = async ({username, confirmationCode}) =>
         else if(nextStep.signUpStep === 'DONE') {
             router.replace('(auth)');
             Alert.alert(
-                "Success",
+                "Account Created",
                 "Sign up successful!",
                 [
                     { text: "Ok" }
@@ -128,12 +135,12 @@ const handleSignUpConfirm = async ({username, confirmationCode}) =>
 const handleResendSignUpCode = async ({username}) =>
 {
     try {
-        const { destination, deliveryMedium } = await resendSignUpCode({
+        await resendSignUpCode({
             username
         });
         Alert.alert(
-            "Success",
-            `Code sent to ${destination} via ${deliveryMedium}`,
+            'Code Resent',
+            'Check your email for your verification code',
             [
                 { text: "Ok" }
             ]
@@ -192,6 +199,13 @@ const signInConfirm = async ({username, isSignedIn, nextStep}) =>
             pathname: '/signUpConfirm',
             params: {username}
         });
+        Alert.alert(
+            'Verification',
+            'Check your email for your verification code',
+            [
+                { text: 'Ok' }
+            ]
+        );
     }
 };
 
@@ -277,13 +291,6 @@ const handleResetPassword = async ({username}) =>
 {
     try {
         const output = await resetPassword({ username });
-        Alert.alert(
-            "Verification",
-            "Check your email for your Verification code",
-            [
-                { text: 'Ok'}
-            ]
-        );
         handleResetPasswordNextSteps(output, {username});
     } catch (error) {
         console.log('error resetting password', error);
@@ -302,22 +309,22 @@ const handleResetPasswordNextSteps = (output, {username}) =>
     const { nextStep } = output;
     switch (nextStep.resetPasswordStep) {
         case 'CONFIRM_RESET_PASSWORD_WITH_CODE':
-            const codeDeliveryDetails = nextStep.codeDeliveryDetails;
-            Alert.alert(
-                "Verification",
-                `Check your ${codeDeliveryDetails.deliveryMedium} for your Verification code`,
-                [
-                    { text: 'Ok'}
-                ]
-            );
             router.push({
                 pathname: '/resetPasswordConfirm',
                 params: {username}
             });
+            Alert.alert(
+                "Verification",
+                "Check your email for your Verification code",
+                [
+                    { text: 'Ok'}
+                ]
+            );
             break;
         case 'DONE':
             Alert.alert(
-                "Password reset successful!",
+                'Password Reset',
+                "Your password has been reset",
                 [
                     { text: 'Ok'}
                 ]
@@ -343,8 +350,8 @@ const handleConfirmResetPassword = async ({username, confirmationCode, newPasswo
     try {
         await confirmResetPassword({username, confirmationCode, newPassword});
         Alert.alert(
-            "Success",
-            "Password reset successful!",
+            "Password Reset",
+            "Your password has been reset",
             [
                 { text: 'Ok'}
             ]
@@ -381,8 +388,8 @@ const handleUpdatePassword = async ({oldPassword, newPassword, confNewPassword})
     try {
         await updatePassword({oldPassword, newPassword});
         Alert.alert(
-            "Success",
-            "Password updated successfully!",
+            "Password Reset",
+            "Your password has been reset",
             [
                 { text: 'Ok'}
             ]
@@ -419,8 +426,8 @@ const handleDeleteUser = async ({email, inputEmail}) =>
     try {
         await deleteUser();
         Alert.alert(
-            "Success",
-            "User deleted successfully!",
+            "Deleted",
+            "User has been deleted",
             [
                 { text: 'Ok'}
             ]
@@ -530,8 +537,8 @@ const handleUpdateAttributesNextSteps = (nextStep) =>
 {
     if (nextStep === 'DONE') {
         Alert.alert(
-            "Success",
-            "Attribute updated successfully!",
+            "Updated",
+            "Account attributes have been updated",
             [
                 { text: 'Ok'}
             ]
@@ -539,6 +546,13 @@ const handleUpdateAttributesNextSteps = (nextStep) =>
         handleRedirect();
     }
     else if (nextStep === 'CONFIRM_ATTRIBUTE_WITH_CODE') {
+        Alert.alert(
+            'Verification',
+            'Check your email for your verification code',
+            [
+                { text: 'Ok'}
+            ]
+        );
         router.push('/confirmAttribute');
     }
 };
@@ -549,8 +563,8 @@ const handleConfirmUserAttribute = async ({ userAttributeKey, confirmationCode }
         await confirmUserAttribute({ userAttributeKey, confirmationCode });
         await handleRedirect();
         Alert.alert(
-            "Success",
-            "Email confirmed!",
+            "Confirmed",
+            "Email has been confirmed!",
             [
                 { text: 'Ok'}
             ]

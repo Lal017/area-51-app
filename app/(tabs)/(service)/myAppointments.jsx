@@ -40,10 +40,12 @@ const MyAppointments = () => {
                     </View>
                     <TouchableOpacity
                         style={Styles.actionButton}
-                        onPress={() => {router.push({
-                            params: { appointmentParam: JSON.stringify(appointment) },
-                            pathname: '/(tabs)/(service)/editAppointment'
-                        })}}
+                        onPress={() => {
+                            router.push({
+                                params: { appointmentParam: JSON.stringify(appointment) },
+                                pathname: '/(tabs)/(service)/editAppointment'
+                            });
+                        }}
                     >
                         <Text style={Styles.actionText}>Edit</Text>
                     </TouchableOpacity>

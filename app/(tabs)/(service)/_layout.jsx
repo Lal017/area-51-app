@@ -1,15 +1,16 @@
 import { Stack } from 'expo-router';
+import { CustHeader } from '../../../components/components';
 
 const scheduleLayout = () =>
 {
     return(
-        <Stack screenOptions={{headerShown: false}}>
-            <Stack.Screen name='index' />
-            <Stack.Screen name='schedule' />
-            <Stack.Screen name='towRequest' />
-            <Stack.Screen name='towStatus' />
-            <Stack.Screen name='myAppointments' />
-            <Stack.Screen name='editAppointment' />
+        <Stack screenOptions={{headerShown: true}}>
+            <Stack.Screen name='index' options={{title: 'Service', header: () => <CustHeader title='Service' index={true}/>}} />
+            <Stack.Screen name='schedule' options={{title: 'Schedule', header: () => <CustHeader title='Appointment'/>}}/>
+            <Stack.Screen name='towRequest' options={{title: 'Tow Request', header: () => <CustHeader title='Tow Request'/>}}/>
+            <Stack.Screen name='towStatus' options={{title: 'Tow Status', header: () => <CustHeader title='Tow Status'/>}}/>
+            <Stack.Screen name='myAppointments' options={{title: 'My Appointments', header: () => <CustHeader title='My Appointments'/>}}/>
+            <Stack.Screen name='editAppointment' options={{title: 'Edit Appointment', header: () => <CustHeader title='Edit Appointment'/>}}/>
         </Stack>
     )
 };

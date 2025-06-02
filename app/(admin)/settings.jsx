@@ -1,10 +1,11 @@
-import { View, Text, TouchableOpacity } from "react-native";
-import { ProfileStyles, Styles } from "../../constants/styles";
-import { Tab, socialRedirect } from "../../components/components";
-import { handleSignOut } from "../../components/authComponents";
-import { router } from "expo-router";
-import { useApp } from "../../components/context";
-import { AntDesign, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { View, Text, TouchableOpacity } from 'react-native';
+import { ProfileStyles, Styles } from '../../constants/styles';
+import { Background, Tab, socialRedirect } from '../../components/components';
+import { handleSignOut } from '../../components/authComponents';
+import { router } from 'expo-router';
+import { useApp } from '../../components/context';
+import { AntDesign, Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 
 // Profile page
 const Profile = () =>
@@ -12,41 +13,49 @@ const Profile = () =>
     const { email, name } = useApp();
 
     return(
-        <View style={[Styles.page, {justifyContent: 'flex-start'}]}>
-            <View style={[Styles.infoContainer, {paddingTop: 10, paddingBottom: 30}]}>
-                <Text style={ProfileStyles.name}>{name}</Text>
-                <Text>{email}</Text>
+        <Background>
+            <View style={Styles.block}>
+                <View style={Styles.infoContainer}>
+                    <Text style={ProfileStyles.name}>{name}</Text>
+                    <Text style={[Styles.text, {fontSize: 17}]}>{email}</Text>
+                </View>
             </View>
             <Tab
-                text="Edit Profile"
+                text='Edit Profile'
                 action={() => router.push('/(admin)/accountEdit')}
                 leftIcon={<Ionicons name='person' size={30} style={Styles.icon} />}
-                rightIcon={<AntDesign name="right" size={25} style={Styles.rightIcon} />}
+                rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon} />}
             />
             <Tab
-                text="Change password"
-                action={() => router.push('/(admin)/changePassword')}
+                text='Change Password'
+                action={() => router.push('/(admin)/resetPassword')}
                 leftIcon={<MaterialIcons name='lock-reset' size={30} style={Styles.icon} />}
-                rightIcon={<AntDesign name="right" size={25} style={Styles.rightIcon} />}
+                rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon} />}
             />
             <Tab
-                text="Delete Account"
+                text='Delete Account'
                 action={() => router.push('/(admin)/deleteAccount')}
                 leftIcon={<AntDesign name='deleteuser' size={30} style={Styles.icon} />}
-                rightIcon={<AntDesign name="right" size={25} style={Styles.rightIcon} />}    
+                rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon} />}
             />
             <View style={ProfileStyles.socialContainer}>
                 <TouchableOpacity
                     style={[ProfileStyles.socialBox, {backgroundColor: '#1877f2'}]}
                     onPress={() => socialRedirect('https://www.facebook.com/Area51MotorsportsLv/')}
                 >
-                    <AntDesign name="facebook-square" size={30} color='white' />
+                    <AntDesign name='facebook-square' size={30} color='white' />
                 </TouchableOpacity>
                 <TouchableOpacity
-                    style={[ProfileStyles.socialBox, {backgroundColor: 'black'}]}
                     onPress={() => socialRedirect('https://www.instagram.com/area51motorsports/')}
                 >
-                    <AntDesign name="instagram" size={30} color='white' />
+                    <LinearGradient
+                        colors={['#feda75', '#fa7e1e', '#d62976', '#962fbf', '#4f5bd5']}
+                        style={ProfileStyles.socialBox}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 1 }}
+                    >
+                        <AntDesign name='instagram' size={30} color='white' />
+                    </LinearGradient>
                 </TouchableOpacity>
             </View>
             <TouchableOpacity
@@ -55,7 +64,7 @@ const Profile = () =>
             >
                 <Text style={Styles.actionText}>Sign Out</Text>
             </TouchableOpacity>
-        </View>
+        </Background>
     );
 };
 

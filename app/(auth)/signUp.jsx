@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, ScrollView, Image } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Image } from "react-native";
 import { useState } from "react";
 import { handleSignUp, GoogleSignInButton, AmazonSignInButton } from "../../components/authComponents";
 import { Link } from "expo-router";
@@ -7,13 +7,14 @@ import { Ionicons } from "@expo/vector-icons";
 import Colors from "../../constants/colors";
 import { AuthBackground } from "../../components/components";
 
-const signUp = () =>
+const SignUp = () =>
 {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [confPassword, setConfPassword] = useState();
     const [name, setName] = useState();
     const [phoneNumber, setPhoneNumber] = useState();
+    const [loading, setLoading] = useState(false);
 
     return(
         <KeyboardAvoidingView
@@ -28,7 +29,7 @@ const signUp = () =>
                     />
                 </View>
                 <View style={[Styles.block, {alignItems: 'center', rowGap: 25}]}>
-                    <Text style={[Styles.title, {paddingLeft: 20}]}>Sign Up</Text>
+                    <Text style={[Styles.title, {paddingLeft: 20, width: '100%'}]}>Sign Up</Text>
                     <View style={Styles.inputContainer}>
                         <View style={Styles.inputWrapper}>
                             <Ionicons name='person' size={20} style={Styles.icon} />
@@ -90,8 +91,14 @@ const signUp = () =>
                         </View>
                     </View>
                     <TouchableOpacity
-                        onPress={() => handleSignUp({name, email, password, confPassword, phoneNumber})}
-                        style={Styles.actionButton}
+                        onPress={async () => {
+                            if (loading) return;
+                            setLoading(true);
+                            await handleSignUp({name, email, password, confPassword, phoneNumber});
+                            setLoading(false);
+                        }}
+                        style={[Styles.actionButton, loading && { opacity: 0.5 }]}
+                        disabled={loading}
                     >
                         <Text style={Styles.actionText}>Sign Up</Text>
                     </TouchableOpacity>
@@ -109,4 +116,4 @@ const signUp = () =>
     );
 };
 
-export default signUp;
+export default SignUp;

@@ -7,9 +7,10 @@ import { handleResetPassword } from "../../components/authComponents";
 import Colors from "../../constants/colors";
 import { AuthBackground } from "../../components/components";
 
-const resetPassword = () =>
+const ResetPassword = () =>
 {
     const [username, setUsername] = useState();
+    const [loading, setLoading] = useState(false);
 
     return (
         <AuthBackground>
@@ -20,7 +21,7 @@ const resetPassword = () =>
                 />
             </View>
             <View style={[Styles.block, {alignItems: 'center', rowGap: 25}]}>
-                <Text style={[Styles.title, {paddingLeft: 20}]}>Reset Password</Text>
+                <Text style={[Styles.title, {paddingLeft: 20, width: '100%'}]}>Reset Password</Text>
                 <Text style={Styles.text}>Enter your email to search for your account</Text>
                 <View style={Styles.inputWrapper}>
                     <Ionicons name='mail' size={20} style={Styles.icon} />
@@ -35,8 +36,14 @@ const resetPassword = () =>
                     />
                 </View>
                 <TouchableOpacity
-                    onPress={() => handleResetPassword({username})}
-                    style={Styles.actionButton}
+                    onPress={async () => {
+                        if (loading) return;
+                        setLoading(true);
+                        await handleResetPassword({username});
+                        setLoading(false);
+                    }}
+                    style={[Styles.actionButton, loading && { opacity: 0.5 }]}
+                    disabled={loading}
                 >
                     <Text style={Styles.actionText}>Reset</Text>
                 </TouchableOpacity>
@@ -46,4 +53,4 @@ const resetPassword = () =>
     );
 };
 
-export default resetPassword;
+export default ResetPassword;

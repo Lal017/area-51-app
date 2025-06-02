@@ -19,41 +19,61 @@ const TowStatus = () =>
                 <View style={Styles.infoContainer}>
                     <View style={ServiceStyles.titleWrapper}>
                         <Text style={[Styles.title, {textAlign: 'left'}]}>Tow Request</Text>
-                        <FontAwesome name="check" size={25} color='black'/>
+                        <FontAwesome name="check" size={30} color='white'/>
                     </View>
                     <Text style={Styles.subTitle}>Price:</Text>
                     <Text style={Styles.text}>{towRequest.price}</Text>
                     <Text style={Styles.subTitle}>Wait Time:</Text>
                     <Text style={Styles.text}>{towRequest.waitTime}</Text>
                 </View>
-                <View style={Styles.block}>
+                <View style={[Styles.block, {alignItems: 'center'}]}>
                     <TouchableOpacity
-                        style={[Styles.actionButton, {alignSelf: 'center'}]}
-                        onPress={() => {
-                            handleSendAdminNotif('Tow Request Confirmed', 'Customer has been confirmed for towing!');
-                            handleUpdateTowRequestStatus(client, towRequest.id, 'IN_PROGRESS', setTowRequest);
-                            Alert.alert(
-                                'Confirmed',
-                                'Your tow request has been confirmed',
-                                [{ text: 'OK' }]
-                            );
-                        }}
+                        style={Styles.actionButton}
+                        onPress={() => Alert.alert(
+                            'Confirm',
+                            'Are you sure you want to accept this tow request?',
+                            [
+                                { text: 'No' },
+                                {
+                                    text: 'Yes',
+                                    onPress: async () => {
+                                        handleSendAdminNotif('Tow Request Confirmed', 'Customer has been confirmed for towing!');
+                                        handleUpdateTowRequestStatus(client, towRequest.id, 'IN_PROGRESS', setTowRequest);
+                                        Alert.alert(
+                                            'Confirmed',
+                                            'Your tow request has been confirmed',
+                                            [{ text: 'OK' }]
+                                        );
+                                    }
+                                }
+                            ]
+                        )}
                     >
                         <Text style={Styles.actionText}>Accept</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                        style={[Styles.actionButton, {backgroundColor: 'red', alignSelf: 'center'}]}
-                        onPress={async () => {
-                            handleSendAdminNotif('Tow Request Cancelled', 'Customer has cancelled the tow request');
-                            handleUpdateTowRequestStatus(client, towRequest.id, 'CANCELLED', setTowRequest);
-                            Alert.alert(
-                                'Cancelled',
-                                'Your tow request has been cancelled',
-                                [{ text: 'OK' }]
-                            );
-                            setTowRequest(undefined);
-                            router.replace('/(tabs)');
-                        }}
+                        style={[Styles.actionButton, {backgroundColor: 'red'}]}
+                        onPress={() => Alert.alert(
+                            'Cancel',
+                            'Are you sure you want to cancel this tow request?',
+                            [
+                                { text: 'No' },
+                                {
+                                    text: 'Yes',
+                                    onPress: async () => {
+                                        handleSendAdminNotif('Tow Request Cancelled', 'Customer has cancelled the tow request');
+                                        handleUpdateTowRequestStatus(client, towRequest.id, 'CANCELLED', setTowRequest);
+                                        Alert.alert(
+                                            'Cancelled',
+                                            'Your tow request has been cancelled',
+                                            [{ text: 'OK' }]
+                                        );
+                                        setTowRequest(undefined);
+                                        router.replace('/(tabs)');
+                                    }
+                                }
+                            ]
+                        )}
                     >
                         <Text style={Styles.actionText}>Cancel</Text>
                     </TouchableOpacity>
@@ -106,7 +126,7 @@ const TowStatus = () =>
                 </View>
             </>
             ) : towRequest?.status === "IN_PROGRESS" ? (
-            <>
+            <View style={Styles.infoContainer}>
                 <View style={ServiceStyles.titleWrapper}>
                     <Text style={Styles.subTitle}>Tow Request</Text>
                     <LottieView
@@ -120,7 +140,7 @@ const TowStatus = () =>
                 Your driver is on the way!
                 Estimated Wait time is {towRequest.waitTime}.
                 </Text>
-            </>
+            </View>
             ) : null}
         </Background>
     );

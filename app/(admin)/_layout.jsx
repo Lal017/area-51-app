@@ -125,8 +125,8 @@ const AdminContent = () =>
             <Stack.Screen name='appointmentList' options={{title: 'Appointments', header: () => <CustHeader title="Appointments" />}}/>
             <Stack.Screen name='appointmentView' options={{title: 'Appointment', header: () => <CustHeader title="Appointment" />}}/>
             <Stack.Screen name='settings' options={{title: 'Settings', header: () => <CustHeader title="Settings" />}}/>
-            <Stack.Screen name="accountEdit" options={{title: "Edit Account", header: () => <CustHeader title="Account Edit" />}}/>
-            <Stack.Screen name="changePassword" options={{title: "Change Password", header: () => <CustHeader title="Reset Password" />}}/>
+            <Stack.Screen name="accountEdit"  options={{title: "Edit Account", header: () => <CustHeader title="Account Edit" />}}/>
+            <Stack.Screen name="resetPassword" options={{title: "Reset Password", header: () => <CustHeader title="Reset Password" />}}/>
             <Stack.Screen name="confirmAttribute" options={{title: "Confirm Change", header: () => <CustHeader title="Reset Password" />}}/>
             <Stack.Screen name="deleteAccount" options={{title: "Account Deletion", header: () => <CustHeader title="Account Deletion" />}}/>
             <Stack.Screen name="towRequests" options={{title: "Tow Requests", header: () => <CustHeader title="Tow Requests"/>}}/>

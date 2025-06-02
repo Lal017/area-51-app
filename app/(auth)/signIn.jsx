@@ -1,4 +1,4 @@
-import { Text, TextInput, View, TouchableOpacity, KeyboardAvoidingView, Image, ScrollView } from 'react-native';
+import { Text, TextInput, View, TouchableOpacity, Image } from 'react-native';
 import { useState } from 'react';
 import { handleSignIn } from '../../components/authComponents';
 import { Ionicons } from '@expo/vector-icons';
@@ -12,6 +12,7 @@ const SignIn = () =>
 {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
+    const [loading, setLoading] = useState(false);
 
     return (
         <AuthBackground>
@@ -22,7 +23,7 @@ const SignIn = () =>
                 />
             </View>
             <View style={[Styles.block, {alignItems: 'center'}]}>
-                <Text style={[Styles.title, { paddingLeft: 20}]}>Sign In</Text>
+                <Text style={[Styles.title, { paddingLeft: 20, width: '100%'}]}>Sign In</Text>
                 <View style={Styles.inputContainer}>
                     <View style={Styles.inputWrapper}>
                         <Ionicons name='mail' size={20} style={Styles.icon} />
@@ -50,8 +51,14 @@ const SignIn = () =>
                     </View>
                 </View>
                 <TouchableOpacity
-                    onPress={() => handleSignIn({ username: email, password })}
-                    style={Styles.actionButton}
+                    onPress={async () => {
+                        if (loading) return;
+                        setLoading(true);
+                        await handleSignIn({ username: email, password });
+                        setLoading(false);
+                    }}
+                    style={[Styles.actionButton, loading && { opacity: 0.5 }]}
+                    disabled={loading}
                 >
                     <Text style={Styles.actionText}>Login</Text>
                 </TouchableOpacity>

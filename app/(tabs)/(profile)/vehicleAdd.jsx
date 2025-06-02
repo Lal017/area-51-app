@@ -17,6 +17,7 @@ const addVehicle = () =>
     const [ color, setColor ] = useState();
     const [ plate, setPlate ] = useState();
     const [ vin, setVin ] = useState();
+    const [ loading, setLoading ] = useState(false);
 
     return (
         <KeyboardAvoidingView behavior='height' style={{flex: 1}}>
@@ -94,8 +95,14 @@ const addVehicle = () =>
                 </View>
                 <View style={[Styles.block, {alignItems: 'center'}]}>
                     <TouchableOpacity
-                        style={Styles.actionButton}
-                        onPress={() => handleCreateVehicle(client, {year, make, model, color, plate, vin}, userId, setVehicles)}
+                        style={[Styles.actionButton, loading && { opacity: 0.5 }]}
+                        disabled={loading}
+                        onPress={async () => {
+                            if (loading) return;
+                            setLoading(true);
+                            await handleCreateVehicle(client, {year, make, model, color, plate, vin}, userId, setVehicles);
+                            setLoading(false);
+                        }}
                     >
                         <Text style={Styles.actionText}>Add</Text>
                     </TouchableOpacity>

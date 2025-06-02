@@ -1,16 +1,17 @@
 import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import { useState } from 'react';
-import { Styles } from '../../../constants/styles';
-import { handleUpdatePassword } from '../../../components/authComponents';
+import { Styles } from '../../constants/styles';
+import { handleUpdatePassword } from '../../components/authComponents';
 import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
-import { Background } from '../../../components/components';
-import Colors from '../../../constants/colors';
+import { Background } from '../../components/components';
+import Colors from '../../constants/colors';
 
-const changePassword = () =>
+const ResetPassword = () =>
 {
-    const [oldPassword, setOldPassword] = useState();
-    const [newPassword, setNewPassword] = useState();
-    const [confNewPassword, setConfNewPassword] = useState();
+    const [ oldPassword, setOldPassword ] = useState();
+    const [ newPassword, setNewPassword ] = useState();
+    const [ confNewPassword, setConfNewPassword ] = useState();
+    const [ loading, setLoading ] = useState(false);
 
     return(
         <KeyboardAvoidingView
@@ -60,8 +61,14 @@ const changePassword = () =>
                     </View>
                 </View>
                 <TouchableOpacity
-                    onPress={() => handleUpdatePassword({oldPassword, newPassword, confNewPassword})}
-                    style={Styles.actionButton}>
+                    onPress={async () => {
+                        if (loading) return;
+                        setLoading(true);
+                        await handleUpdatePassword({oldPassword, newPassword, confNewPassword});
+                        setLoading(false);
+                    }}
+                    style={[Styles.actionButton, loading && { opacity: 0.5 }]}
+                    disabled={loading}>
                     <Text style={Styles.actionText}>Change</Text>
                 </TouchableOpacity>
             </Background>
@@ -69,4 +76,4 @@ const changePassword = () =>
     );
 };
 
-export default changePassword;
+export default ResetPassword;

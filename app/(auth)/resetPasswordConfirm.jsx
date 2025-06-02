@@ -7,12 +7,13 @@ import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import Colors from "../../constants/colors";
 import { AuthBackground } from "../../components/components";
 
-const resetPasswordConfirm = () =>
+const ResetPasswordConfirm = () =>
 {
     const { username } = useLocalSearchParams();
     const [confirmationCode, setConfirmationCode] = useState();
     const [newPassword, setNewPassword] = useState();
     const [confNewPassword, setConfNewPassword] = useState();
+    const [loading, setLoading] = useState(false);
 
     return (
         <KeyboardAvoidingView behavior='height' style={{flex: 1}} >
@@ -36,7 +37,7 @@ const resetPasswordConfirm = () =>
                                 placeholderTextColor={Colors.text}
                                 value={confirmationCode}
                                 onChangeText={setConfirmationCode}
-                                keyboardType="numeric"
+                                keyboardType='number-pad'
                                 autoCapitalize="none"
                                 style={Styles.input}
                             />
@@ -67,8 +68,14 @@ const resetPasswordConfirm = () =>
                         </View>
                     </View>
                     <TouchableOpacity
-                        onPress={() => handleConfirmResetPassword({username, confirmationCode, newPassword, confNewPassword})}
-                        style={Styles.actionButton}
+                        onPress={async () => {
+                            if (loading) return;
+                            setLoading(true);
+                            await handleConfirmResetPassword({username, confirmationCode, newPassword, confNewPassword});
+                            setLoading(false);
+                        }}
+                        style={[Styles.actionButton, loading && { opacity: 0.5 }]}
+                        disabled={loading}
                     >
                         <Text style={Styles.actionText}>Confirm</Text>
                     </TouchableOpacity>
@@ -78,4 +85,4 @@ const resetPasswordConfirm = () =>
     );
 };
 
-export default resetPasswordConfirm;
+export default ResetPasswordConfirm;

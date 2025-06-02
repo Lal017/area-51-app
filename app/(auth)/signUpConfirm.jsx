@@ -1,5 +1,5 @@
-import { View, Text, TextInput, TouchableOpacity, Image} from 'react-native';
-import { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, Image, Alert} from 'react-native';
+import { useState, useEffect } from 'react';
 import { useLocalSearchParams } from 'expo-router';
 import { Styles, AuthStyles } from '../../constants/styles';
 import { handleSignUpConfirm, handleResendSignUpCode } from '../../components/authComponents';
@@ -7,10 +7,22 @@ import Colors from '../../constants/colors';
 import { MaterialIcons } from '@expo/vector-icons';
 import { AuthBackground } from '../../components/components';
 
-const signUpConfirm = () =>
+const SignUpConfirm = () =>
 {
     const { username } = useLocalSearchParams();
     const [confirmationCode, setCode] = useState();
+    const [loading, setLoading] = useState(false);
+    const [cooldown, setCooldown] = useState(30);
+
+    useEffect(() => {
+        if (cooldown === 0) return;
+        const timer = setInterval(() => {
+            setCooldown(prev => prev - 1);
+            console.log(cooldown);
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, [cooldown])
 
     return (
         <AuthBackground>
@@ -38,13 +50,30 @@ const signUpConfirm = () =>
                     />
                 </View>
                 <TouchableOpacity
-                    onPress={() => handleSignUpConfirm({username, confirmationCode})}
-                    style={Styles.actionButton}
+                    onPress={async () => {
+                        if (loading) return;
+                        setLoading(true);
+                        await handleSignUpConfirm({username, confirmationCode});
+                        setLoading(false);
+                    }}
+                    style={[Styles.actionButton, loading && { opacity: 0.5 }]}
+                    disabled={loading}
                 >
                     <Text style={Styles.actionText}>Confirm</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    onPress={() => handleResendSignUpCode({username})}
+                    onPress={() => {
+                        if (cooldown > 0) {
+                            Alert.alert(
+                                'Cooldown',
+                                `Please wait ${cooldown} seconds before requesting a new code.`,
+                                [{ text: 'OK' }]
+                            );
+                            return;
+                        }
+                        handleResendSignUpCode({username});
+                        setCooldown(30);
+                    }}
                 >
                     <Text style={Styles.actionText}>Resend Code</Text>
                 </TouchableOpacity>
@@ -53,4 +82,4 @@ const signUpConfirm = () =>
     );
 };
 
-export default signUpConfirm;
+export default SignUpConfirm;

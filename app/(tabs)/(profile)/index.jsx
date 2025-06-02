@@ -1,4 +1,5 @@
 import { View, Text, TouchableOpacity } from "react-native";
+import { useState } from "react";
 import { ProfileStyles, Styles } from "../../../constants/styles";
 import { Background, Tab, socialRedirect } from "../../../components/components";
 import { handleSignOut } from "../../../components/authComponents";
@@ -11,6 +12,7 @@ import { LinearGradient } from "expo-linear-gradient";
 const Profile = () =>
 {
     const { email, name } = useApp();
+    const [ loading, setLoading ] = useState(false);
 
     return(
         <Background>
@@ -59,8 +61,14 @@ const Profile = () =>
                 </TouchableOpacity>
             </View>
             <TouchableOpacity
-                onPress={handleSignOut}
-                style={Styles.actionButton}
+                onPress={async () => {
+                    if (loading) return;
+                    setLoading(true);
+                    await handleSignOut();
+                    setLoading(false);
+                }}
+                style={[Styles.actionButton, loading && { opacity: 0.5 }]}
+                disabled={loading}
             >
                 <Text style={Styles.actionText}>Sign Out</Text>
             </TouchableOpacity>
