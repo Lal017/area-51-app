@@ -74,7 +74,6 @@ const handleCreateUser = async (client, user_id, token, user_access, name, email
                 }
             }
         });
-        console.log('token created');
     } catch (error) {
         console.log('CREATE ERROR:', error);
     }
@@ -98,7 +97,6 @@ const handleUpdateUser = async (client, user_id, token, user_access, name, email
                 }
             }
         });
-        console.log('token updated');
     } catch (error) {
         console.log('UPDATE ERROR:', error);
     }
@@ -158,9 +156,7 @@ const handleSendAdminNotif = async (title, content, data) =>
         const { body } = await restOperation.response;
         const response = await body.json();
 
-        if (response?.data?.listUsers?.items?.length > 0) {
-            console.log('REQUEST SENT SUCCESSFULLY');
-        } else {
+        if (response?.data?.listUsers?.items?.length <= 0) {
             console.log('REQUEST FAILED:', response);
         }
     } catch (error) {

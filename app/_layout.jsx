@@ -9,6 +9,7 @@ import { useEffect } from 'react';
 import { router } from 'expo-router';
 import { handleGetCurrentUser } from '../components/authComponents';
 import { StatusBar } from 'expo-status-bar';
+import { useFonts } from 'expo-font';
 
 setNotificationHandler({
   handleNotification: async () => ({
@@ -22,6 +23,14 @@ setNotificationHandler({
 
 const RootLayout = () =>
 {
+  const [ fontsLoaded ] = useFonts({
+    'Roboto-Condensed-Light': require('../assets/fonts/Roboto_Condensed-Light.ttf'),
+    'Roboto-SemiCondensed-Bold': require('../assets/fonts/Roboto_SemiCondensed-Bold.ttf'),
+    'Roboto-Regular': require('../assets/fonts/Roboto-Regular.ttf'),
+    'Roboto-Bold': require('../assets/fonts/Roboto-Bold.ttf'),
+    'Roboto-Light': require('../assets/fonts/Roboto-Light.ttf'),
+  });
+
   useEffect(() => {
     const listener = Hub.listen('auth', async (data) => {
       const { payload } = data;

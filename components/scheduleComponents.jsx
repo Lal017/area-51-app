@@ -125,7 +125,7 @@ const handleDeleteAppointment = async (client, appointmentId) =>
 const handleGetMyAppointments = async (client, userId) =>
 {
     try {
-        const today = new Date().toISOString().split('T')[0];
+        const today = new Date().toLocaleDateString('en-CA');
 
         const appointments = await client.graphql({
             query: appointmentsByUserId,
@@ -189,7 +189,6 @@ const handleGetTowRequest = async (client, id) =>
             }
         });
 
-        console.log('Tow request:', request.data.towRequestsByUserId.items);
         return request.data.towRequestsByUserId.items[0];
     } catch (error) {
         console.log('Error getting tow request:', error);
@@ -212,7 +211,7 @@ const handleNotifUpdateTowRequest = async (client, userId, setTowRequest) =>
 handleUpdateTowRequestStatus = async (client, towId, status, setTowRequest) =>
 {
     try {
-        const update = await client.graphql({
+        await client.graphql({
             query: updateTowRequest,
             variables: {
                 input: {
@@ -222,7 +221,6 @@ handleUpdateTowRequestStatus = async (client, towId, status, setTowRequest) =>
             }
         });
         
-        console.log('finishing update...');
     } catch (error) {
         console.log('Error updating tow request:', error);
     }

@@ -1,7 +1,8 @@
 import { TouchableOpacity, Image, Text, Alert } from 'react-native';
-import { AuthStyles } from '../constants/styles';
+import { AuthStyles, Styles } from '../constants/styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
 import {
     signUp,
     confirmSignUp,
@@ -19,6 +20,7 @@ import {
     updateUserAttributes,
     confirmUserAttribute,
 } from 'aws-amplify/auth';
+import { FontAwesome } from '@expo/vector-icons';
 
 // Sign Up
 // ---------------------------------------------------------------------
@@ -222,7 +224,7 @@ const GoogleSignInButton = ({text}) =>
                 source={require('../assets/images/google-icon.png')}
                 style={AuthStyles.signInImg}
             />
-            <Text>{text}</Text>
+            <Text style={{fontFamily: 'Roboto-Regular', fontSize: 17}}>{text}</Text>
         </TouchableOpacity>
     );
 };
@@ -232,13 +234,10 @@ const AmazonSignInButton = ({text}) =>
     return(
         <TouchableOpacity
             onPress={() => handleSignInWithRedirect({providerName: 'Amazon'})}
-            style={AuthStyles.providerSignIn}
+            style={[AuthStyles.providerSignIn, {backgroundColor: '#37475A'}]}
         >
-            <Image
-                source={require('../assets/images/amazon-icon.png')}
-                style={AuthStyles.signInImg}
-            />
-            <Text>{text}</Text>
+            <FontAwesome name='amazon' size={24} color='white' />
+            <Text style={{fontFamily: 'Roboto-Regular', color: 'white', fontSize: 17}}>{text}</Text>
         </TouchableOpacity>
     );
 };

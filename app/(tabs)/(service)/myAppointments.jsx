@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { Styles, ServiceStyles } from '../../../constants/styles';
 import { useEffect, useState } from 'react';
-import { formatDate, formatTime } from '../../../components/components';
+import { Background, formatDate, formatTime } from '../../../components/components';
 import { handleDeleteAppointment, handleGetMyAppointments } from '../../../components/scheduleComponents';
 import { useApp } from '../../../components/context';
 import { handleSendAdminNotif } from '../../../components/notifComponents';
@@ -23,7 +23,7 @@ const MyAppointments = () => {
     }, []);
     
     return (
-        <ScrollView contentContainerStyle={[Styles.scrollPage, {rowGap: 25, paddingTop: 25, paddingBottom: 25}]}>
+        <Background>
             {appointments?.map((appointment, index) => (
                 <View key={index} style={ServiceStyles.fieldContainer}>
                     <View style={Styles.infoContainer}>
@@ -73,7 +73,7 @@ const MyAppointments = () => {
                     </View>
                 </View>
             ))}
-        </ScrollView>
+        </Background>
     );
 };
 

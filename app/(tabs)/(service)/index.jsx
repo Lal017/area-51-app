@@ -1,28 +1,27 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { Text, TouchableOpacity } from "react-native";
 import { Styles } from "../../../constants/styles";
 import LottieView from "lottie-react-native";
 import Colors from "../../../constants/colors";
 import { router } from "expo-router";
 import { useApp } from "../../../components/context";
+import { Background } from "../../../components/components";
 
 const ServiceConsole = () =>
 {
   const { towRequest } = useApp();
 
   return (
-    <View style={[Styles.page, {justifyContent: 'center'}]}>
+    <Background>
       <TouchableOpacity
         onPress={() => {
           if (towRequest !== undefined) {
-            console.log(towRequest);
             router.push('/(tabs)/(service)/towStatus');
           } else {
-            console.log(towRequest);
             router.push('/(tabs)/(service)/towRequest')
           }}}
-        style={[Styles.consoleBubble, {backgroundColor: Colors.secondary, height: 225}]}
+        style={[Styles.consoleBubble, {backgroundColor: Colors.secondary}]}
       >
-        <Text style={[Styles.title, {textAlign: 'center', color: Colors.text, position: 'absolute', top: 75}]}>Request a tow</Text>
+        <Text style={[Styles.title, {fontFamily: 'Roboto-Light', textAlign: 'center', position: 'absolute', top: 75}]}>Request a tow</Text>
         <LottieView
           source={require('../../../assets/animations/ufo.json')}
           loop
@@ -33,9 +32,9 @@ const ServiceConsole = () =>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => router.push('/(tabs)/(service)/schedule')}
-        style={[Styles.consoleBubble, {backgroundColor: Colors.tertiary, height: 225}]}
+        style={[Styles.consoleBubble, {backgroundColor: Colors.tertiary}]}
       >
-        <Text style={[Styles.title, {textAlign: 'center', paddingLeft: 20, color: Colors.text, position: 'absolute', top: 50}]}>Schedule an Appointment</Text>
+        <Text style={[Styles.title, {fontFamily: 'Roboto-Light',textAlign: 'center', position: 'absolute', top: 50}]}>Schedule an Appointment</Text>
         <LottieView
           source={require('../../../assets/animations/calendar.json')}
           loop
@@ -46,9 +45,9 @@ const ServiceConsole = () =>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => router.push('/(tabs)/(service)/myAppointments')}
-        style={[Styles.consoleBubble, {backgroundColor: Colors.primary, height: 225}]}
+        style={[Styles.consoleBubble, {backgroundColor: Colors.primary}]}
       >
-        <Text style={[Styles.title, {textAlign: 'center', color: Colors.text, position: 'absolute', top: 75}]}>My Appointments</Text>
+        <Text style={[Styles.title, {fontFamily: 'Roboto-Light', textAlign: 'center', position: 'absolute', top: 75}]}>My Appointments</Text>
         <LottieView
           source={require('../../../assets/animations/calendarCheck.json')}
           loop
@@ -56,7 +55,7 @@ const ServiceConsole = () =>
           style={{width: 75, height: 75, position: 'absolute', left: 40, top: 120}}
         />
       </TouchableOpacity>
-    </View>
+    </Background>
   );
 }
 

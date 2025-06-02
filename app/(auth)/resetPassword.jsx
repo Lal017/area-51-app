@@ -5,13 +5,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { useState } from "react";
 import { handleResetPassword } from "../../components/authComponents";
 import Colors from "../../constants/colors";
+import { AuthBackground } from "../../components/components";
 
 const resetPassword = () =>
 {
     const [username, setUsername] = useState();
 
     return (
-        <View style={Styles.page}>
+        <AuthBackground>
             <View style={AuthStyles.imgContainer}>
                 <Image
                     source={require('../../assets/images/a51-login-logo.png')}
@@ -41,7 +42,7 @@ const resetPassword = () =>
                 </TouchableOpacity>
                 <Link href="/(auth)/signIn" style={[Styles.text, {textAlign: 'center'}]}>Sign In</Link>
             </View>
-        </View>
+        </AuthBackground>
     );
 };
 

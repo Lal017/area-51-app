@@ -1,6 +1,5 @@
-import { View } from 'react-native';
 import { router } from 'expo-router';
-import { Tab } from '../../../components/components';
+import { Background, Tab } from '../../../components/components';
 import { useApp } from '../../../components/context';
 import { Styles } from '../../../constants/styles';
 import { Ionicons, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -10,7 +9,7 @@ const VehicleList = () =>
     const { vehicles } = useApp();
 
     return(
-        <View style={Styles.page}>
+        <Background>
             {vehicles?.length > 0 ? (
                 vehicles.map((vehicle, index) => (
                     <Tab
@@ -36,7 +35,7 @@ const VehicleList = () =>
                 leftIcon={<Ionicons name="add-circle" size={30} style={Styles.icon} />}
                 rightIcon={<AntDesign name="right" size={25} style={Styles.rightIcon} />}  
             />
-        </View>
+        </Background>
     );
 };
 

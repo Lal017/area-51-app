@@ -1,14 +1,14 @@
-import { View, Text, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView } from 'react-native';
 import { Styles, AdminStyles, ServiceStyles } from '../../constants/styles';
 import { useLocalSearchParams, router } from 'expo-router';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { getAddressByCoords, sendPushNotification } from '../../components/adminComponents';
 import { useEffect, useState } from 'react';
-import { handleUpdateTowRequest, handleGetAddress } from '../../components/adminComponents';
+import { handleUpdateTowRequest, handleGetAddress, sendPushNotification } from '../../components/adminComponents';
 import { useApp } from '../../components/context';
-import { formatNumber } from '../../components/components';
+import { Background, formatNumber } from '../../components/components';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import { handleUpdateTowRequestStatus } from '../../components/scheduleComponents';
+import Colors from '../../constants/colors';
 
 const TowResponse = () =>
 {
@@ -27,7 +27,6 @@ const TowResponse = () =>
     useEffect(() => {
         const fetchAddress = async () => {
             const getAddress = await handleGetAddress(customer.latitude, customer.longitude);
-            console.log(getAddress);
             setAddress(getAddress);
         };
 
@@ -36,9 +35,9 @@ const TowResponse = () =>
 
     return (
         <KeyboardAvoidingView behavior='height' style={{flex: 1}}>
-            <ScrollView contentContainerStyle={[Styles.scrollPage, {justifyContent: 'flex-start', paddingBottom: 25}]}>
-                <View style={Styles.infoContainer}>
-                    <View style={Styles.block}>
+            <Background>
+                <View style={Styles.block}>
+                    <View style={Styles.infoContainer}>
                         <Text style={[Styles.title, {textAlign: 'left'}]}>Customer</Text>
                         <View style={AdminStyles.labelContainer}>
                             <Text style={Styles.subTitle}>Name</Text>
@@ -53,83 +52,85 @@ const TowResponse = () =>
                             <Text style={Styles.text}>{formatNumber(customer.user.phone)}</Text>
                         </View>
                     </View>
-                    <View style={Styles.block}>
-                        <Text style={[Styles.title, {textAlign: 'left'}]}>Location</Text>
-                        <View style={[ServiceStyles.mapContainerAlt, {alignSelf: 'center'}]}>
-                            <MapView
-                                provider={PROVIDER_GOOGLE}
-                                style={{width: '100%', height: '100%'}}
-                                region={{
+                </View>
+                <View style={Styles.block}>
+                    <Text style={[Styles.title, {paddingLeft: 20}]}>Location</Text>
+                    <View style={[ServiceStyles.mapContainerAlt, {alignSelf: 'center'}]}>
+                        <MapView
+                            provider={PROVIDER_GOOGLE}
+                            style={{width: '100%', height: '100%'}}
+                            region={{
+                                latitude: customer.latitude,
+                                longitude: customer.longitude,
+                                latitudeDelta: 0.01,
+                                longitudeDelta: 0.01
+                            }}
+                        >
+                            <Marker
+                                title='Customer Location'
+                                coordinate={{
                                     latitude: customer.latitude,
-                                    longitude: customer.longitude,
-                                    latitudeDelta: 0.01,
-                                    longitudeDelta: 0.01
+                                    longitude: customer.longitude
                                 }}
-                            >
-                                <Marker
-                                    title='Customer Location'
-                                    coordinate={{
-                                        latitude: customer.latitude,
-                                        longitude: customer.longitude
-                                    }}
-                                />
-                            </MapView>
-                        </View>
-                        { address ? (
-                            <>
-                            <Text style={Styles.subTitle}>Address</Text>
+                            />
+                        </MapView>
+                    </View>
+                    { address ? (
+                        <View style={Styles.infoContainer}>
+                            <Text style={Styles.subTitle}>Approximate Address</Text>
                             <Text style={Styles.text}>{address}</Text>
-                            </>
+                        </View>
+                    ) : null }
+                </View>
+                <View style={Styles.block}>
+                    <Text style={[Styles.title, {paddingLeft: 20}]}>Vehicle</Text>
+                    <View style={AdminStyles.vehicleContainer}>
+                        <View style={AdminStyles.labelContainer}>
+                            <Text style={Styles.subTitle}>Year</Text>
+                            <Text style={Styles.text}>{customer.vehicle.year}</Text>
+                        </View>
+                        <View style={AdminStyles.labelContainer}>
+                            <Text style={Styles.subTitle}>Make</Text>
+                            <Text style={Styles.text}>{customer.vehicle.make}</Text>
+                        </View>
+                        <View style={AdminStyles.labelContainer}>
+                            <Text style={Styles.subTitle}>Model</Text>
+                            <Text style={Styles.text}>{customer.vehicle.model}</Text>
+                        </View>
+                        { customer.vehicle.color ? (
+                        <View style={AdminStyles.labelContainer}>
+                            <Text style={Styles.subTitle}>Color</Text>
+                            <Text style={Styles.text}>{customer.vehicle.color}</Text>
+                        </View>
+                        ) : null }
+                        { customer.vehicle.plate ? (
+                        <View style={AdminStyles.labelContainer}>
+                            <Text style={Styles.subTitle}>Plate</Text>
+                            <Text style={Styles.text}>{customer.vehicle.plate}</Text>
+                        </View>
+                        ) : null }
+                        { customer.vehicle.vin ? (
+                        <View style={AdminStyles.labelContainer}>
+                            <Text style={Styles.subTitle}>VIN</Text>
+                            <Text style={Styles.text}>{customer.vehicle.vin}</Text>
+                        </View>
                         ) : null }
                     </View>
-                    <View style={Styles.block}>
-                        <Text style={[Styles.title, {textAlign: 'left'}]}>Vehicle</Text>
-                        <View style={AdminStyles.vehicleContainer}>
-                            <View style={AdminStyles.labelContainer}>
-                                <Text style={Styles.subTitle}>Year</Text>
-                                <Text style={Styles.text}>{customer.vehicle.year}</Text>
-                            </View>
-                            <View style={AdminStyles.labelContainer}>
-                                <Text style={Styles.subTitle}>Make</Text>
-                                <Text style={Styles.text}>{customer.vehicle.make}</Text>
-                            </View>
-                            <View style={AdminStyles.labelContainer}>
-                                <Text style={Styles.subTitle}>Model</Text>
-                                <Text style={Styles.text}>{customer.vehicle.model}</Text>
-                            </View>
-                            { customer.vehicle.color ? (
-                            <View style={AdminStyles.labelContainer}>
-                                <Text style={Styles.subTitle}>Color</Text>
-                                <Text style={Styles.text}>{customer.vehicle.color}</Text>
-                            </View>
-                            ) : null }
-                            { customer.vehicle.plate ? (
-                            <View style={AdminStyles.labelContainer}>
-                                <Text style={Styles.subTitle}>Plate</Text>
-                                <Text style={Styles.text}>{customer.vehicle.plate}</Text>
-                            </View>
-                            ) : null }
-                            { customer.vehicle.vin ? (
-                            <View style={AdminStyles.labelContainer}>
-                                <Text style={Styles.subTitle}>VIN</Text>
-                                <Text style={Styles.text}>{customer.vehicle.vin}</Text>
-                            </View>
-                            ) : null }
-                        </View>
-                    </View>
-                    <View style={Styles.block}>
+                </View>
+                <View style={Styles.block}>
+                    <View style={Styles.infoContainer}>
                         <Text style={[Styles.title, {textAlign: 'left'}]}>Description</Text>
                         <Text style={Styles.text}>{customer.notes}</Text>
                     </View>
                 </View>
                 { customer.status === 'REQUESTED' ? (
-                    <View style={Styles.container}>
-                        <View style={Styles.inputContainer}>
+                    <View style={Styles.block}>
                             <View style={Styles.inputWrapper}>
                                 <FontAwesome5 name="dollar-sign" size={24} style={Styles.icon} />
                                 <TextInput
                                     style={Styles.input}
                                     placeholder='price'
+                                    placeholderTextColor={Colors.text}
                                     value={price}
                                     onChangeText={setPrice}
                                     autoCapitalize='none'
@@ -140,12 +141,12 @@ const TowResponse = () =>
                                 <TextInput
                                     style={Styles.input}
                                     placeholder='estimated wait time'
+                                    placeholderTextColor={Colors.text}
                                     value={waitTime}
                                     onChangeText={setWaitTime}
                                     autoCapitalize='none'
                                 />
                             </View>
-                        </View>
                         <TouchableOpacity
                             style={Styles.actionButton}
                             onPress={() => {
@@ -186,7 +187,7 @@ const TowResponse = () =>
                         </TouchableOpacity>
                     </View>
                 ) : null }
-            </ScrollView>
+            </Background>
         </KeyboardAvoidingView>
     );
 };

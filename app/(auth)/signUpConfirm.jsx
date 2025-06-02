@@ -5,6 +5,7 @@ import { Styles, AuthStyles } from '../../constants/styles';
 import { handleSignUpConfirm, handleResendSignUpCode } from '../../components/authComponents';
 import Colors from '../../constants/colors';
 import { MaterialIcons } from '@expo/vector-icons';
+import { AuthBackground } from '../../components/components';
 
 const signUpConfirm = () =>
 {
@@ -12,7 +13,7 @@ const signUpConfirm = () =>
     const [confirmationCode, setCode] = useState();
 
     return (
-        <View style={Styles.page}>
+        <AuthBackground>
             <View style={AuthStyles.imgContainer}>
                 <Image
                     source={require('../../assets/images/a51-login-logo.png')}
@@ -48,7 +49,7 @@ const signUpConfirm = () =>
                     <Text style={Styles.actionText}>Resend Code</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </AuthBackground>
     );
 };
 

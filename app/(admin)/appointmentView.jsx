@@ -1,7 +1,7 @@
 import { View, Text } from 'react-native';
 import { AdminStyles, Styles } from '../../constants/styles';
 import { useLocalSearchParams } from 'expo-router';
-import { formatNumber, formatDate, formatTime } from '../../components/components';
+import { formatNumber, formatDate, formatTime, Background } from '../../components/components';
 
 const AppointmentView = () =>
 {
@@ -9,10 +9,10 @@ const AppointmentView = () =>
     const appointment = JSON.parse(appointmentParam);
 
     return (
-        <View style={[Styles.page, {justifyContent: 'flex-start'}]}>
-            <View style={Styles.infoContainer}>
-                <View style={Styles.block}>
-                    <Text style={[Styles.title, {textAlign: 'left'}]}>Customer</Text>
+        <Background>
+            <View style={Styles.block}>
+                <View style={Styles.infoContainer}>
+                    <Text style={Styles.title}>Customer</Text>
                     <View style={AdminStyles.labelContainer}>
                         <Text style={Styles.subTitle}>Name</Text>
                         <Text style={Styles.text}>{appointment.user.name}</Text>
@@ -26,10 +26,12 @@ const AppointmentView = () =>
                         <Text style={Styles.text}>{formatNumber(appointment.user.phone)}</Text>
                     </View>
                 </View>
-                <View style={Styles.block}>
-                    <Text style={[Styles.title, {textAlign: 'left'}]}>Details</Text>
+            </View>
+            <View style={Styles.block}>
+                <View style={Styles.infoContainer}>
+                    <Text style={Styles.title}>Details</Text>
                     <View style={AdminStyles.labelContainer}>
-                        <Text style={Styles.subTitle}>Day</Text>
+                        <Text style={Styles.subTitle}>Date</Text>
                         <Text style={Styles.text}>{formatDate(appointment.date)}</Text>
                     </View>
                     <View style={AdminStyles.labelContainer}>
@@ -45,7 +47,9 @@ const AppointmentView = () =>
                         <Text style={Styles.text}>{formatDate(appointment.createdAt)}</Text>
                     </View>
                 </View>
-                <Text style={[Styles.title, {textAlign: 'left'}]}>Vehicle</Text>
+            </View>
+            <View style={Styles.block}>
+                <Text style={[Styles.title, {paddingLeft: 20}]}>Vehicle</Text>
                 <View style={AdminStyles.vehicleContainer}>
                     <View style={AdminStyles.labelContainer}>
                         <Text style={Styles.subTitle}>Year</Text>
@@ -79,7 +83,7 @@ const AppointmentView = () =>
                     ) : null }
                 </View>
             </View>
-        </View>
+        </Background>
     );
 };
 

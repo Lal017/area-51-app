@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Colors from "../../../constants/colors";
 import { Entypo, FontAwesome, FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { handleSendAdminNotif } from "../../../components/notifComponents";
-import { Select } from "../../../components/components";
+import { Background, Select } from "../../../components/components";
 import { handleCreateTowRequest } from "../../../components/scheduleComponents";
 import { requestForegroundPermissionsAsync, getCurrentPositionAsync } from 'expo-location';
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
@@ -24,7 +24,6 @@ const TowRequest = () =>
         const getLocation = async () => {
             let { status } = await requestForegroundPermissionsAsync();
             if (status !== 'granted') {
-                console.log('Permission to access location was denied');
                 return;
             }
 
@@ -51,7 +50,7 @@ const TowRequest = () =>
                 <Entypo name="clipboard" size={30} color={step > 4 ? Colors.secondary : Colors.backDropAccent}/>
             </View>
             { step === 1 ? (
-                <View style={[Styles.page, {justifyContent: 'center'}]}>
+                <Background>
                     <View style={Styles.infoContainer}>
                         <Text style={Styles.subTitle}>How the request works?</Text>
                         <Text style={Styles.text}>
@@ -67,20 +66,25 @@ const TowRequest = () =>
                             Where will you be towed?
                         </Text>
                         <Text style={Styles.text}>3120 W Sirius Ave STE 103, Las Vegas, NV 89102</Text>
-                        <View style={ServiceStyles.buttonContainer}>
-                            <TouchableOpacity
-                                style={ServiceStyles.directionButton}
-                                onPress={() => setStep(2)}
-                            >
-                                <Text style={Styles.actionText}>Continue</Text>
-                                <FontAwesome name='arrow-right' size={24} color='white' />
-                            </TouchableOpacity>
+                    </View>
+                    <View style={ServiceStyles.buttonContainer}>
+                        <TouchableOpacity
+                            style={ServiceStyles.directionButton}
+                            onPress={() => setStep(2)}
+                        >
+                            <Text style={Styles.actionText}>Continue</Text>
+                            <FontAwesome name='arrow-right' size={24} color='white' />
+                        </TouchableOpacity>
+                    </View>
+                </Background>
+            ) : step === 2 ? (
+                <Background>
+                    <View style={Styles.block}>
+                        <View style={Styles.infoContainer}>
+                            <Text style={Styles.subTitle}>Vehicle Selection</Text>
+                            <Text style={Styles.text}>Select the vehicle to be towed</Text>
                         </View>
                     </View>
-                </View>
-            ) : step === 2 ? (
-                <View style={[Styles.page, {justifyContent: 'center', rowGap: 20}]}>
-                    <Text style={Styles.subTitle}>Select the vehicle to be towed</Text>
                     <View style={ServiceStyles.selectionContainer}>
                         {vehicles?.map((vehicle, index) => (
                             <Select
@@ -109,64 +113,70 @@ const TowRequest = () =>
                             <FontAwesome name='arrow-right' size={24} color='white' />
                         </TouchableOpacity>
                     </View>
-                </View>
+                </Background>
             ) : step === 3 ? (
-                <>
-                { location ? (
-                    <View style={[Styles.page, {rowGap: 20, flexGrow: 1}]}>
-                        <View style={[Styles.infoContainer, {paddingTop: 20}]}>
-                            <Text style={[Styles.subTitle, {textAlign: 'center'}]}>Drag and drop the pin to the pickup location</Text>
-                        </View>
-                        <View style={ServiceStyles.mapContainer}>
-                            <MapView
-                                provider={PROVIDER_GOOGLE}
-                                style={{width: '100%', height: '100%'}}
-                                showsUserLocation={true}
-                                zoomControlEnabled={true}
-                                region={{
-                                    latitude: location?.latitude,
-                                    longitude: location?.longitude,
-                                    latitudeDelta: 0.01,
-                                    longitudeDelta: 0.01
-                                }}
-                            >
-                                <Marker
-                                    title="Pickup Location"
-                                    description="This is where the tow truck will be sent"
-                                    coordinate={marker}
-                                    draggable={true}
-                                    onDragEnd={(e) => setMarker(e.nativeEvent.coordinate)}
-                                />
-                            </MapView>
-                        </View>
-                        <View style={ServiceStyles.buttonContainer}>
-                            <TouchableOpacity
-                                style={ServiceStyles.directionButton}
-                                onPress={() => setStep(2)}
-                            >
-                                <FontAwesome name='arrow-left' size={24} color='white' />
-                                <Text style={Styles.actionText}>Back</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={ServiceStyles.directionButton}
-                                onPress={() => { if (selectedVehicle) setStep(4) }}    
-                            >
-                                <Text style={Styles.actionText}>Continue</Text>
-                                <FontAwesome name='arrow-right' size={24} color='white' />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                ) : (
-                    <View style={[Styles.page, {justifyContent: 'center'}]}>
-                        <ActivityIndicator size="large" color="#0000ff" />
-                        <Text style={Styles.text}>Loading your location...</Text>
-                    </View>
-                )}
-                </>
+                <Background>
+                    { location ? (
+                        <>
+                            <View style={Styles.block}>
+                                <View style={Styles.infoContainer}>
+                                    <Text style={Styles.subTitle}>Location</Text>
+                                    <Text style={Styles.text}>Drag and drop the pin to the pickup location</Text>
+                                </View>
+                            </View>
+                            <View style={ServiceStyles.mapContainer}>
+                                <MapView
+                                    provider={PROVIDER_GOOGLE}
+                                    style={{width: '100%', height: '100%'}}
+                                    showsUserLocation={true}
+                                    zoomControlEnabled={true}
+                                    region={{
+                                        latitude: location?.latitude,
+                                        longitude: location?.longitude,
+                                        latitudeDelta: 0.01,
+                                        longitudeDelta: 0.01
+                                    }}
+                                >
+                                    <Marker
+                                        title="Pickup Location"
+                                        description="This is where the tow truck will be sent"
+                                        coordinate={marker}
+                                        draggable={true}
+                                        onDragEnd={(e) => setMarker(e.nativeEvent.coordinate)}
+                                    />
+                                </MapView>
+                            </View>
+                            <View style={ServiceStyles.buttonContainer}>
+                                <TouchableOpacity
+                                    style={ServiceStyles.directionButton}
+                                    onPress={() => setStep(2)}
+                                >
+                                    <FontAwesome name='arrow-left' size={24} color='white' />
+                                    <Text style={Styles.actionText}>Back</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={ServiceStyles.directionButton}
+                                    onPress={() => { if (selectedVehicle) setStep(4) }}    
+                                >
+                                    <Text style={Styles.actionText}>Continue</Text>
+                                    <FontAwesome name='arrow-right' size={24} color='white' />
+                                </TouchableOpacity>
+                            </View>
+                        </>
+                    ) : (
+                        <>
+                            <ActivityIndicator size="large" color="#0000ff" />
+                            <Text style={Styles.text}>Loading your location...</Text>
+                        </>
+                    )}
+                </Background>
             ) : step === 4 ? (
-                <KeyboardAvoidingView behavior='padding' style={[Styles.page, {justifyContent: 'center'}]}>
-                    <View style={Styles.inputContainer}>
-                        <Text style={[Styles.subTitle, {textAlign: 'center', paddingLeft: 30, paddingRight: 30}]}>Please provide us with a description of why the car needs to be towed</Text>
+                <Background>
+                    <View style={Styles.block}>
+                        <View style={Styles.infoContainer}>
+                            <Text style={Styles.subTitle}>Description</Text>
+                            <Text style={Styles.text}>Please, describe why the vehicle needs to be towed</Text>
+                        </View>
                         <View style={Styles.inputWrapper}>
                             <MaterialIcons name="notes" size={30} style={Styles.iconAlt} />
                             <TextInput
@@ -195,32 +205,32 @@ const TowRequest = () =>
                             <FontAwesome name='arrow-right' size={24} color='white' />
                         </TouchableOpacity>
                     </View>
-                </KeyboardAvoidingView>
+                </Background>
             ) : step === 5 ? (
-                <ScrollView contentContainerStyle={[Styles.scrollPage, {justifyContent: 'center', rowGap: 20, paddingTop: 25, flexGrow: 1}]}>
-                        <View style={ServiceStyles.mapContainerAlt}>
-                            { marker ? (
-                                <MapView
-                                    provider={PROVIDER_GOOGLE}
-                                    style={{width: '100%', height: '100%'}}
-                                    region={{
-                                        latitude: marker?.latitude,
-                                        longitude: marker?.longitude,
-                                        latitudeDelta: 0.01,
-                                        longitudeDelta: 0.01
-                                    }}
-                                    liteMode={true}
-                                >
-                                    <Marker
-                                        title="Pickup Location"
-                                        description="This is where the tow truck will be sent"
-                                        coordinate={marker}
-                                    />
-                                </MapView>
-                            ) : (
-                                <ActivityIndicator size='large' color='#0000ff' />
-                            ) }
-                        </View>
+                <Background style={{justifyContent: 'center'}}>
+                    <View style={ServiceStyles.mapContainerAlt}>
+                        { marker ? (
+                            <MapView
+                                provider={PROVIDER_GOOGLE}
+                                style={{width: '100%', height: '100%'}}
+                                region={{
+                                    latitude: marker?.latitude,
+                                    longitude: marker?.longitude,
+                                    latitudeDelta: 0.01,
+                                    longitudeDelta: 0.01
+                                }}
+                                liteMode={true}
+                            >
+                                <Marker
+                                    title="Pickup Location"
+                                    description="This is where the tow truck will be sent"
+                                    coordinate={marker}
+                                />
+                            </MapView>
+                        ) : (
+                            <ActivityIndicator size='large' color='#0000ff' />
+                        ) }
+                    </View>
                     <View style={Styles.infoContainer}>
                         <Text style={Styles.subTitle}>Vehicle</Text>
                         <Text style={Styles.text}>{`${selectedVehicle.year} ${selectedVehicle.make} ${selectedVehicle.model}`}</Text>
@@ -250,7 +260,7 @@ const TowRequest = () =>
                             <Text style={Styles.actionText}>Submit</Text>
                         </TouchableOpacity>
                     </View>
-                </ScrollView>
+                </Background>
             ) : null }
         </>
     )

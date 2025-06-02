@@ -4,15 +4,19 @@ import { useState } from 'react';
 import { handleConfirmUserAttribute } from '../../../components/authComponents';
 import { MaterialIcons } from '@expo/vector-icons';
 import Colors from '../../../constants/colors';
+import { Background } from '../../../components/components';
 
 const ConfirmAttribute = () =>
 {
     const [ code, setCode ] = useState();
 
     return(
-        <View style={[Styles.page, {rowGap: 25}]}>
-            <View style={[Styles.block, {paddingTop: '50%'}]}>
-                <Text style={Styles.subTitle}>Confirm email</Text>
+        <Background>
+            <View style={Styles.block}>
+                <View style={Styles.infoContainer}>
+                    <Text style={Styles.subTitle}>Confirm Email</Text>
+                    <Text style={Styles.text}>Check your email for your verification code</Text>
+                </View>
                 <View style={Styles.inputWrapper}>
                     <MaterialIcons name='numbers' size={20} style={Styles.icon} />
                     <TextInput
@@ -33,7 +37,7 @@ const ConfirmAttribute = () =>
                 style={Styles.actionButton}>
                 <Text style={Styles.actionText}>Confirm</Text>
             </TouchableOpacity>
-        </View>
+        </Background>
     );
 };
 

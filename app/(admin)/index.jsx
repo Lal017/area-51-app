@@ -1,4 +1,5 @@
-import { View, Text, TouchableOpacity, StatusBar } from 'react-native';
+import { Text, TouchableOpacity } from 'react-native';
+import { Background } from '../../components/components';
 import { Styles } from "../../constants/styles";
 import { router } from 'expo-router';
 import LottieView from 'lottie-react-native';
@@ -7,13 +8,12 @@ import Colors from '../../constants/colors';
 const AdminConsole = () =>
 {
     return (
-        <View style={[Styles.page, {rowGap: 5}]}>
-            <StatusBar hidden={true} />
+        <Background>
             <TouchableOpacity
-                style={Styles.consoleBubble}
+                style={[Styles.consoleBubble, {backgroundColor: Colors.tertiary}]}
                 onPress={() => router.push('/(admin)/userList')}
             >
-                <Text style={[Styles.title, {position: 'absolute', top: 50, color: 'white'}]}>Users List</Text>
+                <Text style={[Styles.title, {fontFamily: 'Roboto-Light', textAlign: 'center', position: 'absolute', top: 50}]}>Users List</Text>
                 <LottieView
                     source={require('../../assets/animations/astronaut.json')}
                     loop
@@ -26,12 +26,12 @@ const AdminConsole = () =>
                 style={[Styles.consoleBubble, {backgroundColor: Colors.secondary}]}
                 onPress={() => router.push('/(admin)/appointmentList')}    
             >
-                <Text style={[Styles.title, {position: 'absolute', top: 50, color: 'white'}]}>Appointments</Text>
+                <Text style={[Styles.title, {fontFamily: 'Roboto-Light', textAlign: 'center', position: 'absolute', top: 50}]}>Appointments</Text>
                 <LottieView
                     source={require('../../assets/animations/calendar.json')}
                     loop
                     autoPlay
-                    style={{width: 200, height: 200, position: 'absolute', right: 180, top: 20, marginRight: 50}}
+                    style={{width: 200, height: 200, position: 'absolute', right: 200, top: 20, marginRight: 50}}
                     speed={0.5}
                 />
             </TouchableOpacity>
@@ -39,12 +39,12 @@ const AdminConsole = () =>
                 style={[Styles.consoleBubble, {backgroundColor: Colors.primary}]}
                 onPress={() => router.push('/(admin)/towRequests')}
             >
-                <Text style={[Styles.title, {position: 'absolute', top: 50, color: 'white'}]}>Tow Requests</Text>
+                <Text style={[Styles.title, {fontFamily: 'Roboto-Light', textAlign: 'center', position: 'absolute', top: 50}]}>Tow Requests</Text>
                 <LottieView
                     source={require('../../assets/animations/planet.json')}
                     loop
                     autoPlay
-                    style={{width: 100, height: 100, position: 'absolute', left: 10, top: 75, marginRight: 50}}
+                    style={{width: 100, height: 100, position: 'absolute', left: 20, top: 70, marginRight: 50}}
                     speed={0.5}
                 />
             </TouchableOpacity>
@@ -52,16 +52,16 @@ const AdminConsole = () =>
                 style={[Styles.consoleBubble, {backgroundColor: 'grey'}]}
                 onPress={() => router.push('/(admin)/settings')}
             >
-                <Text style={[Styles.title, {position: 'absolute', top: 50, color: 'white'}]}>Settings</Text>
+                <Text style={[Styles.title, {fontFamily: 'Roboto-Light', textAlign: 'center', position: 'absolute', top: 50}]}>Settings</Text>
                 <LottieView
                     source={require('../../assets/animations/gear.json')}
                     loop
                     autoPlay
-                    style={{width: 100, height: 100, position: 'absolute', left: 10, top: 75, marginRight: 50}}
+                    style={{width: 100, height: 100, position: 'absolute', left: 20, top: 50, marginRight: 50}}
                     speed={0.5}
                 />
             </TouchableOpacity>
-        </View>
+        </Background>
     );
 };
 

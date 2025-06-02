@@ -6,6 +6,7 @@ import { Link } from 'expo-router';
 import { AuthStyles, Styles } from '../../constants/styles';
 import { GoogleSignInButton, AmazonSignInButton } from '../../components/authComponents';
 import Colors from '../../constants/colors';
+import { AuthBackground } from '../../components/components';
 
 const SignIn = () =>
 {
@@ -13,15 +14,15 @@ const SignIn = () =>
     const [password, setPassword] = useState();
 
     return (
-        <View style={Styles.page}>
+        <AuthBackground>
             <View style={AuthStyles.imgContainer}>
                 <Image
                     source={require('../../assets/images/a51-login-logo.png')}
                     style={AuthStyles.logoImg}
                 />
             </View>
-            <View style={[Styles.block, {alignItems: 'center', rowGap: 25}]}>
-                <Text style={[Styles.title, { textAlign: 'left', paddingLeft: 20}]}>Sign In</Text>
+            <View style={[Styles.block, {alignItems: 'center'}]}>
+                <Text style={[Styles.title, { paddingLeft: 20}]}>Sign In</Text>
                 <View style={Styles.inputContainer}>
                     <View style={Styles.inputWrapper}>
                         <Ionicons name='mail' size={20} style={Styles.icon} />
@@ -61,12 +62,12 @@ const SignIn = () =>
                     <GoogleSignInButton text='Sign in'/>
                     <AmazonSignInButton text='Sign in'/>
                 </View>
-                <View style={[AuthStyles.providerContainer, {columnGap: 90}]}>
-                    <Link href="/(auth)/resetPassword" style={Styles.text}>Forgot Password?</Link>
-                    <Link href="/(auth)/signUp" style={[Styles.text, {paddingRight: 25}]}>Sign Up</Link>
+                <View style={[Styles.infoContainer, {alignItems: 'center', rowGap: 20}]}>
+                    <Link href="/(auth)/signUp" style={[Styles.text, {paddingRight: 20}]}>Need an account? Sign Up</Link>
+                    <Link href="/(auth)/resetPassword" style={[Styles.text, {paddingRight: 20}]}>Forgot Password?</Link>
                 </View>
             </View>
-        </View>
+        </AuthBackground>
     );
 };
 

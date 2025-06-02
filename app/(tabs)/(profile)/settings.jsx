@@ -1,6 +1,6 @@
 import { View, Text } from 'react-native';
 import { ProfileStyles, Styles } from '../../../constants/styles'
-import { Tab, formatNumber } from '../../../components/components';
+import { Background, Tab, formatNumber } from '../../../components/components';
 import { router } from 'expo-router';
 import { useApp } from '../../../components/context';
 import { AntDesign, Ionicons, MaterialIcons } from '@expo/vector-icons';
@@ -12,11 +12,13 @@ const Settings = () =>
     const readableNumber = phoneNumber ? formatNumber(phoneNumber) : null;
 
     return(
-        <View style={Styles.page}>
-            <View style={[Styles.infoContainer, {paddingTop: 10, paddingBottom: 30}]}>
-                <Text style={ProfileStyles.name}>{name}</Text>
-                <Text style={Styles.text}>{email}</Text>
-                <Text style={Styles.text}>{readableNumber}</Text>
+        <Background>
+            <View style={Styles.block}>
+                <View style={Styles.infoContainer}>
+                    <Text style={ProfileStyles.name}>{name}</Text>
+                    <Text style={Styles.text}>{email}</Text>
+                    <Text style={Styles.text}>{readableNumber}</Text>
+                </View>
             </View>
             <Tab
                 text="Edit Profile"
@@ -36,7 +38,7 @@ const Settings = () =>
                 leftIcon={<AntDesign name='deleteuser' size={30} style={Styles.icon} />}
                 rightIcon={<AntDesign name="right" size={25} style={Styles.rightIcon} />}
             />
-        </View>
+        </Background>
     );
 };
 

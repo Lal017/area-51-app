@@ -1,6 +1,7 @@
-import { View, Text, TouchableOpacity, Linking } from 'react-native';
+import { View, Text, TouchableOpacity, Linking, ScrollView } from 'react-native';
 import { Styles } from '../constants/styles';
 import Colors from '../constants/colors';
+import { LinearGradient } from 'expo-linear-gradient';
 
 // custom header component to replace default header
 const CustHeader = ({title}) =>
@@ -12,6 +13,37 @@ const CustHeader = ({title}) =>
    
     );
 };
+
+// wraps the page
+const AuthBackground = ({children}) =>
+{
+    return (
+        <LinearGradient
+            style={{flex: 1}}
+            colors={[Colors.backgroundFade, Colors.background]}
+            start={{ x: 0, y: 1 }}
+            end={{ x: 1, y: 0 }}
+        >
+            <ScrollView
+                contentContainerStyle={Styles.page}
+                keyboardShouldPersistTaps='handled'
+            >
+                {children}
+            </ScrollView>
+        </LinearGradient>
+    );
+};
+
+const Background = ({children, style}) =>
+{
+    return (
+        <ScrollView
+            contentContainerStyle={[Styles.page, style, {backgroundColor: Colors.background}]}
+        >
+            {children}
+        </ScrollView>
+    )
+}
 
 // custom calendar header
 const CalendarHeader = ({date}) =>
@@ -107,6 +139,8 @@ const formatTime = (timeString) =>
 
 export {
     CustHeader,
+    AuthBackground,
+    Background,
     CalendarHeader,
     Tab,
     Select,

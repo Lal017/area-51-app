@@ -1,10 +1,11 @@
-import { TextInput, View, Text, TouchableOpacity, Alert } from 'react-native';
+import { TextInput, View, Text, TouchableOpacity, Alert, KeyboardAvoidingView } from 'react-native';
 import { useEffect, useState } from 'react';
-import { ProfileStyles, Styles } from '../../../constants/styles';
+import { Styles } from '../../../constants/styles';
 import { AntDesign, FontAwesome, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { handleDeleteVehicle, handleUpdateVehicle } from '../../../components/vehicleComponents';
 import { useApp } from '../../../components/context';
 import { useLocalSearchParams } from 'expo-router';
+import { Background } from '../../../components/components';
 import Colors from '../../../constants/colors';
 
 const editVehicle = () =>
@@ -35,8 +36,11 @@ const editVehicle = () =>
     }, []);
 
     return (
-        <View style={[Styles.page, {justifyContent: 'flex-start'}]}>
-            <View style={ProfileStyles.formContainer}>
+        <KeyboardAvoidingView behavior='height' style={{flex: 1}}>
+            <Background>
+                <View style={[Styles.block, {paddingLeft: 20}]}>
+                    <Text style={Styles.subTitle}>Vehicle Information</Text>
+                </View>
                 <View style={Styles.inputContainer}>
                     <View style={Styles.inputWrapper}>
                         <Ionicons name='calendar' size={20} style={Styles.icon} />
@@ -101,30 +105,32 @@ const editVehicle = () =>
                         />
                     </View>
                 </View>
-                <TouchableOpacity
-                    style={Styles.actionButton}
-                    onPress={() => handleUpdateVehicle(client, {year, make, model, color, plate, vin}, vehicle.id, userId, setVehicles)}
-                >
-                    <Text style={Styles.actionText}>Update</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[Styles.actionButton, {backgroundColor: 'red'}]}
-                    onPress={() => Alert.alert(
-                        'Confirm',
-                        'Are you sure you want to delete this vehicle?',
-                        [
-                            { text: 'No' },
-                            {
-                                text: 'Yes',
-                                onPress: () => handleDeleteVehicle(client, vehicle.id, setVehicles)
-                            }
-                        ]
-                    )}
-                >
-                    <Text style={Styles.actionText}>Delete</Text>
-                </TouchableOpacity>
-            </View>
-        </View>
+                <View style={[Styles.block, {alignItems: 'center'}]}>
+                    <TouchableOpacity
+                        style={Styles.actionButton}
+                        onPress={() => handleUpdateVehicle(client, {year, make, model, color, plate, vin}, vehicle.id, userId, setVehicles)}
+                    >
+                        <Text style={Styles.actionText}>Update</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={[Styles.actionButton, {backgroundColor: 'red'}]}
+                        onPress={() => Alert.alert(
+                            'Confirm',
+                            'Are you sure you want to delete this vehicle?',
+                            [
+                                { text: 'No' },
+                                {
+                                    text: 'Yes',
+                                    onPress: () => handleDeleteVehicle(client, vehicle.id, setVehicles)
+                                }
+                            ]
+                        )}
+                    >
+                        <Text style={Styles.actionText}>Delete</Text>
+                    </TouchableOpacity>
+                </View>
+            </Background>
+        </KeyboardAvoidingView>
     );
 };
 

@@ -32,13 +32,14 @@ const Styles = StyleSheet.create({
     hr: {
         borderBottomWidth: 1,
         borderColor: Colors.text,
-        width: 350,
+        width: '90%',
     },
     consoleBubble: {
         width: '100%',
         flex: 1,
         alignItems: 'center',
         position: 'relative',
+        padding: 20,
     },
     // Tab Select
     tabWrapper: {
@@ -100,24 +101,25 @@ const Styles = StyleSheet.create({
     actionText: {
         color: Colors.text,
         textAlign: 'center',
+        fontFamily: 'Roboto-Bold'
     },
     // Text
     title: {
         fontSize: 35,
-        fontWeight: 300,
+        fontFamily: 'Roboto-Condensed-Light',
         color: Colors.text,
         width: '100%',
     },
     subTitle: {
-        fontSize: 20,
+        fontSize: 25,
+        fontFamily: 'Roboto-SemiCondensed-Bold',
         textAlign: 'left',
-        fontWeight: 500,
         color: Colors.text,
     },
     text: {
         fontSize: 20,
+        fontFamily: 'Roboto-Light',
         textAlign: 'left',
-        fontWeight: 200,
         color: Colors.text,
     },
     // icons
@@ -136,14 +138,8 @@ const Styles = StyleSheet.create({
     },
     // container
     page: {
-        flex: 1,
-        backgroundColor: Colors.background,
+        flexGrow: 1,
         alignItems: 'center',
-    },
-    scrollPage: {
-        backgroundColor: Colors.background,
-        alignItems: 'center',
-        flexGrow: 1
     },
     infoContainer: {
         width: '100%',
@@ -187,8 +183,8 @@ const AuthStyles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         width: '100%',
-        paddingRight: 40,
-        paddingLeft: 40
+        paddingRight: 20,
+        paddingLeft: 20
     },
     signInImg: {
         width: 25,
@@ -196,8 +192,7 @@ const AuthStyles = StyleSheet.create({
     },
     providerSignIn: {
         backgroundColor: 'white',
-        borderWidth: 1,
-        width: 150,
+        width: 175,
         padding: 10,
         borderRadius: 5,
         flexDirection: 'row',
@@ -225,8 +220,7 @@ const ServiceStyles = StyleSheet.create({
         justifyContent: 'center',
         columnGap: 10,
         backgroundColor: Colors.background,
-        paddingLeft: 20,
-        paddingRight: 20,
+        padding: 20
     },
     progressBarLine: {
         flex: 1,
@@ -257,11 +251,6 @@ const ServiceStyles = StyleSheet.create({
         elevation: 10,
     },
     // schedule.jsx
-    calendarContainer: {
-        width: '100%',
-        rowGap: 10,
-        marginTop: 25
-    },
     timeContainer: {
         width: '100%',
         rowGap: 10,
@@ -303,14 +292,7 @@ const ServiceStyles = StyleSheet.create({
         overflow: 'hidden'
     },
     // towStatus.jsx
-    requestWrapper: {
-        width: '100%',
-        padding: 20,
-        rowGap: 20,
-        alignItems: 'left',
-        justifyContent: 'center'
-    },
-        titleWrapper: {
+    titleWrapper: {
         flexDirection: 'row',
         alignItems: 'center'
     },
@@ -336,7 +318,7 @@ const ProfileStyles = StyleSheet.create({
     },
     name: {
         fontSize: 30,
-        fontWeight: 'bold',
+        fontFamily: 'Roboto-Bold',
         color: Colors.text,
     },
     // Vehicle List
@@ -362,13 +344,6 @@ const ProfileStyles = StyleSheet.create({
         width: '100%',
         alignItems: 'center'
     },
-    formContainer: {
-        paddingTop: 50,
-        width: '100%',
-        rowGap: 20,
-        justifyContent: 'center',
-        alignItems: 'center'
-    }
 });
 
 const AdminStyles = StyleSheet.create({
@@ -376,24 +351,22 @@ const AdminStyles = StyleSheet.create({
         width: '100%',
         padding: 30,
         rowGap: 10,
-        backgroundColor: Colors.backDrop,
-        elevation: 12
+        backgroundColor: Colors.backgroundAccent,
     },
     picker: {
-        backgroundColor: Colors.backDrop,
+        backgroundColor: Colors.backgroundAccent,
         borderRadius: 25,
-        elevation: 10,
         width: 200,
         paddingLeft: 10
     },
     // userView.jsx
     vehicleContainer: {
-        width: '100%',
-        backgroundColor: Colors.backDrop,
-        elevation: 5,
-        borderRadius: 25,
+        width: '90%',
+        backgroundColor: Colors.backgroundAccent,
+        borderRadius: 10,
         padding: 25,
         alignItems: 'center',
+        alignSelf: 'center',
         rowGap: 5
     },
     labelContainer: {

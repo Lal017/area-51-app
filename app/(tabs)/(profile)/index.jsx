@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import { ProfileStyles, Styles } from "../../../constants/styles";
-import { Tab, socialRedirect } from "../../../components/components";
+import { Background, Tab, socialRedirect } from "../../../components/components";
 import { handleSignOut } from "../../../components/authComponents";
 import { router } from "expo-router";
 import { useApp } from "../../../components/context";
@@ -13,10 +13,12 @@ const Profile = () =>
     const { email, name } = useApp();
 
     return(
-        <View style={Styles.page}>
-            <View style={[Styles.infoContainer, {paddingTop: 10, paddingBottom: 30}]}>
-                <Text style={ProfileStyles.name}>{name}</Text>
-                <Text style={[Styles.text, {fontSize: 17}]}>{email}</Text>
+        <Background>
+            <View style={Styles.block}>
+                <View style={Styles.infoContainer}>
+                    <Text style={ProfileStyles.name}>{name}</Text>
+                    <Text style={[Styles.text, {fontSize: 17}]}>{email}</Text>
+                </View>
             </View>
             <Tab
                 text="Account Settings"
@@ -62,7 +64,7 @@ const Profile = () =>
             >
                 <Text style={Styles.actionText}>Sign Out</Text>
             </TouchableOpacity>
-        </View>
+        </Background>
     );
 };
 

@@ -5,6 +5,7 @@ import { useLocalSearchParams } from "expo-router";
 import { handleConfirmResetPassword } from "../../components/authComponents";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import Colors from "../../constants/colors";
+import { AuthBackground } from "../../components/components";
 
 const resetPasswordConfirm = () =>
 {
@@ -15,7 +16,7 @@ const resetPasswordConfirm = () =>
 
     return (
         <KeyboardAvoidingView behavior='height' style={{flex: 1}} >
-            <ScrollView contentContainerStyle={Styles.scrollPage}>
+            <AuthBackground>
                 <View style={AuthStyles.imgContainer}>
                     <Image
                         source={require('../../assets/images/a51-login-logo.png')}
@@ -72,7 +73,7 @@ const resetPasswordConfirm = () =>
                         <Text style={Styles.actionText}>Confirm</Text>
                     </TouchableOpacity>
                 </View>
-            </ScrollView>
+            </AuthBackground>
         </KeyboardAvoidingView>
     );
 };

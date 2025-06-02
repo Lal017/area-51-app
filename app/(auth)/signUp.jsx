@@ -5,6 +5,7 @@ import { Link } from "expo-router";
 import { AuthStyles, Styles } from "../../constants/styles";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "../../constants/colors";
+import { AuthBackground } from "../../components/components";
 
 const signUp = () =>
 {
@@ -19,7 +20,7 @@ const signUp = () =>
             behavior='height'
             style={{flex: 1}}
         >
-            <ScrollView contentContainerStyle={[Styles.scrollPage, {justifyContent: 'center', paddingBottom: 20}]}>
+            <AuthBackground>
                 <View style={AuthStyles.imgContainer}>
                     <Image
                         source={require('../../assets/images/a51-login-logo.png')}
@@ -103,7 +104,7 @@ const signUp = () =>
                     </View>
                     <Link href="/(auth)/signIn" style={[Styles.text, {textAlign: 'center'}]}>Sign In</Link>
                 </View>
-            </ScrollView>
+            </AuthBackground>
         </KeyboardAvoidingView>
     );
 };

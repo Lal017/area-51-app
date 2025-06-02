@@ -1,9 +1,9 @@
-import { View, ScrollView, TouchableOpacity, Text } from 'react-native';
+import { View, TouchableOpacity, Text } from 'react-native';
 import { AdminStyles, Styles } from '../../constants/styles';
 import { useApp } from '../../components/context';
 import { useEffect, useState } from 'react';
 import { listAppointments } from '../../src/graphql/queries';
-import { formatDate, formatTime } from '../../components/components';
+import { Background, formatDate, formatTime } from '../../components/components';
 import { router } from 'expo-router';
 
 const AppointmentList = () =>
@@ -29,8 +29,8 @@ const AppointmentList = () =>
     }, []);
 
     return (
-        <ScrollView contentContainerStyle={Styles.scrollPage}>
-            <View style={Styles.container}>
+        <Background>
+            <View style={[Styles.block, {rowGap: 0}]}>
                 {appointments ? (
                     appointments.map((appointment, index) => (
                         <TouchableOpacity
@@ -48,7 +48,7 @@ const AppointmentList = () =>
                     ))
                 ) : null}
             </View>
-        </ScrollView>
+        </Background>
     );
 };
 
