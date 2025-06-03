@@ -1,6 +1,6 @@
-import { View, Text, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
 import { useState } from 'react';
-import { handleDeleteUser } from '../../components/authComponents';
+import { handleDeleteAccount } from '../../components/authComponents';
 import { ServiceStyles, Styles } from '../../constants/styles';
 import { useApp } from '../../components/context';
 import { Ionicons } from '@expo/vector-icons';
@@ -9,14 +9,14 @@ import Colors from '../../constants/colors';
 
 const DeleteAccount = () =>
 {
-    const { email } = useApp();
+    const { client, userId, email } = useApp();
     const [ inputEmail, setInputEmail ] = useState();
     const [ step, setStep ] = useState(1);
     const [ loading, setLoading ] = useState(false);
 
     return (
         <Background>
-            { step === 1 ? (
+            { step === 1 && !loading ? (
                 <>
                     <View style={Styles.block}>
                         <View style={Styles.infoContainer}>
@@ -37,7 +37,7 @@ const DeleteAccount = () =>
                         </TouchableOpacity>
                     </View>
                 </>
-            ) : step === 2 ? (
+            ) : step === 2 && !loading ? (
                 <>
                     <View style={Styles.block}>
                         <View style={Styles.infoContainer}>
@@ -60,7 +60,7 @@ const DeleteAccount = () =>
                         onPress={async () => {
                             if (loading) return;
                             setLoading(true);
-                            await handleDeleteUser({email, inputEmail});
+                            await handleDeleteAccount(client, userId, email, inputEmail);
                             setLoading(false);
                         }}
                         style={[Styles.actionButton, loading && { opacity: 0.5 }, {backgroundColor: 'red'}]}
@@ -69,6 +69,10 @@ const DeleteAccount = () =>
                         <Text style={Styles.actionText}>Delete</Text>
                     </TouchableOpacity>
                 </>
+            ) : loading ? (
+                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                    <ActivityIndicator size="large" color={Colors.secondary} />
+                </View>
             ) : null }
         </Background>
     )

@@ -1,4 +1,4 @@
-import { createAppointment, createTowRequest, deleteAppointment, updateAppointment, updateTowRequest } from '../src/graphql/mutations';
+import { createAppointment, createTowRequest, deleteAppointment, deleteTowRequest, updateAppointment, updateTowRequest } from '../src/graphql/mutations';
 import { post } from 'aws-amplify/api';
 import { Alert } from 'react-native';
 import { appointmentsByUserId, towRequestsByUserId } from '../src/graphql/queries';
@@ -206,9 +206,9 @@ const handleNotifUpdateTowRequest = async (client, userId, setTowRequest) =>
     } catch (error) {
         console.log('Error updating tow request:', error);
     }
-},
+};
 
-handleUpdateTowRequestStatus = async (client, towId, status, setTowRequest) =>
+const handleUpdateTowRequestStatus = async (client, towId, status, setTowRequest) =>
 {
     try {
         const result = await client.graphql({
@@ -221,9 +221,66 @@ handleUpdateTowRequestStatus = async (client, towId, status, setTowRequest) =>
             }
         });
         
-        setTowRequest(result.data.updateTowRequest);
+        if (setTowRequest) { setTowRequest(result.data.updateTowRequest); }
     } catch (error) {
         console.log('Error updating tow request:', error);
+    }
+};
+
+const handleDeleteAllTowRequests = async (client, userID) =>
+{
+    try {
+        const result = await client.graphql({
+            query: towRequestsByUserId,
+            variables: {
+                userId: userID
+            }
+        });
+
+        const requests = result.data.towRequestsByUserId.items;
+
+        for (const request of requests) {
+            await client.graphql({
+                query: deleteTowRequest,
+                variables: {
+                    input: {
+                        id: request.id
+                    }
+                }
+            });
+        }
+        console.log('All tow requests deleted successfully');
+    } catch (error) {
+        console.log('Error deleting all tow requests:', error);
+    }
+}
+
+const handleDeleteAllAppointments = async (client, userId) =>
+{
+    try {
+        const result = await client.graphql({
+            query: appointmentsByUserId,
+            variables: {
+                userId: userId
+            }
+        });
+
+        const appointments = result.data.appointmentsByUserId.items;
+
+        for (const appointment of appointments) {
+            await client.graphql({
+                query: deleteAppointment,
+                variables: {
+                    input: {
+                        id: appointment.id
+                    }
+                }
+            });
+        }
+
+        console.log('All appointments deleted successfully');
+    } catch (error) {
+        console.log('Error deleting all appointments:', error);
     }
 };
 
@@ -233,9 +290,11 @@ export {
     handleCreateAppointment,
     handleUpdateAppointment,
     handleDeleteAppointment,
+    handleDeleteAllAppointments,
     handleGetMyAppointments,
     handleCreateTowRequest,
     handleGetTowRequest,
     handleNotifUpdateTowRequest,
-    handleUpdateTowRequestStatus
+    handleUpdateTowRequestStatus,
+    handleDeleteAllTowRequests
 }

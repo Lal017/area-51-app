@@ -103,19 +103,20 @@ const handleUpdateUser = async (client, user_id, token, user_access, name, email
 };
 
 // used to delete the clients database entry when they delete there account
-const handleDeleteUser = async (client, user_id) =>
+const handleDeleteUser = async (client, userId) =>
 {
     try {
         await client.graphql({
             query: deleteUser,
             variables: {
                 input: {
-                    id: user_id
+                    id: userId
                 }
-            }
+            },
         });
+        console.log('User deleted successfully');
     } catch (error) {
-        console.log('DELETE ERROR:', error);
+        console.log('DELETE ERROR:', error.errors);
     }
 };
 

@@ -1,7 +1,8 @@
 import { Redirect } from 'expo-router';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import { useEffect, useState } from 'react';
 import { handleGetCurrentUser } from '../components/authComponents';
+import { Background } from '../components/components';
 
 const Index = () =>
 {
@@ -26,9 +27,9 @@ const Index = () =>
 
     if (loading) {
         return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Background style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <ActivityIndicator size="large" color="#0000ff" />
-            </View>
+            </Background>
         );
     }
 

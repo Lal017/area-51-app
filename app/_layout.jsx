@@ -41,6 +41,7 @@ const RootLayout = () =>
           // Redirect to home screen or dashboard after successful sign in
           const user = await handleGetCurrentUser();
           const isAdmin = user?.accessToken?.payload["cognito:groups"]?.includes('Admins');
+          if (router.canDismiss()) { router.dismissAll(); }
           if (isAdmin) { router.replace('(admin)'); }
           else { router.replace('(tabs)'); }
           break;

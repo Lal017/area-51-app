@@ -1,8 +1,7 @@
 import { TouchableOpacity, Image, Text, Alert } from 'react-native';
-import { AuthStyles, Styles } from '../constants/styles';
+import { AuthStyles } from '../constants/styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
 import {
     signUp,
     confirmSignUp,
@@ -21,6 +20,9 @@ import {
     confirmUserAttribute,
 } from 'aws-amplify/auth';
 import { FontAwesome } from '@expo/vector-icons';
+import { handleDeleteAllAppointments, handleDeleteAllTowRequests } from './scheduleComponents';
+import { handleDeleteAllVehicles } from './vehicleComponents';
+import { handleDeleteUser } from './notifComponents';
 
 // Sign Up
 // ---------------------------------------------------------------------
@@ -409,7 +411,7 @@ const handleUpdatePassword = async ({oldPassword, newPassword, confNewPassword})
 
 // Delete User
 // --------------------------------------------------------------
-const handleDeleteUser = async ({email, inputEmail}) =>
+const handleDeleteAccount = async (client, userId, email, inputEmail) =>
 {
     if (email.toLowerCase() !== inputEmail.toLowerCase())
     {
@@ -423,8 +425,14 @@ const handleDeleteUser = async ({email, inputEmail}) =>
         await handleRedirect();
         return;
     }
+
     try {
+        await handleDeleteAllTowRequests(client, userId);
+        await handleDeleteAllAppointments(client, userId);
+        await handleDeleteAllVehicles(client, userId);
+        await handleDeleteUser(client, userId);
         await deleteUser();
+        await clearLocalStorage();
         Alert.alert(
             "Deleted",
             "User has been deleted",
@@ -609,7 +617,7 @@ export {
     handleResetPassword,
     handleConfirmResetPassword,
     handleUpdatePassword,
-    handleDeleteUser,
+    handleDeleteAccount,
     GoogleSignInButton,
     AmazonSignInButton,
     handleUpdatePhone,

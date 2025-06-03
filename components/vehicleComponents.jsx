@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { createVehicle, updateVehicle, deleteVehicle } from '../src/graphql/mutations';
-import { listVehicles } from '../src/graphql/queries';
+import { listVehicles, vehiclesByUserId } from '../src/graphql/queries';
 import { Alert } from 'react-native';
 
 const handleCreateVehicle = async (client, vehicle, userId, setVehicles) =>
@@ -103,8 +103,38 @@ const handleDeleteVehicle = async (client, vehicleId, setVehicles) =>
     }
 };
 
+const handleDeleteAllVehicles = async (client, userId) =>
+{
+    try {
+        const result = await client.graphql({
+            query: vehiclesByUserId,
+            variables: {
+                userId: userId,
+            }
+        });
+
+        const vehicles = result.data.vehiclesByUserId.items;
+
+        for (const vehicle of vehicles) {
+            await client.graphql({
+                query: deleteVehicle,
+                variables: {
+                    input: {
+                        id: vehicle.id
+                    }
+                }
+            });
+        }
+
+        console.log('All vehicles deleted successfully');
+    } catch (error) {
+        console.log('Error deleting all vehicles', error);
+    }
+};
+
 export {
     handleCreateVehicle,
     handleUpdateVehicle,
-    handleDeleteVehicle
+    handleDeleteVehicle,
+    handleDeleteAllVehicles
 };
