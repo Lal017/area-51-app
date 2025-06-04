@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Linking, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { Styles } from '../constants/styles';
 import Colors from '../constants/colors';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -96,12 +96,6 @@ const Select = ({text, selected, action, leftIcon, rightIcon}) =>
     )
 };
 
-//redirects to the trop locksmith website
-const socialRedirect = (link) =>
-{
-    Linking.openURL(link);
-};
-
 // format number for readability
 const formatNumber = (phone) =>
 {
@@ -153,7 +147,6 @@ export {
     CalendarHeader,
     Tab,
     Select,
-    socialRedirect,
     formatNumber,
     formatDate,
     formatTime

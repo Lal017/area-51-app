@@ -1,10 +1,19 @@
 import { Stack } from 'expo-router';
 import { CustHeader } from '../../../components/components';
+import Colors from '../../../constants/colors';
 
 const scheduleLayout = () =>
 {
     return(
-        <Stack screenOptions={{headerShown: true}}>
+        <Stack
+            screenOptions={{
+                headerShown: true,
+                contentStyle: {
+                    backgroundColor: Colors.background
+                },
+                animation: 'fade_from_bottom'
+            }}
+        >
             <Stack.Screen name='index' options={{title: 'Service', header: () => <CustHeader title='Service' index={true}/>}} />
             <Stack.Screen name='schedule' options={{title: 'Schedule', header: () => <CustHeader title='Appointment'/>}}/>
             <Stack.Screen name='towRequest' options={{title: 'Tow Request', header: () => <CustHeader title='Tow Request'/>}}/>

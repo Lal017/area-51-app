@@ -204,6 +204,38 @@ const AuthStyles = StyleSheet.create({
 });
 
 const HomeStyles = StyleSheet.create({
+    snapContainer: {
+        width: '90%',
+        height: 175,
+        borderRadius: 10,
+        backgroundColor: '#1b844a',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    welcomeContainer: {
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 75,
+    },
+    shortcutContainer: {
+        width: '100%',
+        height: 75,
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingLeft: 20,
+        paddingRight: 20,
+        padding: 10,
+        columnGap: 10
+    },
+    shortcutButton: {
+        flex: 1,
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: Colors.backgroundAccent,
+        borderRadius: 5,
+    },
 
 });
 

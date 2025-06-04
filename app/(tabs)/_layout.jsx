@@ -175,7 +175,8 @@ const TabsContent = () =>
                 tabBarActiveTintColor: Colors.secondary,
                 tabBarInactiveTintColor: Colors.backDropAccent,
                 tabBarShowLabel: false,
-            }}>
+            }}
+        >
             <Tabs.Screen
                 name="(home)"
                 options={{

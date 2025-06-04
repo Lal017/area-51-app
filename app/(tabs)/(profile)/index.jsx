@@ -1,7 +1,7 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Linking } from "react-native";
 import { useState } from "react";
 import { ProfileStyles, Styles } from "../../../constants/styles";
-import { Background, Tab, socialRedirect } from "../../../components/components";
+import { Background, Tab } from "../../../components/components";
 import { handleSignOut } from "../../../components/authComponents";
 import { router } from "expo-router";
 import { useApp } from "../../../components/context";
@@ -43,12 +43,12 @@ const Profile = () =>
             <View style={ProfileStyles.socialContainer}>
                 <TouchableOpacity
                     style={[ProfileStyles.socialBox, {backgroundColor: '#1877f2'}]}
-                    onPress={() => socialRedirect('https://www.facebook.com/Area51MotorsportsLv/')}
+                    onPress={() => Linking.openURL('https://www.facebook.com/Area51MotorsportsLv/')}
                 >
                     <AntDesign name="facebook-square" size={30} color='white' />
                 </TouchableOpacity>
                 <TouchableOpacity
-                    onPress={() => socialRedirect('https://www.instagram.com/area51motorsports/')}
+                    onPress={() => Linking.openURL('https://www.instagram.com/area51motorsports/')}
                 >
                     <LinearGradient
                         colors={['#feda75', '#fa7e1e', '#d62976', '#962fbf', '#4f5bd5']}

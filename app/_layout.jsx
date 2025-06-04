@@ -10,6 +10,7 @@ import { router } from 'expo-router';
 import { handleGetCurrentUser } from '../components/authComponents';
 import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
+import Colors from '../constants/colors';
 
 setNotificationHandler({
   handleNotification: async () => ({
@@ -62,7 +63,14 @@ const RootLayout = () =>
   return (
     <>
       <StatusBar hidden={true} />
-      <Stack screenOptions={{headerShown: false}}>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          contentStyle: {
+            backgroundColor: Colors.background
+          },
+          animation: 'fade_from_bottom'
+        }}>
         <Stack.Screen name='index' options={{title: 'Home'}}/>
         <Stack.Screen name='(auth)' options={{title: 'Authentication'}}/>
         <Stack.Screen name='(tabs)' options={{title: 'App'}}/>

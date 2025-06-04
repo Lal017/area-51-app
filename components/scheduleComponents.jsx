@@ -162,7 +162,7 @@ const handleCreateTowRequest = async (client, userId, vehicleId, location, notes
 
         await setTowRequest(result.data.createTowRequest);
 
-        router.replace('/(tabs)/(service)/towStatus');
+        router.replace('towStatus');
         Alert.alert(
             'Tow Request',
             'Your tow request has been sent!',
