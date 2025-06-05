@@ -9,7 +9,8 @@ export const onCreateUser = /* GraphQL */ `
     onCreateUser(filter: $filter, owner: $owner) {
       id
       access
-      name
+      firstName
+      lastName
       email
       phone
       pushToken
@@ -40,7 +41,8 @@ export const onUpdateUser = /* GraphQL */ `
     onUpdateUser(filter: $filter, owner: $owner) {
       id
       access
-      name
+      firstName
+      lastName
       email
       phone
       pushToken
@@ -71,7 +73,8 @@ export const onDeleteUser = /* GraphQL */ `
     onDeleteUser(filter: $filter, owner: $owner) {
       id
       access
-      name
+      firstName
+      lastName
       email
       phone
       pushToken
@@ -111,7 +114,8 @@ export const onCreateVehicle = /* GraphQL */ `
       user {
         id
         access
-        name
+        firstName
+        lastName
         email
         phone
         pushToken
@@ -144,7 +148,8 @@ export const onUpdateVehicle = /* GraphQL */ `
       user {
         id
         access
-        name
+        firstName
+        lastName
         email
         phone
         pushToken
@@ -177,7 +182,8 @@ export const onDeleteVehicle = /* GraphQL */ `
       user {
         id
         access
-        name
+        firstName
+        lastName
         email
         phone
         pushToken
@@ -208,7 +214,8 @@ export const onCreateAppointment = /* GraphQL */ `
       user {
         id
         access
-        name
+        firstName
+        lastName
         email
         phone
         pushToken
@@ -254,7 +261,8 @@ export const onUpdateAppointment = /* GraphQL */ `
       user {
         id
         access
-        name
+        firstName
+        lastName
         email
         phone
         pushToken
@@ -300,7 +308,8 @@ export const onDeleteAppointment = /* GraphQL */ `
       user {
         id
         access
-        name
+        firstName
+        lastName
         email
         phone
         pushToken
@@ -342,7 +351,8 @@ export const onCreateTowRequest = /* GraphQL */ `
       user {
         id
         access
-        name
+        firstName
+        lastName
         email
         phone
         pushToken
@@ -390,7 +400,8 @@ export const onUpdateTowRequest = /* GraphQL */ `
       user {
         id
         access
-        name
+        firstName
+        lastName
         email
         phone
         pushToken
@@ -438,7 +449,8 @@ export const onDeleteTowRequest = /* GraphQL */ `
       user {
         id
         access
-        name
+        firstName
+        lastName
         email
         phone
         pushToken

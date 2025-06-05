@@ -23,8 +23,10 @@ const AdminContent = () =>
         pushToken,
         setPushToken,
         setNotification,
-        name,
-        setName,
+        firstName,
+        setFirstName,
+        lastName,
+        setLastName,
         email,
         setEmail,
         phoneNumber,
@@ -49,7 +51,19 @@ const AdminContent = () =>
             // get and set user attributes
             const userAtt = await fetchUserAttributes();
             await setEmail(userAtt?.email);
-            await setName(userAtt?.name);
+            if (userAtt.given_name && userAtt.family_name) {
+                setFirstName(userAtt.given_name);
+                setLastName(userAtt.family_name);
+            } else if (userAtt.name) {
+                const nameSplit = userAtt.name.trim().split(/\s+/);
+
+                if (nameSplit.length >= 2) {
+                    setFirstName(nameSplit[0]);
+                    setLastName(nameSplit.slice(1).join(' '));
+                } else {
+                    setFirstName(nameSplit[0]);
+                }
+            }
             await setPhoneNumber(userAtt?.phone_number);
 
             // get and set cognito info
@@ -60,14 +74,15 @@ const AdminContent = () =>
             const savedNotif = await AsyncStorage.getItem('notification');
             setNotification(JSON.parse(savedNotif));
 
-            if (!userAtt?.phone_number) {
+            if (!userAtt?.phone_number || ((!userAtt?.given_name || !userAtt?.family_name) && !userAtt?.name)) {
+                router.replace('/(tabs)/(profile)/accountEdit');
+                setIsStuck(true);
                 Alert.alert(
-                    'NOTICE',
-                    'Please add a phone number before continuing',
+                    'Notice',
+                    'Please add missing attributes before continuing',
                     [
                         {
-                            text: 'Settings',
-                            onPress: () => router.push('/(admin)/accountEdit')
+                            text: 'OK',
                         }
                     ]
                 );
@@ -85,19 +100,19 @@ const AdminContent = () =>
                 const alreadyExists = await handleCheckUser(client, userId);
 
                 if (!alreadyExists) {
-                    await handleCreateUser(client, userId, pushToken, access, name, email, phoneNumber);
+                    await handleCreateUser(client, userId, pushToken, access, firstName, lastName, email, phoneNumber);
                 } else {
-                    await handleUpdateUser(client, userId, pushToken, access, name, email, phoneNumber);
+                    await handleUpdateUser(client, userId, pushToken, access, firstName, lastName, email, phoneNumber);
                 }
             } catch (error) {
                 console.error('Error registering for push notifications:', error);
             }
         };
 
-        if (client && userId && pushToken && access && name && email && phoneNumber) {
+        if (client && userId && pushToken && access && firstName && lastName && email && phoneNumber) {
             handleRegisterPushNotifications();
         }
-    }, [client, userId, pushToken, phoneNumber, name, email, access]);
+    }, [client, userId, pushToken, phoneNumber, firstName, lastName, email, access]);
 
     // Listeners for push notifications
     useEffect(() => {

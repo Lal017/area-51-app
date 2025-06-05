@@ -26,19 +26,8 @@ import { handleDeleteUser } from './notifComponents';
 
 // Sign Up
 // ---------------------------------------------------------------------
-const handleSignUp = async ({name, email, password, confPassword, phoneNumber}) =>
+const handleSignUp = async (given_name, family_name, email, password, phoneNumber) =>
 {
-    if (password !== confPassword)
-    {
-        Alert.alert(
-            "Error",
-            "Passwords do not match",
-            [
-                { text: "Ok" }
-            ]
-        );
-        return;
-    }
     const phoneNumberCheck = phoneNumber.replace(/\D/g, '');
     if (phoneNumberCheck.length !== 10)
     {
@@ -57,7 +46,7 @@ const handleSignUp = async ({name, email, password, confPassword, phoneNumber}) 
             password,
             options: {
                 userAttributes: {
-                    name,
+                    name: `${given_name} ${family_name}`,
                     email,
                     phone_number: `+1${phoneNumberCheck}`
                 },
@@ -504,7 +493,7 @@ const handleUpdatePhone = async (phoneNumber, setPhoneNumber) =>
     }
 };
 
-const handleUpdateAttributes = async (updatedEmail, updatedName, updatedPhone, setName, setPhoneNumber) =>
+const handleUpdateAttributes = async (updatedEmail, updatedFirstName, updatedLastName, updatedPhone, setFirstName, setLastName, setPhoneNumber) =>
 {
     const phoneNumberCheck = updatedPhone.replace(/\D/g, '');
     if (phoneNumberCheck.length !== 10)
@@ -522,18 +511,19 @@ const handleUpdateAttributes = async (updatedEmail, updatedName, updatedPhone, s
         const attributes = await updateUserAttributes({
             userAttributes: {
                 email: updatedEmail,
-                name: updatedName,
+                name: `${updatedFirstName} ${updatedLastName}`,
                 phone_number: `+1${phoneNumberCheck}`
             },
         });
 
-        setName(updatedName);
+        setFirstName(updatedFirstName);
+        setLastName(updatedLastName);
         setPhoneNumber(`+1${phoneNumberCheck}`);
         handleUpdateAttributesNextSteps(attributes.email.nextStep.updateAttributeStep);
     } catch (error) {
         Alert.alert(
-            "Error",
-            error.message,
+            'Error',
+            'Could not update attributes',
             [
                 { text: 'Ok'}
             ]

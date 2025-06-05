@@ -32,7 +32,7 @@ const SignUpConfirm = () =>
                     style={AuthStyles.logoImg}
                 />
             </View>
-            <View style={[Styles.block, {alignItems: 'center', rowGap: 25}]}>
+            <View style={[Styles.block, {alignItems: 'center'}]}>
                 <View style={Styles.infoContainer}>
                     <Text style={Styles.title}>Confirm Sign Up</Text>
                     <Text style={Styles.text}>Check your email for your verification code!</Text>

@@ -7,7 +7,7 @@ import { AntDesign, Ionicons, MaterialIcons } from '@expo/vector-icons';
 
 const Settings = () =>
 {
-    const { email, name, phoneNumber } = useApp();
+    const { email, firstName, lastName, phoneNumber } = useApp();
 
     const readableNumber = phoneNumber ? formatNumber(phoneNumber) : null;
 
@@ -15,7 +15,7 @@ const Settings = () =>
         <Background>
             <View style={Styles.block}>
                 <View style={Styles.infoContainer}>
-                    <Text style={ProfileStyles.name}>{name}</Text>
+                    <Text style={ProfileStyles.name}>{firstName} {lastName}</Text>
                     <Text style={Styles.text}>{email}</Text>
                     <Text style={Styles.text}>{readableNumber}</Text>
                 </View>

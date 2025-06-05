@@ -8,7 +8,8 @@ import { useApp } from "../../../components/context";
 // Home page after login
 const Index = () =>
 {
-  const { name, towRequest } = useApp();
+  const { firstName, towRequest } = useApp();
+  
   return (
     <Background>
       <View style={HomeStyles.shortcutContainer}>
@@ -38,7 +39,7 @@ const Index = () =>
         </TouchableOpacity>
       </View>
       <View style={HomeStyles.welcomeContainer}>
-        <Text style={Styles.text}>Welcome {name}!</Text>
+        <Text style={Styles.text}>Welcome {firstName}!</Text>
       </View>
       <TouchableOpacity
         style={HomeStyles.snapContainer}

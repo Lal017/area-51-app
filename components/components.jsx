@@ -1,4 +1,5 @@
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { useApp } from './context';
 import { Styles } from '../constants/styles';
 import Colors from '../constants/colors';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -8,9 +9,11 @@ import { router } from 'expo-router';
 // custom header component to replace default header
 const CustHeader = ({title, index}) =>
 {
+    const { isStuck } = useApp();
+
     return (
         <View style={Styles.HeaderContainer}>
-            { !index && router.canGoBack() ? (
+            { !index && !isStuck && router.canGoBack() ? (
                 <TouchableOpacity
                     style={{position: 'absolute', left: 20, top: 45}}
                     onPress={() => router.back()}

@@ -20,7 +20,7 @@ const ResetPassword = () =>
                     style={AuthStyles.logoImg}
                 />
             </View>
-            <View style={[Styles.block, {alignItems: 'center', rowGap: 25}]}>
+            <View style={[Styles.block, {alignItems: 'center'}]}>
                 <Text style={[Styles.title, {paddingLeft: 20, width: '100%'}]}>Reset Password</Text>
                 <Text style={Styles.text}>Enter your email to search for your account</Text>
                 <View style={Styles.inputWrapper}>

@@ -10,10 +10,12 @@ const AppProvider = ({ children }) => {
   const [ access, setAccess ] = useState();
   const [ notification, setNotification ] = useState();
   const [ email, setEmail ] = useState();
-  const [ name, setName ] = useState();
+  const [ firstName, setFirstName ] = useState();
+  const [ lastName, setLastName ] = useState();
   const [ phoneNumber, setPhoneNumber ] = useState();
   const [ vehicles, setVehicles ] = useState();
   const [ towRequest, setTowRequest ] = useState(undefined);
+  const [ isStuck, setIsStuck ] = useState(false);
 
   const updateNotification = async (newNotif) =>
   {
@@ -54,14 +56,18 @@ const AppProvider = ({ children }) => {
         clearNotification,
         email,
         setEmail,
-        name,
-        setName,
+        firstName,
+        setFirstName,
+        lastName,
+        setLastName,
         phoneNumber,
         setPhoneNumber,
         vehicles,
         setVehicles,
         towRequest,
-        setTowRequest
+        setTowRequest,
+        isStuck,
+        setIsStuck
         }}>
       {children}
     </AppContext.Provider>

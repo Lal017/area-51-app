@@ -6,7 +6,8 @@ export const getUser = /* GraphQL */ `
     getUser(id: $id) {
       id
       access
-      name
+      firstName
+      lastName
       email
       phone
       pushToken
@@ -39,7 +40,8 @@ export const listUsers = /* GraphQL */ `
       items {
         id
         access
-        name
+        firstName
+        lastName
         email
         phone
         pushToken
@@ -77,7 +79,8 @@ export const getVehicle = /* GraphQL */ `
       user {
         id
         access
-        name
+        firstName
+        lastName
         email
         phone
         pushToken
@@ -165,7 +168,8 @@ export const getAppointment = /* GraphQL */ `
       user {
         id
         access
-        name
+        firstName
+        lastName
         email
         phone
         pushToken
@@ -210,7 +214,8 @@ export const listAppointments = /* GraphQL */ `
         service
         notes
         user {
-          name
+          firstName
+          lastName
           email
           phone
         }
@@ -278,7 +283,8 @@ export const getTowRequest = /* GraphQL */ `
       user {
         id
         access
-        name
+        firstName
+        lastName
         email
         phone
         pushToken
@@ -327,7 +333,8 @@ export const listTowRequests = /* GraphQL */ `
         userId
         user {
           id
-          name
+          firstName
+          lastName
           email
           phone
           pushToken

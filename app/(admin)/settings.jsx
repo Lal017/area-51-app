@@ -10,13 +10,13 @@ import { LinearGradient } from 'expo-linear-gradient';
 // Profile page
 const Profile = () =>
 {
-    const { email, name } = useApp();
+    const { email, firstName, lastName } = useApp();
 
     return(
         <Background>
             <View style={Styles.block}>
                 <View style={Styles.infoContainer}>
-                    <Text style={ProfileStyles.name}>{name}</Text>
+                    <Text style={ProfileStyles.name}>{firstName} {lastName}</Text>
                     <Text style={[Styles.text, {fontSize: 17}]}>{email}</Text>
                 </View>
             </View>

@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Image } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Image, Alert } from "react-native";
 import { useState } from "react";
 import { handleSignUp, GoogleSignInButton, AmazonSignInButton } from "../../components/authComponents";
 import { Link } from "expo-router";
@@ -12,8 +12,10 @@ const SignUp = () =>
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [confPassword, setConfPassword] = useState();
-    const [name, setName] = useState();
+    const [firstName, setFirstName] = useState();
+    const [lastName, setLastName] = useState();
     const [phoneNumber, setPhoneNumber] = useState();
+    const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(false);
 
     return(
@@ -28,31 +30,9 @@ const SignUp = () =>
                         style={AuthStyles.logoImg}    
                     />
                 </View>
-                <View style={[Styles.block, {alignItems: 'center', rowGap: 25}]}>
-                    <Text style={[Styles.title, {paddingLeft: 20, width: '100%'}]}>Sign Up</Text>
-                    <View style={Styles.inputContainer}>
-                        <View style={Styles.inputWrapper}>
-                            <Ionicons name='person' size={20} style={Styles.icon} />
-                            <TextInput
-                                placeholder="full name"
-                                placeholderTextColor={Colors.text}
-                                value={name}
-                                onChangeText={setName}
-                                style={Styles.input}
-                            />
-                        </View>
-                        <View style={Styles.inputWrapper}>
-                            <Ionicons name='call' size={20} style={Styles.icon} />
-                            <TextInput
-                                placeholder="phone number"
-                                placeholderTextColor={Colors.text}
-                                value={phoneNumber}
-                                onChangeText={setPhoneNumber}
-                                autoCapitalize="none"
-                                keyboardType="phone-pad"
-                                style={Styles.input}
-                            />
-                        </View>
+                { step === 1 ? (
+                    <View style={[Styles.block, {alignItems: 'center'}]}>
+                        <Text style={[Styles.title, {paddingLeft: 20, width: '100%'}]}>Sign Up</Text>
                         <View style={Styles.inputWrapper}>
                             <Ionicons name='at' size={20} style={Styles.icon} />
                             <TextInput
@@ -89,22 +69,82 @@ const SignUp = () =>
                                 style={Styles.input}
                             />
                         </View>
+                        <TouchableOpacity
+                            onPress={() => {
+                                if (password !== confPassword)
+                                {
+                                    Alert.alert(
+                                        "Error",
+                                        "Passwords do not match",
+                                        [
+                                            { text: "Ok" }
+                                        ]
+                                    );
+                                    return;
+                                }
+                                if (email && password && confPassword) { setStep(2) }
+                                else { Alert.alert(
+                                    'Error',
+                                    'Required fields cannot be empty',
+                                    [{ text: 'OK' }]
+                                )}
+                            }}
+                            style={Styles.actionButton}
+                        >
+                            <Text style={Styles.actionText}>Continue</Text>
+                        </TouchableOpacity>
                     </View>
-                    <TouchableOpacity
-                        onPress={async () => {
-                            if (loading) return;
-                            setLoading(true);
-                            await handleSignUp({name, email, password, confPassword, phoneNumber});
-                            setLoading(false);
-                        }}
-                        style={[Styles.actionButton, loading && { opacity: 0.5 }]}
-                        disabled={loading}
-                    >
-                        <Text style={Styles.actionText}>Sign Up</Text>
-                    </TouchableOpacity>
-                </View>
+                ) : step === 2 ? (
+                    <View style={[Styles.block, {alignItems: 'center'}]}>
+                        <Text style={[Styles.title, {paddingLeft: 20, width: '100%'}]}>Sign Up</Text>
+                        <View style={Styles.inputWrapper}>
+                            <Ionicons name='person' size={20} style={Styles.icon} />
+                            <TextInput
+                                placeholder="first name"
+                                placeholderTextColor={Colors.text}
+                                value={firstName}
+                                onChangeText={setFirstName}
+                                style={Styles.input}
+                            />
+                        </View>
+                        <View style={Styles.inputWrapper}>
+                            <Ionicons name='person' size={20} style={Styles.icon} />
+                            <TextInput
+                                placeholder="last name"
+                                placeholderTextColor={Colors.text}
+                                value={lastName}
+                                onChangeText={setLastName}
+                                style={Styles.input}
+                            />
+                        </View>
+                        <View style={Styles.inputWrapper}>
+                            <Ionicons name='call' size={20} style={Styles.icon} />
+                            <TextInput
+                                placeholder="phone number"
+                                placeholderTextColor={Colors.text}
+                                value={phoneNumber}
+                                onChangeText={setPhoneNumber}
+                                autoCapitalize="none"
+                                keyboardType="phone-pad"
+                                style={Styles.input}
+                            />
+                        </View>
+                        <TouchableOpacity
+                            onPress={async () => {
+                                if (loading) return;
+                                setLoading(true);
+                                await handleSignUp(firstName, lastName, email, password, phoneNumber);
+                                setLoading(false);
+                            }}
+                            style={[Styles.actionButton, loading && { opacity: 0.5 }]}
+                            disabled={loading}
+                        >
+                            <Text style={Styles.actionText}>Sign Up</Text>
+                        </TouchableOpacity>
+                    </View>
+                ) : null}
                 <View style={Styles.hr} />
-                <View style={[Styles.block, {rowGap: 25}]}>
+                <View style={Styles.block}>
                     <View style={AuthStyles.providerContainer}>
                         <GoogleSignInButton text='Sign Up'/>
                         <AmazonSignInButton text='Sign Up'/>

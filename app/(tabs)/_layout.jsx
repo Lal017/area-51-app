@@ -1,7 +1,6 @@
 import { View, Alert } from "react-native";
 import { router, Tabs} from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { CustHeader } from "../../components/components";
 import { Styles } from "../../constants/styles";
 import { AppProvider, useApp } from "../../components/context";
 import { useEffect, useRef } from 'react';
@@ -28,14 +27,17 @@ const TabsContent = () =>
         pushToken,
         setPushToken,
         setNotification,
-        name,
-        setName,
+        firstName,
+        setFirstName,
+        lastName,
+        setLastName,
         email,
         setEmail,
         phoneNumber,
         setPhoneNumber,
         setVehicles,
-        setTowRequest
+        setTowRequest,
+        setIsStuck
     } = useApp();
 
     // notification listeners
@@ -47,34 +49,47 @@ const TabsContent = () =>
         {
             // generate client
             const genClient = generateClient();
-            await setClient(genClient);
+            setClient(genClient);
 
             // get push token for notifications
             const genPushToken = await registerForPushNotifications();
-            await setPushToken(genPushToken);
+            setPushToken(genPushToken);
 
             // get and set user attributes
             const userAtt = await fetchUserAttributes();
-            await setEmail(userAtt?.email);
-            await setName(userAtt?.name);
-            await setPhoneNumber(userAtt?.phone_number);
+            setEmail(userAtt?.email);
+            if (userAtt.given_name && userAtt.family_name) {
+                setFirstName(userAtt.given_name);
+                setLastName(userAtt.family_name);
+            } else if (userAtt.name) {
+                const nameSplit = userAtt.name.trim().split(/\s+/);
+
+                if (nameSplit.length >= 2) {
+                    setFirstName(nameSplit[0]);
+                    setLastName(nameSplit.slice(1).join(' '));
+                } else {
+                    setFirstName(nameSplit[0]);
+                }
+            }
+            setPhoneNumber(userAtt?.phone_number);
 
             // get and set cognito info
             const userInfo = await handleGetCurrentUser();
-            await setAccess(userInfo.accessToken.payload["cognito:groups"]);
-            await setUserId(userInfo.accessToken.payload.sub);
+            setAccess(userInfo.accessToken.payload["cognito:groups"]);
+            setUserId(userInfo.accessToken.payload.sub);
 
             const savedNotif = await AsyncStorage.getItem('notification');
             setNotification(JSON.parse(savedNotif));
 
-            if (!userAtt?.phone_number) {
+            if (!userAtt?.phone_number || ((!userAtt?.given_name || !userAtt?.family_name) && !userAtt?.name)) {
+                router.replace('/(tabs)/(profile)/accountEdit');
+                setIsStuck(true);
                 Alert.alert(
-                    'NOTICE',
-                    'Please add a phone number before continuing',
+                    'Notice',
+                    'Please add missing attributes before continuing',
                     [
                         {
-                            text: 'Settings',
-                            onPress: () => router.push('/(tabs)/(profile)/accountEdit')
+                            text: 'OK',
                         }
                     ]
                 );
@@ -127,20 +142,20 @@ const TabsContent = () =>
                 const alreadyExists = await handleCheckUser(client, userId);
 
                 if (!alreadyExists) {
-                    await handleCreateUser(client, userId, pushToken, access, name, email, phoneNumber);
+                    await handleCreateUser(client, userId, pushToken, access, firstName, lastName, email, phoneNumber);
                 } else {
-                    await handleUpdateUser(client, userId, pushToken, access, name, email, phoneNumber);
+                    await handleUpdateUser(client, userId, pushToken, access, firstName, lastName, email, phoneNumber);
                 }
             } catch (error) {
                 console.error('Error registering for push notifications:', error);
             }
         };
 
-        if (client && userId && pushToken && access && name && email && phoneNumber) {
+        if (client && userId && pushToken && access && firstName && lastName && email && phoneNumber) {
             handleRegisterPushNotifications();
         }
 
-    }, [client, userId, pushToken, phoneNumber, name, email, access]);
+    }, [client, userId, pushToken, phoneNumber, firstName, lastName, email, access]);
 
     // Listeners for push notifications
     useEffect(() => {
@@ -175,6 +190,18 @@ const TabsContent = () =>
                 tabBarActiveTintColor: Colors.secondary,
                 tabBarInactiveTintColor: Colors.backDropAccent,
                 tabBarShowLabel: false,
+            }}
+            screenListeners={{
+                tabPress: (e) => {
+                    if (!firstName || !lastName || !phoneNumber || !email) {
+                        e.preventDefault();
+                        Alert.alert(
+                            'Notice',
+                            'Please add missing attributes before continuing',
+                            [{ text: 'OK'}]
+                        );
+                    }
+                }
             }}
         >
             <Tabs.Screen

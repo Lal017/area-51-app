@@ -64,14 +64,14 @@ const SignIn = () =>
                 </TouchableOpacity>
             </View>
             <View style={Styles.hr}/>
-            <View style={[Styles.block, {rowGap: 25}]}>
+            <View style={Styles.block}>
                 <View style={AuthStyles.providerContainer}>
                     <GoogleSignInButton text='Sign in'/>
                     <AmazonSignInButton text='Sign in'/>
                 </View>
-                <View style={[Styles.infoContainer, {alignItems: 'center', rowGap: 20}]}>
-                    <Link href="/(auth)/signUp" style={[Styles.text, {paddingRight: 20}]}>Need an account? Sign Up</Link>
-                    <Link href="/(auth)/resetPassword" style={[Styles.text, {paddingRight: 20}]}>Forgot Password?</Link>
+                <View style={[Styles.infoContainer, {alignItems: 'center'}]}>
+                    <Link href="/(auth)/signUp" style={Styles.text}>Need an account? Sign Up</Link>
+                    <Link href="/(auth)/resetPassword" style={Styles.text}>Forgot Password?</Link>
                 </View>
             </View>
         </AuthBackground>

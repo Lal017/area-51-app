@@ -8,7 +8,8 @@ type User
 {
   id: ID!
   access: String!
-  name: String!
+  firstName: String!
+  lastName: String!
   email: AWSEmail!
   phone: AWSPhone!
   pushToken: String!
