@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, Linking, View } from "react-native";
+import { Text, TouchableOpacity, Linking, View, Alert } from "react-native";
 import { router } from "expo-router";
 import { Background } from "../../../components/components";
 import { HomeStyles, Styles } from "../../../constants/styles";
@@ -8,7 +8,7 @@ import { useApp } from "../../../components/context";
 // Home page after login
 const Index = () =>
 {
-  const { firstName, towRequest } = useApp();
+  const { firstName, towRequest, vehicles } = useApp();
   
   return (
     <Background>
@@ -16,18 +16,48 @@ const Index = () =>
         <TouchableOpacity
           style={HomeStyles.shortcutButton}
           onPress={() => {
-          if (towRequest !== undefined) {
-            router.push('/towStatus');
-          } else {
-            router.push('/towRequest')
-          }
-        }}
+            if (vehicles.length === 0) {
+              Alert.alert(
+                'Notice',
+                'Please add a vehicle before continuing',
+                [
+                  { text: 'Cancel' },
+                  {
+                    text: 'Settings',
+                    onPress: () => router.push('/vehicleList')
+                  }
+                ]
+              );
+            } else {
+              if (towRequest !== undefined) {
+                router.push('/towStatus');
+              } else {
+                router.push('/towRequest');
+              }
+            }
+          }}
         >
           <MaterialCommunityIcons name="tow-truck" size={30} color="white" />
         </TouchableOpacity>
         <TouchableOpacity
           style={HomeStyles.shortcutButton}
-          onPress={() => router.push('/schedule')}
+          onPress={() => {
+            if (vehicles.length === 0) {
+              Alert.alert(
+                'Notice',
+                'Please add a vehicle before continuing',
+                [
+                  { text: 'Cancel' },
+                  {
+                    text: 'Settings',
+                    onPress: () => router.push('/vehicleList')
+                  }
+                ]
+              );
+            } else {
+              router.push('/schedule');
+            }
+          }}
         >
           <Entypo name='calendar' size={30} color="white" />
         </TouchableOpacity>
@@ -35,7 +65,7 @@ const Index = () =>
           style={HomeStyles.shortcutButton}
           onPress={() => router.push('/vehicleList')}  
         >
-          <Ionicons name='settings' size={30} color="white" />
+          <Ionicons name='car-sport' size={30} color="white" />
         </TouchableOpacity>
       </View>
       <View style={HomeStyles.welcomeContainer}>

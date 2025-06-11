@@ -56,7 +56,7 @@ const registerForPushNotifications = async () =>
 };
 
 // Amplify notif functions
-const handleCreateUser = async (client, user_id, token, user_access, name, email, phoneNumber) =>
+const handleCreateUser = async (client, user_id, token, user_access, firstName, lastName, email, phoneNumber) =>
 {
     try {
         const access_result = user_access.includes('Admins') ? 'Admins' : 'Customers';
@@ -68,7 +68,8 @@ const handleCreateUser = async (client, user_id, token, user_access, name, email
                     id: user_id,
                     pushToken: token,
                     access: access_result,
-                    name: name,
+                    firstName: firstName,
+                    lastName: lastName,
                     email: email,
                     phone: phoneNumber
                 }
@@ -79,7 +80,7 @@ const handleCreateUser = async (client, user_id, token, user_access, name, email
     }
 };
 
-const handleUpdateUser = async (client, user_id, token, user_access, name, email, phone_number) =>
+const handleUpdateUser = async (client, user_id, token, user_access, firstName, lastName, email, phone_number) =>
 {
     try {
         const access_result = user_access.includes('Admins') ? 'Admins' : 'Customers';
@@ -91,7 +92,8 @@ const handleUpdateUser = async (client, user_id, token, user_access, name, email
                     id: user_id,
                     pushToken: token,
                     access: access_result,
-                    name: name,
+                    firstName: firstName,
+                    lastName: lastName,
                     email: email,
                     phone: phone_number
                 }
@@ -158,7 +160,7 @@ const handleSendAdminNotif = async (title, content, data) =>
         const response = await body.json();
 
         if (response?.data?.listUsers?.items?.length <= 0) {
-            console.log('REQUEST FAILED:', response);
+            console.log('REQUEST FAILED:', response.data.listUsers);
         }
     } catch (error) {
         console.log('CUSTOMER REQUEST ERROR:', error);

@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity } from "react-native";
+import { Text, TouchableOpacity, Alert } from "react-native";
 import { Styles } from "../../../constants/styles";
 import LottieView from "lottie-react-native";
 import Colors from "../../../constants/colors";
@@ -8,17 +8,32 @@ import { Background } from "../../../components/components";
 
 const ServiceConsole = () =>
 {
-  const { towRequest } = useApp();
+  const { towRequest, vehicles } = useApp();
 
   return (
     <Background>
       <TouchableOpacity
         onPress={() => {
-          if (towRequest !== undefined) {
-            router.push('/(tabs)/(service)/towStatus');
+          if (vehicles.length === 0) {
+            Alert.alert(
+              'Notice',
+              'Please add a vehicle before continuing',
+              [
+                { text: 'Cancel' },
+                {
+                  text: 'Settings',
+                  onPress: () => router.push('/vehicleList')
+                }
+              ]
+            );
           } else {
-            router.push('/(tabs)/(service)/towRequest')
-          }}}
+            if (towRequest !== undefined) {
+              router.push('/towStatus');
+            } else {
+              router.push('/towRequest');
+            }
+          }
+        }}
         style={[Styles.consoleBubble, {backgroundColor: Colors.secondary}]}
       >
         <Text style={[Styles.title, {fontFamily: 'Roboto-Light', textAlign: 'center', position: 'absolute', top: 75}]}>Request a tow</Text>
@@ -31,7 +46,23 @@ const ServiceConsole = () =>
         />
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => router.push('/(tabs)/(service)/schedule')}
+        onPress={() => {
+          if (vehicles.length === 0) {
+            Alert.alert(
+              'Notice',
+              'Please add a vehicle before continuing',
+              [
+                { text: 'Cancel' },
+                {
+                  text: 'Settings',
+                  onPress: () => router.push('/vehicleList')
+                }
+              ]
+            );
+          } else {
+            router.push('/schedule');
+          }
+        }}
         style={[Styles.consoleBubble, {backgroundColor: Colors.tertiary}]}
       >
         <Text style={[Styles.title, {fontFamily: 'Roboto-Light',textAlign: 'center', position: 'absolute', top: 50}]}>Schedule an Appointment</Text>

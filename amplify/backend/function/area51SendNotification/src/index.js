@@ -47,7 +47,6 @@ const sendPushNotifications = async (expoPushToken, title, body, data) =>
       },
       body: JSON.stringify(message),
     });
-    console.log('sent');
   } catch (error) {
     console.error('Error sending push notification:', error);
   }
