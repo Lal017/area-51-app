@@ -8,9 +8,6 @@ const ProfileLayout = () =>
         <Stack
             screenOptions={{
                 headerShown: true,
-                contentStyle: {
-                    backgroundColor: Colors.background
-                },
                 animation: 'slide_from_right'
             }}
         >

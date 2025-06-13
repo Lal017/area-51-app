@@ -1,5 +1,4 @@
 {
-  "analytics": {},
   "api": {
     "area51RestApi": {
       "dependsOn": [
@@ -147,32 +146,7 @@
       "service": "Lambda"
     }
   },
-  "notifications": {},
   "parameters": {
-    "AMPLIFY_analytics_Pinpoint_Id": {
-      "usedBy": [
-        {
-          "category": "analytics",
-          "resourceName": "Pinpoint"
-        }
-      ]
-    },
-    "AMPLIFY_analytics_Pinpoint_Name": {
-      "usedBy": [
-        {
-          "category": "analytics",
-          "resourceName": "Pinpoint"
-        }
-      ]
-    },
-    "AMPLIFY_analytics_Pinpoint_Region": {
-      "usedBy": [
-        {
-          "category": "analytics",
-          "resourceName": "Pinpoint"
-        }
-      ]
-    },
     "AMPLIFY_function_area51GetAppointments_deploymentBucketName": {
       "usedBy": [
         {
@@ -228,30 +202,35 @@
           "resourceName": "troplocksmithappPostConfirmation"
         }
       ]
-    },
-    "AMPLIFY_notifications_Pinpoint_Id": {
-      "usedBy": [
+    }
+  },
+  "storage": {
+    "area51Files": {
+      "dependsOn": [
         {
-          "category": "notifications",
-          "resourceName": "Pinpoint"
-        }
-      ]
-    },
-    "AMPLIFY_notifications_Pinpoint_Name": {
-      "usedBy": [
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "troplocksmithapp"
+        },
         {
-          "category": "notifications",
-          "resourceName": "Pinpoint"
-        }
-      ]
-    },
-    "AMPLIFY_notifications_Pinpoint_Region": {
-      "usedBy": [
+          "attributes": [
+            "CustomersGroupRole"
+          ],
+          "category": "auth",
+          "resourceName": "userPoolGroups"
+        },
         {
-          "category": "notifications",
-          "resourceName": "Pinpoint"
+          "attributes": [
+            "AdminsGroupRole"
+          ],
+          "category": "auth",
+          "resourceName": "userPoolGroups"
         }
-      ]
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "S3"
     }
   }
 }

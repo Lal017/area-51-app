@@ -41,7 +41,7 @@ const AppointmentList = () =>
                                 pathname: '/(admin)/appointmentView'
                             })}
                         >
-                            <Text style={Styles.subTitle}>{appointment.user.name}</Text>
+                            <Text style={Styles.subTitle}>{appointment.user.firstName} {appointment.user.lastName}</Text>
                             <Text style={Styles.text}>{formatDate(appointment.date)}</Text>
                             <Text style={Styles.text}>{formatTime(appointment.time)}</Text>
                         </TouchableOpacity>

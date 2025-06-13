@@ -69,8 +69,8 @@ const SignIn = () =>
                     <GoogleSignInButton text='Sign in'/>
                     <AmazonSignInButton text='Sign in'/>
                 </View>
-                <View style={[Styles.infoContainer, {alignItems: 'center'}]}>
-                    <Link href="/(auth)/signUp" style={Styles.text}>Need an account? Sign Up</Link>
+                <View style={[Styles.infoContainer, {alignItems: 'center', rowGap: 20}]}>
+                    <Link href="/(auth)/signUp" style={Styles.text}>Need an account? <Text style={{textDecorationLine: 'underline'}}>Sign Up</Text></Link>
                     <Link href="/(auth)/resetPassword" style={Styles.text}>Forgot Password?</Link>
                 </View>
             </View>

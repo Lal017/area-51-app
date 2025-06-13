@@ -1,0 +1,19 @@
+{
+  "resourceName": "area51Files",
+  "policyUUID": "aab61792",
+  "bucketName": "area51-userfiles-storage",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [],
+  "triggerFunction": "NONE",
+  "groupAccess": {
+    "Customers": [
+      "READ"
+    ],
+    "Admins": [
+      "CREATE_AND_UPDATE",
+      "READ",
+      "DELETE"
+    ]
+  }
+}

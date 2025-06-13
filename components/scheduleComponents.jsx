@@ -43,7 +43,13 @@ const handleSetTimes = async (appointments, day) =>
     return filteredSlots;
 };
 
-const handleCreateAppointment = async (client, date, time, service, notes, userId, vehicleId) =>
+const handleFinalCheck = async (date, time) =>
+{
+    const appointments = await handleGetAppointments();
+    return appointments.some(appointment => appointment.date === date && appointment.time === time);
+};
+
+const handleCreateAppointment = async (client, date, time, service, notes, userId, vehicleId, setAppointment) =>
 {
     try {
         await client.graphql({
@@ -60,6 +66,8 @@ const handleCreateAppointment = async (client, date, time, service, notes, userI
             }
         });
         
+        const getAppointments = await handleGetMyAppointments(client, userId);
+        setAppointment(getAppointments);
         Alert.alert(
             'Appointment created',
             'Your appointment has been scheduled!',
@@ -70,7 +78,7 @@ const handleCreateAppointment = async (client, date, time, service, notes, userI
     }
 };
 
-const handleUpdateAppointment = async (client, appointmentId, date, time, service, notes, userId, vehicleId) =>
+const handleUpdateAppointment = async (client, appointmentId, date, time, service, notes, userId, vehicleId, setAppointments) =>
 {
     try {
         await client.graphql({
@@ -88,6 +96,9 @@ const handleUpdateAppointment = async (client, appointmentId, date, time, servic
             }
         });
 
+        const getAppointments = await handleGetMyAppointments(client, userId);
+        setAppointments(getAppointments);
+        
         Alert.alert(
             'Appointment updated',
             'Your appointment has been updated!',
@@ -98,7 +109,7 @@ const handleUpdateAppointment = async (client, appointmentId, date, time, servic
     }
 };
 
-const handleDeleteAppointment = async (client, appointmentId) =>
+const handleDeleteAppointment = async (client, appointmentId, userId, setAppointments) =>
 {
     try {
         await client.graphql({
@@ -109,6 +120,9 @@ const handleDeleteAppointment = async (client, appointmentId) =>
                 }
             }
         });
+
+        const getAppointments = await handleGetMyAppointments(client, userId);
+        setAppointments(getAppointments);
 
         router.replace('/(tabs)');
         Alert.alert(
@@ -289,6 +303,7 @@ export {
     handleSetTimes,
     handleCreateAppointment,
     handleUpdateAppointment,
+    handleFinalCheck,
     handleDeleteAppointment,
     handleDeleteAllAppointments,
     handleGetMyAppointments,

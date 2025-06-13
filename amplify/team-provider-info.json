@@ -14,42 +14,27 @@
       "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-troplocksmithapp-staging-cfc74-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
     },
     "categories": {
-      "auth": {
-        "troplocksmithapp": {},
-        "userPoolGroups": {}
-      },
-      "analytics": {
-        "Pinpoint": {
-          "Name": "troplocksmithapp-staging",
-          "Id": "d8515102c97543abb1d4477bcbda0e6d",
-          "Region": "us-east-2"
-        }
-      },
-      "notifications": {
-        "Pinpoint": {
-          "Name": "troplocksmithapp-staging",
-          "Id": "d8515102c97543abb1d4477bcbda0e6d",
-          "Region": "us-east-2"
-        }
-      },
-      "api": {
-        "area51app": {},
-        "area51RestApi": {}
-      },
       "function": {
         "troplocksmithappPostConfirmation": {
           "GROUP": "Customers",
           "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
           "s3Key": "amplify-builds/troplocksmithappPostConfirmation-797373555a7967487a42-build.zip"
         },
-        "area51SendNotification": {
-          "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
-          "s3Key": "amplify-builds/area51SendNotification-332f6b79307432765171-build.zip"
-        },
         "area51GetAppointments": {
           "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
           "s3Key": "amplify-builds/area51GetAppointments-5166774c477735434c33-build.zip"
+        },
+        "area51SendNotification": {
+          "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
+          "s3Key": "amplify-builds/area51SendNotification-332f6b79307432765171-build.zip"
         }
+      },
+      "auth": {
+        "troplocksmithapp": {},
+        "userPoolGroups": {}
+      },
+      "storage": {
+        "area51Files": {}
       }
     }
   }

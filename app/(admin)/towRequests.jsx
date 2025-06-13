@@ -65,7 +65,8 @@ const TowRequests = () =>
                 {requests && requests
                     .filter(request => {
                         const query = search?.toLowerCase() || '';
-                        const matchesSearch = !search || request.user?.name?.toLowerCase().includes(query);
+                        const fullName = `${request.user.firstName} ${request.user.lastName}`.toLowerCase();
+                        const matchesSearch = !search || fullName.includes(query);
                         const matchesStatus = statusFilter === 'ALL' || request.status === statusFilter;
 
                         return matchesSearch && matchesStatus;
@@ -79,7 +80,7 @@ const TowRequests = () =>
                                 params: { customerParam: JSON.stringify(request)}
                             })}
                         >
-                            <Text style={Styles.subTitle}>{request.user.name}</Text>
+                            <Text style={Styles.subTitle}>{request.user.firstName} {request.user.lastName}</Text>
                             <Text style={Styles.text}>{formatNumber(request.user.phone)}</Text>
                             <Text style={[
                                 Styles.subTitle,

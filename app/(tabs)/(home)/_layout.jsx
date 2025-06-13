@@ -8,10 +8,7 @@ const homeLayout = () =>
         <Stack
             screenOptions={{
                 headerShown: true,
-                contentStyle: {
-                    backgroundColor: Colors.background
-                },
-                animation: 'fade_from_bottom'
+                animation: 'fade_from_bottom',
             }}
         >
             <Stack.Screen name='index' options={{title: 'Home', header: () => <CustHeader title='Home' index={true}/>}}/>

@@ -15,7 +15,7 @@ const AppointmentView = () =>
                     <Text style={Styles.title}>Customer</Text>
                     <View style={AdminStyles.labelContainer}>
                         <Text style={Styles.subTitle}>Name</Text>
-                        <Text style={Styles.text}>{appointment.user.name}</Text>
+                        <Text style={Styles.text}>{appointment.user.firstName} {appointment.user.lastName}</Text>
                     </View>
                     <View style={AdminStyles.labelContainer}>
                         <Text style={Styles.subTitle}>Email</Text>

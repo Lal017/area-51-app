@@ -12,7 +12,7 @@ import { handleSendAdminNotif } from '../../../components/notifComponents';
 
 const Schedule = () =>
 {
-  const { client, vehicles, userId } = useApp();
+  const { client, vehicles, userId, setAppointments } = useApp();
   const { appointmentParam } = useLocalSearchParams();
   const appointment = JSON.parse(appointmentParam);
 
@@ -51,7 +51,7 @@ const Schedule = () =>
   };
 
   return (
-    <>
+    <Background>
       <View style={ServiceStyles.progressBar}>
         <AntDesign name='calendar' size={35} color={step > 1 ? Colors.secondary : Colors.backDropAccent} />
         <View style={[ServiceStyles.progressBarLine, {backgroundColor: step > 1 ? Colors.secondary : Colors.backDropAccent}]} />
@@ -62,7 +62,7 @@ const Schedule = () =>
         <Entypo name="clipboard" size={30} color={step > 4 ? Colors.secondary : Colors.backDropAccent}/>
       </View>
       { step === 1 ? (
-        <Background>
+        <>
           <View style={Styles.infoContainer}>
             <Text style={Styles.subTitle}>Date Selection</Text>
             <Text style={Styles.text}>Select a day and time to get started</Text>
@@ -106,11 +106,7 @@ const Schedule = () =>
                   }
                 ]}
               >
-                <Text style={[
-                  Styles.text,
-                  { color: 'black', textAlign: 'center' },
-                  selectedTime === time && { color: 'white' },
-                ]}
+                <Text style={[Styles.text, { textAlign: 'center' }]}
                 >{formatTime(time)}</Text>
               </TouchableOpacity>
             ))}
@@ -128,9 +124,9 @@ const Schedule = () =>
               <FontAwesome name='arrow-right' size={24} color='white' />
             </TouchableOpacity>
           </View>
-        </Background>
+        </>
       ) : step === 2 ? (
-        <Background>
+        <>
           <View style={Styles.block}>
             <View style={Styles.infoContainer}>
               <Text style={Styles.subTitle}>Select a Vehicle</Text>
@@ -168,9 +164,9 @@ const Schedule = () =>
               <FontAwesome name='arrow-right' size={24} color='white' />
             </TouchableOpacity>
           </View>
-        </Background>
+        </>
       ) : step === 3 ? (
-        <Background>
+        <>
           <View style={Styles.block}>
             <View style={Styles.infoContainer}>
               <Text style={Styles.subTitle}>Select a service</Text>
@@ -231,7 +227,7 @@ const Schedule = () =>
               <FontAwesome name='arrow-right' size={24} color='white' />
             </TouchableOpacity>
           </View>
-        </Background>
+        </>
       ) : step === 4 ? (
         <Background>
           <View style={Styles.block}>
@@ -268,7 +264,7 @@ const Schedule = () =>
           </View>
         </Background>
       ) : step === 5 ? (
-        <Background style={{justifyContent: 'center'}}>
+        <>
           <View style={Styles.infoContainer}>
             <Text style={Styles.subTitle}>Date</Text>
             <Text style={Styles.text}>{formatDate(selectedDay)}</Text>
@@ -294,7 +290,7 @@ const Schedule = () =>
                 if (loading) return;
                 setLoading(true);
                 handleSendAdminNotif('Appointment Edited', 'A customer has edited an appointment');
-                handleUpdateAppointment(client, appointment.id, selectedDay, selectedTime, selectedService, notes, userId, selectedVehicle.id);
+                handleUpdateAppointment(client, appointment.id, selectedDay, selectedTime, selectedService, notes, userId, selectedVehicle.id, setAppointments);
                 router.replace('/(tabs)');
                 setLoading(false);
               }}
@@ -304,9 +300,9 @@ const Schedule = () =>
               <Text style={Styles.actionText}>Schedule</Text>
             </TouchableOpacity>
           </View>
-        </Background>
+        </>
       ) : null }
-    </>
+    </Background>
   )
 }
 

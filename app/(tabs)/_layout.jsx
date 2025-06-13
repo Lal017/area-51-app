@@ -12,11 +12,11 @@ import { handleGetCurrentUser } from "../../components/authComponents";
 import { fetchUserAttributes } from "aws-amplify/auth";
 import { vehiclesByUserId } from "../../src/graphql/queries";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { handleGetTowRequest, handleNotifUpdateTowRequest } from "../../components/scheduleComponents";
+import { handleGetMyAppointments, handleGetTowRequest, handleNotifUpdateTowRequest } from "../../components/scheduleComponents";
 
 const TabsContent = () =>
 {
-    // get setters from context
+    // get variables and setters from context
     const {
         client,
         setClient,
@@ -37,6 +37,7 @@ const TabsContent = () =>
         setPhoneNumber,
         setVehicles,
         setTowRequest,
+        setAppointments,
         setIsStuck
     } = useApp();
 
@@ -122,9 +123,13 @@ const TabsContent = () =>
             try {
                 // set active tow request
                 const getTowRequest = await handleGetTowRequest(client, userId);
-                await setTowRequest(getTowRequest);
+                setTowRequest(getTowRequest);
+
+                // set upcoming appointments
+                const getAppointments = await handleGetMyAppointments(client, userId);
+                setAppointments(getAppointments);
             } catch (error) {
-                console.log('Error getting tow request:', error);
+                console.log('Error getting request:', error);
             }
         }
 
@@ -136,7 +141,7 @@ const TabsContent = () =>
 
     // Send to database
     useEffect(() => {
-        const handleRegisterPushNotifications = async () => {
+        const handleRegisterUser = async () => {
             try {
                 // check if user already has entry in database
                 const alreadyExists = await handleCheckUser(client, userId);
@@ -152,7 +157,7 @@ const TabsContent = () =>
         };
 
         if (client && userId && pushToken && access && firstName && lastName && email && phoneNumber) {
-            handleRegisterPushNotifications();
+            handleRegisterUser();
         }
 
     }, [client, userId, pushToken, phoneNumber, firstName, lastName, email, access]);

@@ -41,7 +41,7 @@ const TowResponse = () =>
                         <Text style={[Styles.title, {textAlign: 'left'}]}>Customer</Text>
                         <View style={AdminStyles.labelContainer}>
                             <Text style={Styles.subTitle}>Name</Text>
-                            <Text style={Styles.text}>{customer.user.name}</Text>
+                            <Text style={Styles.text}>{customer.user.firstName} {customer.user.lastName}</Text>
                         </View>
                         <View style={AdminStyles.labelContainer}>
                             <Text style={Styles.subTitle}>Email</Text>
@@ -82,41 +82,47 @@ const TowResponse = () =>
                         </View>
                     ) : null }
                 </View>
-                <View style={Styles.block}>
-                    <Text style={[Styles.title, {paddingLeft: 20}]}>Vehicle</Text>
-                    <View style={AdminStyles.vehicleContainer}>
-                        <View style={AdminStyles.labelContainer}>
-                            <Text style={Styles.subTitle}>Year</Text>
-                            <Text style={Styles.text}>{customer.vehicle.year}</Text>
+                { customer.vehicle ? (
+                    <View style={Styles.block}>
+                        <Text style={[Styles.title, {paddingLeft: 20}]}>Vehicle</Text>
+                        <View style={AdminStyles.vehicleContainer}>
+                            <View style={AdminStyles.labelContainer}>
+                                <Text style={Styles.subTitle}>Year</Text>
+                                <Text style={Styles.text}>{customer.vehicle.year}</Text>
+                            </View>
+                            <View style={AdminStyles.labelContainer}>
+                                <Text style={Styles.subTitle}>Make</Text>
+                                <Text style={Styles.text}>{customer.vehicle.make}</Text>
+                            </View>
+                            <View style={AdminStyles.labelContainer}>
+                                <Text style={Styles.subTitle}>Model</Text>
+                                <Text style={Styles.text}>{customer.vehicle.model}</Text>
+                            </View>
+                            { customer.vehicle.color ? (
+                            <View style={AdminStyles.labelContainer}>
+                                <Text style={Styles.subTitle}>Color</Text>
+                                <Text style={Styles.text}>{customer.vehicle.color}</Text>
+                            </View>
+                            ) : null }
+                            { customer.vehicle.plate ? (
+                            <View style={AdminStyles.labelContainer}>
+                                <Text style={Styles.subTitle}>Plate</Text>
+                                <Text style={Styles.text}>{customer.vehicle.plate}</Text>
+                            </View>
+                            ) : null }
+                            { customer.vehicle.vin ? (
+                            <View style={AdminStyles.labelContainer}>
+                                <Text style={Styles.subTitle}>VIN</Text>
+                                <Text style={Styles.text}>{customer.vehicle.vin}</Text>
+                            </View>
+                            ) : null }
                         </View>
-                        <View style={AdminStyles.labelContainer}>
-                            <Text style={Styles.subTitle}>Make</Text>
-                            <Text style={Styles.text}>{customer.vehicle.make}</Text>
-                        </View>
-                        <View style={AdminStyles.labelContainer}>
-                            <Text style={Styles.subTitle}>Model</Text>
-                            <Text style={Styles.text}>{customer.vehicle.model}</Text>
-                        </View>
-                        { customer.vehicle.color ? (
-                        <View style={AdminStyles.labelContainer}>
-                            <Text style={Styles.subTitle}>Color</Text>
-                            <Text style={Styles.text}>{customer.vehicle.color}</Text>
-                        </View>
-                        ) : null }
-                        { customer.vehicle.plate ? (
-                        <View style={AdminStyles.labelContainer}>
-                            <Text style={Styles.subTitle}>Plate</Text>
-                            <Text style={Styles.text}>{customer.vehicle.plate}</Text>
-                        </View>
-                        ) : null }
-                        { customer.vehicle.vin ? (
-                        <View style={AdminStyles.labelContainer}>
-                            <Text style={Styles.subTitle}>VIN</Text>
-                            <Text style={Styles.text}>{customer.vehicle.vin}</Text>
-                        </View>
-                        ) : null }
                     </View>
-                </View>
+                ) : (
+                    <View style={Styles.block}>
+                        <Text style={[Styles.subTitle, {paddingLeft: 20, color: 'red'}]}>Customer has deleted Vehicle</Text>
+                    </View>
+                )}
                 <View style={Styles.block}>
                     <View style={Styles.infoContainer}>
                         <Text style={[Styles.title, {textAlign: 'left'}]}>Description</Text>

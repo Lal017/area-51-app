@@ -15,6 +15,7 @@ const AppProvider = ({ children }) => {
   const [ phoneNumber, setPhoneNumber ] = useState();
   const [ vehicles, setVehicles ] = useState();
   const [ towRequest, setTowRequest ] = useState(undefined);
+  const [ appointments, setAppointments ] = useState();
   const [ isStuck, setIsStuck ] = useState(false);
 
   const updateNotification = async (newNotif) =>
@@ -67,7 +68,9 @@ const AppProvider = ({ children }) => {
         towRequest,
         setTowRequest,
         isStuck,
-        setIsStuck
+        setIsStuck,
+        appointments,
+        setAppointments
         }}>
       {children}
     </AppContext.Provider>

@@ -42,9 +42,8 @@ const UserList = () =>
                     .filter(user => {
                         if (!search) return true;
                         const query = search?.toLowerCase();
-                        return(
-                            user.name?.toLowerCase().includes(query)
-                        );
+                        const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
+                        return fullName.includes(query);
                     })
                     .map((user, index) => (
                         <TouchableOpacity
@@ -55,7 +54,7 @@ const UserList = () =>
                                 pathname: '/(admin)/userView'
                             })}    
                         >
-                            <Text style={[Styles.subTitle]}>{user.name}</Text>
+                            <Text style={[Styles.subTitle]}>{user.firstName} {user.lastName}</Text>
                             <Text style={[Styles.text]}>{user.email}</Text>
                             <Text style={[Styles.text]}>{formatNumber(user.phone)}</Text>
                         </TouchableOpacity>

@@ -8,9 +8,7 @@ import { handleSendAdminNotif } from '../../../components/notifComponents';
 import { router } from 'expo-router';
 
 const MyAppointments = () => {
-    const { client, userId } = useApp();
-
-    const [ appointments, setAppointments ] = useState();
+    const { client, userId, appointments, setAppointments } = useApp();
 
     useEffect(() => {
         const getAppointments = async () =>
@@ -60,7 +58,7 @@ const MyAppointments = () => {
                                     {
                                         text: 'Yes',
                                         onPress: () => {
-                                            handleDeleteAppointment(client, appointment.id);
+                                            handleDeleteAppointment(client, appointment.id, userId, setAppointments);
                                             handleSendAdminNotif('Appointment Cancelled', 'A customer has cancelled their appointment');
                                         }
                                     }

@@ -21,6 +21,7 @@ const Styles = StyleSheet.create({
     tabBarStyle: {
         backgroundColor: Colors.background,
         borderTopWidth: 0,
+        elevation: 0,
     },
     carIconContainer: {
         width: 75,
@@ -139,6 +140,7 @@ const Styles = StyleSheet.create({
     },
     // container
     page: {
+        paddingTop: 10,
         flexGrow: 1,
         alignItems: 'center',
     },
@@ -162,7 +164,7 @@ const AuthStyles = StyleSheet.create({
         width: '100%',
         height: '20%',
         paddingLeft: 25,
-        paddingTop: 25
+        paddingTop: 25,
     },
     logoImg: {
         resizeMode: 'contain',
@@ -193,7 +195,7 @@ const AuthStyles = StyleSheet.create({
     },
     providerSignIn: {
         backgroundColor: 'white',
-        width: 175,
+        width: '47%',
         padding: 10,
         borderRadius: 5,
         flexDirection: 'row',
@@ -204,28 +206,59 @@ const AuthStyles = StyleSheet.create({
 });
 
 const HomeStyles = StyleSheet.create({
-    snapContainer: {
+    panel: {
         width: '90%',
-        height: 175,
+        flexDirection: 'row',
+        columnGap: 5,
+        paddingTop: 5,
+        paddingBottom: 5
+    },
+    snapContainer: {
+        width: '100%',
+        height: 75,
         borderRadius: 10,
-        backgroundColor: '#1b844a',
+        backgroundColor: Colors.backDropAccent,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+
+    imgContainer: {
+        width: '90%',
+        height: 190,
+        borderRadius: 10,
+        overflow: 'hidden',
+        backgroundColor: 'white'
     },
     welcomeContainer: {
         width: '100%',
+        alignItems: 'center',
+        height: 50,
+    },
+    activityContainer: {
+        width: 30,
+        height: 30,
+        borderRadius: 100,
         justifyContent: 'center',
         alignItems: 'center',
-        height: 75,
+        position: 'absolute',
+        right: 10,
+        top: -15
+    },
+    appointmentContainer: {
+        backgroundColor: Colors.backgroundAccent,
+        flex: 1,
+        borderRadius: 10,
+        padding: 25,
+        paddingTop: 15,
+        paddingBottom: 15
     },
     shortcutContainer: {
         width: '100%',
-        height: 75,
+        height: 60,
         flexDirection: 'row',
         alignItems: 'center',
         paddingLeft: 20,
         paddingRight: 20,
-        padding: 10,
         columnGap: 10
     },
     shortcutButton: {
@@ -235,6 +268,7 @@ const HomeStyles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: Colors.backgroundAccent,
         borderRadius: 5,
+        position: 'relative'
     },
 
 });
@@ -252,7 +286,7 @@ const ServiceStyles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         columnGap: 10,
-        backgroundColor: Colors.background,
+        backgroundColor: 'transparent',
         padding: 20
     },
     progressBarLine: {
@@ -294,7 +328,7 @@ const ServiceStyles = StyleSheet.create({
         flexDirection: 'row'
     },
     timeBubble: {
-        backgroundColor: Colors.backDropAccent,
+        backgroundColor: Colors.backgroundAccent,
         borderRadius: 5,
         padding: 15,
         width: '45%'
@@ -310,13 +344,13 @@ const ServiceStyles = StyleSheet.create({
     // towRequest.jsx
     mapContainer: {
         elevation: 10,
-        backgroundColor: Colors.background,
+        backgroundColor: 'transparent',
         width: '100%',
         height: '60%'
     },
     mapContainerAlt: {
         elevation: 10,
-        backgroundColor: Colors.background,
+        backgroundColor: 'transparent',
         borderWidth: 4,
         borderColor: Colors.secondary,
         width: 325,

@@ -1,6 +1,5 @@
 import { Stack } from 'expo-router';
 import { CustHeader } from '../../../components/components';
-import Colors from '../../../constants/colors';
 
 const scheduleLayout = () =>
 {
@@ -8,9 +7,6 @@ const scheduleLayout = () =>
         <Stack
             screenOptions={{
                 headerShown: true,
-                contentStyle: {
-                    backgroundColor: Colors.background
-                },
                 animation: 'fade_from_bottom'
             }}
         >

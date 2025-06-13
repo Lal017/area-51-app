@@ -41,7 +41,7 @@ const TowRequest = () =>
     }, [])
 
     return (
-        <>
+        <Background>
             <View style={ServiceStyles.progressBar}>
                 <Ionicons name="information-circle" size={35} color={step > 1 ? Colors.secondary : Colors.backDropAccent} />
                 <View style={[ServiceStyles.progressBarLine, {backgroundColor: step > 1 ? Colors.secondary : Colors.backDropAccent}]} />
@@ -52,35 +52,35 @@ const TowRequest = () =>
                 <Entypo name="clipboard" size={30} color={step > 4 ? Colors.secondary : Colors.backDropAccent}/>
             </View>
             { step === 1 ? (
-                <Background>
-                    <View style={Styles.infoContainer}>
-                        <Text style={Styles.subTitle}>How the request works?</Text>
-                        <Text style={Styles.text}>
-                            You'll start by filling out a form with details about your tow request. Based on this information, we'll provide you with a price and an estimated wait time.
-                        </Text>
-                        <Text style={Styles.text}>
-                            You can then choose to confirm or cancel the request. If you accept, a tow driver will be dispatched to your location immediately. If you cancel, the request will be canceled and you won't be charged.
-                        </Text>
-                        <Text style={Styles.text}>
-                            <Text style={{fontWeight: 500}}>NOTE: </Text>Once the request is confirmed, it cannot be canceled.
-                        </Text>
-                        <Text style={Styles.subTitle}>
-                            Where will you be towed?
-                        </Text>
-                        <Text style={Styles.text}>3120 W Sirius Ave STE 103, Las Vegas, NV 89102</Text>
-                    </View>
-                    <View style={ServiceStyles.buttonContainer}>
-                        <TouchableOpacity
-                            style={ServiceStyles.directionButton}
-                            onPress={() => setStep(2)}
-                        >
-                            <Text style={Styles.actionText}>Continue</Text>
-                            <FontAwesome name='arrow-right' size={24} color='white' />
-                        </TouchableOpacity>
-                    </View>
-                </Background>
+                <>
+                <View style={Styles.infoContainer}>
+                    <Text style={Styles.subTitle}>How the request works?</Text>
+                    <Text style={Styles.text}>
+                        You'll start by filling out a form with details about your tow request. Based on this information, we'll provide you with a price and an estimated wait time.
+                    </Text>
+                    <Text style={Styles.text}>
+                        You can then choose to confirm or cancel the request. If you accept, a tow driver will be dispatched to your location immediately. If you cancel, the request will be canceled and you won't be charged.
+                    </Text>
+                    <Text style={Styles.text}>
+                        <Text style={{fontWeight: 500}}>NOTE: </Text>Once the request is confirmed, it cannot be canceled.
+                    </Text>
+                    <Text style={Styles.subTitle}>
+                        Where will you be towed?
+                    </Text>
+                    <Text style={Styles.text}>3120 W Sirius Ave STE 103, Las Vegas, NV 89102</Text>
+                </View>
+                <View style={ServiceStyles.buttonContainer}>
+                    <TouchableOpacity
+                        style={ServiceStyles.directionButton}
+                        onPress={() => setStep(2)}
+                    >
+                        <Text style={Styles.actionText}>Continue</Text>
+                        <FontAwesome name='arrow-right' size={24} color='white' />
+                    </TouchableOpacity>
+                </View>
+                </>
             ) : step === 2 ? (
-                <Background>
+                <>
                     <View style={Styles.block}>
                         <View style={Styles.infoContainer}>
                             <Text style={Styles.subTitle}>Vehicle Selection</Text>
@@ -115,9 +115,9 @@ const TowRequest = () =>
                             <FontAwesome name='arrow-right' size={24} color='white' />
                         </TouchableOpacity>
                     </View>
-                </Background>
+                </>
             ) : step === 3 ? (
-                <Background>
+                <>
                     { location ? (
                         <>
                             <View style={Styles.block}>
@@ -171,9 +171,9 @@ const TowRequest = () =>
                             <Text style={Styles.text}>Loading your location...</Text>
                         </>
                     )}
-                </Background>
+                </>
             ) : step === 4 ? (
-                <Background>
+                <>
                     <View style={Styles.block}>
                         <View style={Styles.infoContainer}>
                             <Text style={Styles.subTitle}>Description</Text>
@@ -207,81 +207,81 @@ const TowRequest = () =>
                             <FontAwesome name='arrow-right' size={24} color='white' />
                         </TouchableOpacity>
                     </View>
-                </Background>
+                </>
             ) : step === 5 ? (
-                <Background style={{justifyContent: 'center'}}>
-                    <View style={ServiceStyles.mapContainerAlt}>
-                        { marker ? (
-                            <MapView
-                                provider={PROVIDER_GOOGLE}
-                                style={{width: '100%', height: '100%'}}
-                                region={{
-                                    latitude: marker?.latitude,
-                                    longitude: marker?.longitude,
-                                    latitudeDelta: 0.01,
-                                    longitudeDelta: 0.01
-                                }}
-                                liteMode={true}
-                            >
-                                <Marker
-                                    title="Pickup Location"
-                                    description="This is where the tow truck will be sent"
-                                    coordinate={marker}
-                                />
-                            </MapView>
-                        ) : (
-                            <ActivityIndicator size='large' color='#0000ff' />
-                        ) }
-                    </View>
-                    <View style={Styles.infoContainer}>
-                        <Text style={Styles.subTitle}>Vehicle</Text>
-                        <Text style={Styles.text}>{`${selectedVehicle.year} ${selectedVehicle.make} ${selectedVehicle.model}`}</Text>
-                        <Text style={Styles.subTitle}>Description</Text>
-                        <Text style={Styles.text}>{notes}</Text>
-                    </View>
-                    <View style={ServiceStyles.buttonContainer}>
-                        <TouchableOpacity
-                            style={ServiceStyles.directionButton}
-                            onPress={() => setStep(4)}
-                        >
-                            <FontAwesome name='arrow-left' size={24} color='white' />
-                            <Text style={Styles.actionText}>Back</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={[ServiceStyles.directionButton, loading && { opacity: 0.5 }, {backgroundColor: Colors.primary}]}
-                            disabled={loading}
-                            onPress={async () => {
-                                if (loading) return;
-                                if (towRequest) {
-                                    Alert.alert(
-                                        'Tow Request',
-                                        'You already have an active tow request',
-                                        [
-                                            {
-                                                text: 'OK',
-                                                onPress: () => router.replace('(tabs)')
-                                            }
-                                        ]
-                                    )
-                                    return;
-                                }
-                                setLoading(true);
-                                const data = {
-                                    notes: notes,
-                                    vehicleId: selectedVehicle.id,
-                                    userId: userId
-                                };
-                                await handleSendAdminNotif('Towing Request', 'A customer is requesting a tow', data);
-                                await handleCreateTowRequest(client, userId, selectedVehicle.id, marker, notes, setTowRequest);
-                                setLoading(false);
+                <>
+                <View style={ServiceStyles.mapContainerAlt}>
+                    { marker ? (
+                        <MapView
+                            provider={PROVIDER_GOOGLE}
+                            style={{width: '100%', height: '100%'}}
+                            region={{
+                                latitude: marker?.latitude,
+                                longitude: marker?.longitude,
+                                latitudeDelta: 0.01,
+                                longitudeDelta: 0.01
                             }}
+                            liteMode={true}
                         >
-                            <Text style={Styles.actionText}>Submit</Text>
-                        </TouchableOpacity>
-                    </View>
-                </Background>
+                            <Marker
+                                title="Pickup Location"
+                                description="This is where the tow truck will be sent"
+                                coordinate={marker}
+                            />
+                        </MapView>
+                    ) : (
+                        <ActivityIndicator size='large' color='#0000ff' />
+                    ) }
+                </View>
+                <View style={Styles.infoContainer}>
+                    <Text style={Styles.subTitle}>Vehicle</Text>
+                    <Text style={Styles.text}>{`${selectedVehicle.year} ${selectedVehicle.make} ${selectedVehicle.model}`}</Text>
+                    <Text style={Styles.subTitle}>Description</Text>
+                    <Text style={Styles.text}>{notes}</Text>
+                </View>
+                <View style={ServiceStyles.buttonContainer}>
+                    <TouchableOpacity
+                        style={ServiceStyles.directionButton}
+                        onPress={() => setStep(4)}
+                    >
+                        <FontAwesome name='arrow-left' size={24} color='white' />
+                        <Text style={Styles.actionText}>Back</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={[ServiceStyles.directionButton, loading && { opacity: 0.5 }, {backgroundColor: Colors.primary}]}
+                        disabled={loading}
+                        onPress={async () => {
+                            if (loading) return;
+                            if (towRequest) {
+                                Alert.alert(
+                                    'Tow Request',
+                                    'You already have an active tow request',
+                                    [
+                                        {
+                                            text: 'OK',
+                                            onPress: () => router.replace('(tabs)')
+                                        }
+                                    ]
+                                )
+                                return;
+                            }
+                            setLoading(true);
+                            const data = {
+                                notes: notes,
+                                vehicleId: selectedVehicle.id,
+                                userId: userId
+                            };
+                            await handleSendAdminNotif('Towing Request', 'A customer is requesting a tow', data);
+                            await handleCreateTowRequest(client, userId, selectedVehicle.id, marker, notes, setTowRequest);
+                            setLoading(false);
+                        }}
+                    >
+                        <Text style={Styles.actionText}>Submit</Text>
+                    </TouchableOpacity>
+                </View>
+                </>
             ) : null }
-        </>
+        </Background>
     )
 };
 

@@ -1,10 +1,14 @@
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Alert, Animated } from 'react-native';
+import { router } from 'expo-router';
 import { useApp } from './context';
-import { Styles } from '../constants/styles';
+import { Styles, ServiceStyles, HomeStyles } from '../constants/styles';
 import Colors from '../constants/colors';
 import { LinearGradient } from 'expo-linear-gradient';
-import { AntDesign } from '@expo/vector-icons';
-import { router } from 'expo-router';
+import { AntDesign, FontAwesome } from '@expo/vector-icons';
+import LottieView from 'lottie-react-native';
+import { handleUpdateTowRequestStatus } from './scheduleComponents';
+import { handleSendAdminNotif } from './notifComponents';
+import { useEffect, useRef, useState } from 'react';
 
 // custom header component to replace default header
 const CustHeader = ({title, index}) =>
@@ -49,11 +53,21 @@ const AuthBackground = ({children}) =>
 const Background = ({children, style}) =>
 {
     return (
-        <ScrollView
-            contentContainerStyle={[Styles.page, style, {backgroundColor: Colors.background}]}
+        <LinearGradient
+            style={{flex: 1}}
+            colors={[Colors.background, Colors.backgroundFade, Colors.background]}
+            locations={[0.1, 0.5, 0.9]}
+            start={{x: 1, y: 0.9}}
+            end={{x: 0, y: 0.4}}
+            dither={false}
         >
-            {children}
-        </ScrollView>
+            <ScrollView
+                contentContainerStyle={[Styles.page, style]}
+                keyboardShouldPersistTaps='handled'
+            >
+                {children}
+            </ScrollView>
+        </LinearGradient>
     )
 }
 
@@ -141,6 +155,183 @@ const formatTime = (timeString) =>
         minute: '2-digit',
         hour12: true
     })
+};
+
+const TowStatusComponent = ({towRequest, client, setTowRequest}) =>
+{
+    return (
+        <>
+            { towRequest && towRequest.status === "PENDING"? (
+            <>
+                <View style={Styles.infoContainer}>
+                    <View style={ServiceStyles.titleWrapper}>
+                        <Text style={[Styles.title, {textAlign: 'left'}]}>Tow Request</Text>
+                        <FontAwesome name="check" size={30} color='white'/>
+                    </View>
+                    <Text style={Styles.subTitle}>Price:</Text>
+                    <Text style={Styles.text}>{towRequest.price}</Text>
+                    <Text style={Styles.subTitle}>Wait Time:</Text>
+                    <Text style={Styles.text}>{towRequest.waitTime}</Text>
+                </View>
+                <View style={[Styles.block, {alignItems: 'center'}]}>
+                    <TouchableOpacity
+                        style={Styles.actionButton}
+                        onPress={() => Alert.alert(
+                            'Confirm',
+                            'Are you sure you want to accept this tow request?',
+                            [
+                                { text: 'No' },
+                                {
+                                    text: 'Yes',
+                                    onPress: async () => {
+                                        handleSendAdminNotif('Tow Request Confirmed', 'Customer has been confirmed for towing!');
+                                        handleUpdateTowRequestStatus(client, towRequest.id, 'IN_PROGRESS', setTowRequest);
+                                        Alert.alert(
+                                            'Confirmed',
+                                            'Your tow request has been confirmed',
+                                            [{ text: 'OK' }]
+                                        );
+                                    }
+                                }
+                            ]
+                        )}
+                    >
+                        <Text style={Styles.actionText}>Accept</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={[Styles.actionButton, {backgroundColor: 'red'}]}
+                        onPress={() => Alert.alert(
+                            'Cancel',
+                            'Are you sure you want to cancel this tow request?',
+                            [
+                                { text: 'No' },
+                                {
+                                    text: 'Yes',
+                                    onPress: async () => {
+                                        handleSendAdminNotif('Tow Request Cancelled', 'Customer has cancelled the tow request');
+                                        handleUpdateTowRequestStatus(client, towRequest.id, 'CANCELLED', setTowRequest);
+                                        Alert.alert(
+                                            'Cancelled',
+                                            'Your tow request has been cancelled',
+                                            [{ text: 'OK' }]
+                                        );
+                                        setTowRequest(undefined);
+                                        router.replace('/(tabs)');
+                                    }
+                                }
+                            ]
+                        )}
+                    >
+                        <Text style={Styles.actionText}>Cancel</Text>
+                    </TouchableOpacity>
+                </View>
+            </>
+            ) : towRequest && towRequest.status === "REQUESTED" ? (
+            <>
+                <View style={Styles.infoContainer}>
+                    <View style={ServiceStyles.titleWrapper}>
+                    <Text style={Styles.subTitle}>Tow Request</Text>
+                    <LottieView
+                        source={require('../assets/animations/gear.json')}
+                        loop
+                        autoPlay
+                        style={{width: 50, height: 50}}
+                    />
+                    </View>
+                    <Text style={Styles.text}>
+                    Your request is being processed.
+                    We'll notify you with a price and estimated wait time shortly.
+                    </Text>
+                </View>
+                <View style={Styles.block}>
+                    <TouchableOpacity
+                        style={[Styles.actionButton, {backgroundColor: 'red', alignSelf: 'center'}]}
+                        onPress={() => Alert.alert(
+                            'Cancel',
+                            'Are you sure you want to cancel your tow request?',
+                            [
+                                { text: 'NO' },
+                                {
+                                    text: 'Yes',
+                                    onPress: async () => {
+                                        handleSendAdminNotif('Tow Request Cancelled', 'Customer has cancelled the tow request');
+                                        await handleUpdateTowRequestStatus(client, towRequest.id, 'CANCELLED', setTowRequest);
+                                        Alert.alert(
+                                            'Cancelled',
+                                            'Your tow request has been cancelled',
+                                            [{ text: 'OK' }]
+                                        );
+                                        setTowRequest(undefined);
+                                        router.replace('/(tabs)');
+                                    }
+                                }
+                            ]
+                        )}
+                    >
+                        <Text style={Styles.actionText}>Cancel</Text>
+                    </TouchableOpacity>
+                </View>
+            </>
+            ) : towRequest?.status === "IN_PROGRESS" ? (
+            <View style={Styles.infoContainer}>
+                <View style={ServiceStyles.titleWrapper}>
+                    <Text style={Styles.subTitle}>Tow Request</Text>
+                    <LottieView
+                        source={require('../assets/animations/truck.json')}
+                        loop
+                        autoPlay
+                        style={{width: 75, height: 75}}
+                    />
+                </View>
+                <Text style={Styles.text}>
+                Your driver is on the way!
+                Estimated Wait time is {towRequest.waitTime}.
+                </Text>
+            </View>
+            ) : null}
+        </>
+    );
+};
+
+const AppointmentReminder = ({appointments}) =>
+{
+    const [ index, setIndex ] = useState(0);
+    const fadeAnim = useRef(new Animated.Value(1)).current;
+
+    useEffect(() => {
+        if(!appointments || appointments?.length <= 1) return;
+
+        const interval = setInterval(() => {
+            Animated.timing(fadeAnim, {
+                toValue: 0,
+                duration: 500,
+                useNativeDriver: true,
+            }).start(() => {
+                setIndex((prevIndex) => (prevIndex + 1) % appointments.length);
+
+                Animated.timing(fadeAnim, {
+                    toValue: 1,
+                    duration: 500,
+                    useNativeDriver: true,
+                }).start();
+            });
+        }, 4000)
+
+        return () => clearInterval(interval);
+    }, [appointments]);
+
+    if (!appointments || appointments?.length === 0) return null;
+
+    const current = appointments[index];
+    return (
+        <View style={HomeStyles.appointmentContainer}>
+            <Text style={Styles.title}>Appt. Reminder</Text>
+            <Animated.View style={{ opacity: fadeAnim }}>
+                <Text style={Styles.text}>{formatDate(current.date)}</Text>
+                <Text style={Styles.text}>{formatTime(current.time)}</Text>
+            </Animated.View>
+        </View>
+    );
 }
 
 export {
@@ -152,5 +343,7 @@ export {
     Select,
     formatNumber,
     formatDate,
-    formatTime
+    formatTime,
+    TowStatusComponent,
+    AppointmentReminder,
 };

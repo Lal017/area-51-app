@@ -1,9 +1,9 @@
 import { useEffect, useState} from 'react';
-import { View, Text, TextInput, TouchableOpacity} from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Alert} from "react-native";
 import { router } from 'expo-router';
 import { ServiceStyles, Styles } from "../../constants/styles";
 import { Calendar } from "react-native-calendars";
-import { handleGetAppointments, handleSetTimes, handleCreateAppointment } from '../../components/scheduleComponents';
+import { handleGetAppointments, handleSetTimes, handleCreateAppointment, handleFinalCheck } from '../../components/scheduleComponents';
 import Colors from '../../constants/colors';
 import { Select, CalendarHeader, formatDate, formatTime, Background } from '../../components/components';
 import { MaterialIcons, Ionicons, FontAwesome, AntDesign, FontAwesome5, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -12,7 +12,7 @@ import { handleSendAdminNotif } from '../../components/notifComponents';
 
 const Schedule = () =>
 {
-  const { client, vehicles, userId } = useApp();
+  const { client, vehicles, userId, setAppointments } = useApp();
 
   const [selectedDay, setSelectedDay] = useState();
   const [selectedTime, setSelectedTime] = useState();
@@ -43,7 +43,7 @@ const Schedule = () =>
   };
 
   return (
-    <>
+    <Background>
       <View style={ServiceStyles.progressBar}>
         <AntDesign name='calendar' size={35} color={step > 1 ? Colors.secondary : Colors.backDropAccent} />
         <View style={[ServiceStyles.progressBarLine, {backgroundColor: step > 1 ? Colors.secondary : Colors.backDropAccent}]} />
@@ -54,7 +54,7 @@ const Schedule = () =>
         <Entypo name="clipboard" size={30} color={step > 4 ? Colors.secondary : Colors.backDropAccent}/>
       </View>
       { step === 1 ? (
-        <Background>
+        <>
           <View style={Styles.infoContainer}>
             <Text style={Styles.subTitle}>Date Selection</Text>
             <Text style={Styles.text}>Select a day and time to get started</Text>
@@ -98,11 +98,7 @@ const Schedule = () =>
                   }
                 ]}
               >
-                <Text style={[
-                  Styles.text,
-                  { color: 'black', textAlign: 'center' },
-                  selectedTime === time && { color: 'white' },
-                ]}
+                <Text style={[Styles.text, { textAlign: 'center' }]}
                 >{formatTime(time)}</Text>
               </TouchableOpacity>
             ))}
@@ -120,9 +116,9 @@ const Schedule = () =>
               <FontAwesome name='arrow-right' size={24} color='white' />
             </TouchableOpacity>
           </View>
-        </Background>
+        </>
       ) : step === 2 ? (
-        <Background>
+        <>
           <View style={Styles.block}>
             <View style={Styles.infoContainer}>
               <Text style={Styles.subTitle}>Select a Vehicle</Text>
@@ -160,9 +156,9 @@ const Schedule = () =>
               <FontAwesome name='arrow-right' size={24} color='white' />
             </TouchableOpacity>
           </View>
-        </Background>
+        </>
       ) : step === 3 ? (
-        <Background>
+        <>
           <View style={Styles.block}>
             <View style={Styles.infoContainer}>
               <Text style={Styles.subTitle}>Select a service</Text>
@@ -223,9 +219,9 @@ const Schedule = () =>
               <FontAwesome name='arrow-right' size={24} color='white' />
             </TouchableOpacity>
           </View>
-        </Background>
+        </>
       ) : step === 4 ? (
-        <Background>
+        <>
           <View style={Styles.block}>
             <View style={Styles.infoContainer}>
               <Text style={Styles.subTitle}>Description (optional)</Text>
@@ -258,47 +254,59 @@ const Schedule = () =>
               <FontAwesome name='arrow-right' size={24} color='white' />
             </TouchableOpacity>
           </View>
-        </Background>
+        </>
       ) : step === 5 ? (
-        <Background style={{justifyContent: 'center'}}>
-          <View style={Styles.infoContainer}>
-            <Text style={Styles.subTitle}>Date</Text>
-            <Text style={Styles.text}>{formatDate(selectedDay)}</Text>
-            <Text style={Styles.subTitle}>Time</Text>
-            <Text style={Styles.text}>{formatTime(selectedTime)}</Text>
-            <Text style={Styles.subTitle}>Vehicle</Text>
-            <Text style={Styles.text}>{`${selectedVehicle.year} ${selectedVehicle.make} ${selectedVehicle.model}`}</Text>
-            <Text style={Styles.subTitle}>Service</Text>
-            <Text style={Styles.text}>{selectedService}</Text>
-            <Text style={Styles.subTitle}>Notes</Text>
-            <Text style={Styles.text}>{notes}</Text>
-          </View>
-          <View style={ServiceStyles.buttonContainer}>
-            <TouchableOpacity
-              style={ServiceStyles.directionButton}
-              onPress={() => setStep(4)}
-            >
-              <FontAwesome name='arrow-left' size={24} color='white'/>
-              <Text style={Styles.actionText}>Back</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={async () => {
-                if (loading) return;
-                setLoading(true);
+        <>
+        <View style={Styles.infoContainer}>
+          <Text style={Styles.subTitle}>Date</Text>
+          <Text style={Styles.text}>{formatDate(selectedDay)}</Text>
+          <Text style={Styles.subTitle}>Time</Text>
+          <Text style={Styles.text}>{formatTime(selectedTime)}</Text>
+          <Text style={Styles.subTitle}>Vehicle</Text>
+          <Text style={Styles.text}>{`${selectedVehicle.year} ${selectedVehicle.make} ${selectedVehicle.model}`}</Text>
+          <Text style={Styles.subTitle}>Service</Text>
+          <Text style={Styles.text}>{selectedService}</Text>
+          <Text style={Styles.subTitle}>Notes</Text>
+          <Text style={Styles.text}>{notes}</Text>
+        </View>
+        <View style={ServiceStyles.buttonContainer}>
+          <TouchableOpacity
+            style={ServiceStyles.directionButton}
+            onPress={() => setStep(4)}
+          >
+            <FontAwesome name='arrow-left' size={24} color='white'/>
+            <Text style={Styles.actionText}>Back</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={async () => {
+              if (loading) return;
+              setLoading(true);
+              const isValid = await handleFinalCheck(selectedDay, selectedTime);
+              if (!isValid) {
                 await handleSendAdminNotif('Appointment Scheduled', 'A customer has scheduled an appointment');
-                await handleCreateAppointment(client, selectedDay, selectedTime, selectedService, notes, userId, selectedVehicle.id);
+                await handleCreateAppointment(client, selectedDay, selectedTime, selectedService, notes, userId, selectedVehicle.id, setAppointments);
                 router.replace('/(tabs)');
-                setLoading(false);
-              }}
-              style={[ServiceStyles.directionButton, loading && { opacity: 0.5 }, {backgroundColor: Colors.primary}]}
-              disabled={loading}
-            >
-              <Text style={Styles.actionText}>Schedule</Text>
-            </TouchableOpacity>
-          </View>
-        </Background>
+              } else {
+                Alert.alert(
+                  'Time slot invalid',
+                  `A customer has already been scheduled for ${formatDate(selectedDay)} at ${formatTime(selectedTime)}. Please choose a different time slot`,
+                  [{
+                    text: 'OK',
+                    onPress: () => setStep(1)
+                  }]
+                )
+              }
+              setLoading(false);
+            }}
+            style={[ServiceStyles.directionButton, loading && { opacity: 0.5 }, {backgroundColor: Colors.primary}]}
+            disabled={loading}
+          >
+            <Text style={Styles.actionText}>Schedule</Text>
+          </TouchableOpacity>
+        </View>
+        </>
       ) : null }
-    </>
+    </Background>
   )
 }
 

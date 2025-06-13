@@ -15,7 +15,7 @@ const UserView = () =>
                     <Text style={[Styles.title, {textAlign: 'left'}]}>Customer</Text>
                     <View style={AdminStyles.labelContainer}>
                         <Text style={Styles.subTitle}>Name</Text>
-                        <Text style={Styles.text}>{customer.name}</Text>
+                        <Text style={Styles.text}>{customer.firstName} {customer.lastName}</Text>
                     </View>
                     <View style={AdminStyles.labelContainer}>
                         <Text style={Styles.subTitle}>Email</Text>
@@ -32,8 +32,9 @@ const UserView = () =>
                 </View>
             </View>
             <View style={Styles.block}>
-                <Text style={[Styles.title, {paddingLeft: 20}]}>Vehicles</Text>
-                { customer.vehicles.items.map((vehicle, index) => (
+                { customer.vehicles.items.length > 0 ? (<Text style={[Styles.title, {paddingLeft: 20}]}>Vehicles</Text>)
+                    : (<Text style={[Styles.title, {paddingLeft: 20}]}>Customer has no vehicles</Text>)}
+                { customer.vehicles?.items?.map((vehicle, index) => (
                     <View style={AdminStyles.vehicleContainer} key={index}>
                         <View style={AdminStyles.labelContainer}>
                             <Text style={Styles.subTitle}>Year</Text>
