@@ -35,6 +35,7 @@ export const expo = {
   plugins: [
     "expo-router",
     "expo-font",
+    "expo-image-picker",
     [
       "expo-splash-screen",
       {

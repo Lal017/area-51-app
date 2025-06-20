@@ -38,11 +38,13 @@ const Styles = StyleSheet.create({
         width: '90%',
     },
     consoleBubble: {
-        width: '100%',
         flex: 1,
+        width: '100%',
+        flexDirection: 'row',
         alignItems: 'center',
-        position: 'relative',
-        padding: 20,
+        justifyContent: 'space-between',
+        paddingRight: 25,
+        paddingLeft: 25
     },
     // Tab Select
     tabWrapper: {
@@ -152,9 +154,9 @@ const Styles = StyleSheet.create({
         rowGap: 10,
     },
     block: {
-        paddingTop: 25,
-        paddingBottom: 25,
-        rowGap: 25,
+        paddingTop: 20,
+        paddingBottom: 20,
+        rowGap: 20,
         width: '100%',
     },
 });
@@ -209,25 +211,22 @@ const HomeStyles = StyleSheet.create({
     panel: {
         width: '90%',
         flexDirection: 'row',
-        columnGap: 5,
+        columnGap: 10,
         paddingTop: 5,
         paddingBottom: 5
     },
     snapContainer: {
-        width: '100%',
-        height: 75,
+        flex: 1,
         borderRadius: 10,
         backgroundColor: Colors.backDropAccent,
         justifyContent: 'center',
         alignItems: 'center',
     },
-
     imgContainer: {
-        width: '90%',
-        height: 190,
+        flex: 1,
         borderRadius: 10,
         overflow: 'hidden',
-        backgroundColor: 'white'
+        alignSelf: 'center',
     },
     welcomeContainer: {
         width: '100%',
@@ -316,6 +315,18 @@ const ServiceStyles = StyleSheet.create({
         width: 150,
         height: 65,
         elevation: 10,
+    },
+    // index.jsx
+    title: {
+        fontSize: 30,
+        fontFamily: 'Roboto-Light',
+        color: Colors.text,
+        width: '65%',
+        textAlign: 'left',
+    },
+    lottieAnim: {
+        width: 125,
+        height: 125
     },
     // schedule.jsx
     timeContainer: {
@@ -427,6 +438,11 @@ const AdminStyles = StyleSheet.create({
         width: 200,
         paddingLeft: 10
     },
+    // index.jsx
+    lottieAnim: {
+        width: 100,
+        height: 100
+    },
     // userView.jsx
     vehicleContainer: {
         width: '90%',
@@ -441,6 +457,44 @@ const AdminStyles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         width: '100%'
+    },
+    // homeSettings.jsx
+    imgPickContainer: {
+        borderRadius: 10,
+        width: '90%',
+        overflow: 'hidden',
+        alignSelf: 'center'
+    },
+    imgPick: {
+        resizeMode: 'contain',
+        width: 400,
+        height: 225
+    },
+    noImg: {
+        width: '100%',
+        height: 225,
+        borderRadius: 10,
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    centerPercentContainer: {
+        position: 'absolute',
+        borderRadius: 100,
+        justifyContent: 'center',
+        alignItems: 'center',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
+    },
+    percentContainer: {
+        backgroundColor: 'white',
+        width: 50,
+        height: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 100,
     }
 });
 

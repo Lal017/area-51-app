@@ -1,18 +1,24 @@
-import { Text, TouchableOpacity, Linking, View, Alert, Image } from "react-native";
+import { Text, TouchableOpacity, Linking, View, Alert, Image, Dimensions } from "react-native";
 import { router } from "expo-router";
 import { AppointmentReminder, Background } from "../../../components/components";
 import { HomeStyles, Styles } from "../../../constants/styles";
 import { Entypo, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useApp } from "../../../components/context";
 import Animated, { Easing , useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from "react-native-reanimated";
-import { useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 import Colors from "../../../constants/colors";
+import { handleGetURLs } from "../../../components/adminComponents";
+import Carousel from 'react-native-reanimated-carousel';
+
+const screenWidth = Dimensions.get("window").width;
 
 // Home page after login
 const Index = () =>
 {
   const { firstName, towRequest, vehicles, appointments } = useApp();
+  const [ urls, setUrls ] = useState();
 
+  const ref = useRef();
   const bounce = useSharedValue(0);
 
   useEffect(() => {
@@ -35,6 +41,16 @@ const Index = () =>
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: bounce.value }]
   }));
+
+  useEffect(() => {
+    const initUrls = async () =>
+    {
+      const getUrls = await handleGetURLs();
+      setUrls(getUrls);
+    }
+
+    initUrls();
+  }, []);
   
   return (
     <Background>
@@ -108,7 +124,7 @@ const Index = () =>
       <View style={HomeStyles.welcomeContainer}>
         <Text style={Styles.text}>Welcome {firstName}!</Text>
       </View>
-      <View style={HomeStyles.panel}>
+      <View style={[HomeStyles.panel, appointments ? {height: '25%'} : {height: 100}]}>
         <TouchableOpacity
           style={HomeStyles.snapContainer}
           onPress={() => Linking.openURL('https://apply.snapfinance.com/snap-loan/landing?paramId=BEQypIc2AUit0%2BNU%2Fm1jaPTPmNwVgcoBY9btcVvwhMCDJ8qdDYWfFVb5WW%2BxBO51f%2BgPNPmcvPPGEqOKyqcCy57l581i30Mhc54AQ4Uv4I9COQxyDewFNEYSJJRGvQ379a7K2SmTgeFlpEssm%2FParIJh1%2FqwsslQ14TK0wPysRM%2B5wQQIZY5lILxig1G1ms0SOVMj1t76bwiCSSvuzFBeA%3D%3D&source=QR_CODE&merchantId=490307391&lang=en')}
@@ -118,12 +134,30 @@ const Index = () =>
             style={{resizeMode: 'contain', width: 100}}
           />
         </TouchableOpacity>
-      </View>
-      <View style={HomeStyles.panel}>
         { appointments?.length > 0 ? (
           <AppointmentReminder appointments={appointments} />
         ) : null}
       </View>
+      { urls ? (
+        <View style={[HomeStyles.panel, {flexDirection: 'column'}]}>
+          <View style={HomeStyles.imgContainer}>
+            <Carousel
+              ref={ref}
+              data={urls}
+              width={screenWidth * 0.9}
+              height={225}
+              autoPlay
+              autoPlayInterval={5000}
+              renderItem={({item}) => (
+                <Image
+                  source={{uri: item.url}}
+                  style={{width: '100%', height: '100%'}}
+                />
+              )}
+            />
+          </View>
+        </View>
+      ) : null}
     </Background>
   );
 }

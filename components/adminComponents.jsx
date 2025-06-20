@@ -3,6 +3,8 @@ import { updateTowRequest } from '../src/graphql/mutations';
 import { router } from 'expo-router';
 import { Alert } from 'react-native';
 import { reverseGeocodeAsync } from 'expo-location';
+import { uploadData, list, getUrl, remove } from 'aws-amplify/storage';
+import * as FileSystem from 'expo-file-system';
 
 // Expo notif functions
 const sendPushNotification = async (expoPushToken, title, body, data) =>
@@ -108,12 +110,132 @@ const handleGetAddress = async (latitude, longitude) =>
     } catch (error) {
         console.log('Error getting address:', error);
     }
+};
+
+const handleUploadHomeImage = async ({file, fileType, setPercent}) =>
+{
+    try {
+        const fileData = await uriToUint8Array(file, fileType);
+        const listImages = await handleListHomeImages();
+        const count = listImages?.length ?? 0;
+
+        await uploadData({
+            path: `public/homeImages/homeImg${count}.${fileType}`,
+            data: fileData,
+            options: {
+                onProgress: ({ transferredBytes, totalBytes }) => {
+                    if (totalBytes) {
+                        const getPercent = Math.round((transferredBytes / totalBytes) * 100);
+                        if (transferredBytes === totalBytes) {
+                            setPercent(0);
+                        } else {
+                            setPercent(getPercent);
+                        }
+                    }
+                }
+            }
+        }).result;
+
+        Alert.alert(
+            'Upload Complete',
+            'Your image has been uploaded to the home page',
+            [{
+                text: 'OK',
+                onPress: () => router.replace('(admin)')
+            }]
+        )
+    } catch (error) {
+        console.log('Error uploading image:', error);
+    }
+};
+
+const handleListHomeImages = async () =>
+{
+    try {
+        const result = await list({
+            path: 'public/homeImages/'
+        });
+
+        return result.items;
+    } catch (error) {
+        console.log('Error getting images:', error);
+    }
+};
+
+const uriToUint8Array = async (uri) =>
+{
+    try {
+        const base64 = await FileSystem.readAsStringAsync(uri, {
+            encoding: FileSystem.EncodingType.Base64,
+        });
+
+        const binaryString = atob(base64);
+        const bytes = new Uint8Array(binaryString.length);
+
+        for (let i = 0; i < binaryString.length; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+        }
+
+        return bytes;
+    } catch (error) {
+        console.log('Error converting to blob:', error);
+        throw error;
+    }
+};
+
+const handleGetURLs = async () =>
+{
+    try {
+        const items = await handleListHomeImages();
+        const urls = await Promise.all(
+            items?.map(async (item) => {
+                const { url } = await getUrl({ path: item.path });
+                return { url: url.toString() };
+            })
+        );
+
+        return urls;
+    } catch (error) {
+        console.log('Error getting URL:', error);
+    }
+};
+
+const extractPath = (url) => {
+    const match = url.match(/\/(public\/.+?\.(jpg|jpeg|png|webp|gif))/i);
+    if (match && match[1]) {
+        return match[1];
+    }
+    throw new Error('could not extract path');
 }
+
+const handleRemoveImage = async (url) =>
+{
+    const path = extractPath(url);
+    console.log(path);
+    try {
+        await remove({
+            path: path
+        });
+
+        Alert.alert(
+            'Image Removed',
+            'The image has been removed from the home page',
+            [{ text: 'OK' }]
+        );
+        router.replace('(admin)/homeSettings');
+    } catch (error) {
+        console.log('Error removing image:', error);
+    }
+};
 
 export {
     handleListUsers,
     handleListTowRequestUsers,
     sendPushNotification,
     handleUpdateTowRequest,
-    handleGetAddress
+    handleGetAddress,
+    handleUploadHomeImage,
+    handleListHomeImages,
+    handleGetURLs,
+    handleRemoveImage
 }

@@ -1,5 +1,5 @@
-import { Text, TouchableOpacity, Alert } from "react-native";
-import { Styles } from "../../../constants/styles";
+import { Text, TouchableOpacity, Alert, View } from "react-native";
+import { ServiceStyles, Styles } from "../../../constants/styles";
 import LottieView from "lottie-react-native";
 import Colors from "../../../constants/colors";
 import { router } from "expo-router";
@@ -36,12 +36,12 @@ const ServiceConsole = () =>
         }}
         style={[Styles.consoleBubble, {backgroundColor: Colors.secondary}]}
       >
-        <Text style={[Styles.title, {fontFamily: 'Roboto-Light', textAlign: 'center', position: 'absolute', top: 75}]}>Request a tow</Text>
+        <Text style={ServiceStyles.title}>Request a tow</Text>
         <LottieView
           source={require('../../../assets/animations/ufo.json')}
           loop
           autoPlay
-          style={{width: 100, height: 100, position: 'absolute', left: 25, top: 120}}
+          style={ServiceStyles.lottieAnim}
           speed={0.5}
         />
       </TouchableOpacity>
@@ -65,25 +65,27 @@ const ServiceConsole = () =>
         }}
         style={[Styles.consoleBubble, {backgroundColor: Colors.tertiary}]}
       >
-        <Text style={[Styles.title, {fontFamily: 'Roboto-Light',textAlign: 'center', position: 'absolute', top: 50}]}>Schedule an Appointment</Text>
-        <LottieView
-          source={require('../../../assets/animations/calendar.json')}
-          loop
-          autoPlay
-          style={{width: 200, height: 200, position: 'absolute', right: 185, top: 70, marginRight: 50}}
-          speed={0.5}
-        />
+        <Text style={ServiceStyles.title}>Schedule{'\n'}an{'\n'}Appointment</Text>
+        <View style={[ServiceStyles.lottieAnim, {justifyContent: 'center', alignItems: 'center'}]}>
+          <LottieView
+            source={require('../../../assets/animations/calendar.json')}
+            loop
+            autoPlay
+            style={{width: 250, height: 250}}
+            speed={0.5}
+          />
+        </View>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => router.push('/(tabs)/(service)/myAppointments')}
         style={[Styles.consoleBubble, {backgroundColor: Colors.primary}]}
       >
-        <Text style={[Styles.title, {fontFamily: 'Roboto-Light', textAlign: 'center', position: 'absolute', top: 75}]}>My Appointments</Text>
+        <Text style={ServiceStyles.title}>My{'\n'}Appointments</Text>
         <LottieView
           source={require('../../../assets/animations/calendarCheck.json')}
           loop
           autoPlay
-          style={{width: 75, height: 75, position: 'absolute', left: 40, top: 120}}
+          style={ServiceStyles.lottieAnim}
         />
       </TouchableOpacity>
     </Background>
