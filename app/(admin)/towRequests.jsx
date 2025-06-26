@@ -1,11 +1,11 @@
-import { View, Text, TouchableOpacity, TextInput } from 'react-native';
+import { View, TextInput, Text } from 'react-native';
 import { useApp } from '../../components/context';
 import { AdminStyles, Styles } from '../../constants/styles';
 import { useEffect, useState } from 'react';
 import { listTowRequests } from '../../src/graphql/queries';
-import { Background, formatNumber } from '../../components/components';
+import { Background, Tab } from '../../components/components';
 import { router } from 'expo-router';
-import { Entypo } from '@expo/vector-icons';
+import { AntDesign, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
 import Colors from '../../constants/colors';
 
@@ -72,25 +72,21 @@ const TowRequests = () =>
                         return matchesSearch && matchesStatus;
                     })
                     .map((request, index) => (
-                        <TouchableOpacity
-                            key={index}
-                            style={AdminStyles.customerBox}
-                            onPress={() => router.push({
-                                pathname: 'towResponse',
-                                params: { customerParam: JSON.stringify(request)}
-                            })}
-                        >
-                            <Text style={Styles.subTitle}>{request.user.firstName} {request.user.lastName}</Text>
-                            <Text style={Styles.text}>{formatNumber(request.user.phone)}</Text>
-                            <Text style={[
-                                Styles.subTitle,
-                                request.status === 'REQUESTED' ? {color: Colors.primary} : request.status === 'PENDING' ? {color: Colors.secondary} : request.status === 'IN_PROGRESS' ? {color: 'black'} : request.status === 'CANCELLED' ? {color: 'red'} : request.status === 'COMPLETED' ? {color: '#b3b3b3'} : null
-                                ]}>{request.status === 'IN_PROGRESS' ? 'IN PROGRESS' : request.status}</Text>
-                        </TouchableOpacity>
+                        <View key={index}>
+                            <Tab
+                                action={() => router.push({
+                                    pathname: 'towResponse',
+                                    params: { customerParam: JSON.stringify(request)}
+                                })}
+                                text={<Text style={[Styles.subTitle, {paddingLeft: 75}, request.status === 'REQUESTED' ? {color: Colors.primary} : request.status === 'PENDING' ? {color: Colors.secondary} : request.status === 'IN_PROGRESS' ? {color: 'black'} : request.status === 'CANCELLED' ? {color: 'red'} : request.status === 'COMPLETED' ? {color: '#b3b3b3'} : null ]}>{request.user.firstName}{'\n'}{request.status === 'IN_PROGRESS' ? 'IN PROGRESS' : request.status}</Text>}
+                                leftIcon={<MaterialCommunityIcons name='tow-truck' size={30} style={Styles.icon} />}
+                                rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon} />}
+                            />
+                        </View>
                 ))}
             </View>
         </Background>
     );
 };
-
+//                             <Text style={[Styles.subTitle, request.status === 'REQUESTED' ? {color: Colors.primary} : request.status === 'PENDING' ? {color: Colors.secondary} : request.status === 'IN_PROGRESS' ? {color: 'black'} : request.status === 'CANCELLED' ? {color: 'red'} : request.status === 'COMPLETED' ? {color: '#b3b3b3'} : null ]}>{request.status === 'IN_PROGRESS' ? 'IN PROGRESS' : request.status}</Text>
 export default TowRequests;

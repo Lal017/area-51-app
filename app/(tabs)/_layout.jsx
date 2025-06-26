@@ -22,6 +22,8 @@ const TabsContent = () =>
         setClient,
         userId,
         setUserId,
+        identityId,
+        setIdentityId,
         access,
         setAccess,
         pushToken,
@@ -40,8 +42,6 @@ const TabsContent = () =>
         setAppointments,
         setIsStuck
     } = useApp();
-
-    const [ identityId, setIdentityId ] = useState();
 
     // notification listeners
     const notificationListener = useRef();
@@ -177,7 +177,7 @@ const TabsContent = () =>
         notificationListener.current = addNotificationReceivedListener(notification => {
             setNotification(notification.request.content);
 
-            if(notification.request.content.data.type === "TOW_RESPONSE"){
+            if (notification.request.content.data.type === "TOW_RESPONSE"){
                 handleNotifUpdateTowRequest(client, userId, setTowRequest);
             }
         });

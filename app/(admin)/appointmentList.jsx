@@ -3,8 +3,9 @@ import { AdminStyles, Styles } from '../../constants/styles';
 import { useApp } from '../../components/context';
 import { useEffect, useState } from 'react';
 import { listAppointments } from '../../src/graphql/queries';
-import { Background, formatDate, formatTime } from '../../components/components';
+import { Background, formatDate, formatTime, Tab } from '../../components/components';
 import { router } from 'expo-router';
+import { AntDesign } from '@expo/vector-icons';
 
 const AppointmentList = () =>
 {
@@ -30,21 +31,19 @@ const AppointmentList = () =>
 
     return (
         <Background>
-            <View style={[Styles.block, {rowGap: 0}]}>
+            <View style={[Styles.block, {rowGap: 15}]}>
                 {appointments ? (
                     appointments.map((appointment, index) => (
-                        <TouchableOpacity
+                        <Tab
                             key={index}
-                            style={AdminStyles.customerBox}
-                            onPress={() => router.push({
+                            action={() => router.push({
                                 params: { appointmentParam: JSON.stringify(appointment)},
                                 pathname: '/(admin)/appointmentView'
                             })}
-                        >
-                            <Text style={Styles.subTitle}>{appointment.user.firstName} {appointment.user.lastName}</Text>
-                            <Text style={Styles.text}>{formatDate(appointment.date)}</Text>
-                            <Text style={Styles.text}>{formatTime(appointment.time)}</Text>
-                        </TouchableOpacity>
+                            text={`${appointment.user.firstName}\n${formatDate(appointment.date)}\n${formatTime(appointment.time)}`}
+                            leftIcon={<AntDesign name='calendar' size={30} style={Styles.icon} />}
+                            rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon} />}
+                        />
                     ))
                 ) : null}
             </View>

@@ -407,7 +407,6 @@ const ProfileStyles = StyleSheet.create({
     },
     vehicleBox: {
         backgroundColor: Colors.backDrop,
-        elevation: 10,
         padding: 25,
         width: '100%',
         alignItems: 'center',
@@ -445,10 +444,9 @@ const AdminStyles = StyleSheet.create({
     },
     // userView.jsx
     vehicleContainer: {
-        width: '90%',
-        backgroundColor: Colors.backgroundAccent,
-        borderRadius: 10,
-        padding: 25,
+        width: '100%',
+        paddingLeft: 25,
+        paddingRight: 25,
         alignItems: 'center',
         alignSelf: 'center',
         rowGap: 5
@@ -504,6 +502,13 @@ const AdminStyles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 100,
+    },
+    // invoiceList.jsx
+    invoiceItem: {
+        width: '100%',
+        padding: 25,
+        textAlign: 'center',
+        backgroundColor: Colors.backgroundAccent,
     }
 });
 

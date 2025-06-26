@@ -6,6 +6,7 @@ const AppContext = createContext();
 const AppProvider = ({ children }) => {
   const [ userId, setUserId ] = useState();
   const [ client, setClient ] = useState();
+  const [ identityId, setIdentityId ] = useState();
   const [ pushToken, setPushToken ] = useState();
   const [ access, setAccess ] = useState();
   const [ notification, setNotification ] = useState();
@@ -48,6 +49,8 @@ const AppProvider = ({ children }) => {
         setUserId,
         client,
         setClient,
+        identityId,
+        setIdentityId,
         pushToken,
         setPushToken,
         access,

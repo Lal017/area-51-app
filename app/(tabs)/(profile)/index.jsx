@@ -5,7 +5,7 @@ import { Background, Tab } from "../../../components/components";
 import { handleSignOut } from "../../../components/authComponents";
 import { router } from "expo-router";
 import { useApp } from "../../../components/context";
-import { AntDesign, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { AntDesign, FontAwesome6, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 
 // Profile page
@@ -32,6 +32,18 @@ const Profile = () =>
                 text="My Vehicles"
                 action={() => router.push('/(tabs)/(profile)/vehicleList')}
                 leftIcon={<Ionicons name="car-sport" size={30} style={Styles.icon} />}
+                rightIcon={<AntDesign name="right" size={25} style={Styles.rightIcon} />}
+            />
+            <Tab
+                text="Invoices"
+                action={() => router.push('/(tabs)/(profile)/invoices')}
+                leftIcon={<FontAwesome6 name="file-invoice-dollar" size={30} style={Styles.icon} />}
+                rightIcon={<AntDesign name="right" size={25} style={Styles.rightIcon} />}
+            />
+            <Tab
+                text="Estimates"
+                action={() => router.push('/(tabs)/(profile)/estimates')}
+                leftIcon={<FontAwesome6 name="file-circle-question" size={30} style={Styles.icon} />}
                 rightIcon={<AntDesign name="right" size={25} style={Styles.rightIcon} />}
             />
             <Tab

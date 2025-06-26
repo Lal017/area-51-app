@@ -114,7 +114,7 @@ const handleGetAddress = async (latitude, longitude) =>
 
 /* ---------------------------------------------------------------------- */
 
-const handleUploadHomeImage = async (file, fileType, setPercent) =>
+const handleUploadHomeImage = async (file, fileType) =>
 {
     try {
         const fileData = await uriToUint8Array(file, fileType);
@@ -123,19 +123,7 @@ const handleUploadHomeImage = async (file, fileType, setPercent) =>
 
         await uploadData({
             path: `public/homeImages/homeImg${count}.${fileType}`,
-            data: fileData,
-            options: {
-                onProgress: ({ transferredBytes, totalBytes }) => {
-                    if (totalBytes) {
-                        const getPercent = Math.round((transferredBytes / totalBytes) * 100);
-                        if (transferredBytes === totalBytes) {
-                            setPercent(0);
-                        } else {
-                            setPercent(getPercent);
-                        }
-                    }
-                }
-            }
+            data: fileData
         }).result;
 
         Alert.alert(
@@ -231,31 +219,22 @@ const handleRemoveImage = async (url) =>
 
 /* ------------------------------------------------------- */
 
-const handleUploadInvoice = async (identityId, file, setPercent) =>
+const handleUploadInvoice = async (identityId, file, name) =>
 {
     try {
         const fileData = await uriToUint8Array(file, '.pdf');
-        const listDocuments = await handleListInvoices(identityId);
-        const count = listDocuments?.length ?? 0;
 
         await uploadData({
-            path: `protected/${identityId}/invoices/invoice${count}.pdf`,
+            path: `protected/${identityId}/invoices/${name}`,
             data: fileData,
             options: {
-                onProgress: ({ transferredBytes, totalBytes }) => {
-                    if (totalBytes) {
-                        const getPercent = Math.round((transferredBytes / totalBytes) * 100);
-                        if (transferredBytes === totalBytes) {
-                            setPercent(0);
-                        } else {
-                            setPercent(getPercent);
-                        }
-                    }
-                }
+                metadata: {
+                    'content-disposition': 'inline',
+                },
+                contentType: 'application/pdf'
             }
         }).result;
 
-        router.replace('(admin)/userView');
         Alert.alert(
             'Invoice Upload',
             'Invoice has been uploaded to customer account',
@@ -279,6 +258,57 @@ const handleListInvoices = async (identityId) =>
     }
 };
 
+const handleGetUrl = async (pdfPath) =>
+{
+    try {
+        const { url } = await getUrl({
+            path: pdfPath
+        });
+        return url.toString();
+    } catch (error) {
+        console.log('Error getting URL:', error);
+    }
+};
+
+const handleUploadEstimate = async (identityId, file, name) =>
+{
+    try {
+        const fileData = await uriToUint8Array(file, '.pdf');
+
+        await uploadData({
+            path: `protected/${identityId}/estimates/${name}`,
+            data: fileData,
+            options: {
+                metadata: {
+                    'content-disposition': 'inline',
+                },
+                contentType: 'application/pdf'
+            }
+        }).result;
+
+        Alert.alert(
+            'Estimate Upload',
+            'Estimate has been uploaded to customer account',
+            [{ text: 'OK' }]
+        );
+    } catch (error) {
+        console.log('Error uploading document:', error);
+    }
+};
+
+const handleListEstimates = async (identityId) =>
+{
+    try {
+        const result = await list({
+            path: `protected/${identityId}/estimates`
+        });
+
+        return result.items;
+    } catch (error) {
+        console.log('Error getting images:', error);
+    }
+};
+
 export {
     handleListUsers,
     handleListTowRequestUsers,
@@ -289,5 +319,9 @@ export {
     handleListHomeImages,
     handleGetURLs,
     handleRemoveImage,
-    handleUploadInvoice
+    handleUploadInvoice,
+    handleListInvoices,
+    handleGetUrl,
+    handleUploadEstimate,
+    handleListEstimates
 }

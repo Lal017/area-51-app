@@ -2,7 +2,7 @@ import { View, Text } from 'react-native';
 import { Styles, AdminStyles } from '../../constants/styles';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Background, formatDate, formatNumber, Tab } from '../../components/components';
-import { AntDesign, FontAwesome6 } from '@expo/vector-icons';
+import { AntDesign, FontAwesome6, Ionicons } from '@expo/vector-icons';
 
 const UserView = () =>
 {
@@ -38,6 +38,9 @@ const UserView = () =>
                 { customer.vehicles?.items?.map((vehicle, index) => (
                     <View style={AdminStyles.vehicleContainer} key={index}>
                         <View style={AdminStyles.labelContainer}>
+                            <Text style={Styles.text}>Vehicle {index + 1}</Text>
+                        </View>
+                        <View style={AdminStyles.labelContainer}>
                             <Text style={Styles.subTitle}>Year</Text>
                             <Text style={Styles.text}>{vehicle.year}</Text>
                         </View>
@@ -70,7 +73,7 @@ const UserView = () =>
                     </View>
                 ))}
             </View>
-            <View style={[Styles.block, {paddingBottom: 50}]}>
+            <View style={Styles.block}>
                 <View style={Styles.infoContainer}>
                     <Text style={Styles.title}>Invoice Upload</Text>
                     <Text style={Styles.text}>Upload an invoice to this customers account</Text>
@@ -82,6 +85,39 @@ const UserView = () =>
                         params: { userParam }
                     })}
                     leftIcon={<FontAwesome6 name='file-pdf' size={30} style={Styles.icon} />}
+                    rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon} />}
+                />
+                <Tab
+                    text='View Invoices'
+                    action={() => router.push({
+                        pathname: '/(admin)/invoiceList',
+                        params: { userParam }
+                    })}
+                    leftIcon={<FontAwesome6 name='file-invoice-dollar' size={30} style={Styles.icon} />}
+                    rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon} />}
+                />
+            </View>
+            <View style={[Styles.block, {paddingBottom: 50}]}>
+                <View style={Styles.infoContainer}>
+                    <Text style={Styles.title}>Estimate Upload</Text>
+                    <Text style={Styles.text}>Upload an estimate to this customers account</Text>
+                </View>
+                <Tab
+                    text='Upload Estimate'
+                    action={() => router.push({
+                        pathname: '/(admin)/estimateUpload',
+                        params: { userParam }
+                    })}
+                    leftIcon={<FontAwesome6 name='file-pdf' size={30} style={Styles.icon} />}
+                    rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon} />}
+                />
+                <Tab
+                    text='View Estimates'
+                    action={() => router.push({
+                        pathname: '/(admin)/estimateList',
+                        params: { userParam }
+                    })}
+                    leftIcon={<FontAwesome6 name='file-circle-question' size={30} style={Styles.icon} />}
                     rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon} />}
                 />
             </View>

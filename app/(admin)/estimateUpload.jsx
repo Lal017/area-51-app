@@ -4,20 +4,20 @@ import * as DocumentPicker from 'expo-document-picker';
 import { useState } from 'react';
 import { BackgroundAlt } from '../../components/components';
 import { Styles, AdminStyles } from '../../constants/styles';
-import { handleUploadInvoice } from '../../components/adminComponents';
+import { handleUploadEstimate } from '../../components/adminComponents';
 import { FontAwesome6 } from '@expo/vector-icons';
 import Pdf from 'react-native-pdf';
 
-const InvoiceUpload = () =>
+const EstimateUpload = () =>
 {
     const { userParam } = useLocalSearchParams();
     const customer = JSON.parse(userParam);
 
-    const [ invoice, setInvoice ] = useState();
+    const [ estimate, setEstimate ] = useState();
     const [ name, setName ] = useState();
     const [ loading, setLoading ] = useState();
 
-    const pickInvoice = async () =>
+    const pickEstimate = async () =>
     {
         try {
             let result = await DocumentPicker.getDocumentAsync({
@@ -28,19 +28,19 @@ const InvoiceUpload = () =>
 
             if (!result.canceled) {
                 setName(result.assets[0].name);
-                setInvoice(result.assets[0].uri);
+                setEstimate(result.assets[0].uri);
             }
         } catch (error) {
-            console.log('Error picking invoice:', error);
+            console.log('Error picking estimate:', error);
         }
     };
 
     return (
         <BackgroundAlt style={{paddingBottom: 50, rowGap: 20}}>
-            { invoice ? (
+            { estimate ? (
                 <View style={AdminStyles.pdfContainer}>
                     <Pdf
-                        source={{uri: invoice, cache: true}}
+                        source={{uri: estimate, cache: true}}
                         onError={(error) => console.log('PDF Error: ', error)}
                         style={[AdminStyles.pdf, {width: Dimensions.get('window').width, height: Dimensions.get('window').height}]}
                         horizontal={true}
@@ -52,7 +52,7 @@ const InvoiceUpload = () =>
                 <View style={AdminStyles.imgPickContainer}>
                     <TouchableOpacity
                         style={AdminStyles.noImg}
-                        onPress={pickInvoice}
+                        onPress={pickEstimate}
                         disabled={loading}
                     >
                         <FontAwesome6 name="file-pdf" size={50} color="black" />
@@ -64,24 +64,24 @@ const InvoiceUpload = () =>
                 onPress={async () =>{
                     if (loading) return;
                     setLoading(true);
-                    if (invoice) {
-                        await handleUploadInvoice(customer.identityId, invoice, name);
+                    if (estimate) {
+                        await handleUploadEstimate(customer.identityId, estimate, name);
                         router.replace({
                             pathname: '/(admin)/userView',
                             params: { userParam }
                         });
                     } else {
-                        await pickInvoice();
+                        await pickEstimate();
                     }
                     setLoading(false);
                 }}
             >
                 <Text style={Styles.actionText}>
-                    { invoice ? 'Upload Invoice' : 'Select Invoice'}
+                    { estimate ? 'Upload Estimate' : 'Select Estimate'}
                 </Text>
             </TouchableOpacity>
         </BackgroundAlt>
     );
 };
 
-export default InvoiceUpload;
+export default EstimateUpload;
