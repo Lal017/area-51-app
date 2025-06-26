@@ -56,7 +56,7 @@ const registerForPushNotifications = async () =>
 };
 
 // Amplify notif functions
-const handleCreateUser = async (client, user_id, token, user_access, firstName, lastName, email, phoneNumber) =>
+const handleCreateUser = async (client, user_id, identityId, token, user_access, firstName, lastName, email, phoneNumber) =>
 {
     try {
         const access_result = user_access.includes('Admins') ? 'Admins' : 'Customers';
@@ -66,6 +66,7 @@ const handleCreateUser = async (client, user_id, token, user_access, firstName, 
             variables: {
                 input: {
                     id: user_id,
+                    identityId: identityId,
                     pushToken: token,
                     access: access_result,
                     firstName: firstName,
@@ -80,7 +81,7 @@ const handleCreateUser = async (client, user_id, token, user_access, firstName, 
     }
 };
 
-const handleUpdateUser = async (client, user_id, token, user_access, firstName, lastName, email, phone_number) =>
+const handleUpdateUser = async (client, user_id, identityId, token, user_access, firstName, lastName, email, phone_number) =>
 {
     try {
         const access_result = user_access.includes('Admins') ? 'Admins' : 'Customers';
@@ -90,6 +91,7 @@ const handleUpdateUser = async (client, user_id, token, user_access, firstName, 
             variables: {
                 input: {
                     id: user_id,
+                    identityId: identityId,
                     pushToken: token,
                     access: access_result,
                     firstName: firstName,

@@ -35,6 +35,10 @@
       },
       "storage": {
         "area51Files": {}
+      },
+      "api": {
+        "area51RestApi": {},
+        "area51app": {}
       }
     }
   }

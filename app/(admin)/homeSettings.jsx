@@ -132,9 +132,9 @@ const HomeSettings = () =>
                             if (loading) return;
                             setLoading(true);
                             if (image) {
-                                await handleUploadHomeImage({file: image, fileType, setPercent});
+                                await handleUploadHomeImage(image, fileType, setPercent);
                             } else {
-                                pickImage();
+                                await pickImage();
                             }
                             setLoading(false);
                         }}

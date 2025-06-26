@@ -112,7 +112,9 @@ const handleGetAddress = async (latitude, longitude) =>
     }
 };
 
-const handleUploadHomeImage = async ({file, fileType, setPercent}) =>
+/* ---------------------------------------------------------------------- */
+
+const handleUploadHomeImage = async (file, fileType, setPercent) =>
 {
     try {
         const fileData = await uriToUint8Array(file, fileType);
@@ -139,11 +141,10 @@ const handleUploadHomeImage = async ({file, fileType, setPercent}) =>
         Alert.alert(
             'Upload Complete',
             'Your image has been uploaded to the home page',
-            [{
-                text: 'OK',
-                onPress: () => router.replace('(admin)')
-            }]
-        )
+            [
+                { text: 'OK' }
+            ]
+        );
     } catch (error) {
         console.log('Error uploading image:', error);
     }
@@ -201,7 +202,7 @@ const handleGetURLs = async () =>
 };
 
 const extractPath = (url) => {
-    const match = url.match(/\/(public\/.+?\.(jpg|jpeg|png|webp|gif))/i);
+    const match = url.match(/\/(public\/.+?\.(jpg|jpeg|png|webp|heic))/i);
     if (match && match[1]) {
         return match[1];
     }
@@ -228,6 +229,56 @@ const handleRemoveImage = async (url) =>
     }
 };
 
+/* ------------------------------------------------------- */
+
+const handleUploadInvoice = async (identityId, file, setPercent) =>
+{
+    try {
+        const fileData = await uriToUint8Array(file, '.pdf');
+        const listDocuments = await handleListInvoices(identityId);
+        const count = listDocuments?.length ?? 0;
+
+        await uploadData({
+            path: `protected/${identityId}/invoices/invoice${count}.pdf`,
+            data: fileData,
+            options: {
+                onProgress: ({ transferredBytes, totalBytes }) => {
+                    if (totalBytes) {
+                        const getPercent = Math.round((transferredBytes / totalBytes) * 100);
+                        if (transferredBytes === totalBytes) {
+                            setPercent(0);
+                        } else {
+                            setPercent(getPercent);
+                        }
+                    }
+                }
+            }
+        }).result;
+
+        router.replace('(admin)/userView');
+        Alert.alert(
+            'Invoice Upload',
+            'Invoice has been uploaded to customer account',
+            [{ text: 'OK' }]
+        );
+    } catch (error) {
+        console.log('Error uploading document:', error);
+    }
+};
+
+const handleListInvoices = async (identityId) =>
+{
+    try {
+        const result = await list({
+            path: `protected/${identityId}/invoices`
+        });
+
+        return result.items;
+    } catch (error) {
+        console.log('Error getting images:', error);
+    }
+};
+
 export {
     handleListUsers,
     handleListTowRequestUsers,
@@ -237,5 +288,6 @@ export {
     handleUploadHomeImage,
     handleListHomeImages,
     handleGetURLs,
-    handleRemoveImage
+    handleRemoveImage,
+    handleUploadInvoice
 }

@@ -1,13 +1,13 @@
 import { Stack, router } from "expo-router";
 import { CustHeader } from "../../components/components";
 import { AppProvider, useApp } from "../../components/context";
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Alert } from "react-native";
 import { generateClient } from "aws-amplify/api";
 import { addNotificationReceivedListener, addNotificationResponseReceivedListener, removeNotificationSubscription } from "expo-notifications";
 import { registerForPushNotifications, handleCreateUser, handleUpdateUser, handleCheckUser } from "../../components/notifComponents";
 import { handleGetCurrentUser } from "../../components/authComponents";
-import { fetchUserAttributes } from "aws-amplify/auth";
+import { fetchAuthSession, fetchUserAttributes } from "aws-amplify/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AdminContent = () =>
@@ -32,6 +32,8 @@ const AdminContent = () =>
         phoneNumber,
         setPhoneNumber,
     } = useApp();
+
+    const [ identityId, setIdentityId ] = useState();
 
     // notification listeners
     const notificationListener = useRef();
@@ -71,6 +73,10 @@ const AdminContent = () =>
             await setAccess(userInfo.accessToken.payload["cognito:groups"]);
             await setUserId(userInfo.accessToken.payload.sub);
 
+            const getDetails = await fetchAuthSession();
+            setIdentityId(getDetails.identityId);
+
+            // get local storage notification
             const savedNotif = await AsyncStorage.getItem('notification');
             setNotification(JSON.parse(savedNotif));
 
@@ -100,19 +106,19 @@ const AdminContent = () =>
                 const alreadyExists = await handleCheckUser(client, userId);
 
                 if (!alreadyExists) {
-                    await handleCreateUser(client, userId, pushToken, access, firstName, lastName, email, phoneNumber);
+                    await handleCreateUser(client, userId, identityId, pushToken, access, firstName, lastName, email, phoneNumber);
                 } else {
-                    await handleUpdateUser(client, userId, pushToken, access, firstName, lastName, email, phoneNumber);
+                    await handleUpdateUser(client, userId, identityId, pushToken, access, firstName, lastName, email, phoneNumber);
                 }
             } catch (error) {
                 console.error('Error registering for push notifications:', error);
             }
         };
 
-        if (client && userId && pushToken && access && firstName && lastName && email && phoneNumber) {
+        if (client && userId && identityId && pushToken && access && firstName && lastName && email && phoneNumber) {
             handleRegisterPushNotifications();
         }
-    }, [client, userId, pushToken, phoneNumber, firstName, lastName, email, access]);
+    }, [client, userId, identityId, pushToken, phoneNumber, firstName, lastName, email, access]);
 
     // Listeners for push notifications
     useEffect(() => {
@@ -137,6 +143,7 @@ const AdminContent = () =>
             <Stack.Screen name='index' options={{title: 'Admin Console', header: () => <CustHeader title="Console"/>}}/>
             <Stack.Screen name='userList' options={{title: 'Users', header: () => <CustHeader title="Users" />}}/>
             <Stack.Screen name='userView' options={{title: 'User List', header: () => <CustHeader title="User" />}}/>
+            <Stack.Screen name='invoiceUpload' options={{title: 'Invoice Upload', header: () => <CustHeader title="Invoice" />}}/>
             <Stack.Screen name='appointmentList' options={{title: 'Appointments', header: () => <CustHeader title="Appointments" />}}/>
             <Stack.Screen name='appointmentView' options={{title: 'Appointment', header: () => <CustHeader title="Appointment" />}}/>
             <Stack.Screen name='settings' options={{title: 'Settings', header: () => <CustHeader title="Settings" />}}/>

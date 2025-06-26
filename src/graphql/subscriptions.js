@@ -8,6 +8,7 @@ export const onCreateUser = /* GraphQL */ `
   ) {
     onCreateUser(filter: $filter, owner: $owner) {
       id
+      identityId
       access
       firstName
       lastName
@@ -40,6 +41,7 @@ export const onUpdateUser = /* GraphQL */ `
   ) {
     onUpdateUser(filter: $filter, owner: $owner) {
       id
+      identityId
       access
       firstName
       lastName
@@ -72,6 +74,7 @@ export const onDeleteUser = /* GraphQL */ `
   ) {
     onDeleteUser(filter: $filter, owner: $owner) {
       id
+      identityId
       access
       firstName
       lastName
@@ -113,6 +116,7 @@ export const onCreateVehicle = /* GraphQL */ `
       userId
       user {
         id
+        identityId
         access
         firstName
         lastName
@@ -147,6 +151,7 @@ export const onUpdateVehicle = /* GraphQL */ `
       userId
       user {
         id
+        identityId
         access
         firstName
         lastName
@@ -181,6 +186,7 @@ export const onDeleteVehicle = /* GraphQL */ `
       userId
       user {
         id
+        identityId
         access
         firstName
         lastName
@@ -213,6 +219,7 @@ export const onCreateAppointment = /* GraphQL */ `
       userId
       user {
         id
+        identityId
         access
         firstName
         lastName
@@ -260,6 +267,7 @@ export const onUpdateAppointment = /* GraphQL */ `
       userId
       user {
         id
+        identityId
         access
         firstName
         lastName
@@ -307,6 +315,7 @@ export const onDeleteAppointment = /* GraphQL */ `
       userId
       user {
         id
+        identityId
         access
         firstName
         lastName
@@ -350,6 +359,7 @@ export const onCreateTowRequest = /* GraphQL */ `
       userId
       user {
         id
+        identityId
         access
         firstName
         lastName
@@ -399,6 +409,7 @@ export const onUpdateTowRequest = /* GraphQL */ `
       userId
       user {
         id
+        identityId
         access
         firstName
         lastName
@@ -448,6 +459,7 @@ export const onDeleteTowRequest = /* GraphQL */ `
       userId
       user {
         id
+        identityId
         access
         firstName
         lastName

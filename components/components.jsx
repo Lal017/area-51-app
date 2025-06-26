@@ -69,7 +69,23 @@ const Background = ({children, style}) =>
             </ScrollView>
         </LinearGradient>
     )
-}
+};
+
+const BackgroundAlt = ({children, style}) =>
+{
+    return (
+        <LinearGradient
+            style={[{flex: 1}, style]}
+            colors={[Colors.background, Colors.backgroundFade, Colors.background]}
+            locations={[0.1, 0.5, 0.9]}
+            start={{x: 1, y: 0.9}}
+            end={{x: 0, y: 0.4}}
+            dither={false}
+        >
+            {children}
+        </LinearGradient>
+    );
+};
 
 // custom calendar header
 const CalendarHeader = ({date}) =>
@@ -338,6 +354,7 @@ export {
     CustHeader,
     AuthBackground,
     Background,
+    BackgroundAlt,
     CalendarHeader,
     Tab,
     Select,

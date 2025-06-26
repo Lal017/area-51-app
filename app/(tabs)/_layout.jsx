@@ -3,13 +3,13 @@ import { router, Tabs} from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { Styles } from "../../constants/styles";
 import { AppProvider, useApp } from "../../components/context";
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { generateClient } from "aws-amplify/api";
 import { addNotificationReceivedListener, addNotificationResponseReceivedListener, removeNotificationSubscription } from "expo-notifications";
 import { registerForPushNotifications, handleCreateUser, handleUpdateUser, handleCheckUser } from "../../components/notifComponents";
 import Colors from "../../constants/colors";
 import { handleGetCurrentUser } from "../../components/authComponents";
-import { fetchUserAttributes } from "aws-amplify/auth";
+import { fetchUserAttributes, fetchAuthSession } from "aws-amplify/auth";
 import { vehiclesByUserId } from "../../src/graphql/queries";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { handleGetMyAppointments, handleGetTowRequest, handleNotifUpdateTowRequest } from "../../components/scheduleComponents";
@@ -40,6 +40,8 @@ const TabsContent = () =>
         setAppointments,
         setIsStuck
     } = useApp();
+
+    const [ identityId, setIdentityId ] = useState();
 
     // notification listeners
     const notificationListener = useRef();
@@ -79,6 +81,10 @@ const TabsContent = () =>
             setAccess(userInfo.accessToken.payload["cognito:groups"]);
             setUserId(userInfo.accessToken.payload.sub);
 
+            const getDetails = await fetchAuthSession();
+            setIdentityId(getDetails.identityId);
+
+            // get local storage notification
             const savedNotif = await AsyncStorage.getItem('notification');
             setNotification(JSON.parse(savedNotif));
 
@@ -147,20 +153,20 @@ const TabsContent = () =>
                 const alreadyExists = await handleCheckUser(client, userId);
 
                 if (!alreadyExists) {
-                    await handleCreateUser(client, userId, pushToken, access, firstName, lastName, email, phoneNumber);
+                    await handleCreateUser(client, userId, identityId, pushToken, access, firstName, lastName, email, phoneNumber);
                 } else {
-                    await handleUpdateUser(client, userId, pushToken, access, firstName, lastName, email, phoneNumber);
+                    await handleUpdateUser(client, userId, identityId, pushToken, access, firstName, lastName, email, phoneNumber);
                 }
             } catch (error) {
                 console.error('Error registering for push notifications:', error);
             }
         };
 
-        if (client && userId && pushToken && access && firstName && lastName && email && phoneNumber) {
+        if (client && userId && identityId && pushToken && access && firstName && lastName && email && phoneNumber) {
             handleRegisterUser();
         }
 
-    }, [client, userId, pushToken, phoneNumber, firstName, lastName, email, access]);
+    }, [client, userId, identityId, pushToken, phoneNumber, firstName, lastName, email, access]);
 
     // Listeners for push notifications
     useEffect(() => {

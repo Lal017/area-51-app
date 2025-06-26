@@ -4,7 +4,7 @@ const Colors = {
     tertiary: '#7836D4',
     background: '#1A1A1A',
     backgroundFade: '#2E1A3A',
-    backgroundAccent: '#738d9c',
+    backgroundAccent: 'rgba(0, 0, 0, 0.2)',
     backDrop: 'black',
     backDropAccent: 'white',
     text: 'white',

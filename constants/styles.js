@@ -458,6 +458,15 @@ const AdminStyles = StyleSheet.create({
         justifyContent: 'space-between',
         width: '100%'
     },
+    pdfContainer: {
+        flex: 1,
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'black'
+    },
+    pdf: {
+        flex: 1,
+    },
     // homeSettings.jsx
     imgPickContainer: {
         borderRadius: 10,

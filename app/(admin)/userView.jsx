@@ -1,7 +1,8 @@
 import { View, Text } from 'react-native';
 import { Styles, AdminStyles } from '../../constants/styles';
-import { useLocalSearchParams } from 'expo-router';
-import { Background, formatDate, formatNumber } from '../../components/components';
+import { router, useLocalSearchParams } from 'expo-router';
+import { Background, formatDate, formatNumber, Tab } from '../../components/components';
+import { AntDesign, FontAwesome6 } from '@expo/vector-icons';
 
 const UserView = () =>
 {
@@ -68,6 +69,21 @@ const UserView = () =>
                         ) : null }
                     </View>
                 ))}
+            </View>
+            <View style={[Styles.block, {paddingBottom: 50}]}>
+                <View style={Styles.infoContainer}>
+                    <Text style={Styles.title}>Invoice Upload</Text>
+                    <Text style={Styles.text}>Upload an invoice to this customers account</Text>
+                </View>
+                <Tab
+                    text='Upload Invoice'
+                    action={() => router.push({
+                        pathname: '/(admin)/invoiceUpload',
+                        params: { userParam }
+                    })}
+                    leftIcon={<FontAwesome6 name='file-pdf' size={30} style={Styles.icon} />}
+                    rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon} />}
+                />
             </View>
         </Background>
     );

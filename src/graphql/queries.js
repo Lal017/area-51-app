@@ -5,6 +5,7 @@ export const getUser = /* GraphQL */ `
   query GetUser($id: ID!) {
     getUser(id: $id) {
       id
+      identityId
       access
       firstName
       lastName
@@ -39,6 +40,7 @@ export const listUsers = /* GraphQL */ `
     listUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        identityId
         access
         firstName
         lastName
@@ -167,6 +169,7 @@ export const getAppointment = /* GraphQL */ `
       userId
       user {
         id
+        identityId
         access
         firstName
         lastName
@@ -282,6 +285,7 @@ export const getTowRequest = /* GraphQL */ `
       userId
       user {
         id
+        identityId
         access
         firstName
         lastName
