@@ -43,6 +43,10 @@ const Invoices = () =>
                         );
                     })}
                 </Background>
+            ) : invoices && invoices?.length === 0 ? (
+                <Background style={{justifyContent: 'center'}}>
+                    <Text style={Styles.subTitle}>No Invoices</Text>
+                </Background>
             ) : (
                 <Loading />
             )}

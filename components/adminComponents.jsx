@@ -32,6 +32,33 @@ const sendPushNotification = async (expoPushToken, title, body, data) =>
     }
 };
 
+const sendMassPushNotification = async (title, body, client) =>
+{
+    try {
+        const users = await handleListUsers(client);
+        const expoPushTokens = users.map(user => user.pushToken);
+
+        const message = {
+        to: expoPushTokens,
+        sound: 'default',
+        title: title,
+        body: body
+        };
+
+        await fetch('https://exp.host/--/api/v2/push/send', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Accept-Encoding': 'gzip, deflate',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(message),
+        });
+    } catch (error) {
+        console.error('Error sending push notification:', error);
+    }
+};
+
 const handleListUsers = async (client) =>
 {
     try {
@@ -133,6 +160,7 @@ const handleUploadHomeImage = async (file, fileType) =>
                 { text: 'OK' }
             ]
         );
+        router.replace('(admin)/homeSettings');
     } catch (error) {
         console.log('Error uploading image:', error);
     }
@@ -313,6 +341,7 @@ export {
     handleListUsers,
     handleListTowRequestUsers,
     sendPushNotification,
+    sendMassPushNotification,
     handleUpdateTowRequest,
     handleGetAddress,
     handleUploadHomeImage,

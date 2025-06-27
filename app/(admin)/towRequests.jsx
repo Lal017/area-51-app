@@ -78,8 +78,8 @@ const TowRequests = () =>
                                     pathname: 'towResponse',
                                     params: { customerParam: JSON.stringify(request)}
                                 })}
-                                text={<Text style={[Styles.subTitle, {paddingLeft: 75}, request.status === 'REQUESTED' ? {color: Colors.primary} : request.status === 'PENDING' ? {color: Colors.secondary} : request.status === 'IN_PROGRESS' ? {color: 'black'} : request.status === 'CANCELLED' ? {color: 'red'} : request.status === 'COMPLETED' ? {color: '#b3b3b3'} : null ]}>{request.user.firstName}{'\n'}{request.status === 'IN_PROGRESS' ? 'IN PROGRESS' : request.status}</Text>}
-                                leftIcon={<MaterialCommunityIcons name='tow-truck' size={30} style={Styles.icon} />}
+                                text={<Text style={[Styles.subTitle, {paddingLeft: 75}, request.status === 'REQUESTED' ? {color: Colors.primary} : request.status === 'PENDING' ? {color: Colors.secondary} : request.status === 'IN_PROGRESS' ? {color: 'white'} : request.status === 'CANCELLED' ? {color: 'red'} : request.status === 'COMPLETED' ? {color: '#b3b3b3'} : null ]}><Text style={Styles.title}>{request.user.firstName}</Text>{'\n'}{request.status === 'IN_PROGRESS' ? 'IN PROGRESS' : request.status}</Text>}
+                                leftIcon={<MaterialCommunityIcons name='tow-truck' size={35} style={Styles.icon} />}
                                 rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon} />}
                             />
                         </View>
@@ -88,5 +88,5 @@ const TowRequests = () =>
         </Background>
     );
 };
-//                             <Text style={[Styles.subTitle, request.status === 'REQUESTED' ? {color: Colors.primary} : request.status === 'PENDING' ? {color: Colors.secondary} : request.status === 'IN_PROGRESS' ? {color: 'black'} : request.status === 'CANCELLED' ? {color: 'red'} : request.status === 'COMPLETED' ? {color: '#b3b3b3'} : null ]}>{request.status === 'IN_PROGRESS' ? 'IN PROGRESS' : request.status}</Text>
+
 export default TowRequests;

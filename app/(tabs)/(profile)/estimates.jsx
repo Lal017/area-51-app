@@ -43,7 +43,13 @@ const Estimates = () =>
                         );
                     })}
                 </Background>
-            ) : (<Loading />)}
+            ) : estimates && estimates?.length === 0 ? (
+                <Background style={{justifyContent: 'center'}}>
+                    <Text style={Styles.subTitle}>No Estimates</Text>
+                </Background>
+            ) : (
+                <Loading />
+            )}
         </>
     );
 };

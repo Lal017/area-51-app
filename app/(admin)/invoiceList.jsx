@@ -24,25 +24,32 @@ const InvoiceList = () =>
     }, []);
 
     return (
-        <Background>
-            {invoices?.map((invoice, index) => {
-                const parts = invoice.path.split('/');
-                const fileName = parts[parts.length - 1];
-
-                return (
-                    <TouchableOpacity
-                        key={index}
-                        onPress={async () => {
-                            const path = await handleGetUrl(invoice.path);
-                            await openURL(path);
-                        }}
-                        style={AdminStyles.invoiceItem}
-                    >
-                        <Text style={Styles.subTitle}>{fileName}</Text>
-                    </TouchableOpacity>
-                );
-            })}
-        </Background>
+        <>
+            { invoices && invoices.length > 0 ? (
+                <Background>
+                    {invoices?.map((invoice, index) => {
+                        const parts = invoice.path.split('/');
+                        const fileName = parts[parts.length - 1];
+                        return (
+                            <TouchableOpacity
+                                key={index}
+                                onPress={async () => {
+                                    const path = await handleGetUrl(invoice.path);
+                                    await openURL(path);
+                                }}
+                                style={AdminStyles.invoiceItem}
+                            >
+                                <Text style={Styles.subTitle}>{fileName}</Text>
+                            </TouchableOpacity>
+                        );
+                    })}
+                </Background>
+            ) : (
+                <Background style={{justifyContent: 'center'}}>
+                    <Text style={Styles.subTitle}>No Invoices</Text>
+                </Background>
+            )}
+        </>
     );
 };
 

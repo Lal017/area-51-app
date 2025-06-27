@@ -502,23 +502,9 @@ const AdminStyles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
-    centerPercentContainer: {
-        position: 'absolute',
-        borderRadius: 100,
-        justifyContent: 'center',
-        alignItems: 'center',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0
-    },
-    percentContainer: {
+    inputContainer: {
+        width: '100%',
         backgroundColor: 'white',
-        width: 50,
-        height: 50,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 100,
     },
     // invoiceList.jsx
     invoiceItem: {

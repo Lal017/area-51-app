@@ -164,7 +164,7 @@ const TowResponse = () =>
                         </TouchableOpacity>
                     </View>
                 ) : customer.status === 'IN_PROGRESS' ? (
-                    <View style={[Styles.block, {paddingBottom: 25}]}>
+                    <View style={[Styles.block, {paddingBottom: 50, alignItems: 'center'}]}>
                         <TouchableOpacity
                             style={Styles.actionButton}
                             onPress={() => {

@@ -1,22 +1,27 @@
-import { TouchableOpacity, Text, Image, View, Dimensions, Alert } from 'react-native';
+import { TouchableOpacity, Text, Image, View, Dimensions, Alert, TextInput, KeyboardAvoidingView } from 'react-native';
 import { AdminStyles, Styles } from '../../constants/styles';
 import { useEffect, useRef, useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import { Background } from '../../components/components';
-import { handleUploadHomeImage, handleGetURLs, handleRemoveImage } from '../../components/adminComponents';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { handleUploadHomeImage, handleGetURLs, handleRemoveImage, sendMassPushNotification } from '../../components/adminComponents';
+import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import Carousel from 'react-native-reanimated-carousel';
+import Colors from '../../constants/colors';
+import { useApp } from '../../components/context';
 
 const screenWidth = Dimensions.get("window").width;
 
 const HomeSettings = () =>
 {
+    const { client } = useApp();
+
     const [ image, setImage ] = useState();
     const [ fileType, setFileType ] = useState();
     const [ urls, setUrls ] = useState();
-    const [ percent, setPercent ] = useState(0);
     const [ loading, setLoading ] = useState(false);
     const [ currentIndex, setCurrentIndex ] = useState();
+    const [ title, setTitle ] = useState();
+    const [ body, setBody ] = useState();
 
     const carouselRef = useRef();
     const indexRef = useRef();
@@ -47,7 +52,10 @@ const HomeSettings = () =>
     }, []);
 
     return (
-        <>
+        <KeyboardAvoidingView
+            behavior='height'
+            style={{flex: 1}}
+        >
             <Background>
                 <View style={Styles.block}>
                     <View style={Styles.infoContainer}>
@@ -107,7 +115,7 @@ const HomeSettings = () =>
                         </>
                     ) : null}
                 </View>
-                <View style={[Styles.block, {paddingBottom: 50}]}>
+                <View style={Styles.block}>
                     <View style={Styles.infoContainer}>
                         <Text style={Styles.title}>Image Upload</Text>
                         <Text style={Styles.text}>Upload an image to appear on the home screen for customers</Text>
@@ -132,7 +140,7 @@ const HomeSettings = () =>
                             if (loading) return;
                             setLoading(true);
                             if (image) {
-                                await handleUploadHomeImage(image, fileType, setPercent);
+                                await handleUploadHomeImage(image, fileType);
                             } else {
                                 await pickImage();
                             }
@@ -144,15 +152,58 @@ const HomeSettings = () =>
                         </Text>
                     </TouchableOpacity>
                 </View>
-            </Background>
-            { percent > 0 ? (
-                <View style={AdminStyles.centerPercentContainer}>
-                    <View style={AdminStyles.percentContainer}>
-                        <Text style={[Styles.text, {color: 'black'}]}>{percent}%</Text>
+                <View style={[Styles.block, {alignItems: 'center', paddingBottom: 50}]}>
+                    <View style={Styles.infoContainer}>
+                        <Text style={Styles.title}>Send Notification</Text>
+                        <Text style={Styles.text}>Send a push notification to all users</Text>
                     </View>
+                    <View style={Styles.inputContainer}>
+                        <View style={Styles.inputWrapper}>
+                            <Ionicons name='notifications' size={20} style={Styles.icon} />
+                            <TextInput
+                                placeholder='Title'
+                                placeholderTextColor={Colors.text}
+                                value={title}
+                                onChangeText={setTitle}
+                                style={Styles.input}
+                            />
+                        </View>
+                        <View style={Styles.inputWrapper}>
+                            <MaterialIcons name='subject' size={20} style={Styles.icon} />
+                            <TextInput
+                                placeholder='Body'
+                                placeholderTextColor={Colors.text}
+                                value={body}
+                                onChangeText={setBody}
+                                style={Styles.input}
+                            />
+                        </View>
+                    </View>
+                    <TouchableOpacity
+                        onPress={async () => {
+                            if (loading) return;
+                            setLoading(true);
+                            Alert.alert(
+                                'Confirmation',
+                                `Send this notification?\n\n${title}\n${body}`,
+                                [
+                                    { text: 'No'},
+                                    {
+                                        text: 'Yes',
+                                        onPress: async () => { await sendMassPushNotification(title, body, client) }
+                                    }
+                                ]
+                            )
+                            setLoading(false);
+                        }}
+                        style={[Styles.actionButton, loading && {opacity: 0.5}]}
+                        disabled={loading}
+                    >
+                        <Text style={Styles.actionText}>Send</Text>
+                    </TouchableOpacity>
                 </View>
-            ) : null}
-        </>
+            </Background>
+        </KeyboardAvoidingView>
     );
 }
 
