@@ -1,14 +1,10 @@
-import { ActivityIndicator } from 'react-native';
-import Colors from '../constants/colors';
-import { Background } from '../components/components';
+import { Loading } from '../components/components';
 
-const Loading = () => {
+const LoadingPage = () => {
 
     return (
-        <Background style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <ActivityIndicator size="large" color={Colors.secondary} />
-        </Background>
+        <Loading />
     );
 }
 
-export default Loading;
+export default LoadingPage;

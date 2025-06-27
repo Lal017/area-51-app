@@ -18,6 +18,8 @@ const AppProvider = ({ children }) => {
   const [ towRequest, setTowRequest ] = useState(undefined);
   const [ appointments, setAppointments ] = useState();
   const [ isStuck, setIsStuck ] = useState(false);
+  const [ newInvoice, setNewInvoice ] = useState();
+  const [ newEstimate, setNewEstimate ] = useState();
 
   const updateNotification = async (newNotif) =>
   {
@@ -40,6 +42,34 @@ const AppProvider = ({ children }) => {
       setNotification(null);
     } catch (error) {
       console.error('error clearing notification:', error);
+    }
+  };
+
+  const handleNewInvoice = async (value) =>
+  {
+    try {
+      if (value) {
+        await AsyncStorage.setItem('invoice', JSON.stringify(value));
+      } else {
+        await AsyncStorage.removeItem('invoice');
+      }
+      setNewInvoice(value);
+    } catch (error) {
+      console.error('error setting new invoice:', error);
+    }
+  };
+
+  const handleNewEstimate = async (value) =>
+  {
+    try {
+      if (value) {
+        await AsyncStorage.setItem('estimate', JSON.stringify(value));
+      } else {
+        await AsyncStorage.removeItem('estimate');
+      }
+      setNewEstimate(value);
+    } catch (error) {
+      console.error('error setting new estimate:', error);
     }
   };
 
@@ -73,7 +103,11 @@ const AppProvider = ({ children }) => {
         isStuck,
         setIsStuck,
         appointments,
-        setAppointments
+        setAppointments,
+        newInvoice,
+        setNewInvoice: handleNewInvoice,
+        newEstimate,
+        setNewEstimate: handleNewEstimate,
         }}>
       {children}
     </AppContext.Provider>

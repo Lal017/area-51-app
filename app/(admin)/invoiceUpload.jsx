@@ -4,7 +4,7 @@ import * as DocumentPicker from 'expo-document-picker';
 import { useState } from 'react';
 import { BackgroundAlt } from '../../components/components';
 import { Styles, AdminStyles } from '../../constants/styles';
-import { handleUploadInvoice } from '../../components/adminComponents';
+import { handleUploadInvoice, sendPushNotification } from '../../components/adminComponents';
 import { FontAwesome6 } from '@expo/vector-icons';
 import Pdf from 'react-native-pdf';
 
@@ -17,6 +17,10 @@ const InvoiceUpload = () =>
     const [ name, setName ] = useState();
     const [ loading, setLoading ] = useState();
 
+    const data = {
+        type: 'NEW_INVOICE'
+    };
+    
     const pickInvoice = async () =>
     {
         try {
@@ -66,6 +70,7 @@ const InvoiceUpload = () =>
                     setLoading(true);
                     if (invoice) {
                         await handleUploadInvoice(customer.identityId, invoice, name);
+                        await sendPushNotification(customer.pushToken, 'New Invoice', 'A new invoice has been uploaded to your account', data);
                         router.replace({
                             pathname: '/(admin)/userView',
                             params: { userParam }

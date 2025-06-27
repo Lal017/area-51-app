@@ -3,9 +3,9 @@ import { router, Tabs} from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { Styles } from "../../constants/styles";
 import { AppProvider, useApp } from "../../components/context";
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { generateClient } from "aws-amplify/api";
-import { addNotificationReceivedListener, addNotificationResponseReceivedListener, removeNotificationSubscription } from "expo-notifications";
+import { addNotificationReceivedListener, addNotificationResponseReceivedListener, removeNotificationSubscription, getLastNotificationResponseAsync } from "expo-notifications";
 import { registerForPushNotifications, handleCreateUser, handleUpdateUser, handleCheckUser } from "../../components/notifComponents";
 import Colors from "../../constants/colors";
 import { handleGetCurrentUser } from "../../components/authComponents";
@@ -38,9 +38,14 @@ const TabsContent = () =>
         phoneNumber,
         setPhoneNumber,
         setVehicles,
+        towRequest,
         setTowRequest,
         setAppointments,
-        setIsStuck
+        setIsStuck,
+        newInvoice,
+        setNewInvoice,
+        newEstimate,
+        setNewEstimate,
     } = useApp();
 
     // notification listeners
@@ -87,6 +92,23 @@ const TabsContent = () =>
             // get local storage notification
             const savedNotif = await AsyncStorage.getItem('notification');
             setNotification(JSON.parse(savedNotif));
+
+            const lastNotificationResponse = await getLastNotificationResponseAsync();
+
+            if (lastNotificationResponse) {
+                const type = lastNotificationResponse.notification.request.content.data.type;
+                if (type === "NEW_INVOICE") {
+                    setNewInvoice(true);
+                } else if (type === "NEW_ESTIMATE") {
+                    setNewEstimate(true);
+                }
+            }
+
+            // get local storage invoice and estimate
+            const savedInvoice = await AsyncStorage.getItem('invoice');
+            setNewInvoice(JSON.parse(savedInvoice));
+            const savedEstimate = await AsyncStorage.getItem('estimate');
+            setNewEstimate(JSON.parse(savedEstimate));
 
             if (!userAtt?.phone_number || ((!userAtt?.given_name || !userAtt?.family_name) && !userAtt?.name)) {
                 router.replace('/(tabs)/(profile)/accountEdit');
@@ -177,14 +199,26 @@ const TabsContent = () =>
         notificationListener.current = addNotificationReceivedListener(notification => {
             setNotification(notification.request.content);
 
-            if (notification.request.content.data.type === "TOW_RESPONSE"){
+            if (notification.request.content.data.type === "TOW_RESPONSE") {
                 handleNotifUpdateTowRequest(client, userId, setTowRequest);
+            }
+            else if (notification.request.content.data.type === "NEW_INVOICE") {
+                setNewInvoice(true);
+            }
+            else if (notification.request.content.data.type === "NEW_ESTIMATE") {
+                setNewEstimate(true);
             }
         });
 
         // triggered when the user taps on the notification
         responseListener.current = addNotificationResponseReceivedListener(response => {
             router.push('/');
+            if (response.notification.request.content.data.type === "NEW_INVOICE") {
+                setNewInvoice(true);
+            }
+            else if (response.notification.request.content.data.type === "NEW_ESTIMATE") {
+                setNewEstimate(true);
+            }
         });
 
         return () => {
@@ -224,6 +258,7 @@ const TabsContent = () =>
                     tabBarIcon: ({ color, size }) => (
                         <Ionicons name="home" size={size} color={color}/>
                     ),
+                    tabBarBadge: towRequest?.status === 'PENDING' ? (1) : undefined,
                 }}
             />
             <Tabs.Screen
@@ -252,6 +287,7 @@ const TabsContent = () =>
                     tabBarIcon: ({ color, size }) => (
                         <Ionicons name="person" size={size} color={color}/>
                     ),
+                    tabBarBadge: newInvoice && newEstimate ? (2) : newInvoice || newEstimate ? (1) : undefined, 
                 }}
             />
         </Tabs>

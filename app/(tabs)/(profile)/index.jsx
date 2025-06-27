@@ -1,6 +1,8 @@
 import { View, Text, TouchableOpacity, Linking } from "react-native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Animated, { Easing , useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from "react-native-reanimated";
 import { ProfileStyles, Styles } from "../../../constants/styles";
+import Colors from "../../../constants/colors";
 import { Background, Tab } from "../../../components/components";
 import { handleSignOut } from "../../../components/authComponents";
 import { router } from "expo-router";
@@ -11,8 +13,31 @@ import { LinearGradient } from "expo-linear-gradient";
 // Profile page
 const Profile = () =>
 {
-    const { email, firstName, lastName } = useApp();
+    const { email, firstName, lastName, newInvoice, setNewInvoice, newEstimate, setNewEstimate } = useApp();
     const [ loading, setLoading ] = useState(false);
+
+    const bounce = useSharedValue(0);
+
+    useEffect(() => {
+        bounce.value = withRepeat(
+            withSequence(
+            withTiming(-10, {
+                duration: 500,
+                easing: Easing.out(Easing.ease)
+            }),
+            withTiming(0, {
+                duration: 500,
+                easing: Easing.in(Easing.ease)
+            })
+            ),
+            -1,     // infinite
+            true,   // reverse
+        );
+    }, []);
+
+    const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: bounce.value }]
+    }));
 
     return(
         <Background>
@@ -34,18 +59,38 @@ const Profile = () =>
                 leftIcon={<Ionicons name="car-sport" size={30} style={Styles.icon} />}
                 rightIcon={<AntDesign name="right" size={25} style={Styles.rightIcon} />}
             />
-            <Tab
-                text="Invoices"
-                action={() => router.push('/(tabs)/(profile)/invoices')}
-                leftIcon={<FontAwesome6 name="file-invoice-dollar" size={30} style={Styles.icon} />}
-                rightIcon={<AntDesign name="right" size={25} style={Styles.rightIcon} />}
-            />
-            <Tab
-                text="Estimates"
-                action={() => router.push('/(tabs)/(profile)/estimates')}
-                leftIcon={<FontAwesome6 name="file-circle-question" size={30} style={Styles.icon} />}
-                rightIcon={<AntDesign name="right" size={25} style={Styles.rightIcon} />}
-            />
+            <View style={ProfileStyles.tabContainer}>
+                { newInvoice ? (
+                    <Animated.View style={[ProfileStyles.activityContainer, animatedStyle, {backgroundColor: Colors.tertiary}]}>
+                        <Text style={[Styles.subTitle, {fontSize: 20, textAlign: 'center'}]}>!</Text>
+                    </Animated.View>
+                ) : null }
+                <Tab
+                    text="Invoices"
+                    action={() => {
+                        router.push('/(tabs)/(profile)/invoices');
+                        setNewInvoice(false);
+                    }}
+                    leftIcon={<FontAwesome6 name="file-invoice-dollar" size={30} style={Styles.icon} />}
+                    rightIcon={<AntDesign name="right" size={25} style={Styles.rightIcon} />}
+                />
+            </View>
+            <View style={ProfileStyles.tabContainer}>
+                { newEstimate ? (
+                    <Animated.View style={[ProfileStyles.activityContainer, animatedStyle, {backgroundColor: Colors.tertiary}]}>
+                        <Text style={[Styles.subTitle, {fontSize: 20, textAlign: 'center'}]}>!</Text>
+                    </Animated.View>
+                ) : null }
+                <Tab
+                    text="Estimates"
+                    action={() => {
+                        router.push('/(tabs)/(profile)/estimates');
+                        setNewEstimate(false);
+                    }}
+                    leftIcon={<FontAwesome6 name="file-circle-question" size={30} style={Styles.icon} />}
+                    rightIcon={<AntDesign name="right" size={25} style={Styles.rightIcon} />}
+                />
+            </View>
             <Tab
                 text="Contact us"
                 action={() => router.push('/(tabs)/(profile)/contact')}

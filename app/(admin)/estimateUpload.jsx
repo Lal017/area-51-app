@@ -4,7 +4,7 @@ import * as DocumentPicker from 'expo-document-picker';
 import { useState } from 'react';
 import { BackgroundAlt } from '../../components/components';
 import { Styles, AdminStyles } from '../../constants/styles';
-import { handleUploadEstimate } from '../../components/adminComponents';
+import { handleUploadEstimate, sendPushNotification } from '../../components/adminComponents';
 import { FontAwesome6 } from '@expo/vector-icons';
 import Pdf from 'react-native-pdf';
 
@@ -16,6 +16,10 @@ const EstimateUpload = () =>
     const [ estimate, setEstimate ] = useState();
     const [ name, setName ] = useState();
     const [ loading, setLoading ] = useState();
+
+    const data = {
+        type: 'NEW_ESTIMATE'
+    };
 
     const pickEstimate = async () =>
     {
@@ -66,6 +70,7 @@ const EstimateUpload = () =>
                     setLoading(true);
                     if (estimate) {
                         await handleUploadEstimate(customer.identityId, estimate, name);
+                        await sendPushNotification(customer.pushToken, 'New Estimate', 'A new estimate has been uploaded to your account', data);
                         router.replace({
                             pathname: '/(admin)/userView',
                             params: { userParam }

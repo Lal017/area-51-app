@@ -211,19 +211,20 @@ const HomeStyles = StyleSheet.create({
     panel: {
         width: '90%',
         flexDirection: 'row',
-        columnGap: 10,
+        flexWrap: 'wrap',
+        gap: 5,
         paddingTop: 5,
-        paddingBottom: 5
+        paddingBottom: 5,
     },
-    snapContainer: {
+    panelContainer: {
         flex: 1,
+        minWidth: '30%',
         borderRadius: 10,
-        backgroundColor: Colors.backDropAccent,
         justifyContent: 'center',
         alignItems: 'center',
     },
     imgContainer: {
-        flex: 1,
+        width: '100%',
         borderRadius: 10,
         overflow: 'hidden',
         alignSelf: 'center',
@@ -246,6 +247,7 @@ const HomeStyles = StyleSheet.create({
     appointmentContainer: {
         backgroundColor: Colors.backgroundAccent,
         flex: 1,
+        minWidth: '40%',
         borderRadius: 10,
         padding: 25,
         paddingTop: 15,
@@ -399,6 +401,21 @@ const ProfileStyles = StyleSheet.create({
         fontSize: 30,
         fontFamily: 'Roboto-Bold',
         color: Colors.text,
+    },
+    tabContainer: {
+        width: '100%',
+        position: 'relative'
+    },
+    activityContainer: {
+        width: 30,
+        height: 30,
+        borderRadius: 100,
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'absolute',
+        left: 10,
+        top: 5,
+        zIndex: 1,
     },
     // Vehicle List
     vehicleContainer: {

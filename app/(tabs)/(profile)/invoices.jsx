@@ -1,6 +1,6 @@
 import { TouchableOpacity, Text } from 'react-native';
 import { useEffect, useState } from 'react';
-import { Background } from '../../../components/components';
+import { Background, Loading } from '../../../components/components';
 import { handleListInvoices } from '../../../components/adminComponents';
 import { useApp } from '../../../components/context';
 import { AdminStyles, Styles } from '../../../constants/styles';
@@ -23,25 +23,30 @@ const Invoices = () =>
     }, []);
 
     return (
-        <Background>
-            {invoices?.map((invoice, index) => {
-                const parts = invoice.path.split('/');
-                const fileName = parts[parts.length - 1];
-
-                return (
-                    <TouchableOpacity
-                        key={index}
-                        onPress={async () => {
-                            const path = await handleGetUrl(invoice.path);
-                            await openURL(path);
-                        }}
-                        style={AdminStyles.invoiceItem}
-                    >
-                        <Text style={Styles.subTitle}>{fileName}</Text>
-                    </TouchableOpacity>
-                );
-            })}
-        </Background>
+        <>
+            { invoices && invoices?.length > 0 ? (
+                <Background>
+                    {invoices?.map((invoice, index) => {
+                        const parts = invoice.path.split('/');
+                        const fileName = parts[parts.length - 1];
+                        return (
+                            <TouchableOpacity
+                                key={index}
+                                onPress={async () => {
+                                    const path = await handleGetUrl(invoice.path);
+                                    await openURL(path);
+                                }}
+                                style={AdminStyles.invoiceItem}
+                            >
+                                <Text style={Styles.subTitle}>{fileName}</Text>
+                            </TouchableOpacity>
+                        );
+                    })}
+                </Background>
+            ) : (
+                <Loading />
+            )}
+        </>
     );
 };
 

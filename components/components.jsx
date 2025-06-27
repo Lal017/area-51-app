@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ScrollView, Alert, Animated } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Alert, Animated, ActivityIndicator } from 'react-native';
 import { router } from 'expo-router';
 import { useApp } from './context';
 import { Styles, ServiceStyles, HomeStyles } from '../constants/styles';
@@ -9,6 +9,15 @@ import LottieView from 'lottie-react-native';
 import { handleUpdateTowRequestStatus } from './scheduleComponents';
 import { handleSendAdminNotif } from './notifComponents';
 import { useEffect, useRef, useState } from 'react';
+
+// loading page
+const Loading = () => {
+    return (
+        <Background style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <ActivityIndicator size="large" color={Colors.secondary} />
+        </Background>
+    );
+};
 
 // custom header component to replace default header
 const CustHeader = ({title, index}) =>
@@ -348,9 +357,10 @@ const AppointmentReminder = ({appointments}) =>
             </Animated.View>
         </View>
     );
-}
+};
 
 export {
+    Loading,
     CustHeader,
     AuthBackground,
     Background,
