@@ -110,6 +110,7 @@ export const onCreateVehicle = /* GraphQL */ `
       year
       make
       model
+      readyForPickup
       color
       plate
       vin
@@ -145,6 +146,7 @@ export const onUpdateVehicle = /* GraphQL */ `
       year
       make
       model
+      readyForPickup
       color
       plate
       vin
@@ -180,6 +182,7 @@ export const onDeleteVehicle = /* GraphQL */ `
       year
       make
       model
+      readyForPickup
       color
       plate
       vin
@@ -237,6 +240,7 @@ export const onCreateAppointment = /* GraphQL */ `
         year
         make
         model
+        readyForPickup
         color
         plate
         vin
@@ -285,6 +289,7 @@ export const onUpdateAppointment = /* GraphQL */ `
         year
         make
         model
+        readyForPickup
         color
         plate
         vin
@@ -333,6 +338,7 @@ export const onDeleteAppointment = /* GraphQL */ `
         year
         make
         model
+        readyForPickup
         color
         plate
         vin
@@ -377,6 +383,7 @@ export const onCreateTowRequest = /* GraphQL */ `
         year
         make
         model
+        readyForPickup
         color
         plate
         vin
@@ -427,6 +434,7 @@ export const onUpdateTowRequest = /* GraphQL */ `
         year
         make
         model
+        readyForPickup
         color
         plate
         vin
@@ -477,6 +485,7 @@ export const onDeleteTowRequest = /* GraphQL */ `
         year
         make
         model
+        readyForPickup
         color
         plate
         vin

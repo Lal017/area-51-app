@@ -1,4 +1,4 @@
-import { listUsers } from '../src/graphql/queries';
+import { listUsers, listVehicles } from '../src/graphql/queries';
 import { updateTowRequest } from '../src/graphql/mutations';
 import { router } from 'expo-router';
 import { Alert } from 'react-native';
@@ -74,6 +74,19 @@ const handleListUsers = async (client) =>
         return users.data.listUsers.items;
     } catch (error) {
         console.log('Error getting users:', error);
+    }
+};
+
+const handleListVehicles = async (client) =>
+{
+    try {
+        const vehicles = await client.graphql({
+            query: listVehicles
+        });
+
+        return vehicles.data.listVehicles.items;
+    } catch (error) {
+        console.log('Error fetching vehicles:', error);
     }
 };
 
@@ -337,8 +350,29 @@ const handleListEstimates = async (identityId) =>
     }
 };
 
+/* ------------------------------------------ */
+
+const handleUpdateVehicleStatus = async (client, vehicleId, status) =>
+{
+    try {
+        await client.graphql({
+            query: updateVehicle,
+            variables: {
+                input: {
+                    id: vehicleId,
+                    readyForPickup: status
+                }
+            }
+        });
+
+    } catch (error) {
+        console.log('Error updating vehicle status:', error);
+    }
+};
+
 export {
     handleListUsers,
+    handleListVehicles,
     handleListTowRequestUsers,
     sendPushNotification,
     sendMassPushNotification,
@@ -352,5 +386,6 @@ export {
     handleListInvoices,
     handleGetUrl,
     handleUploadEstimate,
-    handleListEstimates
+    handleListEstimates,
+    handleUpdateVehicleStatus
 }

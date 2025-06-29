@@ -1,28 +1,28 @@
 import { View, TextInput } from "react-native";
 import { Styles } from '../../constants/styles';
-import { handleListUsers } from "../../components/adminComponents";
+import { handleListVehicles } from "../../components/adminComponents";
 import { useApp } from '../../components/context';
 import { useEffect, useState } from "react";
 import { Background, Tab } from "../../components/components";
 import { router } from "expo-router";
-import { AntDesign, Entypo } from "@expo/vector-icons";
+import { AntDesign, Entypo, Ionicons } from "@expo/vector-icons";
 import Colors from "../../constants/colors";
 
-const UserList = () =>
+const VehicleList = () =>
 {
     const { client } = useApp();
 
-    const [ users, setUsers ] = useState();
+    const [ vehicles, setVehicles ] = useState();
     const [ search, setSearch ] = useState();
 
     useEffect(() => {
-        const fetchUsers = async () =>
+        const fetchVehicles = async () =>
         {
-            const getUsers = await handleListUsers(client);
-            setUsers(getUsers);
+            const getVehicles = await handleListVehicles(client);
+            setVehicles(getVehicles);
         }
 
-        fetchUsers();
+        fetchVehicles();
     }, [])
 
     return (
@@ -31,7 +31,7 @@ const UserList = () =>
                 <View style={Styles.inputWrapper}>
                     <Entypo name='magnifying-glass' size={20} color='black' style={Styles.icon} />
                     <TextInput
-                        placeholder="Search User"
+                        placeholder="Search Vehicles"
                         placeholderTextColor={Colors.text}
                         style={Styles.input}
                         value={search}
@@ -39,22 +39,18 @@ const UserList = () =>
                     />
                 </View>
             </View>
-            {users && users
-                .filter(user => {
+            {vehicles && vehicles
+                .filter(vehicle => {
                     if (!search) return true;
                     const query = search?.toLowerCase();
-                    const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
+                    const fullName = `${vehicle.year} ${vehicle.make} ${vehicle.model}`.toLowerCase();
                     return fullName.includes(query);
                 })
-                .map((user, index) => (
+                .map((vehicle, index) => (
                 <Tab
                     key={index}
-                    text={`${user.firstName} ${user.lastName}`}
-                    action={() => router.push({
-                        params: { userParam: JSON.stringify(user) },
-                        pathname: '/(admin)/userView'
-                    })}
-                    leftIcon={<Entypo name='user' size={30} style={Styles.icon} />}
+                    text={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
+                    leftIcon={<Ionicons name='car-sport' size={30} style={Styles.icon} />}
                     rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon} />}
                 />
             ))}
@@ -62,4 +58,4 @@ const UserList = () =>
     );
 };
 
-export default UserList;
+export default VehicleList;

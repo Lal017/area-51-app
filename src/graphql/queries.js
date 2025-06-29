@@ -74,12 +74,14 @@ export const getVehicle = /* GraphQL */ `
       year
       make
       model
+      readyForPickup
       color
       plate
       vin
       userId
       user {
         id
+        identityId
         access
         firstName
         lastName
@@ -110,6 +112,7 @@ export const listVehicles = /* GraphQL */ `
         year
         make
         model
+        readyForPickup
         color
         plate
         vin
@@ -144,6 +147,7 @@ export const vehiclesByUserId = /* GraphQL */ `
         year
         make
         model
+        readyForPickup
         color
         plate
         vin
@@ -187,6 +191,7 @@ export const getAppointment = /* GraphQL */ `
         year
         make
         model
+        readyForPickup
         color
         plate
         vin
@@ -303,6 +308,7 @@ export const getTowRequest = /* GraphQL */ `
         year
         make
         model
+        readyForPickup
         color
         plate
         vin

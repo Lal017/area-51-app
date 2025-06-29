@@ -40,7 +40,7 @@ const EstimateUpload = () =>
     };
 
     return (
-        <BackgroundAlt style={{paddingBottom: 50, rowGap: 20}}>
+        <BackgroundAlt style={{paddingBottom: 50, rowGap: 20, justifyContent: 'center'}}>
             { estimate ? (
                 <View style={AdminStyles.pdfContainer}>
                     <Pdf

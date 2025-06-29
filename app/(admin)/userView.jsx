@@ -41,9 +41,9 @@ const UserView = () =>
                     </View>
                 </View>
                 <View style={Styles.block}>
-                    { customer.vehicles.items.length > 0 ? (<Text style={[Styles.title, {paddingLeft: 20}]}>Vehicles</Text>)
+                    { customer?.vehicles?.items?.length > 0 ? (<Text style={[Styles.title, {paddingLeft: 20}]}>Vehicles</Text>)
                         : (<Text style={[Styles.title, {paddingLeft: 20}]}>Customer has no vehicles</Text>)}
-                    { customer.vehicles?.items?.map((vehicle, index) => (
+                    { customer?.vehicles?.items?.map((vehicle, index) => (
                         <View style={AdminStyles.vehicleContainer} key={index}>
                             <View style={AdminStyles.labelContainer}>
                                 <Text style={Styles.text}>Vehicle {index + 1}</Text>
@@ -128,12 +128,6 @@ const UserView = () =>
                         leftIcon={<FontAwesome6 name='file-circle-question' size={30} style={Styles.icon} />}
                         rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon} />}
                     />
-                </View>
-                <View style={[Styles.block, {alignItems: 'center'}]}>
-                    <View style={Styles.infoContainer}>
-                        <Text style={Styles.title}>Notify for pickup</Text>
-                        <Text style={Styles.text}>Customers vehicle is ready for pickup</Text>
-                    </View>
                 </View>
                 <View style={[Styles.block, {alignItems: 'center', paddingBottom: 50}]}>
                     <View style={Styles.infoContainer}>

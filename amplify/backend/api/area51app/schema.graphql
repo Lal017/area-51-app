@@ -30,6 +30,7 @@ type Vehicle
   year: Int!
   make: String!
   model: String!
+  readyForPickup: Boolean
   color: String
   plate: String
   vin: String

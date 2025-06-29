@@ -74,6 +74,34 @@ const handleUpdateVehicle = async (client, vehicle, vehicleId, userId, setVehicl
     }
 };
 
+const handleUpdateVehicleStatus = async (client, vehicleId, setVehicles) =>
+{
+    try {
+        await client.graphql({
+            query: updateVehicle,
+            variables: {
+                input: {
+                    id: vehicleId,
+                    readyForPickup: false
+                }
+            }
+        });
+
+        const newVehicles = await client.graphql({ query: listVehicles });
+        setVehicles(newVehicles.data.listVehicles.items);
+
+        Alert.alert(
+            'Vehicle Pick Up',
+            'Vehicle has been picked up!',
+            [
+                { text: 'OK' }
+            ]
+        );
+    } catch (error) {
+        console.log('Error updating vehicle status:', error);
+    }
+};
+
 const handleDeleteVehicle = async (client, vehicleId, setVehicles) =>
 {
     try {
@@ -135,6 +163,7 @@ const handleDeleteAllVehicles = async (client, userId) =>
 export {
     handleCreateVehicle,
     handleUpdateVehicle,
+    handleUpdateVehicleStatus,
     handleDeleteVehicle,
     handleDeleteAllVehicles
 };

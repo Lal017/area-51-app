@@ -110,6 +110,7 @@ export const createVehicle = /* GraphQL */ `
       year
       make
       model
+      readyForPickup
       color
       plate
       vin
@@ -131,6 +132,7 @@ export const updateVehicle = /* GraphQL */ `
       year
       make
       model
+      readyForPickup
       color
       plate
       vin
@@ -152,6 +154,7 @@ export const deleteVehicle = /* GraphQL */ `
       year
       make
       model
+      readyForPickup
       color
       plate
       vin
