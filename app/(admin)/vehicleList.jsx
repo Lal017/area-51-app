@@ -50,6 +50,10 @@ const VehicleList = () =>
                 <Tab
                     key={index}
                     text={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
+                    action={() => router.push({
+                        pathname: '(admin)/vehicleView',
+                        params: { vehicleParam: JSON.stringify(vehicle)}
+                    })}
                     leftIcon={<Ionicons name='car-sport' size={30} style={Styles.icon} />}
                     rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon} />}
                 />

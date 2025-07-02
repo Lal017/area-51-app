@@ -1,5 +1,5 @@
 import { listUsers, listVehicles } from '../src/graphql/queries';
-import { updateTowRequest } from '../src/graphql/mutations';
+import { updateTowRequest, updateVehicle } from '../src/graphql/mutations';
 import { router } from 'expo-router';
 import { Alert } from 'react-native';
 import { reverseGeocodeAsync } from 'expo-location';
@@ -365,6 +365,11 @@ const handleUpdateVehicleStatus = async (client, vehicleId, status) =>
             }
         });
 
+        Alert.alert(
+            'Vehicle Status',
+            'Customer has been notified about vehicle pickup',
+            [{ text: 'OK' }]
+        );
     } catch (error) {
         console.log('Error updating vehicle status:', error);
     }

@@ -117,6 +117,13 @@ export const listVehicles = /* GraphQL */ `
         plate
         vin
         userId
+        user {
+          firstName
+          lastName
+          email
+          phone
+          pushToken
+        }
         createdAt
         updatedAt
         owner

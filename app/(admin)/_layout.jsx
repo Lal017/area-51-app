@@ -144,6 +144,7 @@ const AdminContent = () =>
             <Stack.Screen name='userList' options={{title: 'Users', header: () => <CustHeader title="Users" />}}/>
             <Stack.Screen name='userView' options={{title: 'User List', header: () => <CustHeader title="User" />}}/>
             <Stack.Screen name='vehicleList' options={{title: 'Vehicles', header: () => <CustHeader title="Vehicles" />}}/>
+            <Stack.Screen name='vehicleView' options={{title: 'Vehicle', header: () => <CustHeader title="Vehicle" />}}/>
             <Stack.Screen name='invoiceUpload' options={{title: 'Invoice Upload', header: () => <CustHeader title="Invoice" />}}/>
             <Stack.Screen name='invoiceList' options={{title: 'Invoice List', header: () => <CustHeader title="Invoice" />}}/>
             <Stack.Screen name='estimateUpload' options={{title: 'Estimate Upload', header: () => <CustHeader title="Estimate" />}}/>
