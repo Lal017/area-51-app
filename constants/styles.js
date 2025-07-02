@@ -232,7 +232,8 @@ const HomeStyles = StyleSheet.create({
     welcomeContainer: {
         width: '100%',
         alignItems: 'center',
-        height: 50,
+        justifyContent: 'center',
+        padding: 15,
     },
     activityContainer: {
         width: 30,
@@ -271,7 +272,20 @@ const HomeStyles = StyleSheet.create({
         borderRadius: 5,
         position: 'relative'
     },
-
+    // vehiclePickup.jsx
+    pickupContainer: {
+        alignItems: 'center',
+        backgroundColor: Colors.backgroundAccent,
+        padding: 20,
+        rowGap: 20,
+        width: '90%',
+        borderRadius: 10
+    },
+    pickupInfo: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        columnGap: 20
+    }
 });
 
 const ServiceStyles = StyleSheet.create({

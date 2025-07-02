@@ -17,6 +17,7 @@ const Index = () =>
 {
   const { firstName, towRequest, vehicles, appointments } = useApp();
   const [ urls, setUrls ] = useState();
+  const [ vehiclePickup, setVehiclePickup ] = useState();
 
   const ref = useRef();
   const bounce = useSharedValue(0);
@@ -41,6 +42,16 @@ const Index = () =>
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: bounce.value }]
   }));
+
+  useEffect(() => {
+    const initVehicles = () =>
+    {
+      const getVehicles = vehicles?.some(item => item.readyForPickup === true);
+      setVehiclePickup(getVehicles);
+    }
+
+    initVehicles();
+  }, [vehicles]);
 
   useEffect(() => {
     const initUrls = async () =>
@@ -115,14 +126,26 @@ const Index = () =>
           </TouchableOpacity>
           <TouchableOpacity
             style={HomeStyles.shortcutButton}
-            onPress={() => router.push('/vehicleList')}
+            onPress={() => {
+              if (vehiclePickup === true) {
+                router.push('vehiclePickup');
+              } else {
+                router.push('vehicleList');
+              }
+            }}
           >
+            { vehiclePickup ? (
+              <Animated.View style={[HomeStyles.activityContainer, animatedStyle, {backgroundColor: Colors.tertiary}]}>
+                <Text style={[Styles.subTitle, {fontSize: 20, textAlign: 'center'}]}>!</Text>
+              </Animated.View>
+            ) : null}
             <Ionicons name='car-sport' size={30} color="white" />
           </TouchableOpacity>
         </View>
       </View>
       <View style={HomeStyles.welcomeContainer}>
         <Text style={Styles.text}>Welcome {firstName}!</Text>
+        { vehiclePickup ? <Text style={Styles.text}>Your vehicle is ready for pickup!</Text> : null}
       </View>
       <View style={[HomeStyles.panel, appointments ? {height: '25%'} : {height: 100}]}>
         <TouchableOpacity

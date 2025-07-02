@@ -9,6 +9,7 @@ import { Select, CalendarHeader, formatDate, formatTime, Background } from '../.
 import { MaterialIcons, Ionicons, FontAwesome, AntDesign, FontAwesome5, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useApp } from '../../components/context';
 import { handleSendAdminNotif } from '../../components/notifComponents';
+import moment from 'moment';
 
 const Schedule = () =>
 {
@@ -42,6 +43,33 @@ const Schedule = () =>
     setAvailableAppointments(getDay);
   };
 
+  const DISABLED_DAYS = ['Saturday', 'Sunday']
+
+  const getDaysInMonth = (month, year, days) => {
+    let pivot = moment().month(month).year(year).startOf('month')
+    const end = moment().month(month).year(year).endOf('month')
+
+    let dates = {}
+    const disabled = { disabled: true }
+    while(pivot.isBefore(end)) {
+      days.forEach((day) => {
+        dates[pivot.day(day).format("YYYY-MM-DD")] = disabled
+      })
+      pivot.add(7, 'days')
+    }
+
+    return dates
+  }
+
+  const today = moment();
+  const [markedDates, setMarkedDates] = useState(
+    getDaysInMonth(today.month(), today.year(), DISABLED_DAYS)
+  );
+
+  const handleMonthChange = (date) => {
+    setMarkedDates(getDaysInMonth(date.month - 1, date.year, DISABLED_DAYS));
+  };
+
   return (
     <Background>
       <View style={ServiceStyles.progressBar}>
@@ -61,6 +89,7 @@ const Schedule = () =>
           </View>
           <View style={Styles.block}>
             <Calendar
+              onMonthChange={handleMonthChange}
               style={{
                 backgroundColor: 'transparent',
               }}
@@ -75,10 +104,15 @@ const Schedule = () =>
               onDayPress={day => handleDayPress(day)}
               enableSwipeMonths={true}
               markedDates={{
-                [selectedDay]: {
-                  selected: true,
-                  selectedColor: Colors.tertiary,
-                }
+                ...markedDates, // from getDaysInMonth, disabling weekends
+                ...(selectedDay && {
+                  [selectedDay]: {
+                    selected: true,
+                    selectedColor: Colors.tertiary,
+                    // Preserve disabled state if it's also a disabled date
+                    ...(markedDates[selectedDay] || {})
+                  }
+                })
               }}
               renderArrow={direction => <AntDesign name={direction === 'left' ? 'arrowleft' : 'arrowright'} size={24} color={Colors.backDropAccent}/>}
               hideExtraDays={true}
