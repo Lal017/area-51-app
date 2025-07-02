@@ -20,6 +20,7 @@ import {
     confirmUserAttribute,
 } from 'aws-amplify/auth';
 import { FontAwesome } from '@expo/vector-icons';
+import { handleDeleteStorage } from './components';
 import { handleDeleteAllAppointments, handleDeleteAllTowRequests } from './scheduleComponents';
 import { handleDeleteAllVehicles } from './vehicleComponents';
 import { handleDeleteUser } from './notifComponents';
@@ -400,7 +401,7 @@ const handleUpdatePassword = async ({oldPassword, newPassword, confNewPassword})
 
 // Delete User
 // --------------------------------------------------------------
-const handleDeleteAccount = async (client, userId, email, inputEmail) =>
+const handleDeleteAccount = async (client, userId, identityId, email, inputEmail) =>
 {
     if (email.toLowerCase() !== inputEmail.toLowerCase())
     {
@@ -419,6 +420,7 @@ const handleDeleteAccount = async (client, userId, email, inputEmail) =>
         await handleDeleteAllTowRequests(client, userId);
         await handleDeleteAllAppointments(client, userId);
         await handleDeleteAllVehicles(client, userId);
+        await handleDeleteStorage(identityId);
         await handleDeleteUser(client, userId);
         await deleteUser();
         await clearLocalStorage();

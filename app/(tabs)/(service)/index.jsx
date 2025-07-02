@@ -65,7 +65,7 @@ const ServiceConsole = () =>
         }}
         style={[Styles.consoleBubble, {backgroundColor: Colors.tertiary}]}
       >
-        <Text style={ServiceStyles.title}>Schedule{'\n'}an{'\n'}Appointment</Text>
+        <Text style={ServiceStyles.title}>Appointment{'\n'}Schedule</Text>
         <View style={[ServiceStyles.lottieAnim, {justifyContent: 'center', alignItems: 'center'}]}>
           <LottieView
             source={require('../../../assets/animations/calendar.json')}

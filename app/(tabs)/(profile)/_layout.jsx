@@ -1,6 +1,5 @@
 import { Stack } from "expo-router";
 import { CustHeader } from "../../../components/components";
-import Colors from "../../../constants/colors";
 
 const ProfileLayout = () =>
 {
@@ -21,6 +20,7 @@ const ProfileLayout = () =>
             <Stack.Screen name="vehicleList" options={{title: "My Vehicles", header: () => <CustHeader title="Vehicles" />}}/>
             <Stack.Screen name="vehicleAdd" options={{title: "New Vehicle", header: () => <CustHeader title="New Vehicle" />}}/>
             <Stack.Screen name="vehicleEdit" options={{title: "Edit Vehicle", header: () => <CustHeader title="Edit Vehicle" />}}/>
+            <Stack.Screen name="vehiclePickup" options={{title: "Pickup Vehicle", header: () => <CustHeader title="Vehicle Pickup" />}}/>
             <Stack.Screen name="invoices" options={{title: "Invoices", header: () => <CustHeader title="Invoices" />}}/>
             <Stack.Screen name="estimates" options={{title: "Estimates", header: () => <CustHeader title="Estimates" />}}/>
         </Stack>

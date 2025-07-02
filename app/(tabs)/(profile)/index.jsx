@@ -13,8 +13,9 @@ import { LinearGradient } from "expo-linear-gradient";
 // Profile page
 const Profile = () =>
 {
-    const { email, firstName, lastName, newInvoice, setNewInvoice, newEstimate, setNewEstimate } = useApp();
+    const { email, firstName, lastName, newInvoice, setNewInvoice, newEstimate, setNewEstimate, vehicles } = useApp();
     const [ loading, setLoading ] = useState(false);
+    const [ vehiclePickup, setVehiclePickup ] = useState();
 
     const bounce = useSharedValue(0);
 
@@ -39,6 +40,16 @@ const Profile = () =>
     transform: [{ translateY: bounce.value }]
     }));
 
+    useEffect(() => {
+        const initVehicles = () =>
+        {
+            const getVehicles = vehicles?.some(item => item.readyForPickup === true);
+            setVehiclePickup(getVehicles);
+        }
+
+        initVehicles();
+    }, [vehicles]);
+
     return(
         <Background>
             <View style={Styles.block}>
@@ -53,12 +64,19 @@ const Profile = () =>
                 leftIcon={<Ionicons name="settings" size={30} style={Styles.icon} />}
                 rightIcon={<AntDesign name="right" size={25} style={Styles.rightIcon} />}
             />
-            <Tab
-                text="My Vehicles"
-                action={() => router.push('/(tabs)/(profile)/vehicleList')}
-                leftIcon={<Ionicons name="car-sport" size={30} style={Styles.icon} />}
-                rightIcon={<AntDesign name="right" size={25} style={Styles.rightIcon} />}
-            />
+            <View style={ProfileStyles.tabContainer}>
+                { vehiclePickup ? (
+                    <Animated.View style={[ProfileStyles.activityContainer, animatedStyle, {backgroundColor: Colors.tertiary}]}>
+                        <Text style={[Styles.subTitle, {fontSize: 20, textAlign: 'center'}]}>!</Text>
+                    </Animated.View>
+                ) : null }
+                <Tab
+                    text="My Vehicles"
+                    action={() => router.push('/(tabs)/(profile)/vehicleList')}
+                    leftIcon={<Ionicons name="car-sport" size={30} style={Styles.icon} />}
+                    rightIcon={<AntDesign name="right" size={25} style={Styles.rightIcon} />}
+                />
+            </View>
             <View style={ProfileStyles.tabContainer}>
                 { newInvoice ? (
                     <Animated.View style={[ProfileStyles.activityContainer, animatedStyle, {backgroundColor: Colors.tertiary}]}>

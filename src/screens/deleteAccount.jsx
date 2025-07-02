@@ -9,7 +9,7 @@ import Colors from '../../constants/colors';
 
 const DeleteAccount = () =>
 {
-    const { client, userId, email } = useApp();
+    const { client, userId, identityId, email } = useApp();
     const [ inputEmail, setInputEmail ] = useState();
     const [ step, setStep ] = useState(1);
     const [ loading, setLoading ] = useState(false);
@@ -60,7 +60,7 @@ const DeleteAccount = () =>
                         onPress={async () => {
                             if (loading) return;
                             setLoading(true);
-                            await handleDeleteAccount(client, userId, email, inputEmail);
+                            await handleDeleteAccount(client, userId, identityId, email, inputEmail);
                             setLoading(false);
                         }}
                         style={[Styles.actionButton, loading && { opacity: 0.5 }, {backgroundColor: 'red'}]}

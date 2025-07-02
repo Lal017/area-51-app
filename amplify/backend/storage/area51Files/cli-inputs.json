@@ -5,10 +5,10 @@
   "storageAccess": "auth",
   "guestAccess": [],
   "authAccess": [],
-  "triggerFunction": "NONE",
   "groupAccess": {
     "Customers": [
-      "READ"
+      "READ",
+      "DELETE"
     ],
     "Admins": [
       "CREATE_AND_UPDATE",

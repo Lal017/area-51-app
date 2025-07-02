@@ -1,6 +1,6 @@
 import { Text, TouchableOpacity, Linking, View, Alert, Image, Dimensions, ActivityIndicator } from "react-native";
 import { router } from "expo-router";
-import { AppointmentReminder, Background } from "../../../components/components";
+import { AppointmentReminder, Background, handleDeleteStorage } from "../../../components/components";
 import { HomeStyles, Styles } from "../../../constants/styles";
 import { Entypo, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useApp } from "../../../components/context";
@@ -9,13 +9,14 @@ import { useEffect, useState, useRef } from "react";
 import Colors from "../../../constants/colors";
 import { handleGetURLs } from "../../../components/adminComponents";
 import Carousel from 'react-native-reanimated-carousel';
+import { list } from "aws-amplify/storage";
 
 const screenWidth = Dimensions.get("window").width;
 
 // Home page after login
 const Index = () =>
 {
-  const { firstName, towRequest, vehicles, appointments } = useApp();
+  const { firstName, towRequest, vehicles, appointments, identityId } = useApp();
   const [ urls, setUrls ] = useState();
   const [ vehiclePickup, setVehiclePickup ] = useState();
 

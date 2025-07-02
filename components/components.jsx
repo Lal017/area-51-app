@@ -9,6 +9,7 @@ import LottieView from 'lottie-react-native';
 import { handleUpdateTowRequestStatus } from './scheduleComponents';
 import { handleSendAdminNotif } from './notifComponents';
 import { useEffect, useRef, useState } from 'react';
+import { list, remove } from 'aws-amplify/storage';
 
 // loading page
 const Loading = () => {
@@ -359,6 +360,24 @@ const AppointmentReminder = ({appointments}) =>
     );
 };
 
+const handleDeleteStorage = async (identityId) =>
+{
+    try {
+        const files = await list({
+            path: `protected/${identityId}/`,
+        });
+
+        await Promise.all(
+            files.items.map((file) =>
+                remove({ path: file.path})
+            )
+        );
+
+    } catch (error) {
+        console.log('Error deleting storage:', error);
+    }
+};
+
 export {
     Loading,
     CustHeader,
@@ -373,4 +392,5 @@ export {
     formatTime,
     TowStatusComponent,
     AppointmentReminder,
+    handleDeleteStorage
 };

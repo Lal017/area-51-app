@@ -21,8 +21,10 @@ const ResetPassword = () =>
                 />
             </View>
             <View style={[Styles.block, {alignItems: 'center'}]}>
-                <Text style={[Styles.title, {paddingLeft: 20, width: '100%'}]}>Reset Password</Text>
-                <Text style={Styles.text}>Enter your email to search for your account</Text>
+                <View style={Styles.infoContainer}>
+                    <Text style={Styles.title}>Reset Password</Text>
+                    <Text style={Styles.text}>Enter your email to search for your account</Text>
+                </View>
                 <View style={Styles.inputWrapper}>
                     <Ionicons name='mail' size={20} style={Styles.icon} />
                     <TextInput
