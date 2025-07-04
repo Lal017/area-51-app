@@ -38,7 +38,7 @@
       "email"
     ],
     "useDefault": "manual",
-    "userPoolGroups": true,
+    "userPoolGroups": false,
     "userPoolGroupList": [
       "Customers",
       "Admins"
@@ -69,6 +69,15 @@
           "Arn",
           "Name"
         ]
+      },
+      {
+        "category": "function",
+        "resourceName": "troplocksmithappPreSignup",
+        "triggerProvider": "Cognito",
+        "attributes": [
+          "Arn",
+          "Name"
+        ]
       }
     ],
     "hostedUIDomainName": "troplocksmithapp5682bf4d-5682bf4d",
@@ -82,12 +91,15 @@
     "triggers": {
       "PostConfirmation": [
         "add-to-group"
+      ],
+      "PreSignup": [
+        "custom"
       ]
     },
     "parentStack": {
       "Ref": "AWS::StackId"
     },
-    "authTriggerConnections": "[\n  {\n    \"triggerType\": \"PostConfirmation\",\n    \"lambdaFunctionName\": \"troplocksmithappPostConfirmation\"\n  }\n]",
+    "authTriggerConnections": "[\n  {\n    \"triggerType\": \"PostConfirmation\",\n    \"lambdaFunctionName\": \"troplocksmithappPostConfirmation\"\n  },\n  {\n    \"triggerType\": \"PreSignUp\",\n    \"lambdaFunctionName\": \"troplocksmithappPreSignup\"\n  }\n]",
     "permissions": [
       "{\n  \"policyName\": \"AddToGroupCognito\",\n  \"trigger\": \"PostConfirmation\",\n  \"effect\": \"Allow\",\n  \"actions\": [\n    \"cognito-idp:AdminAddUserToGroup\",\n    \"cognito-idp:GetGroup\",\n    \"cognito-idp:CreateGroup\"\n  ],\n  \"resource\": {\n    \"paramType\": \"!GetAtt\",\n    \"keys\": [\n      \"UserPool\",\n      \"Arn\"\n    ]\n  }\n}"
     ],

@@ -70,9 +70,10 @@ const handleSignUp = async (given_name, family_name, email, password, phoneNumbe
         }
     } catch (error) {
         console.log('error signing up:', error);
+        const contains = error.message.includes('account already exists');
         Alert.alert(
             'Error',
-            error.message,
+            contains ? 'An account already exists with this email' : error.message,
             [
                 { text: 'Ok'}
             ]

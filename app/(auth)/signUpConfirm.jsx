@@ -18,7 +18,6 @@ const SignUpConfirm = () =>
         if (cooldown === 0) return;
         const timer = setInterval(() => {
             setCooldown(prev => prev - 1);
-            console.log(cooldown);
         }, 1000);
 
         return () => clearInterval(timer);

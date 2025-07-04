@@ -63,6 +63,15 @@
           "category": "function",
           "resourceName": "troplocksmithappPostConfirmation",
           "triggerProvider": "Cognito"
+        },
+        {
+          "attributes": [
+            "Arn",
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "troplocksmithappPreSignup",
+          "triggerProvider": "Cognito"
         }
       ],
       "frontendAuthConfig": {
@@ -144,6 +153,11 @@
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
+    },
+    "troplocksmithappPreSignup": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     }
   },
   "parameters": {
@@ -200,6 +214,22 @@
         {
           "category": "function",
           "resourceName": "troplocksmithappPostConfirmation"
+        }
+      ]
+    },
+    "AMPLIFY_function_troplocksmithappPreSignup_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "troplocksmithappPreSignup"
+        }
+      ]
+    },
+    "AMPLIFY_function_troplocksmithappPreSignup_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "troplocksmithappPreSignup"
         }
       ]
     }
