@@ -40,7 +40,7 @@ const EstimateUpload = () =>
     };
 
     return (
-        <BackgroundAlt style={{paddingBottom: 50, rowGap: 20, justifyContent: 'center'}}>
+        <BackgroundAlt style={{ rowGap: 20, justifyContent: 'center'}}>
             { estimate ? (
                 <View style={AdminStyles.pdfContainer}>
                     <Pdf
@@ -71,10 +71,8 @@ const EstimateUpload = () =>
                     if (estimate) {
                         await handleUploadEstimate(customer.identityId, estimate, name);
                         await sendPushNotification(customer.pushToken, 'New Estimate', 'A new estimate has been uploaded to your account', data);
-                        router.replace({
-                            pathname: '/(admin)/userView',
-                            params: { userParam }
-                        });
+                        if (router.canDismiss()) { router.dismissAll(); }
+                        router.replace('/(admin)');
                     } else {
                         await pickEstimate();
                     }

@@ -41,7 +41,7 @@ const TowRequest = () =>
     }, [])
 
     return (
-        <Background style={{paddingBottom: 20}}>
+        <Background>
             <View style={ServiceStyles.progressBar}>
                 <Ionicons name="information-circle" size={35} color={step > 1 ? Colors.secondary : Colors.backDropAccent} />
                 <View style={[ServiceStyles.progressBarLine, {backgroundColor: step > 1 ? Colors.secondary : Colors.backDropAccent}]} />

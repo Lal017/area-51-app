@@ -1,5 +1,5 @@
 import { Stack, router } from "expo-router";
-import { CustHeader } from "../../components/components";
+import { CustHeader, Loading } from "../../components/components";
 import { AppProvider, useApp } from "../../components/context";
 import { useEffect, useRef, useState } from 'react';
 import { Alert } from "react-native";
@@ -35,6 +35,8 @@ const AdminContent = () =>
         setPhoneNumber,
     } = useApp();
 
+    const [ ready, setReady ] = useState(false);
+
     // notification listeners
     const notificationListener = useRef();
     const responseListener = useRef();
@@ -59,7 +61,7 @@ const AdminContent = () =>
             } else if (userAtt.name) {
                 const nameSplit = userAtt.name.trim().split(/\s+/);
 
-                if (nameSplit.length >= 2) {
+                if (nameSplit?.length >= 2) {
                     setFirstName(nameSplit[0]);
                     setLastName(nameSplit.slice(1).join(' '));
                 } else {
@@ -115,6 +117,10 @@ const AdminContent = () =>
             }
         };
 
+        if (client && userId && access && pushToken && identityId) {
+            setReady(true);
+        }
+
         if (client && userId && identityId && pushToken && access && firstName && lastName && email && phoneNumber) {
             handleRegisterPushNotifications();
         }
@@ -139,27 +145,33 @@ const AdminContent = () =>
     }, []);
 
     return (
-        <Stack>
-            <Stack.Screen name='index' options={{title: 'Admin Console', header: () => <CustHeader title="Console"/>}}/>
-            <Stack.Screen name='userList' options={{title: 'Users', header: () => <CustHeader title="Users" />}}/>
-            <Stack.Screen name='userView' options={{title: 'User List', header: () => <CustHeader title="User" />}}/>
-            <Stack.Screen name='vehicleList' options={{title: 'Vehicles', header: () => <CustHeader title="Vehicles" />}}/>
-            <Stack.Screen name='vehicleView' options={{title: 'Vehicle', header: () => <CustHeader title="Vehicle" />}}/>
-            <Stack.Screen name='invoiceUpload' options={{title: 'Invoice Upload', header: () => <CustHeader title="Invoice" />}}/>
-            <Stack.Screen name='invoiceList' options={{title: 'Invoice List', header: () => <CustHeader title="Invoice" />}}/>
-            <Stack.Screen name='estimateUpload' options={{title: 'Estimate Upload', header: () => <CustHeader title="Estimate" />}}/>
-            <Stack.Screen name='estimateList' options={{title: 'Estimate List', header: () => <CustHeader title="Estimate" />}}/>
-            <Stack.Screen name='appointmentList' options={{title: 'Appointments', header: () => <CustHeader title="Appointments" />}}/>
-            <Stack.Screen name='appointmentView' options={{title: 'Appointment', header: () => <CustHeader title="Appointment" />}}/>
-            <Stack.Screen name='settings' options={{title: 'Settings', header: () => <CustHeader title="Settings" />}}/>
-            <Stack.Screen name="accountEdit"  options={{title: "Edit Account", header: () => <CustHeader title="Account Edit" />}}/>
-            <Stack.Screen name="resetPassword" options={{title: "Reset Password", header: () => <CustHeader title="Reset Password" />}}/>
-            <Stack.Screen name="confirmAttribute" options={{title: "Confirm Change", header: () => <CustHeader title="Reset Password" />}}/>
-            <Stack.Screen name="deleteAccount" options={{title: "Account Deletion", header: () => <CustHeader title="Account Deletion" />}}/>
-            <Stack.Screen name="towRequests" options={{title: "Tow Requests", header: () => <CustHeader title="Tow Requests"/>}}/>
-            <Stack.Screen name="towResponse" options={{title: "Tow Response", header: () => <CustHeader title="Tow Response"/>}}/>
-            <Stack.Screen name="homeSettings" options={{title: "Home Settings", header: () => <CustHeader title="Home Settings"/>}}/>
-        </Stack>
+        <>
+        { ready ? (
+            <Stack>
+                <Stack.Screen name='index' options={{title: 'Admin Console', header: () => <CustHeader title="Console"/>}}/>
+                <Stack.Screen name='userList' options={{title: 'Users', header: () => <CustHeader title="Users" />}}/>
+                <Stack.Screen name='userView' options={{title: 'User List', header: () => <CustHeader title="User" />}}/>
+                <Stack.Screen name='vehicleList' options={{title: 'Vehicles', header: () => <CustHeader title="Vehicles" />}}/>
+                <Stack.Screen name='vehicleView' options={{title: 'Vehicle', header: () => <CustHeader title="Vehicle" />}}/>
+                <Stack.Screen name='invoiceUpload' options={{title: 'Invoice Upload', header: () => <CustHeader title="Invoice" />}}/>
+                <Stack.Screen name='invoiceList' options={{title: 'Invoice List', header: () => <CustHeader title="Invoice" />}}/>
+                <Stack.Screen name='estimateUpload' options={{title: 'Estimate Upload', header: () => <CustHeader title="Estimate" />}}/>
+                <Stack.Screen name='estimateList' options={{title: 'Estimate List', header: () => <CustHeader title="Estimate" />}}/>
+                <Stack.Screen name='appointmentList' options={{title: 'Appointments', header: () => <CustHeader title="Appointments" />}}/>
+                <Stack.Screen name='appointmentView' options={{title: 'Appointment', header: () => <CustHeader title="Appointment" />}}/>
+                <Stack.Screen name='settings' options={{title: 'Settings', header: () => <CustHeader title="Settings" />}}/>
+                <Stack.Screen name="accountEdit"  options={{title: "Edit Account", header: () => <CustHeader title="Account Edit" />}}/>
+                <Stack.Screen name="resetPassword" options={{title: "Reset Password", header: () => <CustHeader title="Reset Password" />}}/>
+                <Stack.Screen name="confirmAttribute" options={{title: "Confirm Change", header: () => <CustHeader title="Reset Password" />}}/>
+                <Stack.Screen name="deleteAccount" options={{title: "Account Deletion", header: () => <CustHeader title="Account Deletion" />}}/>
+                <Stack.Screen name="towRequests" options={{title: "Tow Requests", header: () => <CustHeader title="Tow Requests"/>}}/>
+                <Stack.Screen name="towResponse" options={{title: "Tow Response", header: () => <CustHeader title="Tow Response"/>}}/>
+                <Stack.Screen name="homeSettings" options={{title: "Home Settings", header: () => <CustHeader title="Home Settings"/>}}/>
+            </Stack>
+        ) : (
+            <Loading/>
+        )}
+        </>
     );
 }
 

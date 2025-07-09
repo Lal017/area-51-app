@@ -154,6 +154,7 @@ const Styles = StyleSheet.create({
     // container
     page: {
         paddingTop: 10,
+        paddingBottom: 50,
         flexGrow: 1,
         alignItems: 'center',
     },

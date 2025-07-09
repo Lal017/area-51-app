@@ -25,7 +25,23 @@ const Schedule = () =>
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [isReady, setIsReady] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
+  const onRefresh = async () =>
+  {
+    setRefreshing(true);
+
+    try {
+      // refresh appointments
+      const getAppointments = await handleGetAppointments(client, userId);
+      setScheduledAppointments(getAppointments);
+
+    } catch (error) {
+      console.log('Error refreshing:', error);
+    }
+
+    setRefreshing(false);
+  };
   useEffect(() => {
     const initializeAppointments = async () =>
     {
@@ -75,7 +91,7 @@ const Schedule = () =>
   return (
     <>
     { isReady ? (
-      <Background>
+      <Background refreshing={refreshing} onRefresh={onRefresh}>
         <View style={ServiceStyles.progressBar}>
           <AntDesign name='calendar' size={35} color={step > 1 ? Colors.secondary : Colors.backDropAccent} />
           <View style={[ServiceStyles.progressBarLine, {backgroundColor: step > 1 ? Colors.secondary : Colors.backDropAccent}]} />
@@ -327,10 +343,15 @@ const Schedule = () =>
                 } else {
                   Alert.alert(
                     'Time slot invalid',
-                    `A customer has already been scheduled for ${formatDate(selectedDay)} at ${formatTime(selectedTime)}. Please choose a different time slot`,
+                    `A customer was just scheduled for ${formatDate(selectedDay)} at ${formatTime(selectedTime)}. Please choose a different time slot`,
                     [{
                       text: 'OK',
-                      onPress: () => setStep(1)
+                      onPress: async () => {
+                        // refresh appointments
+                        const getAppointments = await handleGetAppointments(client, userId);
+                        setScheduledAppointments(getAppointments);
+                        setStep(1)
+                      }
                     }]
                   )
                 }

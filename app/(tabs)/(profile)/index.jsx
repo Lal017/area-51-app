@@ -13,9 +13,8 @@ import { LinearGradient } from "expo-linear-gradient";
 // Profile page
 const Profile = () =>
 {
-    const { email, firstName, lastName, newInvoice, setNewInvoice, newEstimate, setNewEstimate, vehicles } = useApp();
+    const { email, firstName, lastName, newInvoice, setNewInvoice, newEstimate, setNewEstimate, vehicles, vehiclePickup, setVehiclePickup } = useApp();
     const [ loading, setLoading ] = useState(false);
-    const [ vehiclePickup, setVehiclePickup ] = useState();
 
     const bounce = useSharedValue(0);
 
@@ -39,16 +38,6 @@ const Profile = () =>
     const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: bounce.value }]
     }));
-
-    useEffect(() => {
-        const initVehicles = () =>
-        {
-            const getVehicles = vehicles?.some(item => item.readyForPickup === true);
-            setVehiclePickup(getVehicles);
-        }
-
-        initVehicles();
-    }, [vehicles]);
 
     return(
         <Background>

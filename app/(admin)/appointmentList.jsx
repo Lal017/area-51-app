@@ -31,22 +31,28 @@ const AppointmentList = () =>
 
     return (
         <Background>
-            <View style={[Styles.block, {rowGap: 15}]}>
-                {appointments ? (
-                    appointments.map((appointment, index) => (
-                        <Tab
-                            key={index}
-                            action={() => router.push({
-                                params: { appointmentParam: JSON.stringify(appointment)},
-                                pathname: '/(admin)/appointmentView'
-                            })}
-                            text={`${appointment.user.firstName}\n${formatDate(appointment.date)}\n${formatTime(appointment.time)}`}
-                            leftIcon={<AntDesign name='calendar' size={30} style={Styles.icon} />}
-                            rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon} />}
-                        />
-                    ))
-                ) : null}
-            </View>
+            { appointments?.length > 0 ? (
+                <View style={[Styles.block, {rowGap: 15}]}>
+                    {appointments ? (
+                        appointments.map((appointment, index) => (
+                            <Tab
+                                key={index}
+                                action={() => router.push({
+                                    params: { appointmentParam: JSON.stringify(appointment)},
+                                    pathname: '/(admin)/appointmentView'
+                                })}
+                                text={`${appointment.user.firstName} ${appointment.user.lastName}\n${formatDate(appointment.date)} ${formatTime(appointment.time)}`}
+                                leftIcon={<AntDesign name='calendar' size={30} style={Styles.icon} />}
+                                rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon} />}
+                            />
+                        ))
+                    ) : null}
+                </View>
+            ) : (
+                <View style={{flex: 1, justifyContent: 'center'}}>
+                    <Text style={Styles.subTitle}>No Appointments</Text>
+                </View>
+            )}
         </Background>
     );
 };

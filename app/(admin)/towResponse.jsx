@@ -130,7 +130,7 @@ const TowResponse = () =>
                     </View>
                 </View>
                 { customer.status === 'REQUESTED' ? (
-                    <View style={[Styles.block, {alignItems: 'center', paddingBottom: 50}]}>
+                    <View style={[Styles.block, {alignItems: 'center'}]}>
                             <View style={Styles.inputWrapper}>
                                 <FontAwesome5 name="dollar-sign" size={24} style={Styles.icon} />
                                 <TextInput
@@ -164,7 +164,7 @@ const TowResponse = () =>
                         </TouchableOpacity>
                     </View>
                 ) : customer.status === 'IN_PROGRESS' ? (
-                    <View style={[Styles.block, {paddingBottom: 50, alignItems: 'center'}]}>
+                    <View style={[Styles.block, {alignItems: 'center'}]}>
                         <TouchableOpacity
                             style={Styles.actionButton}
                             onPress={() => {

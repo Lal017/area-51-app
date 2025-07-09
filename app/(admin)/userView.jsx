@@ -129,7 +129,7 @@ const UserView = () =>
                         rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon} />}
                     />
                 </View>
-                <View style={[Styles.block, {alignItems: 'center', paddingBottom: 50}]}>
+                <View style={[Styles.block, {alignItems: 'center'}]}>
                     <View style={Styles.infoContainer}>
                         <Text style={Styles.title}>Send Notification</Text>
                         <Text style={Styles.text}>Send a push notification to {customer.firstName}</Text>

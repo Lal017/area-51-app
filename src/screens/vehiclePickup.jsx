@@ -10,8 +10,8 @@ import Animated, { Easing , useAnimatedStyle, useSharedValue, withRepeat, withSe
 
 const VehiclePickup = () =>
 {
-    const { client, vehicles, setVehicles } = useApp();
-    const [ vehiclePickup, setVehiclePickup ] = useState();
+    const { client, vehicles, setVehicles, vehiclePickup, setVehiclePickup  } = useApp();
+    const [ vehiclesToPickup, setVehiclesToPickup ] = useState();
     const [ loading, setLoading ] = useState(false);
 
     const bounce = useSharedValue(0);
@@ -30,7 +30,7 @@ const VehiclePickup = () =>
             -1,     // infinite
             true,   // reverse
         );
-    }, [vehiclePickup]);
+    }, [vehiclesToPickup]);
 
         const animatedStyle = useAnimatedStyle(() => ({
         transform: [{ translateY: bounce.value }]
@@ -40,8 +40,7 @@ const VehiclePickup = () =>
         const initVehicles = () =>
         {
             const getVehicles = vehicles?.filter(item => item.readyForPickup === true);
-            console.log(getVehicles);
-            setVehiclePickup(getVehicles);
+            setVehiclesToPickup(getVehicles);
         }
 
         initVehicles();
@@ -60,7 +59,7 @@ const VehiclePickup = () =>
                 </View>
             </View>
             <View style={Styles.block}>
-                { vehiclePickup?.map((vehicle, index) => (
+                { vehiclesToPickup?.map((vehicle, index) => (
                     <Tab
                         key={index}
                         text={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
@@ -74,8 +73,8 @@ const VehiclePickup = () =>
                                     onPress: async () => {
                                         if (loading) return;
                                         setLoading(true);
-                                        await handleUpdateVehicleStatus(client, vehicle.id, setVehicles);
-                                        router.replace('(tabs)/(home)');
+                                        await handleUpdateVehicleStatus(client, vehicle.id, setVehicles, setVehiclePickup);
+                                        router.replace('(tabs)');
                                         setLoading(false);
                                     }
                                 }

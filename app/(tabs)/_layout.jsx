@@ -47,6 +47,8 @@ const TabsContent = () =>
         setNewInvoice,
         newEstimate,
         setNewEstimate,
+        vehiclePickup,
+        setVehiclePickup
     } = useApp();
 
     const [ ready, setReady ] = useState(false);
@@ -104,6 +106,8 @@ const TabsContent = () =>
                     setNewInvoice(true);
                 } else if (type === "NEW_ESTIMATE") {
                     setNewEstimate(true);
+                } else if (type === "VEHICLE_PICKUP") {
+                    setVehiclePickup(true);
                 }
             }
 
@@ -146,6 +150,8 @@ const TabsContent = () =>
                 // set vehicles
                 const getVehicles = await handleGetVehicles(client, userId);
                 setVehicles(getVehicles);
+                const filterVehicles = getVehicles?.some(item => item.readyForPickup === true);
+                setVehiclePickup(filterVehicles);
             } catch (error) {
                 console.log('Error getting request:', error);
             }
@@ -200,6 +206,7 @@ const TabsContent = () =>
             }
             else if (notification.request.content.data.type === "VEHICLE_PICKUP") {
                 handleUpdateVehiclePickup(client, userId, setVehicles);
+                setVehiclePickup(true);
             }
         });
 
@@ -282,7 +289,7 @@ const TabsContent = () =>
                         tabBarIcon: ({ color, size }) => (
                             <Ionicons name="person" size={size} color={color}/>
                         ),
-                        tabBarBadge: newInvoice && newEstimate ? (2) : newInvoice || newEstimate ? (1) : undefined, 
+                        tabBarBadge: newInvoice && newEstimate && vehiclePickup ? (3) : [newInvoice, newEstimate, vehiclePickup].filter(Boolean).length === 2 ? (2) : newInvoice || newEstimate || vehiclePickup ? (1) : undefined, 
                     }}
                 />
             </Tabs>

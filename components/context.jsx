@@ -20,6 +20,7 @@ const AppProvider = ({ children }) => {
   const [ isStuck, setIsStuck ] = useState(false);
   const [ newInvoice, setNewInvoice ] = useState();
   const [ newEstimate, setNewEstimate ] = useState();
+  const [ vehiclePickup, setVehiclePickup ] = useState(false);
 
   const updateNotification = async (newNotif) =>
   {
@@ -108,6 +109,8 @@ const AppProvider = ({ children }) => {
         setNewInvoice: handleNewInvoice,
         newEstimate,
         setNewEstimate: handleNewEstimate,
+        vehiclePickup,
+        setVehiclePickup
         }}>
       {children}
     </AppContext.Provider>

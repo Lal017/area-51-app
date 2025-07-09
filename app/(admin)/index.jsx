@@ -8,7 +8,7 @@ import Colors from '../../constants/colors';
 const AdminConsole = () =>
 {
     return (
-        <Background style={{rowGap: 2, paddingBottom: 20}}>
+        <Background style={{rowGap: 2}}>
             <TouchableOpacity
                 style={[Styles.consoleBubble, {backgroundColor: Colors.tertiary}]}
                 onPress={() => router.push('/(admin)/userList')}

@@ -8,6 +8,8 @@ import Animated, { Easing , useAnimatedStyle, useSharedValue, withRepeat, withSe
 import { useEffect, useState, useRef } from "react";
 import Colors from "../../../constants/colors";
 import { handleGetURLs } from "../../../components/adminComponents";
+import { handleGetVehicles } from "../../../components/vehicleComponents";
+import { handleGetMyAppointments, handleGetTowRequest } from "../../../components/scheduleComponents";
 import Carousel from 'react-native-reanimated-carousel';
 
 const screenWidth = Dimensions.get("window").width;
@@ -15,12 +17,39 @@ const screenWidth = Dimensions.get("window").width;
 // Home page after login
 const Index = () =>
 {
-  const { firstName, towRequest, vehicles, appointments } = useApp();
+  const { client, userId, firstName, towRequest, vehicles, appointments, setTowRequest, setAppointments, setVehicles, vehiclePickup, setVehiclePickup } = useApp();
   const [ urls, setUrls ] = useState();
-  const [ vehiclePickup, setVehiclePickup ] = useState();
+  const [ refreshing, setRefreshing ] = useState(false);
 
   const ref = useRef();
   const bounce = useSharedValue(0);
+
+  const onRefresh = async () =>
+  {
+    setRefreshing(true);
+
+    try {
+      // refresh vehicles
+      const getVehicles = await handleGetVehicles(client, userId);
+      setVehicles(getVehicles);
+
+      // refresh tow requests
+      const getTowRequest = await handleGetTowRequest(client, userId);
+      setTowRequest(getTowRequest);
+
+      // refresh appointments
+      const getAppointments = await handleGetMyAppointments(client, userId);
+      setAppointments(getAppointments);
+
+      // refresh home screen images
+      const getUrls = await handleGetURLs();
+      setUrls(getUrls);
+    } catch (error) {
+      console.log('Error refreshing:', error);
+    }
+
+    setRefreshing(false);
+  };
 
   useEffect(() => {
     bounce.value = withRepeat(
@@ -44,16 +73,6 @@ const Index = () =>
   }));
 
   useEffect(() => {
-    const initVehicles = () =>
-    {
-      const getVehicles = vehicles?.some(item => item.readyForPickup === true);
-      setVehiclePickup(getVehicles);
-    }
-
-    initVehicles();
-  }, [vehicles]);
-
-  useEffect(() => {
     const initUrls = async () =>
     {
       const getUrls = await handleGetURLs();
@@ -64,13 +83,13 @@ const Index = () =>
   }, []);
   
   return (
-    <Background>
+    <Background refreshing={refreshing} onRefresh={onRefresh}>
       <View style={Styles.block}>
         <View style={HomeStyles.shortcutContainer}>
           <TouchableOpacity
             style={HomeStyles.shortcutButton}
             onPress={() => {
-              if (vehicles.length === 0) {
+              if (vehicles?.length === 0) {
                 Alert.alert(
                   'Notice',
                   'Please add a vehicle before continuing',
@@ -105,7 +124,7 @@ const Index = () =>
           <TouchableOpacity
             style={HomeStyles.shortcutButton}
             onPress={() => {
-              if (vehicles.length === 0) {
+              if (vehicles?.length === 0) {
                 Alert.alert(
                   'Notice',
                   'Please add a vehicle before continuing',

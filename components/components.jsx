@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ScrollView, Animated, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Animated, ActivityIndicator, RefreshControl } from 'react-native';
 import { router } from 'expo-router';
 import { useApp } from './context';
 import { Styles, HomeStyles } from '../constants/styles';
@@ -57,7 +57,7 @@ const AuthBackground = ({children}) =>
     );
 };
 
-const Background = ({children, style}) =>
+const Background = ({children, style, refreshing, onRefresh}) =>
 {
     return (
         <LinearGradient
@@ -71,6 +71,11 @@ const Background = ({children, style}) =>
             <ScrollView
                 contentContainerStyle={[Styles.page, style]}
                 keyboardShouldPersistTaps='handled'
+                refreshControl={
+                    onRefresh ? (
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                    ) : null
+                }
             >
                 {children}
             </ScrollView>
@@ -82,7 +87,7 @@ const BackgroundAlt = ({children, style}) =>
 {
     return (
         <LinearGradient
-            style={[{flex: 1}, style]}
+            style={[{flex: 1, paddingBottom: 50}, style]}
             colors={[Colors.background, Colors.backgroundFade, Colors.background]}
             locations={[0.1, 0.5, 0.9]}
             start={{x: 1, y: 0.9}}

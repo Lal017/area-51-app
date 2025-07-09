@@ -103,7 +103,7 @@ const handleUpdateVehiclePickup = async (client, userId, setVehicles) =>
     }
 };
 
-const handleUpdateVehicleStatus = async (client, vehicleId, setVehicles) =>
+const handleUpdateVehicleStatus = async (client, vehicleId, setVehicles, setVehiclePickup) =>
 {
     try {
         await client.graphql({
@@ -118,6 +118,8 @@ const handleUpdateVehicleStatus = async (client, vehicleId, setVehicles) =>
 
         const newVehicles = await client.graphql({ query: listVehicles });
         setVehicles(newVehicles.data.listVehicles.items);
+        const filterVehicles = newVehicles.data.listVehicles.items?.some(item => item.readyForPickup === true);
+        setVehiclePickup(filterVehicles);
 
         Alert.alert(
             'Vehicle Pick Up',
