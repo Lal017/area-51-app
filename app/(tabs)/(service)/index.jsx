@@ -11,7 +11,7 @@ const ServiceConsole = () =>
   const { towRequest, vehicles } = useApp();
 
   return (
-    <Background>
+    <Background style={{rowGap: 5}}>
       <TouchableOpacity
         onPress={() => {
           if (vehicles.length === 0) {
@@ -65,7 +65,7 @@ const ServiceConsole = () =>
         }}
         style={[Styles.consoleBubble, {backgroundColor: Colors.tertiary}]}
       >
-        <Text style={ServiceStyles.title}>Appointment{'\n'}Schedule</Text>
+        <Text style={ServiceStyles.title}>Schedule an Appointment</Text>
         <View style={[ServiceStyles.lottieAnim, {justifyContent: 'center', alignItems: 'center'}]}>
           <LottieView
             source={require('../../../assets/animations/calendar.json')}
@@ -80,13 +80,15 @@ const ServiceConsole = () =>
         onPress={() => router.push('/(tabs)/(service)/myAppointments')}
         style={[Styles.consoleBubble, {backgroundColor: Colors.primary}]}
       >
-        <Text style={ServiceStyles.title}>My{'\n'}Appointments</Text>
-        <LottieView
-          source={require('../../../assets/animations/calendarCheck.json')}
-          loop
-          autoPlay
-          style={ServiceStyles.lottieAnim}
-        />
+        <Text style={ServiceStyles.title}>Appointments</Text>
+        <View style={[ServiceStyles.lottieAnim, {justifyContent: 'center', alignItems: 'center'}]}>
+          <LottieView
+            source={require('../../../assets/animations/calendarCheck.json')}
+            loop
+            autoPlay
+            style={{width: 100, height: 100}}
+          />
+        </View>
       </TouchableOpacity>
     </Background>
   );

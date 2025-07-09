@@ -35,7 +35,7 @@ const CustHeader = ({title, index}) =>
                     <AntDesign name='left' size={30} color='white' />
                 </TouchableOpacity>
             ) : null }
-            <Text style={[Styles.title, {textAlign: 'center'}]}>{title}</Text>
+            <Text style={[Styles.headerTitle, {textAlign: 'center'}]}>{title}</Text>
         </View>
     );
 };
@@ -118,7 +118,7 @@ const Tab = ({text, action, leftIcon, rightIcon}) =>
             onPress={action}
         >
             {leftIcon}
-            <Text style={Styles.text}>{text}</Text>
+            <Text style={Styles.tabText}>{text}</Text>
             {rightIcon}
         </TouchableOpacity>
     )
@@ -133,7 +133,7 @@ const Select = ({text, selected, action, leftIcon, rightIcon}) =>
             onPress={action}
         >
             {leftIcon}
-            <Text style={[Styles.text, selected ? {color: Colors.text} : null]}>{text}</Text>
+            <Text style={[Styles.tabText, selected ? {color: Colors.text} : null]}>{text}</Text>
             {rightIcon}         
         </TouchableOpacity>
     )
@@ -351,10 +351,10 @@ const AppointmentReminder = ({appointments}) =>
     const current = appointments[index];
     return (
         <View style={HomeStyles.appointmentContainer}>
-            <Text style={Styles.title}>Appt. Reminder</Text>
+            <Text style={HomeStyles.appointmentTitle}>Appt. Reminder</Text>
             <Animated.View style={{ opacity: fadeAnim }}>
-                <Text style={Styles.text}>{formatDate(current.date)}</Text>
-                <Text style={Styles.text}>{formatTime(current.time)}</Text>
+                <Text style={HomeStyles.appointmentText}>{formatDate(current.date)}</Text>
+                <Text style={HomeStyles.appointmentText}>{formatTime(current.time)}</Text>
             </Animated.View>
         </View>
     );

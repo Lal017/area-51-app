@@ -6,11 +6,14 @@ import { router } from 'expo-router';
 import { useApp } from '../../components/context';
 import { AntDesign, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useState } from 'react';
 
 // Profile page
 const Profile = () =>
 {
     const { email, firstName, lastName } = useApp();
+
+    const [ loading, setLoading ] = useState();
 
     return(
         <Background>
@@ -59,8 +62,14 @@ const Profile = () =>
                 </TouchableOpacity>
             </View>
             <TouchableOpacity
-                onPress={handleSignOut}
-                style={Styles.actionButton}
+                onPress={async () => {
+                    if (loading) return;
+                    setLoading(true);
+                    await handleSignOut();
+                    setLoading(false);
+                }}
+                style={[Styles.actionButton, loading && {opacity: 0.5}]}
+                disabled={loading}
             >
                 <Text style={Styles.actionText}>Sign Out</Text>
             </TouchableOpacity>

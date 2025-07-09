@@ -1,6 +1,6 @@
 import { Text, TouchableOpacity, Linking, View, Alert, Image, Dimensions, ActivityIndicator } from "react-native";
 import { router } from "expo-router";
-import { AppointmentReminder, Background, handleDeleteStorage } from "../../../components/components";
+import { AppointmentReminder, Background } from "../../../components/components";
 import { HomeStyles, Styles } from "../../../constants/styles";
 import { Entypo, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useApp } from "../../../components/context";
@@ -9,14 +9,13 @@ import { useEffect, useState, useRef } from "react";
 import Colors from "../../../constants/colors";
 import { handleGetURLs } from "../../../components/adminComponents";
 import Carousel from 'react-native-reanimated-carousel';
-import { list } from "aws-amplify/storage";
 
 const screenWidth = Dimensions.get("window").width;
 
 // Home page after login
 const Index = () =>
 {
-  const { firstName, towRequest, vehicles, appointments, identityId } = useApp();
+  const { firstName, towRequest, vehicles, appointments } = useApp();
   const [ urls, setUrls ] = useState();
   const [ vehiclePickup, setVehiclePickup ] = useState();
 
@@ -148,7 +147,7 @@ const Index = () =>
         <Text style={Styles.text}>Welcome {firstName}!</Text>
         { vehiclePickup ? <Text style={Styles.text}>Your vehicle is ready for pickup!</Text> : null}
       </View>
-      <View style={[HomeStyles.panel, appointments ? {height: '25%'} : {height: 100}]}>
+      <View style={HomeStyles.panel}>
         <TouchableOpacity
           style={[HomeStyles.panelContainer, {backgroundColor: Colors.backDropAccent, minWidth: '40%'}]}
           onPress={() => Linking.openURL('https://apply.snapfinance.com/snap-loan/landing?paramId=BEQypIc2AUit0%2BNU%2Fm1jaPTPmNwVgcoBY9btcVvwhMCDJ8qdDYWfFVb5WW%2BxBO51f%2BgPNPmcvPPGEqOKyqcCy57l581i30Mhc54AQ4Uv4I9COQxyDewFNEYSJJRGvQ379a7K2SmTgeFlpEssm%2FParIJh1%2FqwsslQ14TK0wPysRM%2B5wQQIZY5lILxig1G1ms0SOVMj1t76bwiCSSvuzFBeA%3D%3D&source=QR_CODE&merchantId=490307391&lang=en')}
@@ -161,6 +160,8 @@ const Index = () =>
         { appointments?.length > 0 ? (
           <AppointmentReminder appointments={appointments} />
         ) : null}
+      </View>
+      <View style={{alignItems: 'center'}}>
         { urls ? (
           <View style={HomeStyles.imgContainer}>
             <Carousel

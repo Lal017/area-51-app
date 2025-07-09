@@ -1,6 +1,5 @@
 import { Stack } from 'expo-router';
 import { CustHeader } from '../../../components/components';
-import Colors from '../../../constants/colors';
 
 const homeLayout = () =>
 {

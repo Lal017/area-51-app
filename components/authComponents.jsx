@@ -255,8 +255,6 @@ const handleSignOut = async () =>
 {
     try {
         await signOut({global: true });
-        clearLocalStorage();
-        router.replace('(auth)');
     } catch (error) {
         console.log('error signing out', error);
         Alert.alert(
@@ -289,7 +287,7 @@ const handleResetPassword = async ({username}) =>
         console.log('error resetting password', error);
         Alert.alert(
             'Error',
-            error.message,
+            error.name === 'UserNotFoundException' ? 'A user with this email does not exist' : error.message,
             [
                 { text: 'Ok'}
             ]
@@ -450,7 +448,7 @@ const handleDeleteAccount = async (client, userId, identityId, email, inputEmail
 const handleGetCurrentUser = async () =>
 {
     try {
-        const { tokens } = await fetchAuthSession();
+        const { tokens } = await fetchAuthSession({ forceRefresh: true });
         return tokens;
     } catch (error) {
         console.log('no user signed in');
@@ -522,7 +520,7 @@ const handleUpdateAttributes = async (updatedEmail, updatedFirstName, updatedLas
         setFirstName(updatedFirstName);
         setLastName(updatedLastName);
         setPhoneNumber(`+1${phoneNumberCheck}`);
-        handleUpdateAttributesNextSteps(attributes.email.nextStep.updateAttributeStep);
+        handleUpdateAttributesNextSteps(attributes.email.nextStep.updateAttributeStep, updatedEmail);
     } catch (error) {
         Alert.alert(
             'Error',
@@ -534,7 +532,7 @@ const handleUpdateAttributes = async (updatedEmail, updatedFirstName, updatedLas
     };
 };
 
-const handleUpdateAttributesNextSteps = (nextStep) =>
+const handleUpdateAttributesNextSteps = (nextStep, email) =>
 {
     if (nextStep === 'DONE') {
         Alert.alert(
@@ -554,14 +552,18 @@ const handleUpdateAttributesNextSteps = (nextStep) =>
                 { text: 'Ok'}
             ]
         );
-        router.push('/confirmAttribute');
+        router.push({
+            pathname: '/confirmAttribute',
+            params: { email: email }
+        });
     }
 };
 
-const handleConfirmUserAttribute = async ({ userAttributeKey, confirmationCode }) =>
+const handleConfirmUserAttribute = async (userAttributeKey, confirmationCode, email, setEmail) =>
 {
     try {
         await confirmUserAttribute({ userAttributeKey, confirmationCode });
+        setEmail(email);
         await handleRedirect();
         Alert.alert(
             "Confirmed",
@@ -573,7 +575,7 @@ const handleConfirmUserAttribute = async ({ userAttributeKey, confirmationCode }
     } catch (error) {
         console.log(error);
         Alert.alert(
-            "Error",
+            "Error Confirming attribute",
             error.message,
             [
                 { text: 'Ok'}

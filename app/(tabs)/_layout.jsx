@@ -3,16 +3,17 @@ import { router, Tabs} from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { Styles } from "../../constants/styles";
 import { AppProvider, useApp } from "../../components/context";
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { generateClient } from "aws-amplify/api";
 import { addNotificationReceivedListener, addNotificationResponseReceivedListener, removeNotificationSubscription, getLastNotificationResponseAsync } from "expo-notifications";
 import { registerForPushNotifications, handleCreateUser, handleUpdateUser, handleCheckUser } from "../../components/notifComponents";
 import Colors from "../../constants/colors";
 import { handleGetCurrentUser } from "../../components/authComponents";
 import { fetchUserAttributes, fetchAuthSession } from "aws-amplify/auth";
-import { vehiclesByUserId } from "../../src/graphql/queries";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { handleGetMyAppointments, handleGetTowRequest, handleNotifUpdateTowRequest } from "../../components/scheduleComponents";
+import { Loading } from "../../components/components";
+import { handleGetVehicles, handleUpdateVehiclePickup } from "../../components/vehicleComponents";
 
 const TabsContent = () =>
 {
@@ -47,6 +48,8 @@ const TabsContent = () =>
         newEstimate,
         setNewEstimate,
     } = useApp();
+
+    const [ ready, setReady ] = useState(false);
 
     // notification listeners
     const notificationListener = useRef();
@@ -111,7 +114,6 @@ const TabsContent = () =>
             setNewEstimate(JSON.parse(savedEstimate));
 
             if (!userAtt?.phone_number || ((!userAtt?.given_name || !userAtt?.family_name) && !userAtt?.name)) {
-                router.replace('/(tabs)/(profile)/accountEdit');
                 setIsStuck(true);
                 Alert.alert(
                     'Notice',
@@ -122,6 +124,7 @@ const TabsContent = () =>
                         }
                     ]
                 );
+                router.replace('/(tabs)/(profile)/accountEdit');
             }
         }
 
@@ -129,23 +132,6 @@ const TabsContent = () =>
     }, []);
 
     useEffect(() => {
-        const handleGetVehicles = async () =>
-        {
-            try {
-                // get vehicles info from database
-                const vehiclesInfo = await client.graphql({
-                    query: vehiclesByUserId,
-                    variables: {
-                        userId: userId,
-                    }
-                });
-                
-                await setVehicles(vehiclesInfo.data.vehiclesByUserId.items);
-            } catch (error) {
-                console.log('Error getting vehicles:', error);
-            }
-        }
-
         const handleGetRequests = async () =>
         {
             try {
@@ -156,14 +142,18 @@ const TabsContent = () =>
                 // set upcoming appointments
                 const getAppointments = await handleGetMyAppointments(client, userId);
                 setAppointments(getAppointments);
+
+                // set vehicles
+                const getVehicles = await handleGetVehicles(client, userId);
+                setVehicles(getVehicles);
             } catch (error) {
                 console.log('Error getting request:', error);
             }
         }
 
         if (client && userId) {
-            handleGetVehicles();
             handleGetRequests();
+            setReady(true);
         }
     }, [client, userId])
 
@@ -208,6 +198,9 @@ const TabsContent = () =>
             else if (notification.request.content.data.type === "NEW_ESTIMATE") {
                 setNewEstimate(true);
             }
+            else if (notification.request.content.data.type === "VEHICLE_PICKUP") {
+                handleUpdateVehiclePickup(client, userId, setVehicles);
+            }
         });
 
         // triggered when the user taps on the notification
@@ -228,69 +221,75 @@ const TabsContent = () =>
     }, [client, userId]);
 
     return (
-        <Tabs
-            screenOptions={{
-                headerShown: false,
-                tabBarStyle: Styles.tabBarStyle,
-                tabBarActiveTintColor: Colors.secondary,
-                tabBarInactiveTintColor: Colors.backDropAccent,
-                tabBarShowLabel: false,
-            }}
-            screenListeners={{
-                tabPress: (e) => {
-                    if (!firstName || !lastName || !phoneNumber || !email) {
-                        e.preventDefault();
-                        Alert.alert(
-                            'Notice',
-                            'Please add missing attributes before continuing',
-                            [{ text: 'OK'}]
-                        );
+        <>
+        { ready ? (
+            <Tabs
+                screenOptions={{
+                    headerShown: false,
+                    tabBarStyle: Styles.tabBarStyle,
+                    tabBarActiveTintColor: Colors.secondary,
+                    tabBarInactiveTintColor: Colors.backDropAccent,
+                    tabBarShowLabel: false,
+                }}
+                screenListeners={{
+                    tabPress: (e) => {
+                        if (!firstName || !lastName || !phoneNumber || !email) {
+                            e.preventDefault();
+                            Alert.alert(
+                                'Notice',
+                                'Please add missing attributes before continuing',
+                                [{ text: 'OK'}]
+                            );
+                        }
                     }
-                }
-            }}
-        >
-            <Tabs.Screen
-                name="(home)"
-                options={{
-                    title: 'Home',
-                    headerShown: false,
-                    tabBarHideOnKeyboard: true,
-                    tabBarIcon: ({ color, size }) => (
-                        <Ionicons name="home" size={size} color={color}/>
-                    ),
-                    tabBarBadge: towRequest?.status === 'PENDING' ? (1) : undefined,
                 }}
-            />
-            <Tabs.Screen
-                name="(service)"
-                options={{
-                    title: "Services",
-                    headerShown: false,
-                    tabBarHideOnKeyboard: true,
-                    tabBarIcon: ({ color, size, focused }) => (
-                        <View style={Styles.carIconContainer}>
-                            <Ionicons
-                                name="car-sport"
-                                size={size} 
-                                color={focused ? color: "black"} 
-                            />
-                        </View>
-                    ),
-                }}
-            />
-            <Tabs.Screen
-                name="(profile)"
-                options={{
-                    title: "Profile",
-                    headerShown: false,
-                    tabBarHideOnKeyboard: true,
-                    tabBarIcon: ({ color, size }) => (
-                        <Ionicons name="person" size={size} color={color}/>
-                    ),
-                    tabBarBadge: newInvoice && newEstimate ? (2) : newInvoice || newEstimate ? (1) : undefined, 
-                }}
-            />
-        </Tabs>
+            >
+                <Tabs.Screen
+                    name="(home)"
+                    options={{
+                        title: 'Home',
+                        headerShown: false,
+                        tabBarHideOnKeyboard: true,
+                        tabBarIcon: ({ color, size }) => (
+                            <Ionicons name="home" size={size} color={color}/>
+                        ),
+                        tabBarBadge: towRequest?.status === 'PENDING' ? (1) : undefined,
+                    }}
+                />
+                <Tabs.Screen
+                    name="(service)"
+                    options={{
+                        title: "Services",
+                        headerShown: false,
+                        tabBarHideOnKeyboard: true,
+                        tabBarIcon: ({ color, size, focused }) => (
+                            <View style={Styles.carIconContainer}>
+                                <Ionicons
+                                    name="car-sport"
+                                    size={size} 
+                                    color={focused ? color: "black"} 
+                                />
+                            </View>
+                        ),
+                    }}
+                />
+                <Tabs.Screen
+                    name="(profile)"
+                    options={{
+                        title: "Profile",
+                        headerShown: false,
+                        tabBarHideOnKeyboard: true,
+                        tabBarIcon: ({ color, size }) => (
+                            <Ionicons name="person" size={size} color={color}/>
+                        ),
+                        tabBarBadge: newInvoice && newEstimate ? (2) : newInvoice || newEstimate ? (1) : undefined, 
+                    }}
+                />
+            </Tabs>
+        ) : (
+            <Loading/>
+        )}
+        </>
     );
 };
 

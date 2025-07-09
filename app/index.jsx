@@ -1,7 +1,7 @@
 import { Redirect } from 'expo-router';
-import { ActivityIndicator } from 'react-native';
 import { useEffect, useState } from 'react';
 import { handleGetCurrentUser } from '../components/authComponents';
+import LottieView from 'lottie-react-native';
 import { Background } from '../components/components';
 
 const Index = () =>
@@ -27,8 +27,13 @@ const Index = () =>
 
     if (loading) {
         return (
-            <Background style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <ActivityIndicator size="large" color="#0000ff" />
+            <Background style={{justifyContent: 'center'}}>
+                <LottieView
+                    source={require('../assets/animations/astronaut.json')}
+                    autoPlay
+                    loop
+                    style={{width: 150, height: 150}}
+                />
             </Background>
         );
     }

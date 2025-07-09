@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { RFValue } from "react-native-responsive-fontsize";
 import Colors from "./colors";
 
 const Styles = StyleSheet.create({
@@ -39,12 +40,11 @@ const Styles = StyleSheet.create({
     },
     consoleBubble: {
         flex: 1,
-        width: '100%',
+        width: '95%',
+        borderRadius: 10,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingRight: 25,
-        paddingLeft: 25
+        justifyContent: 'space-evenly',
     },
     // Tab Select
     tabWrapper: {
@@ -109,22 +109,33 @@ const Styles = StyleSheet.create({
         fontFamily: 'Roboto-Bold'
     },
     // Text
+    headerTitle: {
+        fontSize: RFValue(25),
+        fontFamily: 'Roboto-Condensed-Light',
+        color: Colors.text
+    },
     title: {
-        fontSize: 35,
+        fontSize: RFValue(35),
         fontFamily: 'Roboto-Condensed-Light',
         color: Colors.text,
     },
     subTitle: {
-        fontSize: 25,
+        fontSize: RFValue(25),
         fontFamily: 'Roboto-SemiCondensed-Bold',
         textAlign: 'left',
         color: Colors.text,
     },
     text: {
-        fontSize: 20,
+        fontSize: RFValue(17),
         fontFamily: 'Roboto-Light',
         textAlign: 'left',
         color: Colors.text,
+    },
+    tabText: {
+        fontSize: RFValue(15),
+        fontFamily: 'Roboto-Light',
+        textAlign: 'left',
+        color: Colors.text
     },
     // icons
     icon: {
@@ -180,7 +191,7 @@ const AuthStyles = StyleSheet.create({
     },
     description: {
         color: Colors.text,
-        fontSize: 15,
+        fontSize: RFValue(15),
         textAlign: 'center',
         width: '75%',
     },
@@ -210,6 +221,7 @@ const AuthStyles = StyleSheet.create({
 const HomeStyles = StyleSheet.create({
     panel: {
         width: '90%',
+        maxHeight: '25%',
         flexDirection: 'row',
         flexWrap: 'wrap',
         gap: 5,
@@ -219,6 +231,7 @@ const HomeStyles = StyleSheet.create({
     panelContainer: {
         flex: 1,
         minWidth: '30%',
+        maxHeight: '100%',
         borderRadius: 10,
         justifyContent: 'center',
         alignItems: 'center',
@@ -249,6 +262,7 @@ const HomeStyles = StyleSheet.create({
         backgroundColor: Colors.backgroundAccent,
         flex: 1,
         minWidth: '40%',
+        maxHeight: '100%',
         borderRadius: 10,
         padding: 25,
         paddingTop: 15,
@@ -271,6 +285,17 @@ const HomeStyles = StyleSheet.create({
         backgroundColor: Colors.backgroundAccent,
         borderRadius: 5,
         position: 'relative'
+    },
+    // index.jsx
+    appointmentTitle: {
+        fontSize: RFValue(25),
+        fontFamily: 'Roboto-Condensed-Light',
+        color: Colors.text
+    },
+    appointmentText: {
+        fontSize: RFValue(12),
+        fontFamily: 'Roboto-Light',
+        color: Colors.text
     },
     // vehiclePickup.jsx
     pickupContainer: {
@@ -334,11 +359,11 @@ const ServiceStyles = StyleSheet.create({
     },
     // index.jsx
     title: {
-        fontSize: 30,
+        fontSize: RFValue(23),
         fontFamily: 'Roboto-Light',
         color: Colors.text,
-        width: '65%',
         textAlign: 'left',
+        width: '50%',
     },
     lottieAnim: {
         width: 125,
@@ -373,7 +398,7 @@ const ServiceStyles = StyleSheet.create({
         elevation: 10,
         backgroundColor: 'transparent',
         width: '100%',
-        height: '60%'
+        height: 400
     },
     mapContainerAlt: {
         elevation: 10,
@@ -412,7 +437,7 @@ const ProfileStyles = StyleSheet.create({
         borderRadius: 25,
     },
     name: {
-        fontSize: 30,
+        fontSize: RFValue(30),
         fontFamily: 'Roboto-Bold',
         color: Colors.text,
     },

@@ -16,6 +16,8 @@ const AdminContent = () =>
     const {
         client,
         setClient,
+        identityId,
+        setIdentityId,
         userId,
         setUserId,
         access,
@@ -32,8 +34,6 @@ const AdminContent = () =>
         phoneNumber,
         setPhoneNumber,
     } = useApp();
-
-    const [ identityId, setIdentityId ] = useState();
 
     // notification listeners
     const notificationListener = useRef();

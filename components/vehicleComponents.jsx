@@ -24,7 +24,7 @@ const handleCreateVehicle = async (client, vehicle, userId, setVehicles) =>
         const newVehicle = await client.graphql({ query: listVehicles });
         await setVehicles(newVehicle.data.listVehicles.items);
 
-        router.replace('(profile)/vehicleList');
+        router.replace('(profile)');
 
         Alert.alert(
             'Vehicle Created',
@@ -60,7 +60,7 @@ const handleUpdateVehicle = async (client, vehicle, vehicleId, userId, setVehicl
         const newVehicles = await client.graphql({ query: listVehicles });
         setVehicles(newVehicles.data.listVehicles.items);
 
-        router.replace('(profile)/vehicleList');
+        router.replace('/(profile)');
 
         Alert.alert(
             'Vehicle Updated',
@@ -71,6 +71,35 @@ const handleUpdateVehicle = async (client, vehicle, vehicleId, userId, setVehicl
         );
     } catch (error) {
         console.log('Error updating vehicle', error);
+    }
+};
+
+const handleGetVehicles = async (client, userId) =>
+{
+    try {
+        // get vehicles info from database
+        const vehiclesInfo = await client.graphql({
+            query: vehiclesByUserId,
+            variables: {
+                userId: userId,
+            }
+        });
+        
+        return vehiclesInfo.data.vehiclesByUserId.items;
+    } catch (error) {
+        console.log('Error getting vehicles:', error);
+    }
+};
+
+// used to update vehicles after receiving a notification
+const handleUpdateVehiclePickup = async (client, userId, setVehicles) =>
+{
+    if (!client || !userId) return;
+    try {
+        const getVehicles = await handleGetVehicles(client, userId);
+        setVehicles(getVehicles);
+    } catch (error) {
+        console.log('Error updating vehicle pickup:', error);
     }
 };
 
@@ -163,6 +192,8 @@ const handleDeleteAllVehicles = async (client, userId) =>
 export {
     handleCreateVehicle,
     handleUpdateVehicle,
+    handleGetVehicles,
+    handleUpdateVehiclePickup,
     handleUpdateVehicleStatus,
     handleDeleteVehicle,
     handleDeleteAllVehicles

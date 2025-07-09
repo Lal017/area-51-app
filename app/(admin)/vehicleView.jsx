@@ -17,7 +17,7 @@ const VehicleView = () =>
     const [ loading, setLoading ] = useState(false);
 
     const data = {
-        type: "VEHICLE_STATUS"
+        type: "VEHICLE_PICKUP"
     };
 
     return (
@@ -99,7 +99,7 @@ const VehicleView = () =>
                                     let body = !vehicle.readyForPickup ? `Your ${vehicle.year} ${vehicle.make} ${vehicle.model} is ready for pickup!` : `Your ${vehicle.year} ${vehicle.make} ${vehicle.model} has been picked up!`;
                                     await handleUpdateVehicleStatus(client, vehicle.id, !vehicle.readyForPickup);
                                     await sendPushNotification(vehicle.user.pushToken, title, body, data);
-                                    router.replace('(admin)/vehicleList');
+                                    router.replace('(admin)');
                                     setLoading(false);
                                 }
                             }

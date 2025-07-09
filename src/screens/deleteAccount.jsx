@@ -58,7 +58,7 @@ const DeleteAccount = () =>
                     </View>
                     <TouchableOpacity
                         onPress={async () => {
-                            if (loading) return;
+                            if (loading || !inputEmail) return;
                             setLoading(true);
                             await handleDeleteAccount(client, userId, identityId, email, inputEmail);
                             setLoading(false);

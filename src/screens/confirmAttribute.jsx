@@ -5,9 +5,14 @@ import { handleConfirmUserAttribute } from '../../components/authComponents';
 import { MaterialIcons } from '@expo/vector-icons';
 import Colors from '../../constants/colors';
 import { Background } from '../../components/components';
+import { useLocalSearchParams } from 'expo-router';
+import { useApp } from '../../components/context';
 
 const ConfirmAttribute = () =>
 {
+    const { email } = useLocalSearchParams();
+    const { setEmail } = useApp();
+    
     const [ code, setCode ] = useState();
     const [ loading, setLoading ] = useState(false);
 
@@ -34,10 +39,7 @@ const ConfirmAttribute = () =>
                 onPress={async () => {
                     if (loading) return;
                     setLoading(true);
-                    await handleConfirmUserAttribute({
-                        userAttributeKey: 'email',
-                        confirmationCode: code
-                    });
+                    await handleConfirmUserAttribute('email', code, email, setEmail);
                     setLoading(false);
                 }}
                 style={[Styles.actionButton, loading && {opacity: 0.5}]}
