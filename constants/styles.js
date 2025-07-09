@@ -115,18 +115,18 @@ const Styles = StyleSheet.create({
         color: Colors.text
     },
     title: {
-        fontSize: RFValue(35),
+        fontSize: RFValue(30),
         fontFamily: 'Roboto-Condensed-Light',
         color: Colors.text,
     },
     subTitle: {
-        fontSize: RFValue(25),
+        fontSize: RFValue(22),
         fontFamily: 'Roboto-SemiCondensed-Bold',
         textAlign: 'left',
         color: Colors.text,
     },
     text: {
-        fontSize: RFValue(17),
+        fontSize: RFValue(15),
         fontFamily: 'Roboto-Light',
         textAlign: 'left',
         color: Colors.text,
@@ -299,17 +299,25 @@ const HomeStyles = StyleSheet.create({
     },
     // vehiclePickup.jsx
     pickupContainer: {
+        flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: Colors.backgroundAccent,
+        backgroundColor: Colors.backDrop,
         padding: 20,
         rowGap: 20,
-        width: '90%',
+        width: '95%',
         borderRadius: 10
     },
     pickupInfo: {
         flexDirection: 'row',
-        justifyContent: 'center',
         columnGap: 20
+    },
+    pickupButton: {
+        width: 50,
+        height: 50,
+        borderRadius: 10,
+        backgroundColor: Colors.primary,
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 });
 
@@ -488,7 +496,7 @@ const AdminStyles = StyleSheet.create({
         backgroundColor: Colors.backgroundAccent,
     },
     picker: {
-        backgroundColor: Colors.backgroundAccent,
+        backgroundColor: Colors.backDropAccent,
         borderRadius: 25,
         width: 200,
         paddingLeft: 10

@@ -131,13 +131,6 @@ const handleResendSignUpCode = async ({username}) =>
         await resendSignUpCode({
             username
         });
-        Alert.alert(
-            'Code Resent',
-            'Check your email for your verification code',
-            [
-                { text: "Ok" }
-            ]
-        );
         return;
     } catch (error) {
         console.log('error resending sign up code', error);
@@ -209,12 +202,13 @@ const handleSignInWithRedirect = async ({providerName}) =>
     } catch (error) {
         console.log('error signing in with redirect', error);
         Alert.alert(
-            'Error',
-            error.message,
+            `Error signing in with ${providerName}`,
+            'Please try again',
             [
                 { text: 'Ok'}
             ]
         );
+        router.replace('(auth)');
     }
 };
 
@@ -287,7 +281,7 @@ const handleResetPassword = async ({username}) =>
         console.log('error resetting password', error);
         Alert.alert(
             'Error',
-            error.name === 'UserNotFoundException' ? 'A user with this email does not exist' : error.message,
+            error.name === 'UserNotFoundException' ? 'A user with this email does not exist' : error.name === 'InvalidParameterException' ? 'Please sign in with Google/Amazon' : error.message,
             [
                 { text: 'Ok'}
             ]

@@ -77,7 +77,7 @@ const VehicleView = () =>
             <View style={[Styles.block, {alignItems: 'center'}]}>
                 <View style={Styles.infoContainer}>
                     <Text style={Styles.title}>Pickup</Text>
-                    <Text style={Styles.text}>Let the customer know there vehicle is ready for pickup</Text>
+                    <Text style={Styles.text}>Let the customer know their vehicle is ready for pickup</Text>
                     <View style={AdminStyles.labelContainer}>
                         <Text style={Styles.subTitle}>Status</Text>
                         <Text style={[Styles.text, vehicle.readyForPickup ? {color: 'green'} : {color: 'red'}]}>{ vehicle.readyForPickup ? 'Ready for pickup' : 'Not ready for pickup'}</Text>

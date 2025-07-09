@@ -71,6 +71,13 @@ const SignUpConfirm = () =>
                             return;
                         }
                         handleResendSignUpCode({username});
+                        Alert.alert(
+                            'Code Resent',
+                            'Check your email for your verification code',
+                            [
+                                { text: "Ok" }
+                            ]
+                        );
                         setCooldown(30);
                     }}
                 >

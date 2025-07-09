@@ -1,13 +1,10 @@
-import { View, Text, TouchableOpacity, ScrollView, Alert, Animated, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Animated, ActivityIndicator } from 'react-native';
 import { router } from 'expo-router';
 import { useApp } from './context';
-import { Styles, ServiceStyles, HomeStyles } from '../constants/styles';
+import { Styles, HomeStyles } from '../constants/styles';
 import Colors from '../constants/colors';
 import { LinearGradient } from 'expo-linear-gradient';
-import { AntDesign, FontAwesome } from '@expo/vector-icons';
-import LottieView from 'lottie-react-native';
-import { handleUpdateTowRequestStatus } from './scheduleComponents';
-import { handleSendAdminNotif } from './notifComponents';
+import { AntDesign } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
 import { list, remove } from 'aws-amplify/storage';
 
@@ -173,150 +170,30 @@ const formatDate = (dateString) =>
 // format time for readability
 const formatTime = (timeString) =>
 {
-    const today = new Date().toISOString().split('T')[0];
-    const time = new Date(`${today}T${timeString}`);
+    const isValidISODate = !isNaN(Date.parse(timeString));
 
-    return time.toLocaleTimeString('en-US', {
+    const date = isValidISODate
+        ? new Date(timeString)
+        : new Date(`${new Date().toISOString().split('T')[0]}T${timeString}`);
+
+    return date.toLocaleTimeString('en-US', {
         hour: 'numeric',
         minute: '2-digit',
         hour12: true
-    })
+    });
 };
 
-const TowStatusComponent = ({towRequest, client, setTowRequest}) =>
+const getRemainingETA = (isoStartTime, estimatedMinutes) =>
 {
-    return (
-        <>
-            { towRequest && towRequest.status === "PENDING"? (
-            <>
-                <View style={Styles.infoContainer}>
-                    <View style={ServiceStyles.titleWrapper}>
-                        <Text style={[Styles.title, {textAlign: 'left'}]}>Tow Request</Text>
-                        <FontAwesome name="check" size={30} color='white'/>
-                    </View>
-                    <Text style={Styles.subTitle}>Price:</Text>
-                    <Text style={Styles.text}>{towRequest.price}</Text>
-                    <Text style={Styles.subTitle}>Wait Time:</Text>
-                    <Text style={Styles.text}>{towRequest.waitTime}</Text>
-                </View>
-                <View style={[Styles.block, {alignItems: 'center'}]}>
-                    <TouchableOpacity
-                        style={Styles.actionButton}
-                        onPress={() => Alert.alert(
-                            'Confirm',
-                            'Are you sure you want to accept this tow request?',
-                            [
-                                { text: 'No' },
-                                {
-                                    text: 'Yes',
-                                    onPress: async () => {
-                                        handleSendAdminNotif('Tow Request Confirmed', 'Customer has been confirmed for towing!');
-                                        handleUpdateTowRequestStatus(client, towRequest.id, 'IN_PROGRESS', setTowRequest);
-                                        Alert.alert(
-                                            'Confirmed',
-                                            'Your tow request has been confirmed',
-                                            [{ text: 'OK' }]
-                                        );
-                                    }
-                                }
-                            ]
-                        )}
-                    >
-                        <Text style={Styles.actionText}>Accept</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={[Styles.actionButton, {backgroundColor: 'red'}]}
-                        onPress={() => Alert.alert(
-                            'Cancel',
-                            'Are you sure you want to cancel this tow request?',
-                            [
-                                { text: 'No' },
-                                {
-                                    text: 'Yes',
-                                    onPress: async () => {
-                                        handleSendAdminNotif('Tow Request Cancelled', 'Customer has cancelled the tow request');
-                                        handleUpdateTowRequestStatus(client, towRequest.id, 'CANCELLED', setTowRequest);
-                                        Alert.alert(
-                                            'Cancelled',
-                                            'Your tow request has been cancelled',
-                                            [{ text: 'OK' }]
-                                        );
-                                        setTowRequest(undefined);
-                                        router.replace('/(tabs)');
-                                    }
-                                }
-                            ]
-                        )}
-                    >
-                        <Text style={Styles.actionText}>Cancel</Text>
-                    </TouchableOpacity>
-                </View>
-            </>
-            ) : towRequest && towRequest.status === "REQUESTED" ? (
-            <>
-                <View style={Styles.infoContainer}>
-                    <View style={ServiceStyles.titleWrapper}>
-                    <Text style={Styles.subTitle}>Tow Request</Text>
-                    <LottieView
-                        source={require('../assets/animations/gear.json')}
-                        loop
-                        autoPlay
-                        style={{width: 50, height: 50}}
-                    />
-                    </View>
-                    <Text style={Styles.text}>
-                    Your request is being processed.
-                    We'll notify you with a price and estimated wait time shortly.
-                    </Text>
-                </View>
-                <View style={Styles.block}>
-                    <TouchableOpacity
-                        style={[Styles.actionButton, {backgroundColor: 'red', alignSelf: 'center'}]}
-                        onPress={() => Alert.alert(
-                            'Cancel',
-                            'Are you sure you want to cancel your tow request?',
-                            [
-                                { text: 'NO' },
-                                {
-                                    text: 'Yes',
-                                    onPress: async () => {
-                                        handleSendAdminNotif('Tow Request Cancelled', 'Customer has cancelled the tow request');
-                                        await handleUpdateTowRequestStatus(client, towRequest.id, 'CANCELLED', setTowRequest);
-                                        Alert.alert(
-                                            'Cancelled',
-                                            'Your tow request has been cancelled',
-                                            [{ text: 'OK' }]
-                                        );
-                                        setTowRequest(undefined);
-                                        router.replace('/(tabs)');
-                                    }
-                                }
-                            ]
-                        )}
-                    >
-                        <Text style={Styles.actionText}>Cancel</Text>
-                    </TouchableOpacity>
-                </View>
-            </>
-            ) : towRequest?.status === "IN_PROGRESS" ? (
-            <View style={Styles.infoContainer}>
-                <View style={ServiceStyles.titleWrapper}>
-                    <Text style={Styles.subTitle}>Tow Request</Text>
-                    <LottieView
-                        source={require('../assets/animations/truck.json')}
-                        loop
-                        autoPlay
-                        style={{width: 75, height: 75}}
-                    />
-                </View>
-                <Text style={Styles.text}>
-                Your driver is on the way!
-                Estimated Wait time is {towRequest.waitTime}.
-                </Text>
-            </View>
-            ) : null}
-        </>
-    );
+    const start = new Date(isoStartTime); // e.g. "2025-07-09T13:25:00Z"
+    const now = new Date();
+
+    const elapsedMs = now - start;
+    const elapsedMinutes = Math.floor(elapsedMs / 60000); // Convert ms to minutes
+
+    const remaining = Math.max(estimatedMinutes - elapsedMinutes, 0); // Prevent negative time
+
+    return remaining;
 };
 
 const AppointmentReminder = ({appointments}) =>
@@ -390,7 +267,7 @@ export {
     formatNumber,
     formatDate,
     formatTime,
-    TowStatusComponent,
+    getRemainingETA,
     AppointmentReminder,
     handleDeleteStorage
 };

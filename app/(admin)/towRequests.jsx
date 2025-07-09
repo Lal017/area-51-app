@@ -50,7 +50,7 @@ const TowRequests = () =>
                     <Picker
                         selectedValue={statusFilter}
                         onValueChange={(itemvalue) => setStatusFilter(itemvalue)}
-                        style={{color: 'white'}}
+                        style={{color: 'black'}}
                     >
                         <Picker.Item label="All" value='ALL' />
                         <Picker.Item label="Requested" value="REQUESTED" />
@@ -78,7 +78,7 @@ const TowRequests = () =>
                                     pathname: 'towResponse',
                                     params: { customerParam: JSON.stringify(request)}
                                 })}
-                                text={<Text style={[Styles.subTitle, {paddingLeft: 75}, request.status === 'REQUESTED' ? {color: Colors.primary} : request.status === 'PENDING' ? {color: Colors.secondary} : request.status === 'IN_PROGRESS' ? {color: 'white'} : request.status === 'CANCELLED' ? {color: 'red'} : request.status === 'COMPLETED' ? {color: '#b3b3b3'} : null ]}><Text style={Styles.title}>{request.user.firstName}</Text>{'\n'}{request.status === 'IN_PROGRESS' ? 'IN PROGRESS' : request.status}</Text>}
+                                text={<Text style={[Styles.headerTitle, {paddingLeft: 75}, request.status === 'REQUESTED' ? {color: Colors.primary} : request.status === 'PENDING' ? {color: Colors.secondary} : request.status === 'IN_PROGRESS' ? {color: 'white'} : request.status === 'CANCELLED' ? {color: 'red'} : request.status === 'COMPLETED' ? {color: '#b3b3b3'} : null ]}><Text style={Styles.tabText}>{request.user.firstName}</Text>{'\n'}{request.status === 'IN_PROGRESS' ? 'IN PROGRESS' : request.status}</Text>}
                                 leftIcon={<MaterialCommunityIcons name='tow-truck' size={35} style={Styles.icon} />}
                                 rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon} />}
                             />

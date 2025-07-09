@@ -1,17 +1,40 @@
-import { View, Text, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, Alert } from 'react-native';
 import { router } from 'expo-router';
-import { Background } from '../../components/components';
+import { Background, Tab } from '../../components/components';
 import { useEffect, useState } from 'react';
 import { useApp } from '../../components/context';
-import { HomeStyles, Styles } from '../../constants/styles';
-import { Ionicons } from '@expo/vector-icons';
+import { Styles, HomeStyles } from '../../constants/styles';
+import { Entypo, Ionicons } from '@expo/vector-icons';
 import { handleUpdateVehicleStatus } from '../../components/vehicleComponents';
+import Animated, { Easing , useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from "react-native-reanimated";
 
 const VehiclePickup = () =>
 {
     const { client, vehicles, setVehicles } = useApp();
     const [ vehiclePickup, setVehiclePickup ] = useState();
     const [ loading, setLoading ] = useState(false);
+
+    const bounce = useSharedValue(0);
+    useEffect(() => {
+        bounce.value = withRepeat(
+            withSequence(
+            withTiming(-10, {
+                duration: 500,
+                easing: Easing.out(Easing.ease)
+            }),
+            withTiming(0, {
+                duration: 500,
+                easing: Easing.in(Easing.ease)
+            })
+            ),
+            -1,     // infinite
+            true,   // reverse
+        );
+    }, [vehiclePickup]);
+
+        const animatedStyle = useAnimatedStyle(() => ({
+        transform: [{ translateY: bounce.value }]
+    }));
 
     useEffect(() => {
         const initVehicles = () =>
@@ -22,53 +45,50 @@ const VehiclePickup = () =>
         }
 
         initVehicles();
-    }, [vehicles]); 
+    }, [vehicles]);
+
     return(
         <Background>
             <View style={Styles.block}>
-                <View style={Styles.infoContainer}>
+                <View style={[Styles.infoContainer, {rowGap: 5}]}>
                     <Text style={Styles.title}>Ready for Pickup</Text>
+                    <Text style={Styles.subTitle}>Location</Text>
+                    <Text style={Styles.text}>3120 W Sirius Ave. #103 Las Vegas, NV 89102</Text>
+                    <Text style={Styles.subTitle}>Hours of operation</Text>
+                    <Text style={Styles.text}>Mon - Fri | 9am - 5:30pm</Text>
                     <Text style={Styles.text}>The following vehicles are ready to be picked up.</Text>
                 </View>
             </View>
-            <View style={[Styles.block, {rowGap: 5, alignItems: 'center'}]}>
-                { vehiclePickup?.map((vehicle, index) => (
-                    <View style={HomeStyles.pickupContainer} key={index}>
-                        <View style={HomeStyles.pickupInfo}>
-                            <Ionicons name='car-sport' size={30} color='white'/>
-                            <Text style={Styles.text}>{vehicle.year} {vehicle.make} {vehicle.model}</Text>
-                        </View>
-                        <TouchableOpacity
-                            style={Styles.actionButton}
-                            onPress={() => Alert.alert(
-                                'Confirm',
-                                'Has your vehicle been picked up?',
-                                [
-                                    { text: 'No'},
-                                    {
-                                        text: 'Yes',
-                                        onPress: async () => {
-                                            if (loading) return;
-                                            setLoading(true);
-                                            await handleUpdateVehicleStatus(client, vehicle.id, setVehicles);
-                                            router.replace('(tabs)/(home)');
-                                            setLoading(false);
-                                        }
-                                    }
-                                ]
-                            )}
-                        >
-                            <Text style={Styles.actionText}>Vehicle has been picked up</Text>
-                        </TouchableOpacity>
-                    </View>
-                ))}
-            </View>
             <View style={Styles.block}>
-                <View style={Styles.infoContainer}>
-                    <Text style={Styles.subTitle}>Reminder</Text>
-                    <Text style={Styles.text}>3120 W Sirius Ave. #103 Las Vegas, NV 89102</Text>
-                    <Text style={Styles.text}>Mon - Fri | 9am - 5:30pm</Text>
-                </View>
+                { vehiclePickup?.map((vehicle, index) => (
+                    <Tab
+                        key={index}
+                        text={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
+                        action={() => Alert.alert(
+                            'Confirm',
+                            'Has your vehicle been picked up?',
+                            [
+                                { text: 'No'},
+                                {
+                                    text: 'Yes',
+                                    onPress: async () => {
+                                        if (loading) return;
+                                        setLoading(true);
+                                        await handleUpdateVehicleStatus(client, vehicle.id, setVehicles);
+                                        router.replace('(tabs)/(home)');
+                                        setLoading(false);
+                                    }
+                                }
+                            ]
+                        )}
+                        leftIcon={<Ionicons name='car-sport' size={30} color='white' style={Styles.icon}/>}
+                        rightIcon={
+                            <Animated.View style={[Styles.rightIcon, animatedStyle, {paddingRight: 15}]}>
+                                <Entypo name='thumbs-up' size={30} color='white' />
+                            </Animated.View>
+                        }
+                    />
+                ))}
             </View>
         </Background>
     );
