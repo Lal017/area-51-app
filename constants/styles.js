@@ -407,7 +407,7 @@ const ServiceStyles = StyleSheet.create({
         elevation: 10,
         backgroundColor: 'transparent',
         width: '100%',
-        height: 400
+        height: 300
     },
     mapContainerAlt: {
         elevation: 10,

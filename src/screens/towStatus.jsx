@@ -1,9 +1,11 @@
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import LottieView from 'lottie-react-native';
 import { Styles, ServiceStyles } from '../../constants/styles';
 import { FontAwesome } from '@expo/vector-icons';
 import { useApp } from "../../components/context";
 import { Background, getRemainingETA, formatTime } from "../../components/components";
+import { handleSendAdminNotif } from '../../components/notifComponents';
+import { handleUpdateTowRequestStatus } from '../../components/scheduleComponents';
 import { useEffect, useState } from "react";
 
 const TowStatus = () =>
@@ -13,7 +15,6 @@ const TowStatus = () =>
 
     useEffect(() => {
         const parseMinutes = (waitTime) => {
-            console.log(waitTime);
             if (!waitTime) return 1;
 
             // Extract the first number found in the string
@@ -54,13 +55,17 @@ const TowStatus = () =>
                                 {
                                     text: 'Yes',
                                     onPress: async () => {
-                                        handleSendAdminNotif('Tow Request Confirmed', 'Customer has been confirmed for towing!');
-                                        handleUpdateTowRequestStatus(client, towRequest.id, 'IN_PROGRESS', setTowRequest);
-                                        Alert.alert(
-                                            'Confirmed',
-                                            'Your tow request has been confirmed',
-                                            [{ text: 'OK' }]
-                                        );
+                                        try {
+                                            await handleSendAdminNotif('Tow Request Confirmed', 'Customer has been confirmed for towing!');
+                                            await handleUpdateTowRequestStatus(client, towRequest.id, 'IN_PROGRESS', setTowRequest);
+                                            Alert.alert(
+                                                'Confirmed',
+                                                'Your tow request has been confirmed',
+                                                [{ text: 'OK' }]
+                                            );
+                                        } catch (error) {
+                                            console.log(error);
+                                        }
                                     }
                                 }
                             ]
