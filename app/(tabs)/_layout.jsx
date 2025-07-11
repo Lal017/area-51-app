@@ -14,6 +14,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { handleGetMyAppointments, handleGetTowRequest, handleNotifUpdateTowRequest } from "../../components/scheduleComponents";
 import { Loading } from "../../components/components";
 import { handleGetVehicles, handleUpdateVehiclePickup } from "../../components/vehicleComponents";
+import { useNavigation } from "@react-navigation/native";
 
 const TabsContent = () =>
 {
@@ -51,6 +52,7 @@ const TabsContent = () =>
         setVehiclePickup
     } = useApp();
 
+    const navigate = useNavigation();
     const [ ready, setReady ] = useState(false);
 
     // notification listeners
@@ -104,10 +106,12 @@ const TabsContent = () =>
                 const type = lastNotificationResponse.notification.request.content.data.type;
                 if (type === "NEW_INVOICE") {
                     setNewInvoice(true);
+                    router.push('(profile)');
                 } else if (type === "NEW_ESTIMATE") {
                     setNewEstimate(true);
+                    router.push('(profile)');
                 } else if (type === "VEHICLE_PICKUP") {
-                    setVehiclePickup(true);
+                    router.push('(profile)');
                 }
             }
 
@@ -206,23 +210,23 @@ const TabsContent = () =>
             }
             else if (notification.request.content.data.type === "VEHICLE_PICKUP") {
                 handleUpdateVehiclePickup(client, userId, setVehicles);
-                setVehiclePickup(true);
+                setVehiclePickup(prev => !prev);
             }
         });
 
         // triggered when the user taps on the notification
         responseListener.current = addNotificationResponseReceivedListener(response => {
             if (response.notification.request.content.data.type === "TOW_RESPONSE") {
-                router.push('/(tabs)/(service)/towStatus');
+                router.push('(tabs)');
             }
             else if (response.notification.request.content.data.type === "NEW_INVOICE") {
-                router.push('/(tabs)/(profile)/invoices');
+                router.push('(profile)');
             }
             else if (response.notification.request.content.data.type === "NEW_ESTIMATE") {
-                router.push('/tabs)/(profile)/estimates');
+                router.push('(profile)');
             }
             else if (response.notification.request.content.data.type === "VEHICLE_PICKUP") {
-                router.push('/(tabs)/(profile)/vehicleList');
+                router.push('(profile)');
             }
         });
 
