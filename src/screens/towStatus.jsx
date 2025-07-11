@@ -16,20 +16,20 @@ const TowStatus = () =>
     
     const [ timeLeft, setTimeLeft ] = useState();
 
+    const parseMinutes = (waitTime) => {
+        if (!waitTime) return 1;
+
+        const stringified = String(waitTime).trim();
+        // Extract the first number found in the string
+        const match = stringified.match(/\d+/);
+        if (match) {
+            return parseInt(match[0], 10);
+        }
+
+        return 0; // fallback if no number found
+    };
+
     useEffect(() => {
-        const parseMinutes = (waitTime) => {
-            if (!waitTime) return 1;
-
-            const stringified = String(waitTime).trim();
-            // Extract the first number found in the string
-            const match = stringified.match(/\d+/);
-            if (match) {
-                return parseInt(match[0], 10);
-            }
-
-            return 0; // fallback if no number found
-        };
-
         const getTimeLeft = getRemainingETA(towRequest.updatedAt, parseMinutes(towRequest.waitTime));
         setTimeLeft(getTimeLeft);
     }, [towRequest]);
@@ -46,7 +46,7 @@ const TowStatus = () =>
                     <Text style={Styles.subTitle}>Price:</Text>
                     <Text style={Styles.text}>{towRequest.price}</Text>
                     <Text style={Styles.subTitle}>Wait Time:</Text>
-                    <Text style={Styles.text}>{towRequest.waitTime}</Text>
+                    <Text style={Styles.text}>{parseMinutes(towRequest.waitTime)} minutes</Text>
                 </View>
                 <View style={[Styles.block, {alignItems: 'center'}]}>
                     <TouchableOpacity

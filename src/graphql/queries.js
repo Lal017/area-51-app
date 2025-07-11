@@ -328,9 +328,13 @@ export const getTowRequest = /* GraphQL */ `
       status
       latitude
       longitude
-      notes
       price
       waitTime
+      notes
+      canRun
+      canRoll
+      keyIncluded
+      isObstructed
       createdAt
       updatedAt
       owner
@@ -368,9 +372,13 @@ export const listTowRequests = /* GraphQL */ `
         status
         latitude
         longitude
-        notes
         price
         waitTime
+        notes
+        canRun
+        canRoll
+        keyIncluded
+        isObstructed
         createdAt
         updatedAt
         owner
@@ -403,9 +411,13 @@ export const towRequestsByUserId = /* GraphQL */ `
         status
         latitude
         longitude
-        notes
         price
         waitTime
+        notes
+        canRun
+        canRoll
+        keyIncluded
+        isObstructed
         createdAt
         updatedAt
         owner

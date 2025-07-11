@@ -141,6 +141,20 @@ const Select = ({text, selected, action, leftIcon, rightIcon}) =>
     )
 };
 
+// reusable tab component for Binary Selections
+const BinarySelect = ({text, selected, action, rightIcon}) =>
+{
+    return(
+        <TouchableOpacity
+            style={[Styles.binaryTabWrapper, selected ? {backgroundColor: Colors.secondary} : null]}
+            onPress={action}
+        >
+            <Text style={[Styles.tabText, selected ? {color: Colors.text} : null, {textAlign: 'center'}]}>{text}</Text>
+            {rightIcon}     
+        </TouchableOpacity>
+    )
+};
+
 // format number for readability
 const formatNumber = (phone) =>
 {
@@ -269,6 +283,7 @@ export {
     CalendarHeader,
     Tab,
     Select,
+    BinarySelect,
     formatNumber,
     formatDate,
     formatTime,

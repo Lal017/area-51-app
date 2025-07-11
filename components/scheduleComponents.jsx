@@ -156,7 +156,7 @@ const handleGetMyAppointments = async (client, userId) =>
     }
 }
 
-const handleCreateTowRequest = async (client, userId, vehicleId, location, notes, setTowRequest) =>
+const handleCreateTowRequest = async (client, userId, vehicleId, location, requestInfo, setTowRequest) =>
 {
     try {
         const result = await client.graphql({
@@ -168,7 +168,11 @@ const handleCreateTowRequest = async (client, userId, vehicleId, location, notes
                     status: "REQUESTED",
                     latitude: location.latitude,
                     longitude: location.longitude,
-                    notes: notes
+                    notes: requestInfo.notes,
+                    canRun: requestInfo.canRun,
+                    canRoll: requestInfo.canRoll,
+                    keyIncluded: requestInfo.keyIncluded,
+                    isObstructed: requestInfo.isObstructed
                 }
             }
         });

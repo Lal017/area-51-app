@@ -126,10 +126,33 @@ const TowResponse = () =>
                 )}
                 <View style={Styles.block}>
                     <View style={Styles.infoContainer}>
-                        <Text style={[Styles.title, {textAlign: 'left'}]}>Description</Text>
-                        <Text style={Styles.text}>{customer.notes}</Text>
+                        <Text style={[Styles.title, {textAlign: 'left'}]}>Towing Info</Text>
+                        <View style={AdminStyles.labelContainer}>
+                            <Text style={Styles.subTitle}>Vehicle runs?</Text>
+                            <Text style={Styles.text}>{customer.canRun ? 'Yes' : 'No'}</Text>
+                        </View>
+                        <View style={AdminStyles.labelContainer}>
+                            <Text style={Styles.subTitle}>Vehicle rolls?</Text>
+                            <Text style={Styles.text}>{customer.canRoll ? 'Yes' : 'No'}</Text>
+                        </View>
+                        <View style={AdminStyles.labelContainer}>
+                            <Text style={Styles.subTitle}>Keys included?</Text>
+                            <Text style={Styles.text}>{customer.keyIncluded ? 'Yes' : 'No'}</Text>
+                        </View>
+                        <View style={AdminStyles.labelContainer}>
+                            <Text style={Styles.subTitle}>Obstructions?</Text>
+                            <Text style={Styles.text}>{customer.isObstructed ? 'Yes' : 'No'}</Text>
+                        </View>
                     </View>
                 </View>
+                { customer.notes ? (
+                    <View style={Styles.block}>
+                        <View style={Styles.infoContainer}>
+                            <Text style={[Styles.title, {textAlign: 'left'}]}>Description</Text>
+                            <Text style={Styles.text}>{customer.notes}</Text>
+                        </View>
+                    </View>
+                ) : null }
                 { customer.status === 'REQUESTED' ? (
                     <View style={[Styles.block, {alignItems: 'center'}]}>
                             <View style={Styles.inputWrapper}>
@@ -147,7 +170,7 @@ const TowResponse = () =>
                                 <FontAwesome5 name="clock" size={24} style={Styles.icon} />
                                 <TextInput
                                     style={Styles.input}
-                                    placeholder='estimated wait time'
+                                    placeholder='estimated wait time (minutes)'
                                     placeholderTextColor={Colors.text}
                                     value={waitTime}
                                     onChangeText={setWaitTime}

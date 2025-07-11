@@ -80,7 +80,11 @@ type TowRequest
   status: TowRequestStatus!
   latitude: Float!
   longitude: Float!
-  notes: String
   price: String
   waitTime: String
+  notes: String
+  canRun: Boolean
+  canRoll: Boolean
+  keyIncluded: Boolean
+  isObstructed: Boolean
 }

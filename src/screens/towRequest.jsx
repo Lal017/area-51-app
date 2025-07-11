@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Colors from "../../constants/colors";
 import { Entypo, FontAwesome, FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { handleSendAdminNotif } from "../../components/notifComponents";
-import { Background, Select } from "../../components/components";
+import { Background, BinarySelect, Select } from "../../components/components";
 import { handleCreateTowRequest } from "../../components/scheduleComponents";
 import { requestForegroundPermissionsAsync, getCurrentPositionAsync } from 'expo-location';
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
@@ -17,6 +17,10 @@ const TowRequest = () =>
 
     const [ selectedVehicle, setSelectedVehicle ] = useState();
     const [ notes, setNotes ] = useState();
+    const [ canRun, setCanRun ] = useState();
+    const [ canRoll, setCanRoll ] = useState();
+    const [ keyIncluded, setKeyIncluded ] = useState();
+    const [ isObstructed, setIsObstructed ] = useState();
     const [ location, setLocation ] = useState();
     const [ marker, setMarker ] = useState();
     const [ step, setStep ] = useState(1);
@@ -176,7 +180,7 @@ const TowRequest = () =>
                 <>
                     <View style={Styles.block}>
                         <View style={Styles.infoContainer}>
-                            <Text style={Styles.subTitle}>Description</Text>
+                            <Text style={Styles.subTitle}>Description (optional)</Text>
                             <Text style={Styles.text}>Please, describe why the vehicle needs to be towed</Text>
                         </View>
                         <View style={Styles.inputWrapper}>
@@ -190,6 +194,74 @@ const TowRequest = () =>
                                 onChangeText={setNotes}
                             />
                         </View>
+                        <View style={Styles.infoContainer}>
+                            <Text style={Styles.text}>Does the vehicle start?</Text>
+                        </View>
+                        <View style={Styles.binaryTabContainer}>
+                            <BinarySelect
+                                text='Yes'
+                                selected={canRun !== undefined ? canRun : null}
+                                action={() => setCanRun(true)}
+                                rightIcon={<Entypo name="thumbs-up" size={30} color='white'/>}
+                            />
+                            <BinarySelect
+                                text='No'
+                                selected={canRun !== undefined ? !canRun : null }
+                                action={() => setCanRun(false)}
+                                rightIcon={<Entypo name="thumbs-down" size={30} color='white'/>}
+                            />
+                        </View>
+                        <View style={Styles.infoContainer}>
+                            <Text style={Styles.text}>Does the vehicle roll?</Text>
+                        </View>
+                        <View style={Styles.binaryTabContainer}>
+                            <BinarySelect
+                                text='Yes'
+                                selected={canRoll !== undefined ? canRoll : null}
+                                action={() => setCanRoll(true)}
+                                rightIcon={<Entypo name="thumbs-up" size={30} color='white'/>}
+                            />
+                            <BinarySelect
+                                text='No'
+                                selected={canRoll !== undefined ? !canRoll : null }
+                                action={() => setCanRoll(false)}
+                                rightIcon={<Entypo name="thumbs-down" size={30} color='white'/>}
+                            />
+                        </View>
+                        <View style={Styles.infoContainer}>
+                            <Text style={Styles.text}>Are the vehicle keys included?</Text>
+                        </View>
+                        <View style={Styles.binaryTabContainer}>
+                            <BinarySelect
+                                text='Yes'
+                                selected={keyIncluded !== undefined ? keyIncluded : null}
+                                action={() => setKeyIncluded(true)}
+                                rightIcon={<Entypo name="thumbs-up" size={30} color='white'/>}
+                            />
+                            <BinarySelect
+                                text='No'
+                                selected={keyIncluded !== undefined ? !keyIncluded : null }
+                                action={() => setKeyIncluded(false)}
+                                rightIcon={<Entypo name="thumbs-down" size={30} color='white'/>}
+                            />
+                        </View>
+                        <View style={Styles.infoContainer}>
+                            <Text style={Styles.text}>Is there anything obstructing the vehicle?</Text>
+                        </View>
+                        <View style={Styles.binaryTabContainer}>
+                            <BinarySelect
+                                text='Yes'
+                                selected={isObstructed !== undefined ? isObstructed : null}
+                                action={() => setIsObstructed(true)}
+                                rightIcon={<Entypo name="thumbs-up" size={30} color='white'/>}
+                            />
+                            <BinarySelect
+                                text='No'
+                                selected={isObstructed !== undefined ? !isObstructed : null }
+                                action={() => setIsObstructed(false)}
+                                rightIcon={<Entypo name="thumbs-down" size={30} color='white'/>}
+                            />
+                        </View>
                     </View>
                     <View style={ServiceStyles.buttonContainer}>
                         <TouchableOpacity
@@ -201,7 +273,7 @@ const TowRequest = () =>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={ServiceStyles.directionButton}
-                            onPress={() => { if (notes) setStep(5) }}
+                            onPress={() => { if (canRun !== undefined && canRoll !== undefined && keyIncluded !== undefined && isObstructed !== undefined) setStep(5) }}
                         >
                             <Text style={Styles.actionText}>Continue</Text>
                             <FontAwesome name='arrow-right' size={24} color='white' />
@@ -210,34 +282,48 @@ const TowRequest = () =>
                 </>
             ) : step === 5 ? (
                 <>
-                <View style={ServiceStyles.mapContainerAlt}>
-                    { marker ? (
-                        <MapView
-                            provider={PROVIDER_GOOGLE}
-                            style={{width: '100%', height: '100%'}}
-                            region={{
-                                latitude: marker?.latitude,
-                                longitude: marker?.longitude,
-                                latitudeDelta: 0.01,
-                                longitudeDelta: 0.01
-                            }}
-                            liteMode={true}
-                        >
-                            <Marker
-                                title="Pickup Location"
-                                description="This is where the tow truck will be sent"
-                                coordinate={marker}
-                            />
-                        </MapView>
-                    ) : (
-                        <ActivityIndicator size='large' color='#0000ff' />
-                    ) }
+                <View style={[Styles.block, {alignItems: 'center'}]}>
+                    <View style={ServiceStyles.mapContainerAlt}>
+                        { marker ? (
+                            <MapView
+                                provider={PROVIDER_GOOGLE}
+                                style={{width: '100%', height: '100%'}}
+                                region={{
+                                    latitude: marker?.latitude,
+                                    longitude: marker?.longitude,
+                                    latitudeDelta: 0.01,
+                                    longitudeDelta: 0.01
+                                }}
+                                liteMode={true}
+                            >
+                                <Marker
+                                    title="Pickup Location"
+                                    description="This is where the tow truck will be sent"
+                                    coordinate={marker}
+                                />
+                            </MapView>
+                        ) : (
+                            <ActivityIndicator size='large' color='#0000ff' />
+                        ) }
+                    </View>
                 </View>
                 <View style={Styles.infoContainer}>
-                    <Text style={Styles.subTitle}>Vehicle</Text>
-                    <Text style={Styles.text}>{`${selectedVehicle.year} ${selectedVehicle.make} ${selectedVehicle.model}`}</Text>
-                    <Text style={Styles.subTitle}>Description</Text>
-                    <Text style={Styles.text}>{notes}</Text>
+                    <Text style={ServiceStyles.subTitle}>Vehicle</Text>
+                    <Text style={ServiceStyles.text}>{`${selectedVehicle.year} ${selectedVehicle.make} ${selectedVehicle.model}`}</Text>
+                    <Text style={ServiceStyles.subTitle}>Does the vehicle start?</Text>
+                    <Text style={ServiceStyles.text}>{canRun ? 'Yes' : 'No'}</Text>
+                    <Text style={ServiceStyles.subTitle}>Does the vehicle roll?</Text>
+                    <Text style={ServiceStyles.text}>{canRoll ? 'Yes' : 'No'}</Text>
+                    <Text style={ServiceStyles.subTitle}>Are the vehicle keys included?</Text>
+                    <Text style={ServiceStyles.text}>{keyIncluded ? 'Yes' : 'No'}</Text>
+                    <Text style={ServiceStyles.subTitle}>Is there anything obstructing the vehicle?</Text>
+                    <Text style={ServiceStyles.text}>{isObstructed ? 'Yes' : 'No'}</Text>
+                    { notes ? (
+                        <>
+                        <Text style={Styles.subTitle}>Description</Text>
+                        <Text style={Styles.text}>{notes}</Text>
+                        </>
+                    ) : null }
                 </View>
                 <View style={ServiceStyles.buttonContainer}>
                     <TouchableOpacity
@@ -272,7 +358,7 @@ const TowRequest = () =>
                                 userId: userId
                             };
                             await handleSendAdminNotif('Towing Request', 'A customer is requesting a tow', data);
-                            await handleCreateTowRequest(client, userId, selectedVehicle.id, marker, notes, setTowRequest);
+                            await handleCreateTowRequest(client, userId, selectedVehicle.id, marker, { notes, canRun, canRoll, keyIncluded, isObstructed }, setTowRequest);
                             setLoading(false);
                         }}
                     >

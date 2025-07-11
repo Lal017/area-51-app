@@ -55,6 +55,25 @@ const Styles = StyleSheet.create({
         position: 'relative',
         height: 75,
     },
+    binaryTabWrapper: {
+        width: '40%',
+        borderRadius: 10,
+        paddingLeft: 25,
+        paddingRight: 25,
+        alignItems: 'center',
+        justifyContent: 'space-around',
+        flexDirection: 'row',
+        position: 'relative',
+        height: 50
+    },
+    binaryTabContainer: {
+        width: '100%',
+        height: 50,
+        flexDirection: 'row',
+        columnGap: 50,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
     rightIcon: {
         position: 'absolute',
         right: 20,
@@ -328,6 +347,18 @@ const ServiceStyles = StyleSheet.create({
         width: '100%'
     },
     // (service)
+    subTitle: {
+        fontSize: RFValue(12),
+        fontFamily: 'Roboto-bold',
+        textAlign: 'left',
+        color: Colors.text,
+    },
+    text: {
+        fontSize: RFValue(22),
+        fontFamily: 'Roboto-light',
+        textAlign: 'left',
+        color: Colors.text,
+    },
     progressBar: {
         alignSelf: 'center',
         width: '100%',
@@ -357,7 +388,7 @@ const ServiceStyles = StyleSheet.create({
     },
     directionButton: {
         backgroundColor: Colors.secondary,
-        borderRadius: 25,
+        borderRadius: 10,
         alignItems: 'center',
         justifyContent: 'center',
         columnGap: 15,
