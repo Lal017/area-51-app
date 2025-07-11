@@ -7,18 +7,22 @@ import { Background, getRemainingETA, formatTime } from "../../components/compon
 import { handleSendAdminNotif } from '../../components/notifComponents';
 import { handleUpdateTowRequestStatus } from '../../components/scheduleComponents';
 import { useEffect, useState } from "react";
+import { useNavigation } from '@react-navigation/native';
 
 const TowStatus = () =>
 {
-    const { towRequest, client, setTowRequest } = useApp();
+    const { userId, towRequest, client, setTowRequest } = useApp();
+    const navigate = useNavigation();
+    
     const [ timeLeft, setTimeLeft ] = useState();
 
     useEffect(() => {
         const parseMinutes = (waitTime) => {
             if (!waitTime) return 1;
 
+            const stringified = String(waitTime).trim();
             // Extract the first number found in the string
-            const match = waitTime.match(/\d+/);
+            const match = stringified.match(/\d+/);
             if (match) {
                 return parseInt(match[0], 10);
             }
@@ -28,7 +32,7 @@ const TowStatus = () =>
 
         const getTimeLeft = getRemainingETA(towRequest.updatedAt, parseMinutes(towRequest.waitTime));
         setTimeLeft(getTimeLeft);
-    }, []);
+    }, [towRequest]);
 
     return (
         <Background>
@@ -57,14 +61,14 @@ const TowStatus = () =>
                                     onPress: async () => {
                                         try {
                                             await handleSendAdminNotif('Tow Request Confirmed', 'Customer has been confirmed for towing!');
-                                            await handleUpdateTowRequestStatus(client, towRequest.id, 'IN_PROGRESS', setTowRequest);
+                                            await handleUpdateTowRequestStatus(client, towRequest.id, userId, 'IN_PROGRESS', setTowRequest);
                                             Alert.alert(
                                                 'Confirmed',
                                                 'Your tow request has been confirmed',
                                                 [{ text: 'OK' }]
                                             );
                                         } catch (error) {
-                                            console.log(error);
+                                            console.log('Error accepting tow request:', error);
                                         }
                                     }
                                 }
@@ -83,15 +87,21 @@ const TowStatus = () =>
                                 {
                                     text: 'Yes',
                                     onPress: async () => {
-                                        handleSendAdminNotif('Tow Request Cancelled', 'Customer has cancelled the tow request');
-                                        handleUpdateTowRequestStatus(client, towRequest.id, 'CANCELLED', setTowRequest);
-                                        Alert.alert(
-                                            'Cancelled',
-                                            'Your tow request has been cancelled',
-                                            [{ text: 'OK' }]
-                                        );
-                                        setTowRequest(undefined);
-                                        router.replace('/(tabs)');
+                                        try {
+                                            await handleSendAdminNotif('Tow Request Cancelled', 'Customer has cancelled the tow request');
+                                            await handleUpdateTowRequestStatus(client, towRequest.id, userId, 'CANCELLED', setTowRequest);
+                                            Alert.alert(
+                                                'Cancelled',
+                                                'Your tow request has been cancelled',
+                                                [{ text: 'OK' }]
+                                            );
+                                            navigate.reset({
+                                                index: 0,
+                                                routes: [{ name: '(tabs)'}]
+                                            })
+                                        } catch (error) {
+                                            console.log('Error cancelling tow request:', error);
+                                        }
                                     }
                                 }
                             ]
@@ -122,19 +132,22 @@ const TowStatus = () =>
                             'Cancel',
                             'Are you sure you want to cancel your tow request?',
                             [
-                                { text: 'NO' },
+                                { text: 'No' },
                                 {
                                     text: 'Yes',
                                     onPress: async () => {
                                         handleSendAdminNotif('Tow Request Cancelled', 'Customer has cancelled the tow request');
-                                        await handleUpdateTowRequestStatus(client, towRequest.id, 'CANCELLED', setTowRequest);
+                                        await handleUpdateTowRequestStatus(client, towRequest.id, userId, 'CANCELLED', setTowRequest);
                                         Alert.alert(
                                             'Cancelled',
                                             'Your tow request has been cancelled',
                                             [{ text: 'OK' }]
                                         );
                                         setTowRequest(undefined);
-                                        router.replace('/(tabs)');
+                                        navigate.reset({
+                                            index: 0,
+                                            routes: [{ name: '(tabs)' }]
+                                        })
                                     }
                                 }
                             ]

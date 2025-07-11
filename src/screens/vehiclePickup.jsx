@@ -3,16 +3,18 @@ import { router } from 'expo-router';
 import { Background, Tab } from '../../components/components';
 import { useEffect, useState } from 'react';
 import { useApp } from '../../components/context';
-import { Styles, HomeStyles } from '../../constants/styles';
+import { Styles } from '../../constants/styles';
 import { Entypo, Ionicons } from '@expo/vector-icons';
 import { handleUpdateVehicleStatus } from '../../components/vehicleComponents';
 import Animated, { Easing , useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from "react-native-reanimated";
+import { useNavigation } from '@react-navigation/native';
 
 const VehiclePickup = () =>
 {
-    const { client, vehicles, setVehicles, vehiclePickup, setVehiclePickup  } = useApp();
+    const { client, vehicles, setVehicles, setVehiclePickup  } = useApp();
     const [ vehiclesToPickup, setVehiclesToPickup ] = useState();
     const [ loading, setLoading ] = useState(false);
+    const navigate = useNavigation();
 
     const bounce = useSharedValue(0);
     useEffect(() => {
@@ -74,7 +76,10 @@ const VehiclePickup = () =>
                                         if (loading) return;
                                         setLoading(true);
                                         await handleUpdateVehicleStatus(client, vehicle.id, setVehicles, setVehiclePickup);
-                                        router.replace('(tabs)');
+                                        navigate.reset({
+                                            index: 0,
+                                            routes: [{ name: '(tabs)' }]
+                                        });
                                         setLoading(false);
                                     }
                                 }

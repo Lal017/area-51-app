@@ -1,20 +1,21 @@
 import { View, Text, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView } from 'react-native';
 import { Styles, AdminStyles, ServiceStyles } from '../../constants/styles';
-import { useLocalSearchParams, router } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
 import { handleUpdateTowRequest, handleGetAddress, sendPushNotification } from '../../components/adminComponents';
 import { useApp } from '../../components/context';
 import { Background, formatNumber } from '../../components/components';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
-import { handleUpdateTowRequestStatus } from '../../components/scheduleComponents';
 import Colors from '../../constants/colors';
+import { useNavigation } from '@react-navigation/native';
 
 const TowResponse = () =>
 {
     const { client } = useApp();
     const { customerParam } = useLocalSearchParams();
     const customer = JSON.parse(customerParam);
+    const navigate = useNavigation();
 
     const [ price, setPrice ] = useState();
     const [ waitTime, setWaitTime ] = useState();
@@ -155,9 +156,16 @@ const TowResponse = () =>
                             </View>
                         <TouchableOpacity
                             style={Styles.actionButton}
-                            onPress={() => {
-                                sendPushNotification(customer.user.pushToken, 'Tow Request', 'Your tow request is ready!', data)
-                                handleUpdateTowRequest(client, customer.id ,'PENDING', price, waitTime);
+                            onPress={async () => {
+                                await sendPushNotification(customer.user.pushToken, 'Tow Request', 'Your tow request is ready!', data)
+                                await handleUpdateTowRequest(client, customer.id ,'PENDING', price, waitTime);
+                                navigate.reset({
+                                    index: 1,
+                                    routes: [
+                                        { name: 'index' },
+                                        { name: 'towRequests' }
+                                    ]
+                                });
                             }}
                         >
                             <Text style={Styles.actionText}>Respond</Text>
@@ -175,14 +183,20 @@ const TowResponse = () =>
                                         { text: 'No' },
                                         {
                                             text: 'Yes',
-                                            onPress: () => {
-                                                handleUpdateTowRequestStatus(client, customer.id, 'COMPLETED');
-                                                router.replace('/(admin)');
+                                            onPress: async () => {
+                                                await handleUpdateTowRequest(client, customer.id, 'COMPLETED');
                                                 Alert.alert(
                                                     'Completed',
                                                     'Tow request has been marked as completed.',
                                                     [{ text: 'OK' }]
                                                 );
+                                                navigate.reset({
+                                                    index: 1,
+                                                    routes: [
+                                                        { name: 'index' },
+                                                        { name: 'towRequests' }
+                                                    ]
+                                                });
                                             }
                                         }
                                     ]

@@ -5,6 +5,7 @@ import { Alert } from 'react-native';
 import { reverseGeocodeAsync } from 'expo-location';
 import { uploadData, list, getUrl, remove } from 'aws-amplify/storage';
 import * as FileSystem from 'expo-file-system';
+import { useNavigation } from '@react-navigation/native';
 
 // Expo notif functions
 const sendPushNotification = async (expoPushToken, title, body, data) =>
@@ -110,29 +111,32 @@ const handleListTowRequestUsers = async (client, userArr) =>
 
 const handleUpdateTowRequest = async (client, towId, status, priceParam, waitTime) =>
 {
-    let price = '$ ' + priceParam;
+    let price;
+    if (priceParam) { price = '$ ' + priceParam; }
+
+    let input = {
+        id: towId,
+        status: status
+    }
+
+    if (priceParam !== undefined) { input.price = price; }
+    if (waitTime !== undefined) { input.waitTime = waitTime; }
 
     try {
         await client.graphql({
             query: updateTowRequest,
-            variables: {
-                input: {
-                    id: towId,
-                    status: status,
-                    price: price,
-                    waitTime: waitTime
-                }
-            }
+            variables: { input }
         });
 
-        router.replace('/(admin)');
-        Alert.alert(
-            'Sent',
-            'Customer request has been updated',
-            [
-                { text: 'OK' }
-            ]
-        );
+        if (status !== 'COMPLETED') {
+            Alert.alert(
+                'Sent',
+                'Customer request has been updated',
+                [
+                    { text: 'OK' }
+                ]
+            );
+        }
     } catch (error) {
         console.log('Error updating tow request', error);
     }

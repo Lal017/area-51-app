@@ -124,7 +124,6 @@ const handleDeleteAppointment = async (client, appointmentId, userId, setAppoint
         const getAppointments = await handleGetMyAppointments(client, userId);
         setAppointments(getAppointments);
 
-        router.replace('/(tabs)');
         Alert.alert(
             'Appointment cancelled',
             'Your appointment has been cancelled',
@@ -222,10 +221,10 @@ const handleNotifUpdateTowRequest = async (client, userId, setTowRequest) =>
     }
 };
 
-const handleUpdateTowRequestStatus = async (client, towId, status, setTowRequest) =>
+const handleUpdateTowRequestStatus = async (client, towId, userId, status, setTowRequest) =>
 {
     try {
-        const result = await client.graphql({
+        await client.graphql({
             query: updateTowRequest,
             variables: {
                 input: {
@@ -235,7 +234,8 @@ const handleUpdateTowRequestStatus = async (client, towId, status, setTowRequest
             }
         });
         
-        if (setTowRequest) { setTowRequest(result.data.updateTowRequest); }
+        const getRequest = await handleGetTowRequest(client, userId);
+        setTowRequest(getRequest);
     } catch (error) {
         console.log('Error updating tow request:', error);
     }

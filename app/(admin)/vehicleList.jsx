@@ -14,6 +14,15 @@ const VehicleList = () =>
 
     const [ vehicles, setVehicles ] = useState();
     const [ search, setSearch ] = useState();
+    const [ refreshing, setRefreshing ] = useState();
+
+    const onRefresh = async () =>
+    {
+        setRefreshing(true);
+        const getVehicles = await handleListVehicles(client);
+        setVehicles(getVehicles);
+        setRefreshing(false);
+    };
 
     useEffect(() => {
         const fetchVehicles = async () =>
@@ -26,7 +35,7 @@ const VehicleList = () =>
     }, [])
 
     return (
-        <Background>
+        <Background refreshing={refreshing} onRefresh={onRefresh}>
             <View style={Styles.block}>
                 <View style={Styles.inputWrapper}>
                     <Entypo name='magnifying-glass' size={20} color='black' style={Styles.icon} />

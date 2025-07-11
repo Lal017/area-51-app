@@ -1,4 +1,3 @@
-import { router } from 'expo-router';
 import { createVehicle, updateVehicle, deleteVehicle } from '../src/graphql/mutations';
 import { listVehicles, vehiclesByUserId } from '../src/graphql/queries';
 import { Alert } from 'react-native';
@@ -23,8 +22,6 @@ const handleCreateVehicle = async (client, vehicle, userId, setVehicles) =>
 
         const newVehicle = await client.graphql({ query: listVehicles });
         await setVehicles(newVehicle.data.listVehicles.items);
-
-        router.replace('(profile)');
 
         Alert.alert(
             'Vehicle Created',
@@ -59,8 +56,6 @@ const handleUpdateVehicle = async (client, vehicle, vehicleId, userId, setVehicl
 
         const newVehicles = await client.graphql({ query: listVehicles });
         setVehicles(newVehicles.data.listVehicles.items);
-
-        router.replace('/(profile)');
 
         Alert.alert(
             'Vehicle Updated',
@@ -147,8 +142,6 @@ const handleDeleteVehicle = async (client, vehicleId, setVehicles) =>
 
         const newVehicles = await client.graphql({ query: listVehicles });
         setVehicles(newVehicles.data.listVehicles.items);
-
-        router.replace('(profile)/vehicleList');
 
         Alert.alert(
             'Vehicle Deleted',

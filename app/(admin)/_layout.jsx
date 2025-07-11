@@ -83,7 +83,7 @@ const AdminContent = () =>
             setNotification(JSON.parse(savedNotif));
 
             if (!userAtt?.phone_number || ((!userAtt?.given_name || !userAtt?.family_name) && !userAtt?.name)) {
-                router.replace('/(tabs)/(profile)/accountEdit');
+                router.push('/(tabs)/(profile)/accountEdit');
                 setIsStuck(true);
                 Alert.alert(
                     'Notice',

@@ -7,12 +7,14 @@ import { useApp } from '../../components/context';
 import { useLocalSearchParams } from 'expo-router';
 import { Background } from '../../components/components';
 import Colors from '../../constants/colors';
+import { useNavigation } from '@react-navigation/native';
 
-const editVehicle = () =>
+const EditVehicle = () =>
 {   
     const { vehicleParam } = useLocalSearchParams();
     const vehicle = JSON.parse(vehicleParam);
     const { client, userId, setVehicles } = useApp();
+    const navigate = useNavigation();
 
     const [ year, setYear ] = useState();
     const [ make, setMake ] = useState();
@@ -118,6 +120,10 @@ const editVehicle = () =>
                             if (loading) return;
                             setLoading(true);
                             await handleUpdateVehicle(client, {year, make, model, color, plate, vin}, vehicle.id, userId, setVehicles);
+                            navigate.reset({
+                                index: 0,
+                                routes: [{ name: '(profile)' }]
+                            });
                             setLoading(false);
                         }}
                     >
@@ -132,8 +138,13 @@ const editVehicle = () =>
                                 { text: 'No' },
                                 {
                                     text: 'Yes',
-                                    onPress: () => handleDeleteVehicle(client, vehicle.id, setVehicles)
-                                }
+                                    onPress: async () => {
+                                        await handleDeleteVehicle(client, vehicle.id, setVehicles);
+                                        navigate.reset({
+                                            index: 0,
+                                            routes: [{ name: '(profile)' }]
+                                        });
+                                }}
                             ]
                         )}
                     >
@@ -145,4 +156,4 @@ const editVehicle = () =>
     );
 };
 
-export default editVehicle;
+export default EditVehicle;

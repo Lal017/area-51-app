@@ -6,9 +6,11 @@ import { handleDeleteAppointment, handleGetMyAppointments } from '../../../compo
 import { useApp } from '../../../components/context';
 import { handleSendAdminNotif } from '../../../components/notifComponents';
 import { router } from 'expo-router';
+import { useNavigation } from '@react-navigation/native';
 
 const MyAppointments = () => {
     const { client, userId, appointments, setAppointments } = useApp();
+    const navigate = useNavigation();
 
     useEffect(() => {
         const getAppointments = async () =>
@@ -59,9 +61,17 @@ const MyAppointments = () => {
                                             { text: 'No' },
                                             {
                                                 text: 'Yes',
-                                                onPress: () => {
-                                                    handleDeleteAppointment(client, appointment.id, userId, setAppointments);
-                                                    handleSendAdminNotif('Appointment Cancelled', 'A customer has cancelled their appointment');
+                                                onPress: async () => {
+                                                    try {
+                                                        await handleDeleteAppointment(client, appointment.id, userId, setAppointments);
+                                                        await handleSendAdminNotif('Appointment Cancelled', 'A customer has cancelled their appointment');
+                                                        navigate.reset({
+                                                            index: 0,
+                                                            routes: [{ name: '(service)' }]
+                                                        });
+                                                    } catch (error) {
+                                                        console.log(error);
+                                                    }
                                                 }
                                             }
                                         ]

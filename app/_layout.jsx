@@ -11,6 +11,7 @@ import { handleGetCurrentUser } from '../components/authComponents';
 import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
 import Colors from '../constants/colors';
+import { useNavigation } from '@react-navigation/native';
 
 setNotificationHandler({
   handleNotification: async () => ({
@@ -32,6 +33,8 @@ const RootLayout = () =>
     'Roboto-Light': require('../assets/fonts/Roboto-Light.ttf'),
   });
 
+  const navigate = useNavigation();
+
   useEffect(() => {
     const listener = Hub.listen('auth', async (data) => {
       const { payload } = data;
@@ -43,16 +46,32 @@ const RootLayout = () =>
           const user = await handleGetCurrentUser();
           const isAdmin = user?.accessToken?.payload["cognito:groups"]?.includes('Admins');
           if (router.canDismiss()) { router.dismissAll(); }
-          if (isAdmin) { router.replace('(admin)'); }
-          else { router.replace('(tabs)'); }
+          if (isAdmin) {
+            navigate.reset({
+              index: 0,
+              routes: [{ name: '(admin)' }]
+            });
+          }
+          else {
+            navigate.reset({
+              index: 0,
+              routes: [{ name: '(tabs)' }]
+            });
+          }
           break;
         case 'signedOut':
           // Redirect to login screen after sign out
-          router.replace('(auth)');
+          navigate.reset({
+            index: 0,
+            routes: [{ name: '(auth)' }]
+          });
           break;
         case 'signedIn_failure':
           // Handle failed sign in
-          router.replace('(auth)');
+          navigate.reset({
+            index: 0,
+            routes: [{ name: '(auth)' }]
+          });
           break;
       }
     });

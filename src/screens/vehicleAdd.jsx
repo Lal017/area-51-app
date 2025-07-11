@@ -6,10 +6,12 @@ import { handleCreateVehicle } from '../../components/vehicleComponents';
 import { useApp } from '../../components/context';
 import Colors from '../../constants/colors';
 import { Background } from '../../components/components';
+import { useNavigation } from '@react-navigation/native';
 
-const addVehicle = () =>
+const AddVehicle = () =>
 {   
     const { client, userId, setVehicles } = useApp();
+    const navigate = useNavigation();
 
     const [ year, setYear ] = useState();
     const [ make, setMake ] = useState();
@@ -103,6 +105,10 @@ const addVehicle = () =>
                             if (loading) return;
                             setLoading(true);
                             await handleCreateVehicle(client, {year, make, model, color, plate, vin}, userId, setVehicles);
+                            navigate.reset({
+                                index: 0,
+                                routes: [{ name: '(profile)' }]
+                            });
                             setLoading(false);
                         }}
                     >
@@ -114,4 +120,4 @@ const addVehicle = () =>
     );
 };
 
-export default addVehicle;
+export default AddVehicle;

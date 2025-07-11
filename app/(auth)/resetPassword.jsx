@@ -41,7 +41,7 @@ const ResetPassword = () =>
                     onPress={async () => {
                         if (loading) return;
                         setLoading(true);
-                        await handleResetPassword({username});
+                        await handleResetPassword(username);
                         setLoading(false);
                     }}
                     style={[Styles.actionButton, loading && { opacity: 0.5 }]}

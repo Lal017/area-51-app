@@ -1,5 +1,5 @@
 import { View, Dimensions, Text, TouchableOpacity } from 'react-native';
-import { useLocalSearchParams, router } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import * as DocumentPicker from 'expo-document-picker';
 import { useState } from 'react';
 import { BackgroundAlt } from '../../components/components';
@@ -7,11 +7,13 @@ import { Styles, AdminStyles } from '../../constants/styles';
 import { handleUploadInvoice, sendPushNotification } from '../../components/adminComponents';
 import { FontAwesome6 } from '@expo/vector-icons';
 import Pdf from 'react-native-pdf';
+import { useNavigation } from '@react-navigation/native';
 
 const InvoiceUpload = () =>
 {
     const { userParam } = useLocalSearchParams();
     const customer = JSON.parse(userParam);
+    const navigate = useNavigation();
 
     const [ invoice, setInvoice ] = useState();
     const [ name, setName ] = useState();
@@ -71,9 +73,9 @@ const InvoiceUpload = () =>
                     if (invoice) {
                         await handleUploadInvoice(customer.identityId, invoice, name);
                         await sendPushNotification(customer.pushToken, 'New Invoice', 'A new invoice has been uploaded to your account', data);
-                        router.replace({
-                            pathname: '/(admin)/userView',
-                            params: { userParam }
+                        navigate.reset({
+                            index: 0,
+                            routes: [{ name: '(admin)' }]
                         });
                     } else {
                         await pickInvoice();

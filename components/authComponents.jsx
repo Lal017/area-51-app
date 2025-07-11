@@ -15,7 +15,6 @@ import {
     updatePassword,
     signInWithRedirect,
     deleteUser,
-    updateUserAttribute,
     updateUserAttributes,
     confirmUserAttribute,
 } from 'aws-amplify/auth';
@@ -146,22 +145,22 @@ const handleResendSignUpCode = async ({username}) =>
 
 // Sign In
 // -----------------------------------------------------------------------------------------
-const handleAutoSignIn = async ({username}) =>
+const handleAutoSignIn = async (navigate, username) =>
 {
     try {
         const signInOutput = await autoSignIn();
-        signInConfirm({username, isSignedIn: signInOutput.isSignedIn, nextStep: signInOutput.nextStep})
+        signInConfirm(navigate, username, signInOutput.isSignedIn, signInOutput.nextStep)
     } catch (error) {
         console.log('error auto signing in', error);
         router.replace('(auth)');
     }
 };
 
-const handleSignIn = async ({username, password}) =>
+const handleSignIn = async (navigate, username, password) =>
 {
     try {
         const { isSignedIn, nextStep } = await signIn({ username, password });
-        signInConfirm({username, isSignedIn, nextStep});
+        signInConfirm(navigate, username, isSignedIn, nextStep);
     } catch (error) {
         console.log('error signing in', error);
         Alert.alert(
@@ -174,10 +173,25 @@ const handleSignIn = async ({username, password}) =>
     }
 };
 
-const signInConfirm = async ({username, isSignedIn, nextStep}) =>
+const signInConfirm = async (navigate, username, isSignedIn, nextStep) =>
 {
     if (isSignedIn && nextStep.signInStep === 'DONE') {
-        await handleRedirect();
+        try {
+            const { tokens } = await fetchAuthSession();
+            if (tokens?.accessToken.payload["cognito:groups"]?.includes("Admins")) {
+                navigate.reset({
+                    index: 0,
+                    routes: [{ name: '(admin)' }]
+                });
+            } else {
+                navigate.reset({
+                    index: 0,
+                    routes: [{ name: '(tabs)' }]
+                });
+            }
+        } catch (error) {
+            console.log('Error with redirect:', error);
+        }
     }
     else if (nextStep.signInStep === 'CONFIRM_SIGN_UP') {
         handleResendSignUpCode({username});
@@ -272,7 +286,7 @@ const clearLocalStorage = async () =>
 
 // Reset Password
 // -------------------------------------------------------------
-const handleResetPassword = async ({username}) =>
+const handleResetPassword = async (username) =>
 {
     try {
         const output = await resetPassword({ username });
@@ -356,7 +370,7 @@ const handleConfirmResetPassword = async ({username, confirmationCode, newPasswo
 
 // Update Password
 // --------------------------------------------------------------
-const handleUpdatePassword = async ({oldPassword, newPassword, confNewPassword}) =>
+const handleUpdatePassword = async (navigate, oldPassword, newPassword, confNewPassword) =>
 {
     if (newPassword !== confNewPassword)
     {
@@ -379,7 +393,7 @@ const handleUpdatePassword = async ({oldPassword, newPassword, confNewPassword})
                 { text: 'Ok'}
             ]
         );
-        await handleRedirect();
+        await handleRedirect(navigate);
     } catch (error) {
         console.log('error updating password', error);
         Alert.alert(
@@ -405,7 +419,6 @@ const handleDeleteAccount = async (client, userId, identityId, email, inputEmail
                 { text: 'Ok'}
             ]
         );
-        await handleRedirect();
         return;
     }
 
@@ -424,7 +437,6 @@ const handleDeleteAccount = async (client, userId, identityId, email, inputEmail
                 { text: 'Ok'}
             ]
         );
-        router.replace('(auth)');
     } catch (error) {
         console.log('error deleting user', error);
         Alert.alert(
@@ -452,43 +464,7 @@ const handleGetCurrentUser = async () =>
 
 // update attributes
 // ------------------------------------------------------
-const handleUpdatePhone = async (phoneNumber, setPhoneNumber) =>
-{
-    const phoneNumberCheck = phoneNumber.replace(/\D/g, '');
-
-    if (phoneNumberCheck.length !== 10)
-    {
-        Alert.alert(
-            "Error",
-            "Invalid phone number",
-            [
-                { text: "Ok" }
-            ]
-        );
-        return;
-    }
-    try {
-        const output = await updateUserAttribute({
-            userAttribute: {
-                attributeKey: 'phone_number',
-                value: `+1${phoneNumberCheck}`
-            }
-        });
-
-        setPhoneNumber(`+1${phoneNumberCheck}`);
-        handleUpdateAttributesNextSteps(output.nextStep.updateAttributeStep);
-    } catch (error) {
-        Alert.alert(
-            "Error",
-            error.message,
-            [
-                { text: 'Ok'}
-            ]
-        )
-    }
-};
-
-const handleUpdateAttributes = async (updatedEmail, updatedFirstName, updatedLastName, updatedPhone, setFirstName, setLastName, setPhoneNumber) =>
+const handleUpdateAttributes = async (navigate, updatedEmail, updatedFirstName, updatedLastName, updatedPhone, setFirstName, setLastName, setPhoneNumber) =>
 {
     const phoneNumberCheck = updatedPhone.replace(/\D/g, '');
     if (phoneNumberCheck.length !== 10)
@@ -514,7 +490,7 @@ const handleUpdateAttributes = async (updatedEmail, updatedFirstName, updatedLas
         setFirstName(updatedFirstName);
         setLastName(updatedLastName);
         setPhoneNumber(`+1${phoneNumberCheck}`);
-        handleUpdateAttributesNextSteps(attributes.email.nextStep.updateAttributeStep, updatedEmail);
+        handleUpdateAttributesNextSteps(navigate, attributes.email.nextStep.updateAttributeStep, updatedEmail);
     } catch (error) {
         Alert.alert(
             'Error',
@@ -526,7 +502,7 @@ const handleUpdateAttributes = async (updatedEmail, updatedFirstName, updatedLas
     };
 };
 
-const handleUpdateAttributesNextSteps = (nextStep, email) =>
+const handleUpdateAttributesNextSteps = (navigate, nextStep, email) =>
 {
     if (nextStep === 'DONE') {
         Alert.alert(
@@ -536,7 +512,7 @@ const handleUpdateAttributesNextSteps = (nextStep, email) =>
                 { text: 'Ok'}
             ]
         );
-        handleRedirect();
+        handleRedirect(navigate);
     }
     else if (nextStep === 'CONFIRM_ATTRIBUTE_WITH_CODE') {
         Alert.alert(
@@ -553,12 +529,12 @@ const handleUpdateAttributesNextSteps = (nextStep, email) =>
     }
 };
 
-const handleConfirmUserAttribute = async (userAttributeKey, confirmationCode, email, setEmail) =>
+const handleConfirmUserAttribute = async (navigate, userAttributeKey, confirmationCode, email, setEmail) =>
 {
     try {
         await confirmUserAttribute({ userAttributeKey, confirmationCode });
         setEmail(email);
-        await handleRedirect();
+        await handleRedirect(navigate);
         Alert.alert(
             "Confirmed",
             "Email has been confirmed!",
@@ -578,17 +554,23 @@ const handleConfirmUserAttribute = async (userAttributeKey, confirmationCode, em
     }
 };
 
-const handleRedirect = async () =>
+const handleRedirect = async (navigate) =>
 {
     try {
         const { tokens } = await fetchAuthSession();
         if (tokens?.accessToken.payload["cognito:groups"]?.includes("Admins")) {
-            router.replace('(admin)');
+            navigate.reset({
+                index: 0,
+                routes: [{ name: '(admin)' }]
+            });
         } else {
-            router.replace('(tabs)');
+            navigate.reset({
+                index: 0,
+                routes: [{ name: '(profile)' }]
+            });
         }
     } catch (error) {
-        console.log(error);
+        console.log('Error with redirect:', error);
     }
 };
 
@@ -609,7 +591,6 @@ export {
     handleDeleteAccount,
     GoogleSignInButton,
     AmazonSignInButton,
-    handleUpdatePhone,
     handleUpdateAttributes,
     handleConfirmUserAttribute
 };

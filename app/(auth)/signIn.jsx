@@ -7,9 +7,11 @@ import { AuthStyles, Styles } from '../../constants/styles';
 import { GoogleSignInButton, AmazonSignInButton } from '../../components/authComponents';
 import Colors from '../../constants/colors';
 import { AuthBackground } from '../../components/components';
+import { useNavigation } from '@react-navigation/native';
 
 const SignIn = () =>
 {
+    const navigate = useNavigation();
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [loading, setLoading] = useState(false);
@@ -54,7 +56,7 @@ const SignIn = () =>
                     onPress={async () => {
                         if (loading) return;
                         setLoading(true);
-                        await handleSignIn({ username: email, password });
+                        await handleSignIn(navigate, email, password);
                         setLoading(false);
                     }}
                     style={[Styles.actionButton, loading && { opacity: 0.5 }]}

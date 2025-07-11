@@ -10,10 +10,12 @@ import { MaterialIcons, Ionicons, FontAwesome, AntDesign, FontAwesome5, Entypo, 
 import { useApp } from '../../components/context';
 import { handleSendAdminNotif } from '../../components/notifComponents';
 import moment from 'moment';
+import { useNavigation } from '@react-navigation/native';
 
 const Schedule = () =>
 {
   const { client, vehicles, userId, setAppointments } = useApp();
+  const navigate = useNavigation();
 
   const [selectedDay, setSelectedDay] = useState();
   const [selectedTime, setSelectedTime] = useState();
@@ -335,11 +337,14 @@ const Schedule = () =>
               onPress={async () => {
                 if (loading) return;
                 setLoading(true);
-                const isValid = await handleFinalCheck(selectedDay, selectedTime);
-                if (!isValid) {
+                const isTaken = await handleFinalCheck(selectedDay, selectedTime);
+                if (!isTaken) {
                   await handleSendAdminNotif('Appointment Scheduled', 'A customer has scheduled an appointment');
                   await handleCreateAppointment(client, selectedDay, selectedTime, selectedService, notes, userId, selectedVehicle.id, setAppointments);
-                  router.replace('/(tabs)');
+                  navigate.reset({
+                    index: 0,
+                    routes: [{ name: '(tabs)'}]
+                  });
                 } else {
                   Alert.alert(
                     'Time slot invalid',

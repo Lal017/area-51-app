@@ -1,5 +1,5 @@
 import { View, Dimensions, Text, TouchableOpacity } from 'react-native';
-import { useLocalSearchParams, router } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import * as DocumentPicker from 'expo-document-picker';
 import { useState } from 'react';
 import { BackgroundAlt } from '../../components/components';
@@ -7,11 +7,13 @@ import { Styles, AdminStyles } from '../../constants/styles';
 import { handleUploadEstimate, sendPushNotification } from '../../components/adminComponents';
 import { FontAwesome6 } from '@expo/vector-icons';
 import Pdf from 'react-native-pdf';
+import { useNavigation } from '@react-navigation/native';
 
 const EstimateUpload = () =>
 {
     const { userParam } = useLocalSearchParams();
     const customer = JSON.parse(userParam);
+    const navigate = useNavigation();
 
     const [ estimate, setEstimate ] = useState();
     const [ name, setName ] = useState();
@@ -71,8 +73,10 @@ const EstimateUpload = () =>
                     if (estimate) {
                         await handleUploadEstimate(customer.identityId, estimate, name);
                         await sendPushNotification(customer.pushToken, 'New Estimate', 'A new estimate has been uploaded to your account', data);
-                        if (router.canDismiss()) { router.dismissAll(); }
-                        router.replace('/(admin)');
+                        navigate.reset({
+                            index: 0,
+                            routes: [{ name: '(admin)' }]
+                        });
                     } else {
                         await pickEstimate();
                     }

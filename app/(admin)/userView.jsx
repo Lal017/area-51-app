@@ -6,11 +6,13 @@ import { sendPushNotification } from '../../components/adminComponents';
 import { AntDesign, FontAwesome6, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useState } from 'react';
 import Colors from '../../constants/colors';
+import { useNavigation } from '@react-navigation/native';
 
 const UserView = () =>
 {
     const { userParam } = useLocalSearchParams();
     const customer = JSON.parse(userParam);
+    const navigate = useNavigation();
 
     const [ title, setTitle ] = useState();
     const [ body, setBody ] = useState();
@@ -167,7 +169,16 @@ const UserView = () =>
                                     { text: 'No'},
                                     {
                                         text: 'Yes',
-                                        onPress: async () => { await sendPushNotification(customer.pushToken, title, body) }
+                                        onPress: async () => {
+                                            await sendPushNotification(customer.pushToken, title, body);
+                                            Alert.alert(
+                                                'Notification Sent',
+                                                'Your notification has been sent!',
+                                                [{ text: 'OK' }]
+                                            );
+                                            setBody('');
+                                            setTitle('');
+                                        }
                                     }
                                 ]
                             )

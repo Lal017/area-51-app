@@ -128,7 +128,7 @@ const TabsContent = () =>
                         }
                     ]
                 );
-                router.replace('/(tabs)/(profile)/accountEdit');
+                router.push('/(tabs)/(profile)/accountEdit');
             }
         }
 
@@ -212,12 +212,17 @@ const TabsContent = () =>
 
         // triggered when the user taps on the notification
         responseListener.current = addNotificationResponseReceivedListener(response => {
-            router.push('/');
-            if (response.notification.request.content.data.type === "NEW_INVOICE") {
-                setNewInvoice(true);
+            if (response.notification.request.content.data.type === "TOW_RESPONSE") {
+                router.push('/(tabs)/(service)/towStatus');
+            }
+            else if (response.notification.request.content.data.type === "NEW_INVOICE") {
+                router.push('/(tabs)/(profile)/invoices');
             }
             else if (response.notification.request.content.data.type === "NEW_ESTIMATE") {
-                setNewEstimate(true);
+                router.push('/tabs)/(profile)/estimates');
+            }
+            else if (response.notification.request.content.data.type === "VEHICLE_PICKUP") {
+                router.push('/(tabs)/(profile)/vehicleList');
             }
         });
 

@@ -1,16 +1,18 @@
 import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import { Background, formatNumber } from '../../components/components';
-import { useLocalSearchParams, router } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { AdminStyles, Styles } from '../../constants/styles';
 import Colors from '../../constants/colors';
 import { useState } from 'react';
 import { handleUpdateVehicleStatus, sendPushNotification } from '../../components/adminComponents';
 import { useApp } from '../../components/context';
+import { useNavigation } from '@react-navigation/native';
 
 const VehicleView = () =>
 {
     const { vehicleParam } = useLocalSearchParams();
     const vehicle = JSON.parse(vehicleParam);
+    const navigate = useNavigation();
 
     const { client } = useApp();
 
@@ -99,7 +101,13 @@ const VehicleView = () =>
                                     let body = !vehicle.readyForPickup ? `Your ${vehicle.year} ${vehicle.make} ${vehicle.model} is ready for pickup!` : `Your ${vehicle.year} ${vehicle.make} ${vehicle.model} has been picked up!`;
                                     await handleUpdateVehicleStatus(client, vehicle.id, !vehicle.readyForPickup);
                                     await sendPushNotification(vehicle.user.pushToken, title, body, data);
-                                    router.replace('(admin)');
+                                    navigate.reset({
+                                        index: 1,
+                                        routes: [
+                                            { name: 'index' },
+                                            { name: 'vehicleList' }
+                                        ]
+                                    });
                                     setLoading(false);
                                 }
                             }

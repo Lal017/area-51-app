@@ -14,6 +14,15 @@ const UserList = () =>
 
     const [ users, setUsers ] = useState();
     const [ search, setSearch ] = useState();
+    const [ refreshing, setRefreshing ] = useState();
+
+    const onRefresh = async () =>
+    {
+        setRefreshing(true);
+        const getUsers = await handleListUsers(client);
+        setUsers(getUsers);
+        setRefreshing(false);
+    }
 
     useEffect(() => {
         const fetchUsers = async () =>
@@ -26,7 +35,7 @@ const UserList = () =>
     }, [])
 
     return (
-        <Background>
+        <Background refreshing={refreshing} onRefresh={onRefresh}>
             <View style={Styles.block}>
                 <View style={Styles.inputWrapper}>
                     <Entypo name='magnifying-glass' size={20} color='black' style={Styles.icon} />

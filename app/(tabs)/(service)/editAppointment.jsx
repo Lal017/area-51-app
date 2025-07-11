@@ -9,12 +9,14 @@ import { Select, CalendarHeader, formatDate, formatTime, Background } from '../.
 import { MaterialIcons, Ionicons, FontAwesome, AntDesign, FontAwesome5, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useApp } from '../../../components/context';
 import { handleSendAdminNotif } from '../../../components/notifComponents';
+import { useNavigation } from '@react-navigation/native';
 
 const Schedule = () =>
 {
   const { client, vehicles, userId, setAppointments } = useApp();
   const { appointmentParam } = useLocalSearchParams();
   const appointment = JSON.parse(appointmentParam);
+  const navigate = useNavigation();
 
   const [selectedDay, setSelectedDay] = useState(appointment.date);
   const [selectedTime, setSelectedTime] = useState(appointment.time);
@@ -286,12 +288,15 @@ const Schedule = () =>
               <Text style={Styles.actionText}>Back</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => {
+              onPress={async () => {
                 if (loading) return;
                 setLoading(true);
-                handleSendAdminNotif('Appointment Edited', 'A customer has edited an appointment');
-                handleUpdateAppointment(client, appointment.id, selectedDay, selectedTime, selectedService, notes, userId, selectedVehicle.id, setAppointments);
-                router.replace('/(tabs)');
+                await handleSendAdminNotif('Appointment Edited', 'A customer has edited an appointment');
+                await handleUpdateAppointment(client, appointment.id, selectedDay, selectedTime, selectedService, notes, userId, selectedVehicle.id, setAppointments);
+                navigate.reset({
+                  index: 0,
+                  routes: [{ name: '(service)' }]
+                });
                 setLoading(false);
               }}
               style={[ServiceStyles.directionButton, loading && {opacity: 0.5}, {backgroundColor: Colors.primary}]}

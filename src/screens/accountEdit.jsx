@@ -6,11 +6,13 @@ import { useApp } from "../../components/context";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "../../constants/colors";
 import { Background } from "../../components/components";
+import { useNavigation } from "@react-navigation/native";
 
 const AccountEdit = () =>
 {
     const { firstName, lastName, email, phoneNumber, setFirstName, setLastName, setPhoneNumber, isStuck, setIsStuck } = useApp();
-
+    const navigate = useNavigation();
+    
     const [ editFirstName, setEditFirstName ] = useState(firstName);
     const [ editLastName, setEditLastName ] = useState(lastName);
     const [ editEmail, setEditEmail ] = useState(email);
@@ -103,6 +105,7 @@ const AccountEdit = () =>
                         setLoading(true);
                         try {
                             await handleUpdateAttributes(
+                                navigate,
                                 editEmail,
                                 editFirstName,
                                 editLastName,

@@ -5,9 +5,11 @@ import { handleUpdatePassword } from '../../components/authComponents';
 import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { Background } from '../../components/components';
 import Colors from '../../constants/colors';
+import { useNavigation } from '@react-navigation/native';
 
 const ResetPassword = () =>
 {
+    const navigate = useNavigation();
     const [ oldPassword, setOldPassword ] = useState();
     const [ newPassword, setNewPassword ] = useState();
     const [ confNewPassword, setConfNewPassword ] = useState();
@@ -64,7 +66,7 @@ const ResetPassword = () =>
                     onPress={async () => {
                         if (loading) return;
                         setLoading(true);
-                        await handleUpdatePassword({oldPassword, newPassword, confNewPassword});
+                        await handleUpdatePassword(navigate, oldPassword, newPassword, confNewPassword);
                         setLoading(false);
                     }}
                     style={[Styles.actionButton, loading && { opacity: 0.5 }]}

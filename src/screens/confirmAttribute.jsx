@@ -7,12 +7,14 @@ import Colors from '../../constants/colors';
 import { Background } from '../../components/components';
 import { useLocalSearchParams } from 'expo-router';
 import { useApp } from '../../components/context';
+import { useNavigation } from '@react-navigation/native';
 
 const ConfirmAttribute = () =>
 {
     const { email } = useLocalSearchParams();
     const { setEmail } = useApp();
-    
+    const navigate = useNavigation();
+
     const [ code, setCode ] = useState();
     const [ loading, setLoading ] = useState(false);
 
@@ -39,7 +41,7 @@ const ConfirmAttribute = () =>
                 onPress={async () => {
                     if (loading) return;
                     setLoading(true);
-                    await handleConfirmUserAttribute('email', code, email, setEmail);
+                    await handleConfirmUserAttribute(navigate, 'email', code, email, setEmail);
                     setLoading(false);
                 }}
                 style={[Styles.actionButton, loading && {opacity: 0.5}]}

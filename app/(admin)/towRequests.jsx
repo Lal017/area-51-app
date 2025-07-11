@@ -15,6 +15,24 @@ const TowRequests = () =>
     const [ requests, setRequests ] = useState();
     const [ search, setSearch ] = useState();
     const [ statusFilter, setStatusFilter ] = useState('ALL');
+    const [ refresing, setRefreshing ] = useState();
+
+    const onRefresh = async () =>
+    {
+        setRefreshing(true);
+
+        try {
+            const getRequests = await client.graphql({
+                query: listTowRequests
+            });
+
+            setRequests(getRequests.data.listTowRequests.items);  
+        } catch (error) {
+            console.log('Error getting tow requests:', error);
+        }
+
+        setRefreshing(false);
+    };
 
     useEffect(() => {
         const handleGetTowRequests = async () =>
@@ -34,7 +52,7 @@ const TowRequests = () =>
     }, []);
 
     return (
-        <Background>
+        <Background refreshing={refresing} onRefresh={onRefresh}>
             <View style={Styles.inputWrapper}>
                 <Entypo name='magnifying-glass' size={20} color='black' style={Styles.icon} />
                 <TextInput
