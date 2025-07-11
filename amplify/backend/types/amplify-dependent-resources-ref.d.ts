@@ -24,7 +24,8 @@ export type AmplifyDependentResourcesAttributes = {
     },
     "userPoolGroups": {
       "AdminsGroupRole": "string",
-      "CustomersGroupRole": "string"
+      "CustomersGroupRole": "string",
+      "TowDriversGroupRole": "string"
     }
   },
   "function": {

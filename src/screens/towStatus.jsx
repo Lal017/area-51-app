@@ -15,6 +15,17 @@ const TowStatus = () =>
     const navigate = useNavigation();
     
     const [ timeLeft, setTimeLeft ] = useState();
+    const [ refreshing, setRefreshing ] = useState();
+
+    const onRefresh = async () =>
+    {
+        setRefreshing(true);
+
+        const getTimeLeft = getRemainingETA(towRequest.updatedAt, parseMinutes(towRequest.waitTime));
+        setTimeLeft(getTimeLeft);
+
+        setRefreshing(false);
+    }
 
     const parseMinutes = (waitTime) => {
         if (!waitTime) return 1;
@@ -35,7 +46,7 @@ const TowStatus = () =>
     }, [towRequest]);
 
     return (
-        <Background>
+        <Background refreshing={refreshing} onRefresh={onRefresh}>
             { towRequest && towRequest.status === "PENDING"? (
             <>
                 <View style={Styles.infoContainer}>

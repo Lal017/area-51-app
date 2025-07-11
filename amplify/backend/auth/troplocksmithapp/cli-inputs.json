@@ -40,8 +40,9 @@
     "useDefault": "manual",
     "userPoolGroups": false,
     "userPoolGroupList": [
-      "Customers",
-      "Admins"
+      "Admins",
+      "TowDrivers",
+      "Customers"
     ],
     "adminQueries": false,
     "hostedUI": true,
