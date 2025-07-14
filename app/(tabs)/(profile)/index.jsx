@@ -124,18 +124,6 @@ const Profile = () =>
                     </LinearGradient>
                 </TouchableOpacity>
             </View>
-            <TouchableOpacity
-                onPress={async () => {
-                    if (loading) return;
-                    setLoading(true);
-                    await handleSignOut();
-                    setLoading(false);
-                }}
-                style={[Styles.actionButton, loading && { opacity: 0.5 }]}
-                disabled={loading}
-            >
-                <Text style={Styles.actionText}>Sign Out</Text>
-            </TouchableOpacity>
         </Background>
     );
 };

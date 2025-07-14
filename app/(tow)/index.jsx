@@ -1,6 +1,6 @@
 import { Background } from "../../components/components";
 import { router } from 'expo-router';
-import { Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { Styles, AdminStyles } from "../../constants/styles";
 import Colors from "../../constants/colors";
 import LottieView from "lottie-react-native";
@@ -8,7 +8,7 @@ import LottieView from "lottie-react-native";
 const Index = () =>
 {
     return(
-        <Background style={{justifyContent: 'center'}}>
+        <Background style={{justifyContent: 'center', rowGap: 2}}>
             <TouchableOpacity
                 style={[Styles.consoleBubble, {backgroundColor: Colors.secondary}]}
             >

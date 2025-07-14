@@ -7,6 +7,9 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
 import { list, remove } from 'aws-amplify/storage';
+import { MaterialIcons } from '@expo/vector-icons';
+import { handleSignOut } from './authComponents';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 // loading page
 const Loading = () => {
@@ -21,9 +24,10 @@ const Loading = () => {
 const CustHeader = ({title, index}) =>
 {
     const { isStuck } = useApp();
+    const [ loading, setLoading ] = useState();
 
     return (
-        <View style={Styles.HeaderContainer}>
+        <SafeAreaView style={Styles.HeaderContainer}>
             { !index && !isStuck && router.canGoBack() ? (
                 <TouchableOpacity
                     style={{position: 'absolute', left: 20, top: 45}}
@@ -33,7 +37,21 @@ const CustHeader = ({title, index}) =>
                 </TouchableOpacity>
             ) : null }
             <Text style={[Styles.headerTitle, {textAlign: 'center'}]}>{title}</Text>
-        </View>
+            { title === 'Settings' || title === 'Profile' ? (
+                <TouchableOpacity
+                    style={Styles.signOutButton}
+                    onPress={async () => {
+                        if (loading) return;
+                        setLoading(true);
+                        await handleSignOut();
+                        setLoading(false);
+                    }}
+                    disabled={loading}
+                >
+                    <MaterialIcons name='logout' size={30} color={loading ? 'gray' : 'white'}/>
+                </TouchableOpacity>
+            ) : null}
+        </SafeAreaView>
     );
 };
 

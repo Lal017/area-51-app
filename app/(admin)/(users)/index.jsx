@@ -1,12 +1,12 @@
 import { View, TextInput } from "react-native";
-import { Styles } from '../../constants/styles';
-import { handleListUsers } from "../../components/adminComponents";
-import { useApp } from '../../components/context';
+import { Styles } from '../../../constants/styles';
+import { handleListUsers } from "../../../components/adminComponents";
+import { useApp } from '../../../components/context';
 import { useEffect, useState } from "react";
-import { Background, Tab } from "../../components/components";
+import { Background, Tab } from "../../../components/components";
 import { router } from "expo-router";
 import { AntDesign, Entypo } from "@expo/vector-icons";
-import Colors from "../../constants/colors";
+import Colors from "../../../constants/colors";
 
 const UserList = () =>
 {

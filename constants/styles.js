@@ -7,10 +7,9 @@ const Styles = StyleSheet.create({
     HeaderContainer: {
         height: 100,
         justifyContent: 'center',
-        alignItems: 'flex-end',
+        alignItems: 'center',
         flexDirection: 'row',
         position: 'relative',
-        paddingBottom: 20,
         backgroundColor: Colors.background,
     },
     LogoImg: {
@@ -127,6 +126,13 @@ const Styles = StyleSheet.create({
         textAlign: 'center',
         fontFamily: 'Roboto-Bold'
     },
+    signOutButton: {
+        position: 'absolute',
+        right: 20,
+        top: 45,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
     // Text
     headerTitle: {
         fontSize: RFValue(25),
@@ -173,7 +179,7 @@ const Styles = StyleSheet.create({
     // container
     page: {
         paddingTop: 10,
-        paddingBottom: 50,
+        paddingBottom: 20,
         flexGrow: 1,
         alignItems: 'center',
     },
@@ -411,19 +417,14 @@ const ServiceStyles = StyleSheet.create({
     },
     // schedule.jsx
     timeContainer: {
-        width: '100%',
-        rowGap: 10,
-        justifyContent: 'space-evenly',
-        paddingTop: 25,
-        paddingBottom: 25,
-        flexWrap: 'wrap',
-        flexDirection: 'row'
+        columnGap: 10,
+        padding: 10
     },
     timeBubble: {
         backgroundColor: Colors.backgroundAccent,
         borderRadius: 5,
         padding: 15,
-        width: '45%'
+        width: 150
     },
     // myAppointments.jsx
     fieldContainer: {

@@ -1,7 +1,7 @@
 import { View, Text } from 'react-native';
-import { AdminStyles, Styles } from '../../constants/styles';
+import { AdminStyles, Styles } from '../../../constants/styles';
 import { useLocalSearchParams } from 'expo-router';
-import { formatNumber, formatDate, formatTime, Background } from '../../components/components';
+import { formatNumber, formatDate, formatTime, Background } from '../../../components/components';
 
 const AppointmentView = () =>
 {

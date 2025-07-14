@@ -1,40 +1,40 @@
 import { Text, TouchableOpacity } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
-import { Background } from '../../components/components';
-import { handleGetUrl, handleListInvoices } from '../../components/adminComponents';
+import { Background } from '../../../components/components';
+import { handleGetUrl, handleListEstimates } from '../../../components/adminComponents';
 import { useEffect, useState } from 'react';
-import { Styles, AdminStyles } from '../../constants/styles';
+import { Styles, AdminStyles } from '../../../constants/styles';
 import { openURL } from 'expo-linking';
 
-const InvoiceList = () =>
+const EstimateList = () =>
 {
     const { userParam } = useLocalSearchParams();
     const customer = JSON.parse(userParam);
 
-    const [ invoices, setInvoices ] = useState();
+    const [ estimates, setEstimates ] = useState();
 
     useEffect(() => {
-        const initInvoices = async () =>
+        const initEstimates = async () =>
         {
-            const getInvoices = await handleListInvoices(customer.identityId);
-            setInvoices(getInvoices);
+            const getEstimates = await handleListEstimates(customer.identityId);
+            setEstimates(getEstimates);
         }
 
-        initInvoices();
+        initEstimates();
     }, []);
 
     return (
         <>
-            { invoices && invoices.length > 0 ? (
+            { estimates && estimates.length > 0 ? (
                 <Background>
-                    {invoices?.map((invoice, index) => {
-                        const parts = invoice.path.split('/');
+                    {estimates?.map((estimate, index) => {
+                        const parts = estimate.path.split('/');
                         const fileName = parts[parts.length - 1];
                         return (
                             <TouchableOpacity
                                 key={index}
                                 onPress={async () => {
-                                    const path = await handleGetUrl(invoice.path);
+                                    const path = await handleGetUrl(estimate.path);
                                     await openURL(path);
                                 }}
                                 style={AdminStyles.invoiceItem}
@@ -46,11 +46,11 @@ const InvoiceList = () =>
                 </Background>
             ) : (
                 <Background style={{justifyContent: 'center'}}>
-                    <Text style={Styles.subTitle}>No Invoices</Text>
+                    <Text style={Styles.subTitle}>No Estimates</Text>
                 </Background>
             )}
         </>
     );
 };
 
-export default InvoiceList;
+export default EstimateList;

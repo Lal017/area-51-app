@@ -1,9 +1,9 @@
 import { View, Text } from 'react-native';
-import { Styles } from '../../constants/styles';
-import { useApp } from '../../components/context';
+import { Styles } from '../../../constants/styles';
+import { useApp } from '../../../components/context';
 import { useEffect, useState } from 'react';
-import { listAppointments } from '../../src/graphql/queries';
-import { Background, formatDate, formatTime, Tab } from '../../components/components';
+import { listAppointments } from '../../../src/graphql/queries';
+import { Background, formatDate, formatTime, Tab } from '../../../components/components';
 import { router } from 'expo-router';
 import { AntDesign } from '@expo/vector-icons';
 

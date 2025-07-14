@@ -1,11 +1,11 @@
 import { View, Text, Alert, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
-import { Styles, AdminStyles } from '../../constants/styles';
+import { Styles, AdminStyles } from '../../../constants/styles';
 import { router, useLocalSearchParams } from 'expo-router';
-import { Background, formatDate, formatNumber, Tab } from '../../components/components';
-import { sendPushNotification } from '../../components/adminComponents';
+import { Background, formatDate, formatNumber, Tab } from '../../../components/components';
+import { sendPushNotification } from '../../../components/adminComponents';
 import { AntDesign, FontAwesome6, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useState } from 'react';
-import Colors from '../../constants/colors';
+import Colors from '../../../constants/colors';
 import { useNavigation } from '@react-navigation/native';
 
 const UserView = () =>

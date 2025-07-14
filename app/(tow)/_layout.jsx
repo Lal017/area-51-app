@@ -5,7 +5,11 @@ import { AppProvider } from "../../components/context";
 const TowDriverContent = () =>
 {
     return(
-        <Stack>
+        <Stack
+            screenOptions={{
+                headerShown: false
+            }}
+        >
             <Stack.Screen name="index" options={{title: 'Console', header: () => <CustHeader title='Console'/>}}/>
         </Stack>
     );

@@ -1,3 +1,3 @@
-import AccountEdit from '../../../src/screens/accountEdit';
+import Settings from '../../../src/screens/settings';
 
-export default AccountEdit;
+export default Settings;

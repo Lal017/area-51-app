@@ -11,7 +11,7 @@ const AdminConsole = () =>
         <Background style={{rowGap: 2}}>
             <TouchableOpacity
                 style={[Styles.consoleBubble, {backgroundColor: Colors.tertiary}]}
-                onPress={() => router.push('/(admin)/userList')}
+                onPress={() => router.push('/(admin)/(users)')}
             >
                 <Text style={ServiceStyles.title}>User List</Text>
                 <LottieView
@@ -39,7 +39,7 @@ const AdminConsole = () =>
             </TouchableOpacity>
             <TouchableOpacity
                 style={[Styles.consoleBubble, {backgroundColor: Colors.primary}]}
-                onPress={() => router.push('/(admin)/appointmentList')}
+                onPress={() => router.push('/(admin)/(appointments)')}
             >
                 <Text style={ServiceStyles.title}>Appointments</Text>
                 <View style={[AdminStyles.lottieAnim, {justifyContent: 'center', alignItems: 'center'}]}>
@@ -80,7 +80,7 @@ const AdminConsole = () =>
             </TouchableOpacity>
             <TouchableOpacity
                 style={[Styles.consoleBubble, {backgroundColor: 'grey'}]}
-                onPress={() => router.push('/(admin)/settings')}
+                onPress={() => router.push('/(admin)/(settings)')}
             >
                 <Text style={ServiceStyles.title}>Settings</Text>
                 <LottieView
