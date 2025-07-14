@@ -44,6 +44,9 @@ const Index = () =>
     else if (user?.accessToken?.payload["cognito:groups"]?.includes('Admins')) {
         return <Redirect href={{ pathname: '(admin)' }} />;
     }
+    else if (user?.accessToken?.payload["cognito:groups"]?.includes('TowDrivers')) {
+        return <Redirect href={{ pathname: '(tow)' }} />
+    }
     return <Redirect href={{ pathname: '(tabs)' }} />;
 };
 

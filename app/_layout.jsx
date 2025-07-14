@@ -45,11 +45,18 @@ const RootLayout = () =>
           // Redirect to home screen or dashboard after successful sign in
           const user = await handleGetCurrentUser();
           const isAdmin = user?.accessToken?.payload["cognito:groups"]?.includes('Admins');
+          const isDriver = user?.accessToken?.payload["cognito:groups"]?.includes('TowDrivers');
           if (router.canDismiss()) { router.dismissAll(); }
           if (isAdmin) {
             navigate.reset({
               index: 0,
               routes: [{ name: '(admin)' }]
+            });
+          }
+          else if (isDriver) {
+            navigate.reset({
+              index: 0,
+              routes: [{ name: '(tow)' }]
             });
           }
           else {
@@ -94,6 +101,7 @@ const RootLayout = () =>
         <Stack.Screen name='(auth)' options={{title: 'Authentication'}}/>
         <Stack.Screen name='(tabs)' options={{title: 'App'}}/>
         <Stack.Screen name='(admin)' options={{title: 'Admin'}}/>
+        <Stack.Screen name='(tow)' options={{title: 'Tow Console'}}/>
       </Stack>
     </>
   );
