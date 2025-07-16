@@ -11,6 +11,7 @@ const Index = () =>
         <Background style={{justifyContent: 'center', rowGap: 2}}>
             <TouchableOpacity
                 style={[Styles.consoleBubble, {backgroundColor: Colors.secondary}]}
+                onPress={() => router.push('(requests)')}
             >
                 <Text style={Styles.title}>View Requests</Text>
                 <LottieView

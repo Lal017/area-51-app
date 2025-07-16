@@ -1,5 +1,5 @@
 import { createAppointment, createTowRequest, deleteAppointment, deleteTowRequest, updateAppointment, updateTowRequest } from '../src/graphql/mutations';
-import { post } from 'aws-amplify/api';
+import { post, get } from 'aws-amplify/api';
 import { Alert } from 'react-native';
 import { appointmentsByUserId, towRequestsByUserId } from '../src/graphql/queries';
 import { router } from 'expo-router';
@@ -156,6 +156,25 @@ const handleGetMyAppointments = async (client, userId) =>
     }
 }
 
+// get all active Tow Requests
+const handleGetAllTowRequests = async () =>
+{
+    try {
+        const restOperation = get({
+            apiName: 'area51RestApi',
+            path: '/getTowRequests',
+            authMode: 'AWS_IAM'
+        });
+
+        const { body } = await restOperation.response;
+        const str = await body.json();
+
+        return str;
+    } catch (error) {
+        console.log('Error getting tow requests:', error);
+    }
+};
+
 const handleCreateTowRequest = async (client, userId, vehicleId, location, requestInfo, setTowRequest) =>
 {
     try {
@@ -311,6 +330,7 @@ export {
     handleDeleteAppointment,
     handleDeleteAllAppointments,
     handleGetMyAppointments,
+    handleGetAllTowRequests,
     handleCreateTowRequest,
     handleGetTowRequest,
     handleNotifUpdateTowRequest,

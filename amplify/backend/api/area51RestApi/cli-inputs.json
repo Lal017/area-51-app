@@ -20,6 +20,18 @@
           "read"
         ]
       }
+    },
+    "/getTowRequests": {
+      "name": "/getTowRequests",
+      "lambdaFunction": "area51GetTowRequests",
+      "permissions": {
+        "groups": {
+          "TowDrivers": [
+            "read"
+          ]
+        },
+        "setting": "private"
+      }
     }
   }
 }

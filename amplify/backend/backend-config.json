@@ -17,6 +17,28 @@
           ],
           "category": "function",
           "resourceName": "area51GetAppointments"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "area51GetTowRequests"
+        },
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "troplocksmithapp"
+        },
+        {
+          "attributes": [
+            "TowDriversGroupRole"
+          ],
+          "category": "auth",
+          "resourceName": "userPoolGroups"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -134,6 +156,21 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "area51GetTowRequests": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ],
+          "category": "api",
+          "resourceName": "area51app"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "area51SendNotification": {
       "build": true,
       "dependsOn": [
@@ -174,6 +211,22 @@
         {
           "category": "function",
           "resourceName": "area51GetAppointments"
+        }
+      ]
+    },
+    "AMPLIFY_function_area51GetTowRequests_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "area51GetTowRequests"
+        }
+      ]
+    },
+    "AMPLIFY_function_area51GetTowRequests_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "area51GetTowRequests"
         }
       ]
     },

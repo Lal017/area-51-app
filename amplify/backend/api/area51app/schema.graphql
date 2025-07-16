@@ -24,14 +24,15 @@ type Vehicle
   @auth(rules: [
     {allow: owner},
     {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]}
+    {allow: private, provider: iam, operations: [read]}
   ])
 {
   id: ID!
   year: Int!
   make: String!
   model: String!
+  color: String!
   readyForPickup: Boolean
-  color: String
   plate: String
   vin: String
   userId: ID! @index(name: "byUser")
@@ -69,7 +70,8 @@ type TowRequest
   @model
   @auth(rules: [
     {allow: owner},
-    {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]}
+    {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]},
+    {allow: private, provider: iam, operations: [read]}
   ])
 {
   id: ID!

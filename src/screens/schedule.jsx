@@ -187,23 +187,21 @@ const Schedule = () =>
           </>
         ) : step === 2 ? (
           <>
-            <View style={{width: '100%', flex: 1, justifyContent: 'center'}}>
-              <View style={Styles.block}>
-                <View style={Styles.infoContainer}>
-                  <Text style={Styles.subTitle}>Select a Vehicle</Text>
-                </View>
-                <View style={ServiceStyles.selectionContainer}>
-                  {vehicles?.map((vehicle, index) => (
-                    <Select
-                      key={index}
-                      text={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
-                      selected={vehicle === selectedVehicle ? true : false}
-                      action={() => setSelectedVehicle(vehicle)}
-                      leftIcon={<Ionicons name="car-sport" size={30} style={Styles.icon} color={selectedVehicle === vehicle ? Colors.backDrop : null}/>}
-                      rightIcon={<FontAwesome name={selectedVehicle === vehicle ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedVehicle === vehicle ? Colors.backDrop : null}/>}
-                    />
-                  ))}
-                </View>
+            <View style={Styles.block}>
+              <View style={Styles.infoContainer}>
+                <Text style={Styles.subTitle}>Select a Vehicle</Text>
+              </View>
+              <View style={ServiceStyles.selectionContainer}>
+                {vehicles?.map((vehicle, index) => (
+                  <Select
+                    key={index}
+                    text={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
+                    selected={vehicle === selectedVehicle ? true : false}
+                    action={() => setSelectedVehicle(vehicle)}
+                    leftIcon={<Ionicons name="car-sport" size={30} style={Styles.icon} color={selectedVehicle === vehicle ? Colors.backDrop : null}/>}
+                    rightIcon={<FontAwesome name={selectedVehicle === vehicle ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedVehicle === vehicle ? Colors.backDrop : null}/>}
+                  />
+                ))}
               </View>
             </View>
             <View style={{flex: 1, justifyContent: 'flex-end', alignItems: 'center', paddingBottom: 25, width: '100%'}}>
@@ -231,48 +229,46 @@ const Schedule = () =>
           </>
         ) : step === 3 ? (
           <>
-            <View style={{width: '100%', flex: 1, justifyContent: 'center'}}>
-              <View style={Styles.block}>
-                <View style={Styles.infoContainer}>
-                  <Text style={Styles.subTitle}>Select a service</Text>
-                </View>
-                <View style={ServiceStyles.selectionContainer}>
-                  <Select
-                    text="Oil Change"
-                    selected={selectedService === 'Oil Change' ? true : false}
-                    action={() => setSelectedService('Oil Change')}
-                    leftIcon={<FontAwesome5 name="oil-can" size={30} style={Styles.icon} color={selectedService === 'Oil Change' ? Colors.backDrop : null} />}
-                    rightIcon={<FontAwesome name={selectedService === 'Oil Change' ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedService === 'Oil Change' ? Colors.backDrop : null}/>}
-                  />
-                  <Select
-                    text="Diagnosis"
-                    selected={selectedService === 'Diagnosis' ? true : false}
-                    action={() => setSelectedService('Diagnosis')}
-                    leftIcon={<FontAwesome name="stethoscope" size={30} style={Styles.icon} color={selectedService === 'Diagnosis' ? Colors.backDrop : null}/>}
-                    rightIcon={<FontAwesome name={selectedService === 'Diagnosis' ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedService === 'Diagnosis' ? Colors.backDrop : null}/>}
-                  />
-                  <Select
-                    text="Tuning"
-                    selected={selectedService === 'Tuning' ? true : false}
-                    action={() => setSelectedService('Tuning')}
-                    leftIcon={<Entypo name="area-graph" size={30} style={Styles.icon} color={selectedService === 'Tuning' ? Colors.backDrop : null}/>}
-                    rightIcon={<FontAwesome name={selectedService === 'Tuning' ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedService === 'Tuning' ? Colors.backDrop : null}/>}
-                  />
-                  <Select
-                    text="A/C"
-                    selected={selectedService === 'A/C' ? true : false}
-                    action={() => setSelectedService('A/C')}
-                    leftIcon={<MaterialIcons name="air" size={30} style={Styles.icon} color={selectedService === 'A/C' ? Colors.backDrop : null}/>}
-                    rightIcon={<FontAwesome name={selectedService === 'A/C' ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedService === 'A/C' ? Colors.backDrop : null}/>}
-                  />
-                  <Select
-                    text="Other"
-                    selected={selectedService === 'Other' ? true : false}
-                    action={() => setSelectedService('Other')}
-                    leftIcon={<MaterialCommunityIcons name="dots-horizontal-circle" size={30} style={Styles.icon} color={selectedService === 'Other' ? Colors.backDrop : null} />}
-                    rightIcon={<FontAwesome name={selectedService === 'Other' ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedService === 'Other' ? Colors.backDrop : null}/>}
-                  />
-                </View>
+            <View style={Styles.block}>
+              <View style={Styles.infoContainer}>
+                <Text style={Styles.subTitle}>Select a service</Text>
+              </View>
+              <View style={ServiceStyles.selectionContainer}>
+                <Select
+                  text="Oil Change"
+                  selected={selectedService === 'Oil Change' ? true : false}
+                  action={() => setSelectedService('Oil Change')}
+                  leftIcon={<FontAwesome5 name="oil-can" size={30} style={Styles.icon} color={selectedService === 'Oil Change' ? Colors.backDrop : null} />}
+                  rightIcon={<FontAwesome name={selectedService === 'Oil Change' ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedService === 'Oil Change' ? Colors.backDrop : null}/>}
+                />
+                <Select
+                  text="Diagnosis"
+                  selected={selectedService === 'Diagnosis' ? true : false}
+                  action={() => setSelectedService('Diagnosis')}
+                  leftIcon={<FontAwesome name="stethoscope" size={30} style={Styles.icon} color={selectedService === 'Diagnosis' ? Colors.backDrop : null}/>}
+                  rightIcon={<FontAwesome name={selectedService === 'Diagnosis' ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedService === 'Diagnosis' ? Colors.backDrop : null}/>}
+                />
+                <Select
+                  text="Tuning"
+                  selected={selectedService === 'Tuning' ? true : false}
+                  action={() => setSelectedService('Tuning')}
+                  leftIcon={<Entypo name="area-graph" size={30} style={Styles.icon} color={selectedService === 'Tuning' ? Colors.backDrop : null}/>}
+                  rightIcon={<FontAwesome name={selectedService === 'Tuning' ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedService === 'Tuning' ? Colors.backDrop : null}/>}
+                />
+                <Select
+                  text="A/C"
+                  selected={selectedService === 'A/C' ? true : false}
+                  action={() => setSelectedService('A/C')}
+                  leftIcon={<MaterialIcons name="air" size={30} style={Styles.icon} color={selectedService === 'A/C' ? Colors.backDrop : null}/>}
+                  rightIcon={<FontAwesome name={selectedService === 'A/C' ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedService === 'A/C' ? Colors.backDrop : null}/>}
+                />
+                <Select
+                  text="Other"
+                  selected={selectedService === 'Other' ? true : false}
+                  action={() => setSelectedService('Other')}
+                  leftIcon={<MaterialCommunityIcons name="dots-horizontal-circle" size={30} style={Styles.icon} color={selectedService === 'Other' ? Colors.backDrop : null} />}
+                  rightIcon={<FontAwesome name={selectedService === 'Other' ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedService === 'Other' ? Colors.backDrop : null}/>}
+                />
               </View>
             </View>
             <View style={{flex: 1, justifyContent: 'flex-end', alignItems: 'center', paddingBottom: 25, width: '100%'}}>

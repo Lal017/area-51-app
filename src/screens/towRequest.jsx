@@ -73,51 +73,64 @@ const TowRequest = () =>
                     </Text>
                     <Text style={Styles.text}>3120 W Sirius Ave STE 103, Las Vegas, NV 89102</Text>
                 </View>
-                <View style={ServiceStyles.buttonContainer}>
-                    <TouchableOpacity
-                        style={ServiceStyles.directionButton}
-                        onPress={() => setStep(2)}
-                    >
-                        <Text style={Styles.actionText}>Continue</Text>
-                        <FontAwesome name='arrow-right' size={24} color='white' />
-                    </TouchableOpacity>
-                </View>
-                </>
-            ) : step === 2 ? (
-                <>
-                    <View style={Styles.block}>
-                        <View style={Styles.infoContainer}>
-                            <Text style={Styles.subTitle}>Vehicle Selection</Text>
-                            <Text style={Styles.text}>Select the vehicle to be towed</Text>
-                        </View>
-                    </View>
-                    <View style={ServiceStyles.selectionContainer}>
-                        {vehicles?.map((vehicle, index) => (
-                            <Select
-                                key={index}
-                                text={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
-                                selected={vehicle === selectedVehicle ? true : false}
-                                action={() => setSelectedVehicle(vehicle)}
-                                leftIcon={<Ionicons name="car-sport" size={30} style={Styles.icon} color={selectedVehicle === vehicle ? Colors.backDrop : null}/>}
-                                rightIcon={<FontAwesome name={selectedVehicle === vehicle ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedVehicle === vehicle ? Colors.backDrop : null}/>}
-                            />
-                        ))}
-                    </View>
+                <View style={{flex: 1, justifyContent: 'flex-end', alignItems: 'center', paddingBottom: 25, width: '100%'}}>
                     <View style={ServiceStyles.buttonContainer}>
                         <TouchableOpacity
-                            style={ServiceStyles.directionButton}
-                            onPress={() => setStep(1)}
+                        style={[ServiceStyles.directionButton, {opacity: 0}]}
+                        disabled={true}
                         >
-                            <FontAwesome name='arrow-left' size={24} color='white' />
-                            <Text style={Styles.actionText}>Back</Text>
+                        <FontAwesome name='arrow-left' size={24} color='white' />
+                        <Text style={Styles.actionText}>Back</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={ServiceStyles.directionButton}
-                            onPress={() => { if (selectedVehicle) setStep(3) }}    
+                            onPress={() => setStep(2)}
                         >
                             <Text style={Styles.actionText}>Continue</Text>
                             <FontAwesome name='arrow-right' size={24} color='white' />
                         </TouchableOpacity>
+                    </View>
+                </View>
+                </>
+            ) : step === 2 ? (
+                <>
+                    <View style={{flex: 1, width: '100%', justifyContent: 'center'}}>
+                        <View style={Styles.block}>
+                            <View style={Styles.infoContainer}>
+                                <Text style={Styles.subTitle}>Vehicle Selection</Text>
+                                <Text style={Styles.text}>Select the vehicle to be towed</Text>
+                            </View>
+                        </View>
+                        <View style={ServiceStyles.selectionContainer}>
+                            {vehicles?.map((vehicle, index) => (
+                                <Select
+                                    key={index}
+                                    text={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
+                                    selected={vehicle === selectedVehicle ? true : false}
+                                    action={() => setSelectedVehicle(vehicle)}
+                                    leftIcon={<Ionicons name="car-sport" size={30} style={Styles.icon} color={selectedVehicle === vehicle ? Colors.backDrop : null}/>}
+                                    rightIcon={<FontAwesome name={selectedVehicle === vehicle ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedVehicle === vehicle ? Colors.backDrop : null}/>}
+                                />
+                            ))}
+                        </View>
+                    </View>
+                    <View style={{flex: 1, justifyContent: 'flex-end', alignItems: 'center', paddingBottom: 25, width: '100%'}}>
+                        <View style={ServiceStyles.buttonContainer}>
+                            <TouchableOpacity
+                                style={ServiceStyles.directionButton}
+                                onPress={() => setStep(1)}
+                            >
+                                <FontAwesome name='arrow-left' size={24} color='white' />
+                                <Text style={Styles.actionText}>Back</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={ServiceStyles.directionButton}
+                                onPress={() => { if (selectedVehicle) setStep(3) }}    
+                            >
+                                <Text style={Styles.actionText}>Continue</Text>
+                                <FontAwesome name='arrow-right' size={24} color='white' />
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </>
             ) : step === 3 ? (
@@ -152,21 +165,23 @@ const TowRequest = () =>
                                     />
                                 </MapView>
                             </View>
-                            <View style={ServiceStyles.buttonContainer}>
-                                <TouchableOpacity
-                                    style={ServiceStyles.directionButton}
-                                    onPress={() => setStep(2)}
-                                >
-                                    <FontAwesome name='arrow-left' size={24} color='white' />
-                                    <Text style={Styles.actionText}>Back</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    style={ServiceStyles.directionButton}
-                                    onPress={() => { if (selectedVehicle) setStep(4) }}    
-                                >
-                                    <Text style={Styles.actionText}>Continue</Text>
-                                    <FontAwesome name='arrow-right' size={24} color='white' />
-                                </TouchableOpacity>
+                            <View style={{flex: 1, justifyContent: 'flex-end', alignItems: 'center', paddingBottom: 25, width: '100%'}}>
+                                <View style={ServiceStyles.buttonContainer}>
+                                    <TouchableOpacity
+                                        style={ServiceStyles.directionButton}
+                                        onPress={() => setStep(2)}
+                                    >
+                                        <FontAwesome name='arrow-left' size={24} color='white' />
+                                        <Text style={Styles.actionText}>Back</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={ServiceStyles.directionButton}
+                                        onPress={() => { if (selectedVehicle) setStep(4) }}    
+                                    >
+                                        <Text style={Styles.actionText}>Continue</Text>
+                                        <FontAwesome name='arrow-right' size={24} color='white' />
+                                    </TouchableOpacity>
+                                </View>
                             </View>
                         </>
                     ) : (

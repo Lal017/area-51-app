@@ -16,12 +16,12 @@ const AdminContent = () =>
     const {
         client,
         setClient,
-        identityId,
-        setIdentityId,
         userId,
         setUserId,
         access,
         setAccess,
+        identityId,
+        setIdentityId,
         pushToken,
         setPushToken,
         setNotification,
@@ -46,15 +46,15 @@ const AdminContent = () =>
         {
             // generate client
             const genClient = generateClient();
-            await setClient(genClient);
+            setClient(genClient);
 
             // get push token for notifications
             const genPushToken = await registerForPushNotifications();
-            await setPushToken(genPushToken);
+            setPushToken(genPushToken);
 
             // get and set user attributes
             const userAtt = await fetchUserAttributes();
-            await setEmail(userAtt?.email);
+            setEmail(userAtt?.email);
             if (userAtt.given_name && userAtt.family_name) {
                 setFirstName(userAtt.given_name);
                 setLastName(userAtt.family_name);
@@ -68,13 +68,14 @@ const AdminContent = () =>
                     setFirstName(nameSplit[0]);
                 }
             }
-            await setPhoneNumber(userAtt?.phone_number);
+            setPhoneNumber(userAtt?.phone_number);
 
             // get and set cognito info
             const userInfo = await handleGetCurrentUser();
-            await setAccess(userInfo.accessToken.payload["cognito:groups"]);
-            await setUserId(userInfo.accessToken.payload.sub);
+            setAccess(userInfo.accessToken.payload["cognito:groups"]);
+            setUserId(userInfo.accessToken.payload.sub);
 
+            // identityId for amplify storage
             const getDetails = await fetchAuthSession();
             setIdentityId(getDetails.identityId);
 
@@ -83,7 +84,6 @@ const AdminContent = () =>
             setNotification(JSON.parse(savedNotif));
 
             if (!userAtt?.phone_number || ((!userAtt?.given_name || !userAtt?.family_name) && !userAtt?.name)) {
-                router.push('/(tabs)/(profile)/accountEdit');
                 setIsStuck(true);
                 Alert.alert(
                     'Notice',
@@ -94,6 +94,7 @@ const AdminContent = () =>
                         }
                     ]
                 );
+                router.push('accountEdit');
             }
         }
 
@@ -117,8 +118,11 @@ const AdminContent = () =>
             }
         };
 
-        if (client && userId && access && pushToken && identityId) {
+        if (client && userId && identityId && access && pushToken) {
             setReady(true);
+        }
+        else {
+            console.log('client', client, 'user', userId, 'identity', identityId, 'access', access, 'token', pushToken);
         }
 
         if (client && userId && identityId && pushToken && access && firstName && lastName && email && phoneNumber) {
@@ -154,7 +158,7 @@ const AdminContent = () =>
                 <Stack.Screen name='(settings)' options={{headerShown: false}}/>
                 <Stack.Screen name='vehicleList' options={{title: 'Vehicles', header: () => <CustHeader title="Vehicles" />}}/>
                 <Stack.Screen name='vehicleView' options={{title: 'Vehicle', header: () => <CustHeader title="Vehicle" />}}/>
-                <Stack.Screen name="towRequests" options={{title: "Tow Requests", header: () => <CustHeader title="Tow Requests"/>}}/>
+                <Stack.Screen name="towRequestList" options={{title: "Tow Requests", header: () => <CustHeader title="Tow Requests"/>}}/>
                 <Stack.Screen name="towResponse" options={{title: "Tow Response", header: () => <CustHeader title="Tow Response"/>}}/>
                 <Stack.Screen name="homeSettings" options={{title: "Home Settings", header: () => <CustHeader title="Home Settings"/>}}/>
             </Stack>

@@ -5,7 +5,6 @@ import { Alert } from 'react-native';
 import { reverseGeocodeAsync } from 'expo-location';
 import { uploadData, list, getUrl, remove } from 'aws-amplify/storage';
 import * as FileSystem from 'expo-file-system';
-import { useNavigation } from '@react-navigation/native';
 
 // Expo notif functions
 const sendPushNotification = async (expoPushToken, title, body, data) =>

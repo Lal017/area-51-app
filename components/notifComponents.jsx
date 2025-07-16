@@ -59,7 +59,7 @@ const registerForPushNotifications = async () =>
 const handleCreateUser = async (client, user_id, identityId, token, user_access, firstName, lastName, email, phoneNumber) =>
 {
     try {
-        const access_result = user_access.includes('Admins') ? 'Admins' : 'Customers';
+        const access_result = user_access.includes('Admins') ? 'Admins' : user_access.includes('TowDrivers') ? 'TowDrivers' : 'Customers';
 
         await client.graphql({
             query: createUser,
@@ -84,7 +84,7 @@ const handleCreateUser = async (client, user_id, identityId, token, user_access,
 const handleUpdateUser = async (client, user_id, identityId, token, user_access, firstName, lastName, email, phone_number) =>
 {
     try {
-        const access_result = user_access.includes('Admins') ? 'Admins' : 'Customers';
+        const access_result = user_access.includes('Admins') ? 'Admins' : user_access.includes('TowDrivers') ? 'TowDrivers' : 'Customers';
 
         await client.graphql({
             query: updateUser,
@@ -162,7 +162,7 @@ const handleSendAdminNotif = async (title, content, data) =>
         const response = await body.json();
 
         if (response?.data?.listUsers?.items?.length <= 0) {
-            console.log('REQUEST FAILED:', response.data.listUsers);
+            console.log('REQUEST FAILED, THERE ARE NO ADMINS:', response.data.listUsers);
         }
     } catch (error) {
         console.log('CUSTOMER REQUEST ERROR:', error);

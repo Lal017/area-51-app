@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ScrollView, Animated, ActivityIndicator, RefreshControl } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Animated, ActivityIndicator, RefreshControl, Alert } from 'react-native';
 import { router } from 'expo-router';
 import { useApp } from './context';
 import { Styles, HomeStyles } from '../constants/styles';
@@ -8,7 +8,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
 import { list, remove } from 'aws-amplify/storage';
 import { MaterialIcons } from '@expo/vector-icons';
-import { handleSignOut } from './authComponents';
+import { signOut } from '@aws-amplify/auth';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 // loading page
@@ -43,7 +43,18 @@ const CustHeader = ({title, index}) =>
                     onPress={async () => {
                         if (loading) return;
                         setLoading(true);
-                        await handleSignOut();
+                        try {
+                            await signOut({global: true });
+                        } catch (error) {
+                            console.log('error signing out', error);
+                            Alert.alert(
+                                'Error',
+                                error.message,
+                                [
+                                    { text: 'Ok'}
+                                ]
+                            );
+                        }
                         setLoading(false);
                     }}
                     disabled={loading}

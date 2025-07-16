@@ -63,7 +63,8 @@ const Styles = StyleSheet.create({
         justifyContent: 'space-around',
         flexDirection: 'row',
         position: 'relative',
-        height: 50
+        height: 50,
+        backgroundColor: Colors.backgroundAccent
     },
     binaryTabContainer: {
         width: '100%',
@@ -71,7 +72,7 @@ const Styles = StyleSheet.create({
         flexDirection: 'row',
         columnGap: 50,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     rightIcon: {
         position: 'absolute',

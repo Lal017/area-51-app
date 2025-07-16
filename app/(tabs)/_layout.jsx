@@ -93,6 +93,7 @@ const TabsContent = () =>
             setAccess(userInfo.accessToken.payload["cognito:groups"]);
             setUserId(userInfo.accessToken.payload.sub);
 
+            // identityId for amplify storage
             const getDetails = await fetchAuthSession();
             setIdentityId(getDetails.identityId);
 

@@ -9,7 +9,7 @@ import { AntDesign, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
 import Colors from '../../constants/colors';
 
-const TowRequests = () =>
+const TowRequestList = () =>
 {
     const { client } = useApp();
     const [ requests, setRequests ] = useState();
@@ -42,6 +42,7 @@ const TowRequests = () =>
                     query: listTowRequests
                 });
 
+                console.log(getRequests.data.listTowRequests.items);
                 setRequests(getRequests.data.listTowRequests.items);  
             } catch (error) {
                 console.log('Error getting tow requests:', error);
@@ -107,4 +108,4 @@ const TowRequests = () =>
     );
 };
 
-export default TowRequests;
+export default TowRequestList;
