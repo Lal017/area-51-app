@@ -9,3 +9,4 @@ ToDo:
     - Re-organize components. (re-name notifComponenets to databaseComponenets, etc.)
     - move initialize app functions to components file
     - get user attributes and only updateUser in database if something has changed.
+    - fix error with getTowRequests lambda. "not authorized to make query"
