@@ -142,6 +142,7 @@ const handleCheckUser = async (client, userId) =>
     return alreadyExists;
 };
 
+// sends notification to all users in Admins groups
 const handleSendAdminNotif = async (title, content, data) =>
 {
     try {
@@ -169,9 +170,38 @@ const handleSendAdminNotif = async (title, content, data) =>
     }
 };
 
+// send notification to all users in TowDrivers group
+const handleSendDriversNotif = async (title, content, data) =>
+{
+    try {
+        const restOperation = post({
+            apiName: 'area51RestApi',
+            path: '/sendNotifToDrivers',
+            authMode: 'AWS_IAM',
+            options: {
+                body: {
+                    title: title,
+                    content: content,
+                    data: data
+                }
+            }
+        });
+
+        const { body } = await restOperation.response;
+        const response = await body.json();
+
+        if (response?.data?.listUsers?.items?.length <= 0) {
+            console.log('REQUEST FAILED, THERE ARE NO DRIVERS:', response.data.listUsers);
+        }
+    } catch (error) {
+        console.log('CUSTOMER REQUEST ERROR:', error);
+    }
+};
+
 export {
     registerForPushNotifications,
     handleSendAdminNotif,
+    handleSendDriversNotif,
     handleCreateUser,
     handleUpdateUser,
     handleDeleteUser,

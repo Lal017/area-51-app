@@ -2,11 +2,11 @@ ToDo:
     - Add appointments to google calendar and make visual calendar for app to display appointments
     - Check out navigation for reset password in (auth)
     - newEstimate and newInvoice do not update if you launch the app from the terminated state by clicking on the app itself
-    - Make the color for a vehicle attribute required
     - Try to make styling for tow request look better and maybe also for scheduling
     - Add notification widget to home page
     - Add notification tab in header for home page
     - Re-organize components. (re-name notifComponenets to databaseComponenets, etc.)
     - move initialize app functions to components file
     - get user attributes and only updateUser in database if something has changed.
-    - fix error with getTowRequests lambda. "not authorized to make query"
+    - allow admin to add users to TowDrivers group
+    - update notification listeners for Admins and TowDrivers

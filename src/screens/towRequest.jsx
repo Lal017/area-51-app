@@ -4,7 +4,7 @@ import { useApp } from '../../components/context';
 import { useEffect, useState } from "react";
 import Colors from "../../constants/colors";
 import { Entypo, FontAwesome, FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { handleSendAdminNotif } from "../../components/notifComponents";
+import { handleSendAdminNotif, handleSendDriversNotif } from "../../components/notifComponents";
 import { Background, BinarySelect, Select } from "../../components/components";
 import { handleCreateTowRequest } from "../../components/scheduleComponents";
 import { requestForegroundPermissionsAsync, getCurrentPositionAsync } from 'expo-location';
@@ -373,6 +373,7 @@ const TowRequest = () =>
                                     userId: userId
                                 };
                                 await handleSendAdminNotif('Towing Request', 'A customer is requesting a tow', data);
+                                await handleSendDriversNotif('Towing Request', 'A customer is requesting a tow', data);
                                 await handleCreateTowRequest(client, userId, selectedVehicle.id, marker, { notes, canRun, canRoll, keyIncluded, isObstructed }, setTowRequest);
                                 setLoading(false);
                             }}

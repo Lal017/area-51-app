@@ -85,6 +85,6 @@ type TowRequest
   canRoll: Boolean!
   keyIncluded: Boolean!
   isObstructed: Boolean!
-  notes: String
   waitTime: Int
+  notes: String
 }

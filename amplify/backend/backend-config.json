@@ -12,14 +12,6 @@
         },
         {
           "attributes": [
-            "Name",
-            "Arn"
-          ],
-          "category": "function",
-          "resourceName": "area51GetTowRequests"
-        },
-        {
-          "attributes": [
             "UserPoolId"
           ],
           "category": "auth",
@@ -27,10 +19,18 @@
         },
         {
           "attributes": [
-            "TowDriversGroupRole"
+            "CustomersGroupRole"
           ],
           "category": "auth",
           "resourceName": "userPoolGroups"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "area51SendNotifToDrivers"
         },
         {
           "attributes": [
@@ -42,7 +42,15 @@
         },
         {
           "attributes": [
-            "CustomersGroupRole"
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "area51GetTowRequests"
+        },
+        {
+          "attributes": [
+            "TowDriversGroupRole"
           ],
           "category": "auth",
           "resourceName": "userPoolGroups"
@@ -193,6 +201,21 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "area51SendNotifToDrivers": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ],
+          "category": "api",
+          "resourceName": "area51app"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "troplocksmithappPostConfirmation": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -250,6 +273,22 @@
         {
           "category": "function",
           "resourceName": "area51SendNotifToAdmins"
+        }
+      ]
+    },
+    "AMPLIFY_function_area51SendNotifToDrivers_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "area51SendNotifToDrivers"
+        }
+      ]
+    },
+    "AMPLIFY_function_area51SendNotifToDrivers_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "area51SendNotifToDrivers"
         }
       ]
     },

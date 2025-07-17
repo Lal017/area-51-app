@@ -36,6 +36,10 @@
         "area51SendNotifToAdmins": {
           "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
           "s3Key": "amplify-builds/area51SendNotifToAdmins-71364d5777394e556a36-build.zip"
+        },
+        "area51SendNotifToDrivers": {
+          "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
+          "s3Key": "amplify-builds/area51SendNotifToDrivers-532f624979434e445370-build.zip"
         }
       },
       "auth": {
