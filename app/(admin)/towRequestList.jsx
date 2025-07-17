@@ -42,7 +42,6 @@ const TowRequestList = () =>
                     query: listTowRequests
                 });
 
-                console.log(getRequests.data.listTowRequests.items);
                 setRequests(getRequests.data.listTowRequests.items);  
             } catch (error) {
                 console.log('Error getting tow requests:', error);
@@ -73,7 +72,6 @@ const TowRequestList = () =>
                     >
                         <Picker.Item label="All" value='ALL' />
                         <Picker.Item label="Requested" value="REQUESTED" />
-                        <Picker.Item label="Pending" value="PENDING" />
                         <Picker.Item label="In Progress" value="IN_PROGRESS" />
                         <Picker.Item label="Cancelled" value="CANCELLED" />
                         <Picker.Item label="Completed" value="COMPLETED" />
@@ -97,7 +95,7 @@ const TowRequestList = () =>
                                     pathname: 'towResponse',
                                     params: { customerParam: JSON.stringify(request)}
                                 })}
-                                text={<Text style={[Styles.headerTitle, {paddingLeft: 75}, request.status === 'REQUESTED' ? {color: Colors.primary} : request.status === 'PENDING' ? {color: Colors.secondary} : request.status === 'IN_PROGRESS' ? {color: 'white'} : request.status === 'CANCELLED' ? {color: 'red'} : request.status === 'COMPLETED' ? {color: '#b3b3b3'} : null ]}><Text style={Styles.tabText}>{request.user.firstName}</Text>{'\n'}{request.status === 'IN_PROGRESS' ? 'IN PROGRESS' : request.status}</Text>}
+                                text={<Text style={[Styles.headerTitle, {paddingLeft: 75}, request.status === 'REQUESTED' ? {color: Colors.primary} : request.status === 'IN_PROGRESS' ? {color: Colors.secondary} : request.status === 'CANCELLED' ? {color: 'red'} : request.status === 'COMPLETED' ? {color: '#b3b3b3'} : null ]}><Text style={Styles.tabText}>{request.user.firstName}</Text>{'\n'}{request.status === 'IN_PROGRESS' ? 'IN PROGRESS' : request.status}</Text>}
                                 leftIcon={<MaterialCommunityIcons name='tow-truck' size={35} style={Styles.icon} />}
                                 rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon} />}
                             />

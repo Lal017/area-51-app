@@ -108,17 +108,13 @@ const handleListTowRequestUsers = async (client, userArr) =>
     }
 };
 
-const handleUpdateTowRequest = async (client, towId, status, priceParam, waitTime) =>
+const handleUpdateTowRequest = async (client, towId, status, waitTime) =>
 {
-    let price;
-    if (priceParam) { price = '$ ' + priceParam; }
-
     let input = {
         id: towId,
         status: status
     }
 
-    if (priceParam !== undefined) { input.price = price; }
     if (waitTime !== undefined) { input.waitTime = waitTime; }
 
     try {

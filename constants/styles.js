@@ -166,7 +166,7 @@ const Styles = StyleSheet.create({
     // icons
     icon: {
         position: 'absolute',
-        left: 20,
+        left: 17,
         zIndex: 1,
         color: Colors.text,
     },
@@ -596,4 +596,40 @@ const AdminStyles = StyleSheet.create({
     }
 });
 
-export { Styles, AuthStyles, HomeStyles, ServiceStyles, ProfileStyles, AdminStyles };
+const TowStyles = StyleSheet.create({
+    dualButtonContainer: {
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        alignItems: 'center'
+    },
+    button: {
+        width: '40%',
+        height: 50,
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row',
+        columnGap: 5
+    },
+    inputWrapper: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignSelf: 'center',
+        justifyContent: 'center',
+        position: 'relative',
+        width: '35%'
+    },
+    input: {
+        color: Colors.text,
+        height: 55,
+        paddingLeft: 55,
+        paddingRight: 10,
+        width: '100%',
+        borderWidth: 1,
+        borderRadius: 5,
+        borderColor: Colors.text,
+    },
+});
+
+export { Styles, AuthStyles, HomeStyles, ServiceStyles, ProfileStyles, AdminStyles, TowStyles };

@@ -8,14 +8,6 @@
             "Arn"
           ],
           "category": "function",
-          "resourceName": "area51SendNotification"
-        },
-        {
-          "attributes": [
-            "Name",
-            "Arn"
-          ],
-          "category": "function",
           "resourceName": "area51GetAppointments"
         },
         {
@@ -36,6 +28,21 @@
         {
           "attributes": [
             "TowDriversGroupRole"
+          ],
+          "category": "auth",
+          "resourceName": "userPoolGroups"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "area51SendNotifToAdmins"
+        },
+        {
+          "attributes": [
+            "CustomersGroupRole"
           ],
           "category": "auth",
           "resourceName": "userPoolGroups"
@@ -171,7 +178,7 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
-    "area51SendNotification": {
+    "area51SendNotifToAdmins": {
       "build": true,
       "dependsOn": [
         {
@@ -230,19 +237,19 @@
         }
       ]
     },
-    "AMPLIFY_function_area51SendNotification_deploymentBucketName": {
+    "AMPLIFY_function_area51SendNotifToAdmins_deploymentBucketName": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "area51SendNotification"
+          "resourceName": "area51SendNotifToAdmins"
         }
       ]
     },
-    "AMPLIFY_function_area51SendNotification_s3Key": {
+    "AMPLIFY_function_area51SendNotifToAdmins_s3Key": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "area51SendNotification"
+          "resourceName": "area51SendNotifToAdmins"
         }
       ]
     },

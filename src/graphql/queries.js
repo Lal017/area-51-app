@@ -74,10 +74,10 @@ export const getVehicle = /* GraphQL */ `
       year
       make
       model
-      readyForPickup
       color
       plate
       vin
+      readyForPickup
       userId
       user {
         id
@@ -112,10 +112,10 @@ export const listVehicles = /* GraphQL */ `
         year
         make
         model
-        readyForPickup
         color
         plate
         vin
+        readyForPickup
         userId
         user {
           firstName
@@ -154,10 +154,10 @@ export const vehiclesByUserId = /* GraphQL */ `
         year
         make
         model
-        readyForPickup
         color
         plate
         vin
+        readyForPickup
         userId
         createdAt
         updatedAt
@@ -198,10 +198,10 @@ export const getAppointment = /* GraphQL */ `
         year
         make
         model
-        readyForPickup
         color
         plate
         vin
+        readyForPickup
         userId
         createdAt
         updatedAt
@@ -315,10 +315,10 @@ export const getTowRequest = /* GraphQL */ `
         year
         make
         model
-        readyForPickup
         color
         plate
         vin
+        readyForPickup
         userId
         createdAt
         updatedAt
@@ -328,13 +328,12 @@ export const getTowRequest = /* GraphQL */ `
       status
       latitude
       longitude
-      price
-      waitTime
-      notes
       canRun
       canRoll
       keyIncluded
       isObstructed
+      waitTime
+      notes
       createdAt
       updatedAt
       owner
@@ -372,13 +371,12 @@ export const listTowRequests = /* GraphQL */ `
         status
         latitude
         longitude
-        price
-        waitTime
-        notes
         canRun
         canRoll
         keyIncluded
         isObstructed
+        waitTime
+        notes
         createdAt
         updatedAt
         owner
@@ -411,13 +409,12 @@ export const towRequestsByUserId = /* GraphQL */ `
         status
         latitude
         longitude
-        price
-        waitTime
-        notes
         canRun
         canRoll
         keyIncluded
         isObstructed
+        waitTime
+        notes
         createdAt
         updatedAt
         owner

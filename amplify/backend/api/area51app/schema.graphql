@@ -3,7 +3,7 @@ type User
   @auth(rules: [
     {allow: owner},
     {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]},
-    {allow: private, provider: iam, operations: [read]}
+    {allow: private, provider: identityPool, operations: [read]}
   ])
 {
   id: ID!
@@ -24,7 +24,7 @@ type Vehicle
   @auth(rules: [
     {allow: owner},
     {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]}
-    {allow: private, provider: iam, operations: [read]}
+    {allow: private, provider: identityPool, operations: [read]}
   ])
 {
   id: ID!
@@ -32,9 +32,9 @@ type Vehicle
   make: String!
   model: String!
   color: String!
-  readyForPickup: Boolean
   plate: String
   vin: String
+  readyForPickup: Boolean
   userId: ID! @index(name: "byUser")
   user: User @belongsTo(fields: ["userId"])
 }
@@ -44,7 +44,7 @@ type Appointment
   @auth(rules: [
     {allow: owner},
     {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]},
-    {allow: private, provider: iam, operations: [read]}
+    {allow: private, provider: identityPool, operations: [read]}
   ])
 {
   id: ID!
@@ -60,7 +60,6 @@ type Appointment
 
 enum TowRequestStatus {
   REQUESTED
-  PENDING
   CANCELLED
   IN_PROGRESS
   COMPLETED
@@ -71,7 +70,7 @@ type TowRequest
   @auth(rules: [
     {allow: owner},
     {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]},
-    {allow: private, provider: iam, operations: [read]}
+    {allow: private, provider: identityPool, operations: [read]}
   ])
 {
   id: ID!
@@ -82,11 +81,10 @@ type TowRequest
   status: TowRequestStatus!
   latitude: Float!
   longitude: Float!
-  price: String
-  waitTime: String
+  canRun: Boolean!
+  canRoll: Boolean!
+  keyIncluded: Boolean!
+  isObstructed: Boolean!
   notes: String
-  canRun: Boolean
-  canRoll: Boolean
-  keyIncluded: Boolean
-  isObstructed: Boolean
+  waitTime: Int
 }

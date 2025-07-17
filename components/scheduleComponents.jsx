@@ -171,7 +171,7 @@ const handleGetAllTowRequests = async () =>
 
         return str;
     } catch (error) {
-        console.log('Error getting tow requests:', error);
+        console.log('Error getting ALL tow requests:', error);
     }
 };
 

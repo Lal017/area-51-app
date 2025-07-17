@@ -147,7 +147,7 @@ const handleSendAdminNotif = async (title, content, data) =>
     try {
         const restOperation = post({
             apiName: 'area51RestApi',
-            path: '/sendCustomerNotif',
+            path: '/sendNotifToAdmins',
             authMode: 'AWS_IAM',
             options: {
                 body: {

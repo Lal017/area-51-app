@@ -54,7 +54,7 @@ const AdminConsole = () =>
             </TouchableOpacity>
             <TouchableOpacity
                 style={[Styles.consoleBubble, {backgroundColor: Colors.secondary}]}
-                onPress={() => router.push('/(admin)/towRequests')}
+                onPress={() => router.push('/(admin)/towRequestList')}
             >
                 <Text style={ServiceStyles.title}>Tow Requests</Text>
                 <LottieView

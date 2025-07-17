@@ -1,16 +1,6 @@
 {
   "version": 1,
   "paths": {
-    "/sendCustomerNotif": {
-      "name": "/sendCustomerNotif",
-      "lambdaFunction": "area51SendNotification",
-      "permissions": {
-        "setting": "private",
-        "auth": [
-          "read"
-        ]
-      }
-    },
     "/getAppointments": {
       "name": "/getAppointments",
       "lambdaFunction": "area51GetAppointments",
@@ -27,6 +17,18 @@
       "permissions": {
         "groups": {
           "TowDrivers": [
+            "read"
+          ]
+        },
+        "setting": "private"
+      }
+    },
+    "/sendNotifToAdmins": {
+      "name": "/sendNotifToAdmins",
+      "lambdaFunction": "area51SendNotifToAdmins",
+      "permissions": {
+        "groups": {
+          "Customers": [
             "read"
           ]
         },

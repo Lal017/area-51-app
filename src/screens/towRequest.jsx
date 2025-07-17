@@ -57,21 +57,21 @@ const TowRequest = () =>
             </View>
             { step === 1 ? (
                 <>
-                <View style={Styles.infoContainer}>
-                    <Text style={Styles.subTitle}>How the request works?</Text>
-                    <Text style={Styles.text}>
-                        You'll start by filling out a form with details about your tow request. Based on this information, we'll provide you with a price and an estimated wait time.
-                    </Text>
-                    <Text style={Styles.text}>
-                        You can then choose to confirm or cancel the request. If you accept, a tow driver will be dispatched to your location immediately. If you cancel, the request will be canceled and you won't be charged.
-                    </Text>
-                    <Text style={Styles.text}>
-                        <Text style={{fontWeight: 500}}>NOTE: </Text>Once the request is confirmed, it cannot be canceled.
-                    </Text>
-                    <Text style={Styles.subTitle}>
-                        Where will you be towed?
-                    </Text>
-                    <Text style={Styles.text}>3120 W Sirius Ave STE 103, Las Vegas, NV 89102</Text>
+                <View style={Styles.block}>
+                    <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                        <Text style={Styles.subTitle}>Pricing</Text>
+                        <Text style={Styles.text}>
+                            All tow requests start at a base price of <Text style={{fontWeight: 'bold'}}>$100</Text>. Extra fees may apply depending on the situation. You will recieve a phone call from one of our drivers if extra fees are going to be applied.
+                        </Text>
+                    </View>
+                    <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                        <Text style={Styles.subTitle}>Where will you be towed?</Text>
+                        <Text style={Styles.text}>3120 W Sirius Ave STE 103,{'\n'}Las Vegas, NV 89102</Text>
+                    </View>
+                    <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                        <Text style={Styles.subTitle}>NOTE</Text>
+                        <Text style={Styles.text}>Once a driver has accepted your request, you will <Text style={{color: 'red', fontWeight: 'bold'}}>NOT</Text> be able to cancel</Text>
+                    </View>
                 </View>
                 <View style={{flex: 1, justifyContent: 'flex-end', alignItems: 'center', paddingBottom: 25, width: '100%'}}>
                     <View style={ServiceStyles.buttonContainer}>
@@ -94,7 +94,7 @@ const TowRequest = () =>
                 </>
             ) : step === 2 ? (
                 <>
-                    <View style={{flex: 1, width: '100%', justifyContent: 'center'}}>
+                    <View style={{flex: 1, width: '100%'}}>
                         <View style={Styles.block}>
                             <View style={Styles.infoContainer}>
                                 <Text style={Styles.subTitle}>Vehicle Selection</Text>
@@ -194,7 +194,7 @@ const TowRequest = () =>
             ) : step === 4 ? (
                 <>
                     <View style={Styles.block}>
-                        <View style={Styles.infoContainer}>
+                        <View style={[Styles.infoContainer, {rowGap: 0}]}>
                             <Text style={Styles.subTitle}>Description (optional)</Text>
                             <Text style={Styles.text}>Please, describe why the vehicle needs to be towed</Text>
                         </View>
@@ -211,71 +211,71 @@ const TowRequest = () =>
                         </View>
                         <View style={Styles.infoContainer}>
                             <Text style={Styles.text}>Does the vehicle start?</Text>
-                        </View>
-                        <View style={Styles.binaryTabContainer}>
-                            <BinarySelect
-                                text='Yes'
-                                selected={canRun !== undefined ? canRun : null}
-                                action={() => setCanRun(true)}
-                                rightIcon={<Entypo name="thumbs-up" size={30} color='white'/>}
-                            />
-                            <BinarySelect
-                                text='No'
-                                selected={canRun !== undefined ? !canRun : null }
-                                action={() => setCanRun(false)}
-                                rightIcon={<Entypo name="thumbs-down" size={30} color='white'/>}
-                            />
+                            <View style={Styles.binaryTabContainer}>
+                                <BinarySelect
+                                    text='Yes'
+                                    selected={canRun !== undefined ? canRun : null}
+                                    action={() => setCanRun(true)}
+                                    rightIcon={<Entypo name="thumbs-up" size={30} color='white'/>}
+                                />
+                                <BinarySelect
+                                    text='No'
+                                    selected={canRun !== undefined ? !canRun : null }
+                                    action={() => setCanRun(false)}
+                                    rightIcon={<Entypo name="thumbs-down" size={30} color='white'/>}
+                                />
+                            </View>
                         </View>
                         <View style={Styles.infoContainer}>
                             <Text style={Styles.text}>Does the vehicle roll?</Text>
-                        </View>
-                        <View style={Styles.binaryTabContainer}>
-                            <BinarySelect
-                                text='Yes'
-                                selected={canRoll !== undefined ? canRoll : null}
-                                action={() => setCanRoll(true)}
-                                rightIcon={<Entypo name="thumbs-up" size={30} color='white'/>}
-                            />
-                            <BinarySelect
-                                text='No'
-                                selected={canRoll !== undefined ? !canRoll : null }
-                                action={() => setCanRoll(false)}
-                                rightIcon={<Entypo name="thumbs-down" size={30} color='white'/>}
-                            />
+                            <View style={Styles.binaryTabContainer}>
+                                <BinarySelect
+                                    text='Yes'
+                                    selected={canRoll !== undefined ? canRoll : null}
+                                    action={() => setCanRoll(true)}
+                                    rightIcon={<Entypo name="thumbs-up" size={30} color='white'/>}
+                                />
+                                <BinarySelect
+                                    text='No'
+                                    selected={canRoll !== undefined ? !canRoll : null }
+                                    action={() => setCanRoll(false)}
+                                    rightIcon={<Entypo name="thumbs-down" size={30} color='white'/>}
+                                />
+                            </View>
                         </View>
                         <View style={Styles.infoContainer}>
                             <Text style={Styles.text}>Are the vehicle keys included?</Text>
-                        </View>
-                        <View style={Styles.binaryTabContainer}>
-                            <BinarySelect
-                                text='Yes'
-                                selected={keyIncluded !== undefined ? keyIncluded : null}
-                                action={() => setKeyIncluded(true)}
-                                rightIcon={<Entypo name="thumbs-up" size={30} color='white'/>}
-                            />
-                            <BinarySelect
-                                text='No'
-                                selected={keyIncluded !== undefined ? !keyIncluded : null }
-                                action={() => setKeyIncluded(false)}
-                                rightIcon={<Entypo name="thumbs-down" size={30} color='white'/>}
-                            />
+                            <View style={Styles.binaryTabContainer}>
+                                <BinarySelect
+                                    text='Yes'
+                                    selected={keyIncluded !== undefined ? keyIncluded : null}
+                                    action={() => setKeyIncluded(true)}
+                                    rightIcon={<Entypo name="thumbs-up" size={30} color='white'/>}
+                                />
+                                <BinarySelect
+                                    text='No'
+                                    selected={keyIncluded !== undefined ? !keyIncluded : null }
+                                    action={() => setKeyIncluded(false)}
+                                    rightIcon={<Entypo name="thumbs-down" size={30} color='white'/>}
+                                />
+                            </View>
                         </View>
                         <View style={Styles.infoContainer}>
                             <Text style={Styles.text}>Is there anything obstructing the vehicle?</Text>
-                        </View>
-                        <View style={Styles.binaryTabContainer}>
-                            <BinarySelect
-                                text='Yes'
-                                selected={isObstructed !== undefined ? isObstructed : null}
-                                action={() => setIsObstructed(true)}
-                                rightIcon={<Entypo name="thumbs-up" size={30} color='white'/>}
-                            />
-                            <BinarySelect
-                                text='No'
-                                selected={isObstructed !== undefined ? !isObstructed : null }
-                                action={() => setIsObstructed(false)}
-                                rightIcon={<Entypo name="thumbs-down" size={30} color='white'/>}
-                            />
+                            <View style={Styles.binaryTabContainer}>
+                                <BinarySelect
+                                    text='Yes'
+                                    selected={isObstructed !== undefined ? isObstructed : null}
+                                    action={() => setIsObstructed(true)}
+                                    rightIcon={<Entypo name="thumbs-up" size={30} color='white'/>}
+                                />
+                                <BinarySelect
+                                    text='No'
+                                    selected={isObstructed !== undefined ? !isObstructed : null }
+                                    action={() => setIsObstructed(false)}
+                                    rightIcon={<Entypo name="thumbs-down" size={30} color='white'/>}
+                                />
+                            </View>
                         </View>
                     </View>
                     <View style={ServiceStyles.buttonContainer}>
@@ -322,63 +322,64 @@ const TowRequest = () =>
                         ) }
                     </View>
                 </View>
-                <View style={Styles.infoContainer}>
-                    <Text style={ServiceStyles.subTitle}>Vehicle</Text>
-                    <Text style={ServiceStyles.text}>{`${selectedVehicle.year} ${selectedVehicle.make} ${selectedVehicle.model}`}</Text>
-                    <Text style={ServiceStyles.subTitle}>Does the vehicle start?</Text>
-                    <Text style={ServiceStyles.text}>{canRun ? 'Yes' : 'No'}</Text>
-                    <Text style={ServiceStyles.subTitle}>Does the vehicle roll?</Text>
-                    <Text style={ServiceStyles.text}>{canRoll ? 'Yes' : 'No'}</Text>
-                    <Text style={ServiceStyles.subTitle}>Are the vehicle keys included?</Text>
-                    <Text style={ServiceStyles.text}>{keyIncluded ? 'Yes' : 'No'}</Text>
-                    <Text style={ServiceStyles.subTitle}>Is there anything obstructing the vehicle?</Text>
-                    <Text style={ServiceStyles.text}>{isObstructed ? 'Yes' : 'No'}</Text>
+                <View style={[Styles.block]}>
+                    <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                        <Text style={Styles.subTitle}>Vehicle</Text>
+                        <Text style={Styles.text}>{selectedVehicle.year} {selectedVehicle.make} {selectedVehicle.model}</Text>
+                    </View>
+                    <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                        <Text style={[Styles.subTitle]}>Tow Details</Text>
+                        <Text style={Styles.text}> - Car runs?                               {canRun ? 'Yes' : 'No' }</Text>
+                        <Text style={Styles.text}> - Car rolls?                               {canRoll ? 'Yes' : 'No' }</Text>
+                        <Text style={Styles.text}> - Keys included?                     {keyIncluded ? 'Yes' : 'No' }</Text>
+                        <Text style={Styles.text}> - Vehicle is obstructed?         {isObstructed ? 'Yes' : 'No' }</Text>
+                    </View>
                     { notes ? (
-                        <>
-                        <Text style={Styles.subTitle}>Description</Text>
-                        <Text style={Styles.text}>{notes}</Text>
-                        </>
-                    ) : null }
-                </View>
-                <View style={ServiceStyles.buttonContainer}>
-                    <TouchableOpacity
-                        style={ServiceStyles.directionButton}
-                        onPress={() => setStep(4)}
-                    >
-                        <FontAwesome name='arrow-left' size={24} color='white' />
-                        <Text style={Styles.actionText}>Back</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={[ServiceStyles.directionButton, loading && { opacity: 0.5 }, {backgroundColor: Colors.primary}]}
-                        disabled={loading}
-                        onPress={async () => {
-                            if (loading) return;
-                            if (towRequest) {
-                                Alert.alert(
-                                    'Tow Request',
-                                    'You already have an active tow request',
-                                    [
-                                        {
-                                            text: 'OK',
-                                            onPress: () => router.replace('(tabs)')
-                                        }
-                                    ]
-                                )
-                                return;
-                            }
-                            setLoading(true);
-                            const data = {
-                                notes: notes,
-                                vehicleId: selectedVehicle.id,
-                                userId: userId
-                            };
-                            await handleSendAdminNotif('Towing Request', 'A customer is requesting a tow', data);
-                            await handleCreateTowRequest(client, userId, selectedVehicle.id, marker, { notes, canRun, canRoll, keyIncluded, isObstructed }, setTowRequest);
-                            setLoading(false);
-                        }}
-                    >
-                        <Text style={Styles.actionText}>Submit</Text>
-                    </TouchableOpacity>
+                        <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                            <Text style={Styles.subTitle}>Notes</Text>
+                            <Text style={Styles.text}>{notes}</Text>
+                        </View>
+                    ) : null}
+                    <View style={ServiceStyles.buttonContainer}>
+                        <TouchableOpacity
+                            style={ServiceStyles.directionButton}
+                            onPress={() => setStep(4)}
+                        >
+                            <FontAwesome name='arrow-left' size={24} color='white' />
+                            <Text style={Styles.actionText}>Back</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={[ServiceStyles.directionButton, loading && { opacity: 0.5 }, {backgroundColor: Colors.primary}]}
+                            disabled={loading}
+                            onPress={async () => {
+                                if (loading) return;
+                                if (towRequest) {
+                                    Alert.alert(
+                                        'Tow Request',
+                                        'You already have an active tow request',
+                                        [
+                                            {
+                                                text: 'OK',
+                                                onPress: () => router.replace('towStatus')
+                                            }
+                                        ]
+                                    )
+                                    return;
+                                }
+                                setLoading(true);
+                                const data = {
+                                    notes: notes,
+                                    vehicleId: selectedVehicle.id,
+                                    userId: userId
+                                };
+                                await handleSendAdminNotif('Towing Request', 'A customer is requesting a tow', data);
+                                await handleCreateTowRequest(client, userId, selectedVehicle.id, marker, { notes, canRun, canRoll, keyIncluded, isObstructed }, setTowRequest);
+                                setLoading(false);
+                            }}
+                        >
+                            <Text style={Styles.actionText}>Submit</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
                 </>
             ) : null }

@@ -1,6 +1,6 @@
-import { View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import { Styles, ServiceStyles } from '../../../constants/styles';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Background, formatDate, formatTime } from '../../../components/components';
 import { handleDeleteAppointment, handleGetMyAppointments } from '../../../components/scheduleComponents';
 import { useApp } from '../../../components/context';
@@ -30,15 +30,15 @@ const MyAppointments = () => {
                         <View key={index} style={ServiceStyles.fieldContainer}>
                             <View style={Styles.infoContainer}>
                                 <Text style={Styles.subTitle}>Date</Text>
-                                <Text style={Styles.text}>{formatDate(appointment.date)}</Text>
+                                <Text style={Styles.text}>{formatDate(appointment?.date)}</Text>
                                 <Text style={Styles.subTitle}>Time</Text>
-                                <Text style={Styles.text}>{formatTime(appointment.time)}</Text>
+                                <Text style={Styles.text}>{formatTime(appointment?.time)}</Text>
                                 <Text style={Styles.subTitle}>Vehicle</Text>
-                                <Text style={Styles.text}>{`${appointment.vehicle.year} ${appointment.vehicle.make} ${appointment.vehicle.model}`}</Text>
+                                <Text style={Styles.text}>{`${appointment?.vehicle?.year} ${appointment?.vehicle?.make} ${appointment?.vehicle?.model}`}</Text>
                                 <Text style={Styles.subTitle}>Service</Text>
-                                <Text style={Styles.text}>{appointment.service}</Text>
+                                <Text style={Styles.text}>{appointment?.service}</Text>
                                 <Text style={Styles.subTitle}>Description</Text>
-                                <Text style={Styles.text}>{appointment.notes}</Text>
+                                <Text style={Styles.text}>{appointment?.notes}</Text>
                             </View>
                             <TouchableOpacity
                                 style={Styles.actionButton}
@@ -63,7 +63,7 @@ const MyAppointments = () => {
                                                 text: 'Yes',
                                                 onPress: async () => {
                                                     try {
-                                                        await handleDeleteAppointment(client, appointment.id, userId, setAppointments);
+                                                        await handleDeleteAppointment(client, appointment?.id, userId, setAppointments);
                                                         await handleSendAdminNotif('Appointment Cancelled', 'A customer has cancelled their appointment');
                                                         navigate.reset({
                                                             index: 0,

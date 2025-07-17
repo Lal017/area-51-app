@@ -121,9 +121,6 @@ const AdminContent = () =>
         if (client && userId && identityId && access && pushToken) {
             setReady(true);
         }
-        else {
-            console.log('client', client, 'user', userId, 'identity', identityId, 'access', access, 'token', pushToken);
-        }
 
         if (client && userId && identityId && pushToken && access && firstName && lastName && email && phoneNumber) {
             handleRegisterPushNotifications();

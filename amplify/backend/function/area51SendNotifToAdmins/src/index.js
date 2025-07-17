@@ -16,36 +16,42 @@ const AWS_REGION = process.env.AWS_REGION || 'us-east-1';
 const { Sha256 } = crypto;
 
 const query = /* GraphQL */ `
-  query LIST_TOWREQUESTS($filter: ModelTowRequestFilterInput) {
-    listTowRequests(filter: $filter) {
+  query LIST_ADMINS {
+    listUsers( filter: { access: { eq: "Admins"}}) {
       items {
-        user {
-          firstName
-          lastName
-          phone
-          pushToken
-        }
-        vehicle {
-          year
-          make
-          model
-          color
-        }
-        status
-        latitude
-        longitude
-        waitTime
-        notes
-        canRun
-        canRoll
-        keyIncluded
-        isObstructed
-        createdAt
-        updatedAt
+        id
+        pushToken
       }
     }
   }
 `;
+
+// Expo notif functions
+const sendPushNotifications = async (expoPushToken, title, body, data) =>
+{
+  const message = {
+      to: expoPushToken,
+      sound: 'default',
+      title: title,
+      body: body,
+      data: data
+  };
+
+  try {
+    await fetch('https://exp.host/--/api/v2/push/send', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Accept-Encoding': 'gzip, deflate',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(message),
+    });
+    console.log('sent');
+  } catch (error) {
+    console.error('Error sending push notification:', error);
+  }
+};
 
 /**
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
@@ -70,17 +76,7 @@ const query = /* GraphQL */ `
       host: endpoint.host
     },
     hostname: endpoint.host,
-    body: JSON.stringify({
-      query,
-      variables: {
-        filter: {
-          and: [
-            { status: { ne: 'CANCELLED' }},
-            { status: { ne: 'COMPLETED'}}
-          ]
-        }
-      }
-    }),
+    body: JSON.stringify({ query }),
     path: endpoint.pathname
   });
 
@@ -96,8 +92,9 @@ const query = /* GraphQL */ `
     body = await response.json();
     if (body.errors) statusCode = 400;
     else {
-      const towRequests = body.data.listTowRequests.items;
-      body = towRequests;
+      const { title, content, data } = JSON.parse(event.body);
+      const pushTokens = body.data.listUsers.items.map((user) => user.pushToken);
+      await sendPushNotifications(pushTokens, title, content, data);
     }
   } catch (error) {
     statusCode = 500;

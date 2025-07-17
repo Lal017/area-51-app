@@ -110,10 +110,10 @@ export const onCreateVehicle = /* GraphQL */ `
       year
       make
       model
-      readyForPickup
       color
       plate
       vin
+      readyForPickup
       userId
       user {
         id
@@ -146,10 +146,10 @@ export const onUpdateVehicle = /* GraphQL */ `
       year
       make
       model
-      readyForPickup
       color
       plate
       vin
+      readyForPickup
       userId
       user {
         id
@@ -182,10 +182,10 @@ export const onDeleteVehicle = /* GraphQL */ `
       year
       make
       model
-      readyForPickup
       color
       plate
       vin
+      readyForPickup
       userId
       user {
         id
@@ -240,10 +240,10 @@ export const onCreateAppointment = /* GraphQL */ `
         year
         make
         model
-        readyForPickup
         color
         plate
         vin
+        readyForPickup
         userId
         createdAt
         updatedAt
@@ -289,10 +289,10 @@ export const onUpdateAppointment = /* GraphQL */ `
         year
         make
         model
-        readyForPickup
         color
         plate
         vin
+        readyForPickup
         userId
         createdAt
         updatedAt
@@ -338,10 +338,10 @@ export const onDeleteAppointment = /* GraphQL */ `
         year
         make
         model
-        readyForPickup
         color
         plate
         vin
+        readyForPickup
         userId
         createdAt
         updatedAt
@@ -383,10 +383,10 @@ export const onCreateTowRequest = /* GraphQL */ `
         year
         make
         model
-        readyForPickup
         color
         plate
         vin
+        readyForPickup
         userId
         createdAt
         updatedAt
@@ -396,13 +396,12 @@ export const onCreateTowRequest = /* GraphQL */ `
       status
       latitude
       longitude
-      price
-      waitTime
-      notes
       canRun
       canRoll
       keyIncluded
       isObstructed
+      waitTime
+      notes
       createdAt
       updatedAt
       owner
@@ -438,10 +437,10 @@ export const onUpdateTowRequest = /* GraphQL */ `
         year
         make
         model
-        readyForPickup
         color
         plate
         vin
+        readyForPickup
         userId
         createdAt
         updatedAt
@@ -451,13 +450,12 @@ export const onUpdateTowRequest = /* GraphQL */ `
       status
       latitude
       longitude
-      price
-      waitTime
-      notes
       canRun
       canRoll
       keyIncluded
       isObstructed
+      waitTime
+      notes
       createdAt
       updatedAt
       owner
@@ -493,10 +491,10 @@ export const onDeleteTowRequest = /* GraphQL */ `
         year
         make
         model
-        readyForPickup
         color
         plate
         vin
+        readyForPickup
         userId
         createdAt
         updatedAt
@@ -506,13 +504,12 @@ export const onDeleteTowRequest = /* GraphQL */ `
       status
       latitude
       longitude
-      price
-      waitTime
-      notes
       canRun
       canRoll
       keyIncluded
       isObstructed
+      waitTime
+      notes
       createdAt
       updatedAt
       owner
