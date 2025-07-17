@@ -15,35 +15,12 @@ const GRAPHQL_ENDPOINT = process.env.API_AREA51APP_GRAPHQLAPIENDPOINTOUTPUT;
 const AWS_REGION = process.env.AWS_REGION || 'us-east-1';
 const { Sha256 } = crypto;
 
-const query = /* GraphQL */ `
-  query LIST_TOWREQUESTS($filter: ModelTowRequestFilterInput) {
-    listTowRequests(filter: $filter) {
-      items {
-        id
-        user {
-          firstName
-          lastName
-          phone
-          pushToken
-        }
-        vehicle {
-          year
-          make
-          model
-          color
-        }
-        status
-        latitude
-        longitude
-        waitTime
-        notes
-        canRun
-        canRoll
-        keyIncluded
-        isObstructed
-        createdAt
-        updatedAt
-      }
+const mutation = /* GraphQL */ `
+  mutation UPDATE_TOWREQUEST($input: UpdateTowRequestInput!) {
+    updateTowRequest(input: $input) {
+      id
+      status
+      waitTime
     }
   }
 `;
@@ -54,6 +31,14 @@ const query = /* GraphQL */ `
 
  export const handler = async (event) => {
   console.log(`EVENT: ${JSON.stringify(event)}`);
+
+  const { id, status, waitTime } = JSON.parse(event.body);
+  const input = {
+    id: id,
+    status: status
+  };
+
+  if (waitTime !== undefined) { input.waitTime = waitTime; }
 
   const endpoint = new URL(GRAPHQL_ENDPOINT);
 
@@ -72,15 +57,8 @@ const query = /* GraphQL */ `
     },
     hostname: endpoint.host,
     body: JSON.stringify({
-      query,
-      variables: {
-        filter: {
-          and: [
-            { status: { ne: 'CANCELLED' }},
-            { status: { ne: 'COMPLETED'}}
-          ]
-        }
-      }
+      query: mutation,
+      variables: { input: input }
     }),
     path: endpoint.pathname
   });
@@ -96,10 +74,6 @@ const query = /* GraphQL */ `
     response = await fetch(request);
     body = await response.json();
     if (body.errors) statusCode = 400;
-    else {
-      const towRequests = body.data.listTowRequests.items;
-      body = towRequests;
-    }
   } catch (error) {
     statusCode = 500;
     body = {

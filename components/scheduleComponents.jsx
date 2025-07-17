@@ -13,7 +13,6 @@ const handleGetAppointments = async () =>
         const restOperation = post({
             apiName: 'area51RestApi',
             path: '/getAppointments',
-            authMode: 'AWS_IAM',
             options: {
                 body: {
                     date: today
@@ -162,8 +161,7 @@ const handleGetAllTowRequests = async () =>
     try {
         const restOperation = get({
             apiName: 'area51RestApi',
-            path: '/getTowRequests',
-            authMode: 'AWS_IAM'
+            path: '/getTowRequests'
         });
 
         const { body } = await restOperation.response;
@@ -244,6 +242,7 @@ const handleNotifUpdateTowRequest = async (client, userId, setTowRequest) =>
     }
 };
 
+// used by Customers to update their own tow request entry status
 const handleUpdateTowRequestStatus = async (client, towId, userId, status, setTowRequest) =>
 {
     try {
@@ -259,6 +258,31 @@ const handleUpdateTowRequestStatus = async (client, towId, userId, status, setTo
         
         const getRequest = await handleGetTowRequest(client, userId);
         setTowRequest(getRequest);
+    } catch (error) {
+        console.log('Error updating tow request:', error);
+    }
+};
+
+// used by TowDrivers to update a customers tow request entry status
+const handleUpdateCustomersTowRequestStatus = async (requestId, status, waitTime) =>
+{
+    try {
+        const restOperation = post({
+            apiName: 'area51RestApi',
+            path: '/updateTowStatus',
+            options: {
+                body: {
+                    id: requestId,
+                    status: status,
+                    waitTime: waitTime
+                }
+            }
+        });
+
+        const { body } = await restOperation.response;
+        const str = await body.json();
+
+        return str;
     } catch (error) {
         console.log('Error updating tow request:', error);
     }
@@ -335,5 +359,6 @@ export {
     handleGetTowRequest,
     handleNotifUpdateTowRequest,
     handleUpdateTowRequestStatus,
+    handleUpdateCustomersTowRequestStatus,
     handleDeleteAllTowRequests
 }

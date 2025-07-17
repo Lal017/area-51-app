@@ -1,13 +1,14 @@
 import { useLocalSearchParams } from "expo-router";
-import { TouchableOpacity, View, Text, TextInput, KeyboardAvoidingView } from 'react-native';
+import { TouchableOpacity, View, Text, TextInput, KeyboardAvoidingView, Alert } from 'react-native';
 import { Background, formatNumber } from "../../../components/components";
 import { TowStyles, ServiceStyles, Styles } from "../../../constants/styles";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import Colors from "../../../constants/colors";
 import { useEffect, useState } from "react";
-import { handleGetAddress } from "../../../components/adminComponents";
+import { handleGetAddress, sendPushNotification } from "../../../components/adminComponents";
 import { AntDesign, Entypo, FontAwesome5 } from "@expo/vector-icons";
 import { openURL } from "expo-linking";
+import { handleUpdateCustomersTowRequestStatus } from "../../../components/scheduleComponents";
 
 const TowResponse = () =>
 {
@@ -37,7 +38,7 @@ const TowResponse = () =>
         };
 
         fetchAddress();
-    })
+    });
 
     return (
         <KeyboardAvoidingView behavior="height" style={{flex: 1}}>
@@ -124,6 +125,23 @@ const TowResponse = () =>
                     <View style={TowStyles.dualButtonContainer}>
                         <TouchableOpacity
                             style={[TowStyles.button, {backgroundColor: Colors.primary}]}
+                            onPress={() => {Alert.alert(
+                                'Confirm',
+                                'Once you accept this request, the customer will be able to view your location. Are you sure you want to accept the request?',
+                                [
+                                    { text: 'No' },
+                                    {
+                                        text: 'Yes',
+                                        onPress: async () => {
+                                            const data = {
+                                                type: 'TOW_RESPONSE'
+                                            };
+                                            await sendPushNotification(request.pushToken, 'Tow Request', 'A driver is on the way!', data);
+                                            await handleUpdateCustomersTowRequestStatus(request.id, 'IN_PROGRESS', waitTime);
+                                        }
+                                    }
+                                ]
+                            )}}
                         >
                             <AntDesign name="check" size={25} color='white'/>
                             <Text style={Styles.actionText}>Accept</Text>

@@ -149,7 +149,6 @@ const handleSendAdminNotif = async (title, content, data) =>
         const restOperation = post({
             apiName: 'area51RestApi',
             path: '/sendNotifToAdmins',
-            authMode: 'AWS_IAM',
             options: {
                 body: {
                     title: title,
@@ -177,7 +176,6 @@ const handleSendDriversNotif = async (title, content, data) =>
         const restOperation = post({
             apiName: 'area51RestApi',
             path: '/sendNotifToDrivers',
-            authMode: 'AWS_IAM',
             options: {
                 body: {
                     title: title,

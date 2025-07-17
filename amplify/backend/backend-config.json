@@ -54,6 +54,14 @@
           ],
           "category": "auth",
           "resourceName": "userPoolGroups"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "area51UpdateTowStatus"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -216,6 +224,21 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "area51UpdateTowStatus": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ],
+          "category": "api",
+          "resourceName": "area51app"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "troplocksmithappPostConfirmation": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -289,6 +312,22 @@
         {
           "category": "function",
           "resourceName": "area51SendNotifToDrivers"
+        }
+      ]
+    },
+    "AMPLIFY_function_area51UpdateTowStatus_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "area51UpdateTowStatus"
+        }
+      ]
+    },
+    "AMPLIFY_function_area51UpdateTowStatus_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "area51UpdateTowStatus"
         }
       ]
     },

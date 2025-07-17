@@ -31,7 +31,7 @@
         },
         "area51GetTowRequests": {
           "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
-          "s3Key": "amplify-builds/area51GetTowRequests-574a484b564b6f586761-build.zip"
+          "s3Key": "amplify-builds/area51GetTowRequests-50435a542b674b533748-build.zip"
         },
         "area51SendNotifToAdmins": {
           "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
@@ -40,6 +40,10 @@
         "area51SendNotifToDrivers": {
           "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
           "s3Key": "amplify-builds/area51SendNotifToDrivers-532f624979434e445370-build.zip"
+        },
+        "area51UpdateTowStatus": {
+          "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
+          "s3Key": "amplify-builds/area51UpdateTowStatus-2f577152655135497542-build.zip"
         }
       },
       "auth": {

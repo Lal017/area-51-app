@@ -48,6 +48,18 @@
         },
         "setting": "private"
       }
+    },
+    "/updateTowStatus": {
+      "name": "/updateTowStatus",
+      "lambdaFunction": "area51UpdateTowStatus",
+      "permissions": {
+        "groups": {
+          "TowDrivers": [
+            "create"
+          ]
+        },
+        "setting": "private"
+      }
     }
   }
 }
