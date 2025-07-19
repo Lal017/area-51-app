@@ -104,56 +104,62 @@ const TowResponse = () =>
                             <Text style={Styles.text}>{request?.notes}</Text>
                         </View>
                     ) : null }
-                    <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                        <Text style={Styles.subTitle}>Wait Time</Text>
-                        <Text style={Styles.text}>Set an estimated wait time for the customer (in minutes)</Text>
-                        <View style={{flexDirection: 'row', columnGap: 10, paddingTop: 10, alignItems: 'center'}}>
-                            <View style={TowStyles.inputWrapper}>
-                                <AntDesign name="clockcircle" size={25} color='white' style={Styles.icon}/>
-                                <TextInput
-                                    placeholder='wait time'
-                                    placeholderTextColor={Colors.text}
-                                    value={waitTime}
-                                    onChangeText={setWaitTime}
-                                    keyboardType='number-pad'
-                                    style={TowStyles.input}
-                                />
+                    { request.status === 'REQUESTED' ? (
+                        <>
+                            <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                                <Text style={Styles.subTitle}>Wait Time</Text>
+                                <Text style={Styles.text}>Set an estimated wait time for the customer (in minutes)</Text>
+                                <View style={{flexDirection: 'row', columnGap: 10, paddingTop: 10, alignItems: 'center'}}>
+                                    <View style={TowStyles.inputWrapper}>
+                                        <AntDesign name="clockcircle" size={25} color='white' style={Styles.icon}/>
+                                        <TextInput
+                                            placeholder='wait time'
+                                            placeholderTextColor={Colors.text}
+                                            value={waitTime}
+                                            onChangeText={setWaitTime}
+                                            keyboardType='number-pad'
+                                            style={TowStyles.input}
+                                        />
+                                    </View>
+                                    <Text style={Styles.text}>minutes</Text>
+                                </View>
                             </View>
-                            <Text style={Styles.text}>minutes</Text>
-                        </View>
-                    </View>
-                    <View style={TowStyles.dualButtonContainer}>
-                        <TouchableOpacity
-                            style={[TowStyles.button, {backgroundColor: Colors.primary}]}
-                            onPress={() => {Alert.alert(
-                                'Confirm',
-                                'Once you accept this request, the customer will be able to view your location. Are you sure you want to accept the request?',
-                                [
-                                    { text: 'No' },
-                                    {
-                                        text: 'Yes',
-                                        onPress: async () => {
-                                            const data = {
-                                                type: 'TOW_RESPONSE'
-                                            };
-                                            await sendPushNotification(request.pushToken, 'Tow Request', 'A driver is on the way!', data);
-                                            await handleUpdateCustomersTowRequestStatus(request.id, 'IN_PROGRESS', waitTime);
-                                        }
-                                    }
-                                ]
-                            )}}
-                        >
-                            <AntDesign name="check" size={25} color='white'/>
-                            <Text style={Styles.actionText}>Accept</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={[TowStyles.button, {backgroundColor: Colors.secondary}]}
-                            onPress={() => openCallCustomer(request?.user?.phone)}
-                        >
-                            <Entypo name="phone" size={25} color='white'/>
-                            <Text style={Styles.actionText}>Call Customer</Text>
-                        </TouchableOpacity>
-                    </View>
+                            <View style={TowStyles.dualButtonContainer}>
+                                <TouchableOpacity
+                                    style={[TowStyles.button, {backgroundColor: Colors.primary}]}
+                                    onPress={() => {Alert.alert(
+                                        'Confirm',
+                                        'Once you accept this request, the customer will be able to view your location. Are you sure you want to accept the request?',
+                                        [
+                                            { text: 'No' },
+                                            {
+                                                text: 'Yes',
+                                                onPress: async () => {
+                                                    const data = {
+                                                        type: 'TOW_RESPONSE'
+                                                    };
+                                                    await sendPushNotification(request.pushToken, 'Tow Request', 'A driver is on the way!', data);
+                                                    await handleUpdateCustomersTowRequestStatus(request.id, 'IN_PROGRESS', waitTime);
+                                                }
+                                            }
+                                        ]
+                                    )}}
+                                >
+                                    <AntDesign name="check" size={25} color='white'/>
+                                    <Text style={Styles.actionText}>Accept</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={[TowStyles.button, {backgroundColor: Colors.secondary}]}
+                                    onPress={() => openCallCustomer(request?.user?.phone)}
+                                >
+                                    <Entypo name="phone" size={25} color='white'/>
+                                    <Text style={Styles.actionText}>Call Customer</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </>
+                    ) : request.status === 'IN_PROGRESS' ? (
+                        <View></View>
+                    ) : null }
                 </View>
             </Background>
         </KeyboardAvoidingView>

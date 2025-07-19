@@ -8,5 +8,5 @@ ToDo:
     - Re-organize components. (re-name notifComponenets to databaseComponenets, etc.)
     - move initialize app functions to components file
     - get user attributes and only updateUser in database if something has changed.
-    - allow admin to add users to TowDrivers group
+    - allow admin to add users to TowDrivers group and assign driverId field.
     - update notification listeners for Admins and TowDrivers
