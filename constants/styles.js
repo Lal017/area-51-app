@@ -243,6 +243,14 @@ const AuthStyles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    checkBox: {
+        width: 30,
+        height: 30,
+        backgroundColor: Colors.backDropAccent,
+        borderRadius: 5,
+        justifyContent: 'center',
+        alignItems: 'center'
+    }
 });
 
 const HomeStyles = StyleSheet.create({

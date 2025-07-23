@@ -39,6 +39,21 @@
           ],
           "category": "function",
           "resourceName": "area51SendNotifToAdmins"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "area51AddUserToTowDriversGroup"
+        },
+        {
+          "attributes": [
+            "AdminsGroupRole"
+          ],
+          "category": "auth",
+          "resourceName": "userPoolGroups"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -141,6 +156,20 @@
     }
   },
   "function": {
+    "area51AddUserToTowDriversGroup": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "troplocksmithapp"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "area51GetAppointments": {
       "build": true,
       "dependsOn": [
@@ -198,6 +227,22 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_area51AddUserToTowDriversGroup_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "area51AddUserToTowDriversGroup"
+        }
+      ]
+    },
+    "AMPLIFY_function_area51AddUserToTowDriversGroup_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "area51AddUserToTowDriversGroup"
+        }
+      ]
+    },
     "AMPLIFY_function_area51GetAppointments_deploymentBucketName": {
       "usedBy": [
         {

@@ -36,6 +36,18 @@
         },
         "setting": "private"
       }
+    },
+    "/addUserToTowDriversGroup": {
+      "name": "/addUserToTowDriversGroup",
+      "lambdaFunction": "area51AddUserToTowDriversGroup",
+      "permissions": {
+        "groups": {
+          "Admins": [
+            "create"
+          ]
+        },
+        "setting": "private"
+      }
     }
   }
 }

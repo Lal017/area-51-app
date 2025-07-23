@@ -1,11 +1,11 @@
-import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Image, Alert } from "react-native";
-import { useState } from "react";
-import { handleSignUp, GoogleSignInButton, AmazonSignInButton } from "../../components/authComponents";
-import { Link } from "expo-router";
-import { AuthStyles, Styles } from "../../constants/styles";
-import { Ionicons } from "@expo/vector-icons";
 import Colors from "../../constants/colors";
 import { AuthBackground } from "../../components/components";
+import { handleSignUp, GoogleSignInButton, AmazonSignInButton } from "../../components/authComponents";
+import { AuthStyles, Styles } from "../../constants/styles";
+import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Image, Alert } from "react-native";
+import { useState } from "react";
+import { Link } from "expo-router";
+import { Entypo, Ionicons } from "@expo/vector-icons";
 
 const SignUp = () =>
 {
@@ -15,6 +15,7 @@ const SignUp = () =>
     const [firstName, setFirstName] = useState();
     const [lastName, setLastName] = useState();
     const [phoneNumber, setPhoneNumber] = useState();
+    const [check, setCheck] = useState(false);
     const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(false);
 
@@ -69,25 +70,48 @@ const SignUp = () =>
                                 style={Styles.input}
                             />
                         </View>
+                        <View style={{width: '90%', flexDirection: 'row', columnGap: 10, alignItems: 'center', justifyContent: 'center'}}>
+                            <TouchableOpacity
+                                style={AuthStyles.checkBox}
+                                onPress={() => setCheck(prev => !prev)}
+                            >
+                                { check ? <Entypo name='check' size={25}/> : null}
+                            </TouchableOpacity>
+                            <Text style={Styles.text}>Tow truck driver account?</Text>
+                        </View>
                         <TouchableOpacity
                             onPress={() => {
-                                if (password !== confPassword)
-                                {
+                                if (password !== confPassword) {
                                     Alert.alert(
                                         "Error",
                                         "Passwords do not match",
-                                        [
-                                            { text: "Ok" }
-                                        ]
+                                        [{ text: 'OK' }]
                                     );
                                     return;
                                 }
-                                if (email && password && confPassword) { setStep(2) }
-                                else { Alert.alert(
-                                    'Error',
-                                    'Required fields cannot be empty',
-                                    [{ text: 'OK' }]
-                                )}
+                                if (email && password && confPassword && !check) {
+                                    setStep(2);
+                                }
+                                else if (email && password && confPassword && check) {
+                                    Alert.alert(
+                                        'Notice',
+                                        'You are signing up for a tow driver account. If this was a mistake please go back and uncheck the box. Otherwise, hit continue.',
+                                        [
+                                            { text: 'Back'},
+                                            {
+                                                text: 'Continue',
+                                                onPress: () => setStep(2)
+                                            }
+                                        ]
+                                    );
+                                }
+                                else {
+                                    Alert.alert(
+                                        'Error',
+                                        'Required fields cannot be empty',
+                                        [{ text: 'OK' }]
+                                    )
+                                }
                             }}
                             style={Styles.actionButton}
                         >

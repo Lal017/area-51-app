@@ -29,6 +29,13 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "function": {
+    "area51AddUserToTowDriversGroup": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
     "area51GetAppointments": {
       "Arn": "string",
       "LambdaExecutionRole": "string",

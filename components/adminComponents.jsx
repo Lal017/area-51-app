@@ -3,6 +3,35 @@ import { reverseGeocodeAsync } from 'expo-location';
 import { uploadData, list, getUrl, remove } from 'aws-amplify/storage';
 import { router } from 'expo-router';
 import { Alert } from 'react-native';
+import { post } from 'aws-amplify/api';
+
+// --------------------------------------------------------
+//              ADD USER TO TOWDRIVERS GROUP
+// --------------------------------------------------------
+
+// used to invoke lambda to add user to TowDrivers group
+const handleMakeUserTowDriver = async (username) =>
+{
+    try {
+        const restOperation = post({
+            apiName: 'area51RestApi',
+            path: '/addUserToTowDriversGroup',
+            options: {
+                body: {
+                    username: username
+                }
+            }
+        });
+
+        const { body } = await restOperation.response;
+        const str = await body.json();
+
+        return str;
+    } catch (error) {
+        console.error('ERROR, could not make user a tow driver:', error);
+    }
+};
+
 
 // --------------------------------------------
 //              HOME PAGE IMAGES
@@ -242,6 +271,7 @@ const extractPath = (url) => {
 };
 
 export {
+    handleMakeUserTowDriver,
     handleListHomeImages,
     handleGetURLs,
     handleUploadHomeImage,

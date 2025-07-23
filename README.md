@@ -4,7 +4,7 @@ ToDo:
     - Try to make styling for admin pages better
     - allow admin to add users to TowDrivers group and assign driverId field.
     - update notification listeners for Admins and TowDrivers
-    - add an option to allow users to sign up to become a tow driver
+ -> - figure out how to set driverId to 1 when a user signs up for a towDriver account
     - add a waiting page for when a user signs up to be a tow driver
     - fix handleResetPassword error message codes
 
