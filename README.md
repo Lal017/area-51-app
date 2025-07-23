@@ -2,10 +2,10 @@ ToDo:
     - Add appointments to google calendar and make visual calendar for app to display appointments
     - Try to make styling for tow request look better and maybe also for scheduling
     - Try to make styling for admin pages better
-    - allow admin to add users to TowDrivers group and assign driverId field.
+    - assign driverId field after becoming a towdriver
     - update notification listeners for Admins and TowDrivers
- -> - figure out how to set driverId to 1 when a user signs up for a towDriver account
     - add a waiting page for when a user signs up to be a tow driver
+    - allow users to request to become a towdriver while inside of the app
     - fix handleResetPassword error message codes
 
 PotentialChanges:

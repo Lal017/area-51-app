@@ -20,23 +20,26 @@ const handleGetUser = async (client, userId) =>
 };
 
 // used to create database entry for user data model
-const handleCreateUser = async (client, user_id, identityId, token, access, firstName, lastName, email, phoneNumber) =>
+const handleCreateUser = async (client, user_id, identityId, token, access, firstName, lastName, email, phoneNumber, towDriverRequest) =>
 {
     try {
+        const input = {
+            id: user_id,
+            identityId: identityId,
+            pushToken: token,
+            access: access,
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            phone: phoneNumber
+        };
+
+        // set driverId to 1 to show the admin that they are requesting to become a towDriver.
+        if (towDriverRequest) { input.driverId = 1 }
+
         await client.graphql({
             query: createUser,
-            variables: {
-                input: {
-                    id: user_id,
-                    identityId: identityId,
-                    pushToken: token,
-                    access: access,
-                    firstName: firstName,
-                    lastName: lastName,
-                    email: email,
-                    phone: phoneNumber
-                }
-            }
+            variables: { input }
         });
     } catch (error) {
         console.error('ERROR, could not create user database entry:', error);
@@ -44,23 +47,25 @@ const handleCreateUser = async (client, user_id, identityId, token, access, firs
 };
 
 // used to update database entry for user data model
-const handleUpdateUser = async (client, userId, identityId, pushToken, access, firstName, lastName, email, phone_number) =>
+const handleUpdateUser = async (client, userId, identityId, pushToken, access, firstName, lastName, email, phone_number, towDriverRequest) =>
 {
     try {
+        const input = {
+            id: userId,
+            identityId: identityId,
+            pushToken: pushToken,
+            access: access,
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            phone: phone_number
+        };
+
+        if (towDriverRequest !== undefined) { input.driverId = 1 }
+
         await client.graphql({
             query: updateUser,
-            variables: {
-                input: {
-                    id: userId,
-                    identityId: identityId,
-                    pushToken: pushToken,
-                    access: access,
-                    firstName: firstName,
-                    lastName: lastName,
-                    email: email,
-                    phone: phone_number
-                }
-            }
+            variables: { input }
         });
     } catch (error) {
         console.error('ERROR, could not update user database entry:', error);

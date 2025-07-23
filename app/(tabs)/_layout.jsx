@@ -6,7 +6,7 @@ import { handleGetMyAppointments } from "../../components/appointmentComponents"
 import { handleGetTowRequest, handleNotifUpdateTowRequest } from '../../components/towComponents';
 import { Loading } from "../../components/components";
 import { handleGetVehicles, handleNotifUpdateVehicle } from "../../components/vehicleComponents";
-import { registerForPushNotifications } from "../../components/notifComponents";
+import { handleSendAdminNotif, registerForPushNotifications } from "../../components/notifComponents";
 import { handleCreateUser, handleUpdateUser, handleGetUser } from '../../components/userComponents';
 import { handleGetCurrentUser } from "../../components/authComponents";
 import { Styles } from "../../constants/styles";
@@ -57,6 +57,8 @@ const TabsContent = () =>
 
     // load components when finished fetching data
     const [ ready, setReady ] = useState(false);
+    // if user is requesting to be a tow driver
+    const [ towDriverRequest, setTowDriverRequest ] = useState();
 
     // notification listeners
     const notificationListener = useRef();
@@ -119,7 +121,7 @@ const TabsContent = () =>
                     setCustomNotification(lastNotificationResponse.notification.request.content);
                 }
             }
-
+            
             // get local storage data
             const savedInvoice = await AsyncStorage.getItem('invoice');
             setNewInvoice(JSON.parse(savedInvoice));
@@ -132,7 +134,7 @@ const TabsContent = () =>
             if (!userAtt?.phone_number || ((!userAtt?.given_name || !userAtt?.family_name) && !userAtt?.name)) {
                 setIsMissingAttr(true);
             }
-        }
+        };
 
         initializeApp();
     }, []);
@@ -172,9 +174,17 @@ const TabsContent = () =>
             try {
                 // check if user already has entry in database
                 const user = await handleGetUser(client, userId);
-
+                
+                // check if user request to be a tow driver
+                const getTowDriverRequest = await AsyncStorage.getItem('wantsToBeTowDriver');
+                const check = JSON.parse(getTowDriverRequest);
+                console.log(check, getTowDriverRequest);
+                if (check) {
+                    await AsyncStorage.removeItem('wantsToBeTowDriver');
+                    await handleSendAdminNotif('Tow Driver Account Request', 'A user is requesting to become a tow driver');
+                }
                 if (!user) {
-                    await handleCreateUser(client, userId, identityId, pushToken, access, firstName, lastName, email, phoneNumber);
+                    await handleCreateUser(client, userId, identityId, pushToken, access, firstName, lastName, email, phoneNumber, check);
                 } else {
                     // check if anything has changed
                     const isSame =

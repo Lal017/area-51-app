@@ -24,6 +24,7 @@ export const getUser = /* GraphQL */ `
         nextToken
         __typename
       }
+      driverId
       createdAt
       updatedAt
       owner
@@ -57,6 +58,7 @@ export const listUsers = /* GraphQL */ `
             vin
           }
         }
+        driverId
         createdAt
         updatedAt
         owner
@@ -88,6 +90,7 @@ export const getVehicle = /* GraphQL */ `
         email
         phone
         pushToken
+        driverId
         createdAt
         updatedAt
         owner
@@ -187,6 +190,7 @@ export const getAppointment = /* GraphQL */ `
         email
         phone
         pushToken
+        driverId
         createdAt
         updatedAt
         owner
@@ -304,6 +308,7 @@ export const getTowRequest = /* GraphQL */ `
         email
         phone
         pushToken
+        driverId
         createdAt
         updatedAt
         owner
@@ -332,8 +337,13 @@ export const getTowRequest = /* GraphQL */ `
       canRoll
       keyIncluded
       isObstructed
-      waitTime
       notes
+      waitTime
+      driverId
+      driverFirstName
+      driverPhoneNumber
+      driverLatitude
+      driverLongitude
       createdAt
       updatedAt
       owner
@@ -375,8 +385,13 @@ export const listTowRequests = /* GraphQL */ `
         canRoll
         keyIncluded
         isObstructed
-        waitTime
         notes
+        waitTime
+        driverId
+        driverFirstName
+        driverPhoneNumber
+        driverLatitude
+        driverLongitude
         createdAt
         updatedAt
         owner
@@ -413,8 +428,13 @@ export const towRequestsByUserId = /* GraphQL */ `
         canRoll
         keyIncluded
         isObstructed
-        waitTime
         notes
+        waitTime
+        driverId
+        driverFirstName
+        driverPhoneNumber
+        driverLatitude
+        driverLongitude
         createdAt
         updatedAt
         owner

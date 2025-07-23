@@ -6,6 +6,7 @@ import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Image, A
 import { useState } from "react";
 import { Link } from "expo-router";
 import { Entypo, Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SignUp = () =>
 {
@@ -77,7 +78,7 @@ const SignUp = () =>
                             >
                                 { check ? <Entypo name='check' size={25}/> : null}
                             </TouchableOpacity>
-                            <Text style={Styles.text}>Tow truck driver account?</Text>
+                            <Text style={Styles.text}>Request a tow truck driver account?</Text>
                         </View>
                         <TouchableOpacity
                             onPress={() => {
@@ -95,7 +96,7 @@ const SignUp = () =>
                                 else if (email && password && confPassword && check) {
                                     Alert.alert(
                                         'Notice',
-                                        'You are signing up for a tow driver account. If this was a mistake please go back and uncheck the box. Otherwise, hit continue.',
+                                        'You are signing up for a tow truck driver account. If this was a mistake please go back and uncheck the box. Otherwise, hit continue.',
                                         [
                                             { text: 'Back'},
                                             {
@@ -157,7 +158,12 @@ const SignUp = () =>
                             onPress={async () => {
                                 if (loading) return;
                                 setLoading(true);
-                                await handleSignUp(firstName, lastName, email, password, phoneNumber);
+                                try {
+                                    await handleSignUp(firstName, lastName, email, password, phoneNumber);
+                                    await AsyncStorage.setItem('wantsToBeTowDriver', JSON.stringify(check));
+                                } catch (error) {
+                                    console.error('ERROR, could not sign up:', error);
+                                }
                                 setLoading(false);
                             }}
                             style={[Styles.actionButton, loading && { opacity: 0.5 }]}

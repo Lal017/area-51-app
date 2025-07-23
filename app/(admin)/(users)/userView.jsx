@@ -6,11 +6,14 @@ import { View, Text, Alert, TextInput, TouchableOpacity, KeyboardAvoidingView } 
 import { router, useLocalSearchParams } from 'expo-router';
 import { AntDesign, FontAwesome6, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useState } from 'react';
+import { handleMakeUserTowDriver } from '../../../components/adminComponents';
+import { useNavigation } from '@react-navigation/native';
 
 const UserView = () =>
 {
     const { userParam } = useLocalSearchParams();
     const customer = JSON.parse(userParam);
+    const navigate = useNavigation();
 
     const [ title, setTitle ] = useState();
     const [ body, setBody ] = useState();
@@ -20,69 +23,76 @@ const UserView = () =>
         <KeyboardAvoidingView behavior='height' style={{flex: 1}}>
             <Background>
                 <View style={Styles.block}>
-                    <View style={Styles.infoContainer}>
-                        <Text style={[Styles.title, {textAlign: 'left'}]}>Customer</Text>
+                    <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                        <Text style={Styles.subTitle}>Customer</Text>
+                        <Text style={Styles.text}>{customer?.firstName} {customer?.lastName} | {formatNumber(customer?.phone)} | {customer?.email}</Text>
+                    </View>
+                    <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                        <Text style={Styles.subTitle}>Account details</Text>
                         <View style={AdminStyles.labelContainer}>
-                            <Text style={Styles.subTitle}>Name</Text>
-                            <Text style={Styles.text}>{customer.firstName} {customer.lastName}</Text>
-                        </View>
-                        <View style={AdminStyles.labelContainer}>
-                            <Text style={Styles.subTitle}>Email</Text>
-                            <Text style={Styles.text}>{customer.email}</Text>
-                        </View>
-                        <View style={AdminStyles.labelContainer}>
-                            <Text style={Styles.subTitle}>Phone Number</Text>
-                            <Text style={Styles.text}>{formatNumber(customer.phone)}</Text>
-                        </View>
-                        <View style={AdminStyles.labelContainer}>
-                            <Text style={Styles.subTitle}>Created on</Text>
+                            <Text style={Styles.text}>Created on:</Text>
                             <Text style={Styles.text}>{formatDate(customer.createdAt)}</Text>
                         </View>
+                        <View style={AdminStyles.labelContainer}>
+                            <Text style={Styles.text}>Group:</Text>
+                            <Text style={Styles.text}>{customer?.access}</Text>
+                        </View>
                     </View>
+                    { customer?.driverId === '1' ? (
+                        <>
+                            <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                                <Text style={Styles.subTitle}>NOTICE</Text>
+                                <Text style={Styles.text}>The user is requesting to become a tow truck driver. Would you like to make them into a driver?</Text>
+                            </View>
+                            <TouchableOpacity
+                                style={[Styles.actionButton, {backgroundColor: Colors.primary, alignSelf: 'center'}]}
+                                onPress={() => {
+                                    Alert.alert(
+                                        'Confirmation',
+                                        `Are you sure you want to make ${customer?.firstName} ${customer?.lastName} a tow truck driver?`,
+                                        [
+                                            { text: 'No'},
+                                            {
+                                                text: 'Yes',
+                                                onPress: async () => {
+                                                    try {
+                                                        await handleMakeUserTowDriver(customer?.email);
+                                                        Alert.alert(
+                                                            'Driver Created',
+                                                            'The user has been converted into a tow truck driver',
+                                                            [{ text: 'OK' }]
+                                                        );
+                                                        await sendPushNotification(customer.pushToken, 'Driver Account Request', 'Your account is ready!');
+                                                        navigate.reset({
+                                                            index: 0,
+                                                            routes: [{ name: '(admin)'}]
+                                                        });
+                                                    } catch (error) {
+                                                        console.error('ERROR, could not convert user to a tow truck driver:', error);
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    );
+                                }}
+                            >
+                                <Text style={Styles.actionText}>Convert</Text>
+                            </TouchableOpacity>
+                        </>
+                    ) : null}
                 </View>
-                <View style={Styles.block}>
-                    { customer?.vehicles?.items?.length > 0 ? (<Text style={[Styles.title, {paddingLeft: 20}]}>Vehicles</Text>)
-                        : (<Text style={[Styles.title, {paddingLeft: 20}]}>Customer has no vehicles</Text>)}
+                <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                    { customer?.vehicles?.items?.length > 0 ? (<Text style={Styles.subTitle}>Vehicles</Text>)
+                        : customer?.access === 'Customers' && customer?.vehicle?.items?.lenth === 0 ? (<Text style={[Styles.subTitle, {alignSelf: 'center'}]}>Customer has no vehicles</Text>) : null}
                     { customer?.vehicles?.items?.map((vehicle, index) => (
-                        <View style={AdminStyles.vehicleContainer} key={index}>
-                            <View style={AdminStyles.labelContainer}>
-                                <Text style={Styles.text}>Vehicle {index + 1}</Text>
-                            </View>
-                            <View style={AdminStyles.labelContainer}>
-                                <Text style={Styles.subTitle}>Year</Text>
-                                <Text style={Styles.text}>{vehicle.year}</Text>
-                            </View>
-                            <View style={AdminStyles.labelContainer}>
-                                <Text style={Styles.subTitle}>Make</Text>
-                                <Text style={Styles.text}>{vehicle.make}</Text>
-                            </View>
-                            <View style={AdminStyles.labelContainer}>
-                                <Text style={Styles.subTitle}>Model</Text>
-                                <Text style={Styles.text}>{vehicle.model}</Text>
-                            </View>
-                            { vehicle.color ? (
-                            <View style={AdminStyles.labelContainer}>
-                                <Text style={Styles.subTitle}>Color</Text>
-                                <Text style={Styles.text}>{vehicle.color}</Text>
-                            </View>
-                            ) : null }
-                            { vehicle.plate ? (
-                            <View style={AdminStyles.labelContainer}>
-                                <Text style={Styles.subTitle}>Plate</Text>
-                                <Text style={Styles.text}>{vehicle.plate}</Text>
-                            </View>
-                            ) : null }
-                            { vehicle.vin ? (
-                            <View style={AdminStyles.labelContainer}>
-                                <Text style={Styles.subTitle}>VIN</Text>
-                                <Text style={Styles.text}>{vehicle.vin}</Text>
-                            </View>
-                            ) : null }
+                        <View key={index}>
+                            <Text style={Styles.text}>{vehicle?.year} {vehicle?.make} {vehicle?.model} ({vehicle?.color})</Text>
+                            { vehicle?.plate || vehicle?.vin ? <Text style={Styles.text}>{vehicle?.plate}{vehicle?.plate && vehicle?.vin ? ' | ' : null}{vehicle?.vin}</Text> : null }
                         </View>
                     ))}
                 </View>
                 <View style={Styles.block}>
-                    <View style={Styles.infoContainer}>
+                    <View style={[Styles.infoContainer, {rowGap: 0}]}>
                         <Text style={Styles.title}>Invoice Upload</Text>
                         <Text style={Styles.text}>Upload an invoice to this customers account</Text>
                     </View>
@@ -104,9 +114,7 @@ const UserView = () =>
                         leftIcon={<FontAwesome6 name='file-invoice-dollar' size={30} style={Styles.icon} />}
                         rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon} />}
                     />
-                </View>
-                <View style={Styles.block}>
-                    <View style={Styles.infoContainer}>
+                    <View style={[Styles.infoContainer, {rowGap: 0}]}>
                         <Text style={Styles.title}>Estimate Upload</Text>
                         <Text style={Styles.text}>Upload an estimate to this customers account</Text>
                     </View>
@@ -128,9 +136,7 @@ const UserView = () =>
                         leftIcon={<FontAwesome6 name='file-circle-question' size={30} style={Styles.icon} />}
                         rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon} />}
                     />
-                </View>
-                <View style={[Styles.block, {alignItems: 'center'}]}>
-                    <View style={Styles.infoContainer}>
+                    <View style={[Styles.infoContainer, {rowGap: 0}]}>
                         <Text style={Styles.title}>Send Notification</Text>
                         <Text style={Styles.text}>Send a push notification to {customer.firstName}</Text>
                     </View>
@@ -185,7 +191,7 @@ const UserView = () =>
                             )
                             setLoading(false);
                         }}
-                        style={[Styles.actionButton, loading && {opacity: 0.5}]}
+                        style={[Styles.actionButton, {alignSelf: 'center'}, loading && {opacity: 0.5}]}
                         disabled={loading}
                     >
                         <Text style={Styles.actionText}>Send</Text>

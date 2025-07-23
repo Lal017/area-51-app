@@ -27,6 +27,7 @@ export const onCreateUser = /* GraphQL */ `
         nextToken
         __typename
       }
+      driverId
       createdAt
       updatedAt
       owner
@@ -60,6 +61,7 @@ export const onUpdateUser = /* GraphQL */ `
         nextToken
         __typename
       }
+      driverId
       createdAt
       updatedAt
       owner
@@ -93,6 +95,7 @@ export const onDeleteUser = /* GraphQL */ `
         nextToken
         __typename
       }
+      driverId
       createdAt
       updatedAt
       owner
@@ -124,6 +127,7 @@ export const onCreateVehicle = /* GraphQL */ `
         email
         phone
         pushToken
+        driverId
         createdAt
         updatedAt
         owner
@@ -160,6 +164,7 @@ export const onUpdateVehicle = /* GraphQL */ `
         email
         phone
         pushToken
+        driverId
         createdAt
         updatedAt
         owner
@@ -196,6 +201,7 @@ export const onDeleteVehicle = /* GraphQL */ `
         email
         phone
         pushToken
+        driverId
         createdAt
         updatedAt
         owner
@@ -229,6 +235,7 @@ export const onCreateAppointment = /* GraphQL */ `
         email
         phone
         pushToken
+        driverId
         createdAt
         updatedAt
         owner
@@ -278,6 +285,7 @@ export const onUpdateAppointment = /* GraphQL */ `
         email
         phone
         pushToken
+        driverId
         createdAt
         updatedAt
         owner
@@ -327,6 +335,7 @@ export const onDeleteAppointment = /* GraphQL */ `
         email
         phone
         pushToken
+        driverId
         createdAt
         updatedAt
         owner
@@ -372,6 +381,7 @@ export const onCreateTowRequest = /* GraphQL */ `
         email
         phone
         pushToken
+        driverId
         createdAt
         updatedAt
         owner
@@ -400,8 +410,13 @@ export const onCreateTowRequest = /* GraphQL */ `
       canRoll
       keyIncluded
       isObstructed
-      waitTime
       notes
+      waitTime
+      driverId
+      driverFirstName
+      driverPhoneNumber
+      driverLatitude
+      driverLongitude
       createdAt
       updatedAt
       owner
@@ -426,6 +441,7 @@ export const onUpdateTowRequest = /* GraphQL */ `
         email
         phone
         pushToken
+        driverId
         createdAt
         updatedAt
         owner
@@ -454,8 +470,13 @@ export const onUpdateTowRequest = /* GraphQL */ `
       canRoll
       keyIncluded
       isObstructed
-      waitTime
       notes
+      waitTime
+      driverId
+      driverFirstName
+      driverPhoneNumber
+      driverLatitude
+      driverLongitude
       createdAt
       updatedAt
       owner
@@ -480,6 +501,7 @@ export const onDeleteTowRequest = /* GraphQL */ `
         email
         phone
         pushToken
+        driverId
         createdAt
         updatedAt
         owner
@@ -508,8 +530,13 @@ export const onDeleteTowRequest = /* GraphQL */ `
       canRoll
       keyIncluded
       isObstructed
-      waitTime
       notes
+      waitTime
+      driverId
+      driverFirstName
+      driverPhoneNumber
+      driverLatitude
+      driverLongitude
       createdAt
       updatedAt
       owner

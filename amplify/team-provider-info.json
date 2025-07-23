@@ -39,7 +39,7 @@
         },
         "area51AddUserToTowDriversGroup": {
           "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
-          "s3Key": "amplify-builds/area51AddUserToTowDriversGroup-66464238566f34555976-build.zip"
+          "s3Key": "amplify-builds/area51AddUserToTowDriversGroup-6a444f616c2b4a504d44-build.zip"
         }
       },
       "auth": {

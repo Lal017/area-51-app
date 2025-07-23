@@ -27,6 +27,7 @@ export const createUser = /* GraphQL */ `
         nextToken
         __typename
       }
+      driverId
       createdAt
       updatedAt
       owner
@@ -60,6 +61,7 @@ export const updateUser = /* GraphQL */ `
         nextToken
         __typename
       }
+      driverId
       createdAt
       updatedAt
       owner
@@ -93,6 +95,7 @@ export const deleteUser = /* GraphQL */ `
         nextToken
         __typename
       }
+      driverId
       createdAt
       updatedAt
       owner
@@ -242,8 +245,13 @@ export const createTowRequest = /* GraphQL */ `
       canRoll
       keyIncluded
       isObstructed
-      waitTime
       notes
+      waitTime
+      driverId
+      driverFirstName
+      driverPhoneNumber
+      driverLatitude
+      driverLongitude
       createdAt
       updatedAt
       owner
@@ -267,8 +275,13 @@ export const updateTowRequest = /* GraphQL */ `
       canRoll
       keyIncluded
       isObstructed
-      waitTime
       notes
+      waitTime
+      driverId
+      driverFirstName
+      driverPhoneNumber
+      driverLatitude
+      driverLongitude
       createdAt
       updatedAt
       owner
@@ -292,8 +305,13 @@ export const deleteTowRequest = /* GraphQL */ `
       canRoll
       keyIncluded
       isObstructed
-      waitTime
       notes
+      waitTime
+      driverId
+      driverFirstName
+      driverPhoneNumber
+      driverLatitude
+      driverLongitude
       createdAt
       updatedAt
       owner
