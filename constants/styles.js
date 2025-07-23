@@ -247,7 +247,7 @@ const AuthStyles = StyleSheet.create({
 
 const HomeStyles = StyleSheet.create({
     panel: {
-        width: '90%',
+        width: '95%',
         maxHeight: '25%',
         flexDirection: 'row',
         flexWrap: 'wrap',

@@ -1,18 +1,16 @@
-import { View, Text, Alert, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import Colors from '../../../constants/colors';
 import { Styles, AdminStyles } from '../../../constants/styles';
-import { router, useLocalSearchParams } from 'expo-router';
 import { Background, formatDate, formatNumber, Tab } from '../../../components/components';
-import { sendPushNotification } from '../../../components/adminComponents';
+import { sendPushNotification } from '../../../components/notifComponents';
+import { View, Text, Alert, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import { router, useLocalSearchParams } from 'expo-router';
 import { AntDesign, FontAwesome6, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useState } from 'react';
-import Colors from '../../../constants/colors';
-import { useNavigation } from '@react-navigation/native';
 
 const UserView = () =>
 {
     const { userParam } = useLocalSearchParams();
     const customer = JSON.parse(userParam);
-    const navigate = useNavigation();
 
     const [ title, setTitle ] = useState();
     const [ body, setBody ] = useState();
@@ -92,7 +90,7 @@ const UserView = () =>
                         text='Upload Invoice'
                         action={() => router.push({
                             pathname: '/(admin)/invoiceUpload',
-                            params: { userParam }
+                            params: { isInvoice: true, userParam }
                         })}
                         leftIcon={<FontAwesome6 name='file-pdf' size={30} style={Styles.icon} />}
                         rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon} />}
@@ -101,7 +99,7 @@ const UserView = () =>
                         text='View Invoices'
                         action={() => router.push({
                             pathname: '/(admin)/invoiceList',
-                            params: { userParam }
+                            params: { isInvoice: true, userParam }
                         })}
                         leftIcon={<FontAwesome6 name='file-invoice-dollar' size={30} style={Styles.icon} />}
                         rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon} />}

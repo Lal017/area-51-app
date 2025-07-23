@@ -1,8 +1,8 @@
-import { View, Text } from 'react-native';
 import { ProfileStyles, Styles } from '../../constants/styles'
 import { Background, Tab, formatNumber } from '../../components/components';
-import { router } from 'expo-router';
 import { useApp } from '../../components/context';
+import { View, Text } from 'react-native';
+import { router } from 'expo-router';
 import { AntDesign, Ionicons, MaterialIcons } from '@expo/vector-icons';
 
 const Settings = () =>

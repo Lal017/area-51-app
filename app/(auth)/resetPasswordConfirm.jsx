@@ -1,4 +1,4 @@
-import { View, Text, TextInput, KeyboardAvoidingView, TouchableOpacity, Image, ScrollView } from "react-native";
+import { View, Text, TextInput, KeyboardAvoidingView, TouchableOpacity, Image } from "react-native";
 import { Styles, AuthStyles } from "../../constants/styles";
 import { useState } from "react";
 import { useLocalSearchParams } from "expo-router";
@@ -6,10 +6,12 @@ import { handleConfirmResetPassword } from "../../components/authComponents";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import Colors from "../../constants/colors";
 import { AuthBackground } from "../../components/components";
+import { useNavigation } from "@react-navigation/native";
 
 const ResetPasswordConfirm = () =>
 {
     const { username } = useLocalSearchParams();
+    const navigate = useNavigation();
     const [confirmationCode, setConfirmationCode] = useState();
     const [newPassword, setNewPassword] = useState();
     const [confNewPassword, setConfNewPassword] = useState();
@@ -71,7 +73,7 @@ const ResetPasswordConfirm = () =>
                         onPress={async () => {
                             if (loading) return;
                             setLoading(true);
-                            await handleConfirmResetPassword({username, confirmationCode, newPassword, confNewPassword});
+                            await handleConfirmResetPassword(navigate, username, confirmationCode, newPassword, confNewPassword);
                             setLoading(false);
                         }}
                         style={[Styles.actionButton, loading && { opacity: 0.5 }]}

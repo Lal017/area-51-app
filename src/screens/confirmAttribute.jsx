@@ -1,12 +1,12 @@
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-import { Styles } from '../../constants/styles';
-import { useState } from 'react';
-import { handleConfirmUserAttribute } from '../../components/authComponents';
-import { MaterialIcons } from '@expo/vector-icons';
 import Colors from '../../constants/colors';
+import { handleConfirmUserAttribute } from '../../components/authComponents';
 import { Background } from '../../components/components';
-import { useLocalSearchParams } from 'expo-router';
 import { useApp } from '../../components/context';
+import { Styles } from '../../constants/styles';
+import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { useState } from 'react';
+import { MaterialIcons } from '@expo/vector-icons';
+import { useLocalSearchParams } from 'expo-router';
 import { useNavigation } from '@react-navigation/native';
 
 const ConfirmAttribute = () =>

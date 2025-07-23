@@ -1,3 +1,3 @@
-import VehicleEdit from '../../../src/screens/vehicleEdit';
+import Vehicle from '../../../src/screens/vehicle';
 
-export default VehicleEdit;
+export default Vehicle;

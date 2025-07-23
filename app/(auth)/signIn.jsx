@@ -56,7 +56,7 @@ const SignIn = () =>
                     onPress={async () => {
                         if (loading) return;
                         setLoading(true);
-                        await handleSignIn(navigate, email, password);
+                        await handleSignIn(email, password);
                         setLoading(false);
                     }}
                     style={[Styles.actionButton, loading && { opacity: 0.5 }]}
@@ -68,8 +68,8 @@ const SignIn = () =>
             <View style={Styles.hr}/>
             <View style={Styles.block}>
                 <View style={AuthStyles.providerContainer}>
-                    <GoogleSignInButton text='Sign in'/>
-                    <AmazonSignInButton text='Sign in'/>
+                    <GoogleSignInButton text='Sign in' navigate={navigate}/>
+                    <AmazonSignInButton text='Sign in' navigate={navigate}/>
                 </View>
                 <View style={[Styles.infoContainer, {alignItems: 'center', rowGap: 20}]}>
                     <Link href="/(auth)/signUp" style={Styles.text}>Need an account? <Text style={{textDecorationLine: 'underline'}}>Sign Up</Text></Link>

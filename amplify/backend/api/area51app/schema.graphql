@@ -17,6 +17,7 @@ type User
   vehicles: [Vehicle] @hasMany(indexName: "byUser", fields: ["id"])
   appointments: [Appointment] @hasMany(indexName: "byUser", fields: ["id"])
   towRequests: [TowRequest] @hasMany(indexName: "byUser", fields: ["id"])
+  driverId: ID          # Tow Drivers ID for accepting tow requests
 }
 
 type Vehicle
@@ -70,7 +71,7 @@ type TowRequest
   @auth(rules: [
     {allow: owner},
     {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]},
-    {allow: private, provider: identityPool, operations: [read]}
+    {allow: groups, groups: ["TowDrivers"], operations: [read]}
   ])
 {
   id: ID!
@@ -87,4 +88,9 @@ type TowRequest
   isObstructed: Boolean!
   notes: String
   waitTime: Int
+  driverId: ID
+  driverFirstName: String
+  driverPhoneNumber: AWSPhone
+  driverLatitude: Float
+  driverLongitude: Float
 }

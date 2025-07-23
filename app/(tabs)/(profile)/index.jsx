@@ -1,20 +1,18 @@
-import { View, Text, TouchableOpacity, Linking } from "react-native";
-import { useState, useEffect } from "react";
-import Animated, { Easing , useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from "react-native-reanimated";
-import { ProfileStyles, Styles } from "../../../constants/styles";
 import Colors from "../../../constants/colors";
+import { ProfileStyles, Styles } from "../../../constants/styles";
 import { Background, Tab } from "../../../components/components";
-import { handleSignOut } from "../../../components/authComponents";
-import { router } from "expo-router";
 import { useApp } from "../../../components/context";
+import { View, Text, TouchableOpacity, Linking } from "react-native";
+import Animated, { Easing , useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from "react-native-reanimated";
 import { AntDesign, FontAwesome6, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { useEffect } from "react";
+import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 
 // Profile page
 const Profile = () =>
 {
-    const { email, firstName, lastName, newInvoice, setNewInvoice, newEstimate, setNewEstimate, vehicles, vehiclePickup, setVehiclePickup } = useApp();
-    const [ loading, setLoading ] = useState(false);
+    const { email, firstName, lastName, newInvoice, setNewInvoice, newEstimate, setNewEstimate, vehiclePickup } = useApp();
 
     const bounce = useSharedValue(0);
 
@@ -49,7 +47,7 @@ const Profile = () =>
             </View>
             <Tab
                 text="Account Settings"
-                action={() => router.push('/(tabs)/(profile)/settings')}
+                action={() => router.push('/settings')}
                 leftIcon={<Ionicons name="settings" size={30} style={Styles.icon} />}
                 rightIcon={<AntDesign name="right" size={25} style={Styles.rightIcon} />}
             />
@@ -61,7 +59,7 @@ const Profile = () =>
                 ) : null }
                 <Tab
                     text="My Vehicles"
-                    action={() => router.push('/(tabs)/(profile)/vehicleList')}
+                    action={() => router.push('/vehicleList')}
                     leftIcon={<Ionicons name="car-sport" size={30} style={Styles.icon} />}
                     rightIcon={<AntDesign name="right" size={25} style={Styles.rightIcon} />}
                 />
@@ -75,7 +73,10 @@ const Profile = () =>
                 <Tab
                     text="Invoices"
                     action={() => {
-                        router.push('/(tabs)/(profile)/invoices');
+                        router.push({
+                            pathname: '/invoices',
+                            params: { isInvoice: true }
+                        });
                         setNewInvoice(false);
                     }}
                     leftIcon={<FontAwesome6 name="file-invoice-dollar" size={30} style={Styles.icon} />}
@@ -91,7 +92,9 @@ const Profile = () =>
                 <Tab
                     text="Estimates"
                     action={() => {
-                        router.push('/(tabs)/(profile)/estimates');
+                        router.push({
+                            pathname: '/estimates'
+                        });
                         setNewEstimate(false);
                     }}
                     leftIcon={<FontAwesome6 name="file-circle-question" size={30} style={Styles.icon} />}
@@ -100,7 +103,7 @@ const Profile = () =>
             </View>
             <Tab
                 text="Contact us"
-                action={() => router.push('/(tabs)/(profile)/contact')}
+                action={() => router.push('/contact')}
                 leftIcon={<MaterialIcons name="contact-support" size={30} style={Styles.icon} />}
                 rightIcon={<AntDesign name="right" size={25} style={Styles.rightIcon} />}
             />

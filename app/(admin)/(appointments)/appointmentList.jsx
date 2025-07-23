@@ -2,10 +2,10 @@ import { View, Text } from 'react-native';
 import { Styles } from '../../../constants/styles';
 import { useApp } from '../../../components/context';
 import { useEffect, useState } from 'react';
-import { listAppointments } from '../../../src/graphql/queries';
 import { Background, formatDate, formatTime, Tab } from '../../../components/components';
 import { router } from 'expo-router';
 import { AntDesign } from '@expo/vector-icons';
+import { handleGetAllAppointments } from '../../../components/appointmentComponents';
 
 const AppointmentList = () =>
 {
@@ -18,13 +18,11 @@ const AppointmentList = () =>
         setRefreshing(true);
 
         try {
-            const getAppointments = await client.graphql({
-                query: listAppointments,
-            });
-
-            setAppointments(getAppointments.data.listAppointments.items);
+            const getAppointments = await handleGetAllAppointments(client);
+            setAppointments(getAppointments);
         } catch (error) {
-            console.log('Error refreshing:', error);
+            console.error('ERROR, could not refresh:', error);
+            throw error;
         }
 
         setRefreshing(false);
@@ -34,13 +32,11 @@ const AppointmentList = () =>
         const handleGetAppointments = async () =>
         {
             try {
-                const getAppointments = await client.graphql({
-                    query: listAppointments,
-                });
-
-                setAppointments(getAppointments.data.listAppointments.items);
+                const getAppointments = await handleGetAllAppointments(client);
+                setAppointments(getAppointments);
             } catch (error) {
-                console.log('Error getting appointments:', error);
+                console.error('ERROR, could not get appointments:', error);
+                throw error;
             }
         }
 

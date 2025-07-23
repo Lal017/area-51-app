@@ -1,14 +1,15 @@
+import { Background } from '../components/components';
+import { handleGetCurrentUser } from '../components/authComponents';
 import { Redirect } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { handleGetCurrentUser } from '../components/authComponents';
 import LottieView from 'lottie-react-native';
-import { Background } from '../components/components';
 
 const Index = () =>
 {
     const [user, setUser] = useState();
     const [loading, setLoading] = useState(true);
 
+    // get current authenticated user
     useEffect(() => {
         const fetchUser = async () => {
             try {
@@ -25,6 +26,7 @@ const Index = () =>
         fetchUser();
     }, []);
 
+    // set loading screen while calling handleGetCurrentUser
     if (loading) {
         return (
             <Background style={{justifyContent: 'center'}}>
@@ -39,14 +41,18 @@ const Index = () =>
     }
 
     if (!user) {
+        // if there is no current authenticated user
         return <Redirect href={{ pathname: '(auth)' }} />;
     }
     else if (user?.accessToken?.payload["cognito:groups"]?.includes('Admins')) {
+        // if user is an admin
         return <Redirect href={{ pathname: '(admin)' }} />;
     }
     else if (user?.accessToken?.payload["cognito:groups"]?.includes('TowDrivers')) {
+        // if user is a tow driver
         return <Redirect href={{ pathname: '(tow)' }} />
     }
+    // if user is a customer
     return <Redirect href={{ pathname: '(tabs)' }} />;
 };
 

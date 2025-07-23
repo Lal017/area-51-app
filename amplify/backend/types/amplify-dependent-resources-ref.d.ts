@@ -36,13 +36,6 @@ export type AmplifyDependentResourcesAttributes = {
       "Name": "string",
       "Region": "string"
     },
-    "area51GetTowRequests": {
-      "Arn": "string",
-      "LambdaExecutionRole": "string",
-      "LambdaExecutionRoleArn": "string",
-      "Name": "string",
-      "Region": "string"
-    },
     "area51SendNotifToAdmins": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
@@ -51,13 +44,6 @@ export type AmplifyDependentResourcesAttributes = {
       "Region": "string"
     },
     "area51SendNotifToDrivers": {
-      "Arn": "string",
-      "LambdaExecutionRole": "string",
-      "LambdaExecutionRoleArn": "string",
-      "Name": "string",
-      "Region": "string"
-    },
-    "area51UpdateTowStatus": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
       "LambdaExecutionRoleArn": "string",

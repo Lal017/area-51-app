@@ -1,6 +1,11 @@
-import { TouchableOpacity, Image, Text, Alert } from 'react-native';
-import { AuthStyles } from '../constants/styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { handleDeleteStorage, handleDeleteUser } from './userComponents';
+import { handleDeleteAllAppointments } from './appointmentComponents'
+import { handleDeleteAllTowRequests } from './towComponents';
+import { handleDeleteAllVehicles } from './vehicleComponents';
+import { AuthStyles } from '../constants/styles';
+import { TouchableOpacity, Image, Text, Alert } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import {
     signUp,
@@ -18,14 +23,13 @@ import {
     updateUserAttributes,
     confirmUserAttribute,
 } from 'aws-amplify/auth';
-import { FontAwesome } from '@expo/vector-icons';
-import { handleDeleteStorage } from './components';
-import { handleDeleteAllAppointments, handleDeleteAllTowRequests } from './scheduleComponents';
-import { handleDeleteAllVehicles } from './vehicleComponents';
-import { handleDeleteUser } from './notifComponents';
 
-// Sign Up
-// ---------------------------------------------------------------------
+
+// --------------------------------------------
+//                  SIGN UP
+// --------------------------------------------
+
+// used to handle signing up via cognito
 const handleSignUp = async (given_name, family_name, email, password, phoneNumber) =>
 {
     const phoneNumberCheck = phoneNumber.replace(/\D/g, '');
@@ -68,7 +72,7 @@ const handleSignUp = async (given_name, family_name, email, password, phoneNumbe
             );
         }
     } catch (error) {
-        console.log('error signing up:', error);
+        console.error('ERROR, could not sign up:', error);
         const contains = error.message.includes('account already exists');
         Alert.alert(
             'Error',
@@ -80,7 +84,8 @@ const handleSignUp = async (given_name, family_name, email, password, phoneNumbe
     }
 };
 
-const handleSignUpConfirm = async ({username, confirmationCode}) =>
+// used to confirm signing up with confirmation code
+const handleSignUpConfirm = async (navigate, username, confirmationCode) =>
 {
     try {
         const { nextStep } = await confirmSignUp({
@@ -89,7 +94,7 @@ const handleSignUpConfirm = async ({username, confirmationCode}) =>
         });
 
         if (nextStep.signUpStep === 'COMPLETE_AUTO_SIGN_IN') {
-            handleAutoSignIn({username});
+            handleAutoSignIn(username);
             Alert.alert(
                 "Account Created",
                 "Sign up successful!",
@@ -99,7 +104,10 @@ const handleSignUpConfirm = async ({username, confirmationCode}) =>
             );
         }
         else if(nextStep.signUpStep === 'DONE') {
-            router.replace('(auth)');
+            navigate.reset({
+                index: 0,
+                routes: [{ name: '(auth)' }]
+            });
             Alert.alert(
                 "Account Created",
                 "Sign up successful!",
@@ -109,11 +117,14 @@ const handleSignUpConfirm = async ({username, confirmationCode}) =>
             );
         }
         else {
-            console.log('error, could not auto sign in');
-            router.replace('(auth)');
+            console.error('ERROR, could not auto sign in');
+            navigate.reset({
+                index: 0,
+                routes: [{ name: '(auth)' }]
+            });
         }
     } catch (error) {
-        console.log('error confirming sign up', error);
+        console.error('ERROR, could not confirm sign up', error);
         Alert.alert(
             "Error",
             error.message,
@@ -124,15 +135,14 @@ const handleSignUpConfirm = async ({username, confirmationCode}) =>
     }
 };
 
-const handleResendSignUpCode = async ({username}) =>
+// used to resend sign up code for confirmation
+const handleResendSignUpCode = async (username) =>
 {
     try {
-        await resendSignUpCode({
-            username
-        });
+        await resendSignUpCode({ username });
         return;
     } catch (error) {
-        console.log('error resending sign up code', error);
+        console.error('ERROR, could not resend sign up code', error);
         Alert.alert(
             'Error',
             error.message,
@@ -143,26 +153,19 @@ const handleResendSignUpCode = async ({username}) =>
     }
 };
 
-// Sign In
-// -----------------------------------------------------------------------------------------
-const handleAutoSignIn = async (navigate, username) =>
-{
-    try {
-        const signInOutput = await autoSignIn();
-        signInConfirm(navigate, username, signInOutput.isSignedIn, signInOutput.nextStep)
-    } catch (error) {
-        console.log('error auto signing in', error);
-        router.replace('(auth)');
-    }
-};
 
-const handleSignIn = async (navigate, username, password) =>
+// -----------------------------------------------
+//                   SIGN IN
+// -----------------------------------------------
+
+// used to sign in via cognito
+const handleSignIn = async (username, password) =>
 {
     try {
-        const { isSignedIn, nextStep } = await signIn({ username, password });
-        signInConfirm(navigate, username, isSignedIn, nextStep);
+        const { nextStep } = await signIn({ username, password });
+        signInConfirm(username, nextStep);
     } catch (error) {
-        console.log('error signing in', error);
+        console.error('ERROR, could not sign in', error);
         Alert.alert(
             'Error',
             error.message,
@@ -173,28 +176,11 @@ const handleSignIn = async (navigate, username, password) =>
     }
 };
 
-const signInConfirm = async (navigate, username, isSignedIn, nextStep) =>
+// used to check if user has confirmed sign up before signing them in
+const signInConfirm = async (username, nextStep) =>
 {
-    if (isSignedIn && nextStep.signInStep === 'DONE') {
-        try {
-            const { tokens } = await fetchAuthSession();
-            if (tokens?.accessToken.payload["cognito:groups"]?.includes("Admins")) {
-                navigate.reset({
-                    index: 0,
-                    routes: [{ name: '(admin)' }]
-                });
-            } else {
-                navigate.reset({
-                    index: 0,
-                    routes: [{ name: '(tabs)' }]
-                });
-            }
-        } catch (error) {
-            console.log('Error with redirect:', error);
-        }
-    }
-    else if (nextStep.signInStep === 'CONFIRM_SIGN_UP') {
-        handleResendSignUpCode({username});
+    if (nextStep.signInStep === 'CONFIRM_SIGN_UP') {
+        handleResendSignUpCode(username);
         router.push({
             pathname: '/signUpConfirm',
             params: {username}
@@ -209,12 +195,28 @@ const signInConfirm = async (navigate, username, isSignedIn, nextStep) =>
     }
 };
 
-const handleSignInWithRedirect = async ({providerName}) =>
+// auto sign in after confirming sign up
+const handleAutoSignIn = async (navigate, username) =>
+{
+    try {
+        const signInOutput = await autoSignIn();
+        signInConfirm(navigate, username, signInOutput.isSignedIn, signInOutput.nextStep)
+    } catch (error) {
+        console.error('ERROR, could not auto sign in', error);
+        navigate.reset({
+            index: 0,
+            routes: [{ name: '(auth)' }]
+        });
+    }
+};
+
+// used to sign in with an external provider (Google, Amazon)
+const handleSignInWithRedirect = async (providerName, navigate) =>
 {
     try {
         await signInWithRedirect({ provider: providerName });
     } catch (error) {
-        console.log('error signing in with redirect', error);
+        console.error('ERROR, could not sign in with redirect:', error);
         Alert.alert(
             `Error signing in with ${providerName}`,
             'Please try again',
@@ -222,17 +224,19 @@ const handleSignInWithRedirect = async ({providerName}) =>
                 { text: 'Ok'}
             ]
         );
-        router.replace('(auth)');
+        navigate.reset({
+            index: 0,
+            routes: [{ name: '(auth)'}]
+        });
     }
 };
 
-// Google and amazon sign in buttons
-// ---------------------------------------------------
-const GoogleSignInButton = ({text}) =>
+// Google sign in button component
+const GoogleSignInButton = ({text, navigate}) =>
 {
     return(
         <TouchableOpacity
-            onPress={() => handleSignInWithRedirect({providerName: 'Google'})}
+            onPress={() => handleSignInWithRedirect('Google', navigate)}
             style={AuthStyles.providerSignIn}
         >
             <Image
@@ -244,11 +248,12 @@ const GoogleSignInButton = ({text}) =>
     );
 };
 
-const AmazonSignInButton = ({text}) =>
+// Amazon sign in button component
+const AmazonSignInButton = ({text, navigate}) =>
 {
     return(
         <TouchableOpacity
-            onPress={() => handleSignInWithRedirect({providerName: 'Amazon'})}
+            onPress={() => handleSignInWithRedirect('Amazon', navigate)}
             style={[AuthStyles.providerSignIn, {backgroundColor: '#37475A'}]}
         >
             <FontAwesome name='amazon' size={24} color='white' />
@@ -257,14 +262,18 @@ const AmazonSignInButton = ({text}) =>
     );
 };
 
-// Sign Out
-// --------------------------------------------------------
+
+// -----------------------------------------------
+//                    SIGN OUT
+// -----------------------------------------------
+
+// used to sign out of users account
 const handleSignOut = async () =>
 {
     try {
         await signOut({global: true });
     } catch (error) {
-        console.log('error signing out', error);
+        console.error('ERROR, could not sign out', error);
         Alert.alert(
             'Error',
             error.message,
@@ -275,24 +284,29 @@ const handleSignOut = async () =>
     }
 };
 
+// used to clear local storage for app from device
 const clearLocalStorage = async () =>
 {
     try {
         await AsyncStorage.clear();
     } catch (error) {
-        console.log('error clearing local storage', error);
+        console.error('ERROR, could not clear local storage', error);
     }
 };
 
-// Reset Password
-// -------------------------------------------------------------
+
+// -----------------------------------------------------
+//                     RESET PASSWORD
+// -----------------------------------------------------
+
+// used to reset a users password while unauthenticated
 const handleResetPassword = async (username) =>
 {
     try {
-        const output = await resetPassword({ username });
-        handleResetPasswordNextSteps(output, {username});
+        const { nextStep } = await resetPassword({ username });
+        handleResetPasswordNextSteps(nextStep, username);
     } catch (error) {
-        console.log('error resetting password', error);
+        console.error('ERROR, could not reset password', error);
         Alert.alert(
             'Error',
             error.name === 'UserNotFoundException' ? 'A user with this email does not exist' : error.name === 'InvalidParameterException' ? 'Please sign in with Google/Amazon' : error.message,
@@ -303,9 +317,9 @@ const handleResetPassword = async (username) =>
     }
 };
 
-const handleResetPasswordNextSteps = (output, {username}) =>
+// used to evaluate what step of the process the user is on
+const handleResetPasswordNextSteps = (nextStep, username) =>
 {
-    const { nextStep } = output;
     switch (nextStep.resetPasswordStep) {
         case 'CONFIRM_RESET_PASSWORD_WITH_CODE':
             router.push({
@@ -332,7 +346,8 @@ const handleResetPasswordNextSteps = (output, {username}) =>
     }
 };
 
-const handleConfirmResetPassword = async ({username, confirmationCode, newPassword, confNewPassword}) =>
+// used to confirm the password reset
+const handleConfirmResetPassword = async (navigate, username, confirmationCode, newPassword, confNewPassword) =>
 {
     if (newPassword !== confNewPassword)
     {
@@ -355,9 +370,12 @@ const handleConfirmResetPassword = async ({username, confirmationCode, newPasswo
                 { text: 'Ok'}
             ]
         );
-        router.replace('(auth)');
+        navigate.reset({
+            index: 0,
+            routes: [{ name: '(auth)'}]
+        });
     } catch (error) {
-        console.log(error);
+        console.error(error);
         Alert.alert(
             "Error",
             error.message,
@@ -368,8 +386,7 @@ const handleConfirmResetPassword = async ({username, confirmationCode, newPasswo
     }
 };
 
-// Update Password
-// --------------------------------------------------------------
+// used to update the users password while authenticated
 const handleUpdatePassword = async (navigate, oldPassword, newPassword, confNewPassword) =>
 {
     if (newPassword !== confNewPassword)
@@ -395,7 +412,7 @@ const handleUpdatePassword = async (navigate, oldPassword, newPassword, confNewP
         );
         await handleRedirect(navigate);
     } catch (error) {
-        console.log('error updating password', error);
+        console.error('ERROR, could not update password', error);
         Alert.alert(
             "Error",
             error.message,
@@ -406,8 +423,12 @@ const handleUpdatePassword = async (navigate, oldPassword, newPassword, confNewP
     }
 };
 
-// Delete User
-// --------------------------------------------------------------
+
+// --------------------------------------------------------
+//                      DELETE USER
+// --------------------------------------------------------
+
+// used to delete the users account
 const handleDeleteAccount = async (client, userId, identityId, email, inputEmail) =>
 {
     if (email.toLowerCase() !== inputEmail.toLowerCase())
@@ -438,7 +459,7 @@ const handleDeleteAccount = async (client, userId, identityId, email, inputEmail
             ]
         );
     } catch (error) {
-        console.log('error deleting user', error);
+        console.error('ERROR, could not delete user', error);
         Alert.alert(
             "Error",
             error.message,
@@ -449,22 +470,13 @@ const handleDeleteAccount = async (client, userId, identityId, email, inputEmail
     }
 };
 
-// Get User
-// -----------------------------------------------------
-const handleGetCurrentUser = async () =>
-{
-    try {
-        const { tokens } = await fetchAuthSession({ forceRefresh: true });
-        return tokens;
-    } catch (error) {
-        console.log('no user signed in');
-        // this means there is currently no user signed in
-    }
-};
 
-// update attributes
 // ------------------------------------------------------
-const handleUpdateAttributes = async (navigate, updatedEmail, updatedFirstName, updatedLastName, updatedPhone, setFirstName, setLastName, setPhoneNumber) =>
+//                   UPDATE ATTRIBUTES
+// ------------------------------------------------------
+
+// used to update a users attributes
+const handleUpdateAttributes = async (navigate, isMissingAttr, updatedEmail, updatedFirstName, updatedLastName, updatedPhone, setFirstName, setLastName, setPhoneNumber) =>
 {
     const phoneNumberCheck = updatedPhone.replace(/\D/g, '');
     if (phoneNumberCheck.length !== 10)
@@ -490,7 +502,7 @@ const handleUpdateAttributes = async (navigate, updatedEmail, updatedFirstName, 
         setFirstName(updatedFirstName);
         setLastName(updatedLastName);
         setPhoneNumber(`+1${phoneNumberCheck}`);
-        handleUpdateAttributesNextSteps(navigate, attributes.email.nextStep.updateAttributeStep, updatedEmail);
+        handleUpdateAttributesNextSteps(navigate, isMissingAttr, attributes.email.nextStep.updateAttributeStep, updatedEmail);
     } catch (error) {
         Alert.alert(
             'Error',
@@ -502,7 +514,8 @@ const handleUpdateAttributes = async (navigate, updatedEmail, updatedFirstName, 
     };
 };
 
-const handleUpdateAttributesNextSteps = (navigate, nextStep, email) =>
+// used to determine if an attribute that needs to be confirmed was updated
+const handleUpdateAttributesNextSteps = (navigate, isMissingAttr, nextStep, email) =>
 {
     if (nextStep === 'DONE') {
         Alert.alert(
@@ -512,7 +525,7 @@ const handleUpdateAttributesNextSteps = (navigate, nextStep, email) =>
                 { text: 'Ok'}
             ]
         );
-        handleRedirect(navigate);
+        if (!isMissingAttr) handleRedirect(navigate);
     }
     else if (nextStep === 'CONFIRM_ATTRIBUTE_WITH_CODE') {
         Alert.alert(
@@ -529,6 +542,7 @@ const handleUpdateAttributesNextSteps = (navigate, nextStep, email) =>
     }
 };
 
+// used to confirm email if it was updated
 const handleConfirmUserAttribute = async (navigate, userAttributeKey, confirmationCode, email, setEmail) =>
 {
     try {
@@ -543,7 +557,7 @@ const handleConfirmUserAttribute = async (navigate, userAttributeKey, confirmati
             ]
         );
     } catch (error) {
-        console.log(error);
+        console.error(error);
         Alert.alert(
             "Error Confirming attribute",
             error.message,
@@ -554,6 +568,12 @@ const handleConfirmUserAttribute = async (navigate, userAttributeKey, confirmati
     }
 };
 
+
+// ----------------------------------------------------
+//                      OTHER
+// ----------------------------------------------------
+
+// used to redirect user based on what group they belong too
 const handleRedirect = async (navigate) =>
 {
     try {
@@ -563,6 +583,11 @@ const handleRedirect = async (navigate) =>
                 index: 0,
                 routes: [{ name: '(admin)' }]
             });
+        } else if (tokens?.accessToken.payload["cognito:groups"]?.includes("TowDrivers")) {
+            navigate.reset({
+                index: 0,
+                routes: [{ name: '(tow)' }]
+            });
         } else {
             navigate.reset({
                 index: 0,
@@ -570,12 +595,23 @@ const handleRedirect = async (navigate) =>
             });
         }
     } catch (error) {
-        console.log('Error with redirect:', error);
+        console.error('ERROR, could not redirect:', error);
     }
 };
 
-// Exports
-// -------------------------------------------------------------
+// used to get the current users auth credentials
+const handleGetCurrentUser = async () =>
+{
+    try {
+        const { tokens } = await fetchAuthSession({ forceRefresh: true });
+        return tokens;
+    } catch (error) {
+        console.log('no user signed in');
+        // this means there is currently no user signed in
+    }
+};
+
+
 export {
     handleSignUp,
     handleSignUpConfirm,

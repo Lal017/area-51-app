@@ -1,11 +1,11 @@
-import { View, Text } from 'react-native';
 import Colors from '../../constants/colors';
-import { router } from 'expo-router';
-import { useEffect } from 'react';
 import { Background, Tab } from '../../components/components';
 import { useApp } from '../../components/context';
 import { ProfileStyles, Styles } from '../../constants/styles';
 import { Ionicons, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
+import { router } from 'expo-router';
+import { useEffect } from 'react';
+import { View, Text } from 'react-native';
 import Animated, { Easing , useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from "react-native-reanimated";
 
 const VehicleList = () =>

@@ -1,19 +1,23 @@
-import { useLocalSearchParams } from "expo-router";
-import { TouchableOpacity, View, Text, TextInput, KeyboardAvoidingView, Alert } from 'react-native';
+import Colors from "../../../constants/colors";
+import { handleUpdateCustomersTowRequestStatus } from "../../../components/towComponents";
+import { useApp } from "../../../components/context";
+import { sendPushNotification } from '../../../components/notifComponents'
 import { Background, formatNumber } from "../../../components/components";
 import { TowStyles, ServiceStyles, Styles } from "../../../constants/styles";
+import { handleGetAddress } from "../../../components/adminComponents";
+import { useLocalSearchParams } from "expo-router";
+import { TouchableOpacity, View, Text, TextInput, KeyboardAvoidingView, Alert } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
-import Colors from "../../../constants/colors";
 import { useEffect, useState } from "react";
-import { handleGetAddress, sendPushNotification } from "../../../components/adminComponents";
 import { AntDesign, Entypo, FontAwesome5 } from "@expo/vector-icons";
 import { openURL } from "expo-linking";
-import { handleUpdateCustomersTowRequestStatus } from "../../../components/scheduleComponents";
 
 const TowResponse = () =>
 {
     const { towParam } = useLocalSearchParams();
     const request = JSON.parse(towParam);
+
+    const { client } = useApp();
 
     const [ address, setAddress ] = useState();
     const [ waitTime, setWaitTime ] = useState();
@@ -139,7 +143,7 @@ const TowResponse = () =>
                                                         type: 'TOW_RESPONSE'
                                                     };
                                                     await sendPushNotification(request.pushToken, 'Tow Request', 'A driver is on the way!', data);
-                                                    await handleUpdateCustomersTowRequestStatus(request.id, 'IN_PROGRESS', waitTime);
+                                                    await handleUpdateCustomersTowRequestStatus(client, request.id, 'IN_PROGRESS', waitTime);
                                                 }
                                             }
                                         ]

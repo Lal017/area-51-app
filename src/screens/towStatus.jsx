@@ -1,10 +1,10 @@
-import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import LottieView from 'lottie-react-native';
 import { Styles, ServiceStyles } from '../../constants/styles';
 import { useApp } from "../../components/context";
 import { Background, getRemainingETA, formatTime } from "../../components/components";
 import { handleSendAdminNotif } from '../../components/notifComponents';
-import { handleUpdateTowRequestStatus } from '../../components/scheduleComponents';
+import { handleUpdateTowRequestStatus } from '../../components/towComponents';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import { useEffect, useState } from "react";
 import { useNavigation } from '@react-navigation/native';
 

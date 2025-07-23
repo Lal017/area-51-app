@@ -1,10 +1,130 @@
-import { Alert } from 'react-native';
-import { createUser, updateUser, deleteUser } from '../src/graphql/mutations';
-import { getUser } from '../src/graphql/queries';
-import { post } from 'aws-amplify/api';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import Constants from 'expo-constants';
+import { Alert } from 'react-native';
+import { post } from 'aws-amplify/api';
+
+// ------------------------------------
+//              ADMINS
+// ------------------------------------
+
+// sends a push notification to a specific user
+const sendPushNotification = async (expoPushToken, title, body, data) =>
+{
+    const message = {
+        to: expoPushToken,
+        sound: 'default',
+        title: title,
+        body: body,
+        data: data
+    };
+
+    try {
+        await fetch('https://exp.host/--/api/v2/push/send', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Accept-Encoding': 'gzip, deflate',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(message),
+        });
+    } catch (error) {
+        console.error('Error sending push notification:', error);
+    }
+};
+
+// used to send a notification to all users
+// (may need to edit to only send to customers group)
+const sendMassPushNotification = async (title, body, client) =>
+{
+    try {
+        const users = await handleListUsers(client);
+        const expoPushTokens = users.map(user => user.pushToken);
+
+        const message = {
+            to: expoPushTokens,
+            sound: 'default',
+            title: title,
+            body: body
+        };
+
+        await fetch('https://exp.host/--/api/v2/push/send', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Accept-Encoding': 'gzip, deflate',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(message),
+        });
+    } catch (error) {
+        console.error('ERROR, could not send mass push notification:', error);
+    }
+};
+
+
+// -----------------------------------
+//              CUSTOMERS
+// -----------------------------------
+
+// sends notification to all users in Admins groups
+const handleSendAdminNotif = async (title, content, data) =>
+{
+    try {
+        const restOperation = post({
+            apiName: 'area51RestApi',
+            path: '/sendNotifToAdmins',
+            options: {
+                body: {
+                    title: title,
+                    content: content,
+                    data: data
+                }
+            }
+        });
+
+        const { body } = await restOperation.response;
+        const response = await body.json();
+
+        if (response?.data?.listUsers?.items?.length <= 0) {
+            console.error('ERROR, could not find any admin accounts', response.data.listUsers);
+        }
+    } catch (error) {
+        console.error('ERROR, could not send notification to admins:', error);
+    }
+};
+
+// send notification to all users in TowDrivers group
+const handleSendDriversNotif = async (title, content, data) =>
+{
+    try {
+        const restOperation = post({
+            apiName: 'area51RestApi',
+            path: '/sendNotifToDrivers',
+            options: {
+                body: {
+                    title: title,
+                    content: content,
+                    data: data
+                }
+            }
+        });
+
+        const { body } = await restOperation.response;
+        const response = await body.json();
+
+        if (response?.data?.listUsers?.items?.length <= 0) {
+            console.error('ERROR, could not find TowDrivers', response.data.listUsers);
+        }
+    } catch (error) {
+        console.error('ERROR, could not send notification to TowDrivers', error);
+    }
+};
+
+// ------------------------------------------
+//              DO NOT EDIT
+// ------------------------------------------
 
 const handleRegistrationError = (errMessage) =>
 {
@@ -55,153 +175,10 @@ const registerForPushNotifications = async () =>
     }
 };
 
-// Amplify notif functions
-const handleCreateUser = async (client, user_id, identityId, token, user_access, firstName, lastName, email, phoneNumber) =>
-{
-    try {
-        const access_result = user_access.includes('Admins') ? 'Admins' : user_access.includes('TowDrivers') ? 'TowDrivers' : 'Customers';
-
-        await client.graphql({
-            query: createUser,
-            variables: {
-                input: {
-                    id: user_id,
-                    identityId: identityId,
-                    pushToken: token,
-                    access: access_result,
-                    firstName: firstName,
-                    lastName: lastName,
-                    email: email,
-                    phone: phoneNumber
-                }
-            }
-        });
-    } catch (error) {
-        console.log('CREATE ERROR:', error);
-    }
-};
-
-const handleUpdateUser = async (client, user_id, identityId, token, user_access, firstName, lastName, email, phone_number) =>
-{
-    try {
-        const access_result = user_access.includes('Admins') ? 'Admins' : user_access.includes('TowDrivers') ? 'TowDrivers' : 'Customers';
-
-        await client.graphql({
-            query: updateUser,
-            variables: {
-                input: {
-                    id: user_id,
-                    identityId: identityId,
-                    pushToken: token,
-                    access: access_result,
-                    firstName: firstName,
-                    lastName: lastName,
-                    email: email,
-                    phone: phone_number
-                }
-            }
-        });
-    } catch (error) {
-        console.log('UPDATE ERROR:', error);
-    }
-};
-
-// used to delete the clients database entry when they delete there account
-const handleDeleteUser = async (client, userId) =>
-{
-    try {
-        await client.graphql({
-            query: deleteUser,
-            variables: {
-                input: {
-                    id: userId
-                }
-            },
-        });
-        console.log('User deleted successfully');
-    } catch (error) {
-        console.log('DELETE ERROR:', error.errors);
-    }
-};
-
-// check if user entry already exists
-const handleCheckUser = async (client, userId) =>
-{
-    const exists = await client.graphql({
-        query: getUser,
-        variables: {
-            id: userId
-        }
-    });
-
-    var alreadyExists;
-
-    if (exists.data.getUser === null) { alreadyExists = false }
-    else { alreadyExists = true }
-
-    return alreadyExists;
-};
-
-// sends notification to all users in Admins groups
-const handleSendAdminNotif = async (title, content, data) =>
-{
-    try {
-        const restOperation = post({
-            apiName: 'area51RestApi',
-            path: '/sendNotifToAdmins',
-            options: {
-                body: {
-                    title: title,
-                    content: content,
-                    data: data
-                }
-            }
-        });
-
-        const { body } = await restOperation.response;
-        const response = await body.json();
-
-        if (response?.data?.listUsers?.items?.length <= 0) {
-            console.log('REQUEST FAILED, THERE ARE NO ADMINS:', response.data.listUsers);
-        }
-    } catch (error) {
-        console.log('CUSTOMER REQUEST ERROR:', error);
-    }
-};
-
-// send notification to all users in TowDrivers group
-const handleSendDriversNotif = async (title, content, data) =>
-{
-    try {
-        const restOperation = post({
-            apiName: 'area51RestApi',
-            path: '/sendNotifToDrivers',
-            options: {
-                body: {
-                    title: title,
-                    content: content,
-                    data: data
-                }
-            }
-        });
-
-        const { body } = await restOperation.response;
-        const response = await body.json();
-
-        if (response?.data?.listUsers?.items?.length <= 0) {
-            console.log('REQUEST FAILED, THERE ARE NO DRIVERS:', response.data.listUsers);
-        }
-    } catch (error) {
-        console.log('CUSTOMER REQUEST ERROR:', error);
-    }
-};
-
 export {
-    registerForPushNotifications,
+    sendPushNotification,
+    sendMassPushNotification,
     handleSendAdminNotif,
     handleSendDriversNotif,
-    handleCreateUser,
-    handleUpdateUser,
-    handleDeleteUser,
-    handleCheckUser
+    registerForPushNotifications
 };

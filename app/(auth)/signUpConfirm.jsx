@@ -1,11 +1,12 @@
+import Colors from '../../constants/colors';
+import { Styles, AuthStyles } from '../../constants/styles';
+import { handleSignUpConfirm, handleResendSignUpCode } from '../../components/authComponents';
+import { AuthBackground } from '../../components/components';
 import { View, Text, TextInput, TouchableOpacity, Image, Alert} from 'react-native';
 import { useState, useEffect } from 'react';
 import { useLocalSearchParams } from 'expo-router';
-import { Styles, AuthStyles } from '../../constants/styles';
-import { handleSignUpConfirm, handleResendSignUpCode } from '../../components/authComponents';
-import Colors from '../../constants/colors';
 import { MaterialIcons } from '@expo/vector-icons';
-import { AuthBackground } from '../../components/components';
+import { useNavigation } from '@react-navigation/native';
 
 const SignUpConfirm = () =>
 {
@@ -13,6 +14,8 @@ const SignUpConfirm = () =>
     const [confirmationCode, setCode] = useState();
     const [loading, setLoading] = useState(false);
     const [cooldown, setCooldown] = useState(30);
+
+    const navigate = useNavigation();
 
     useEffect(() => {
         if (cooldown === 0) return;
@@ -52,7 +55,7 @@ const SignUpConfirm = () =>
                     onPress={async () => {
                         if (loading) return;
                         setLoading(true);
-                        await handleSignUpConfirm({username, confirmationCode});
+                        await handleSignUpConfirm(navigate, username, confirmationCode);
                         setLoading(false);
                     }}
                     style={[Styles.actionButton, loading && { opacity: 0.5 }]}
@@ -70,7 +73,7 @@ const SignUpConfirm = () =>
                             );
                             return;
                         }
-                        handleResendSignUpCode({username});
+                        handleResendSignUpCode(username);
                         Alert.alert(
                             'Code Resent',
                             'Check your email for your verification code',

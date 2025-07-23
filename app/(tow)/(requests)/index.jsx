@@ -1,14 +1,17 @@
-import { Text } from 'react-native';
-import { router } from 'expo-router';
+import Colors from '../../../constants/colors';
+import { useApp } from '../../../components/context';
 import { Background, Loading, Tab } from '../../../components/components';
 import { Styles } from '../../../constants/styles';
-import { handleGetAllTowRequests } from '../../../components/scheduleComponents';
+import { handleGetAllTowRequests } from '../../../components/towComponents';
+import { Text } from 'react-native';
+import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
-import Colors from '../../../constants/colors';
 
 const RequestList = () =>
 {
+    const { client } = useApp();
+
     const [ towRequests, setTowRequests ] = useState();
     const [ ready, setReady ] = useState(false);
     const [ refresing, setRefreshing ] = useState();
@@ -17,7 +20,7 @@ const RequestList = () =>
     {
         setRefreshing(true);
 
-        const getTowRequests = await handleGetAllTowRequests();
+        const getTowRequests = await handleGetAllTowRequests(client);
         setTowRequests(getTowRequests);
 
         setRefreshing(false);
@@ -27,7 +30,7 @@ const RequestList = () =>
         const getTowRequests = async () =>
         {
             try {
-                const getTowRequests = await handleGetAllTowRequests();
+                const getTowRequests = await handleGetAllTowRequests(client);
                 setTowRequests(getTowRequests);
                 setReady(true);
             } catch (error) {

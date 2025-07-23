@@ -1,12 +1,11 @@
-import { View, Text, TouchableOpacity, ScrollView, Animated, ActivityIndicator, RefreshControl, Alert } from 'react-native';
-import { router } from 'expo-router';
+import Colors from '../constants/colors';
 import { useApp } from './context';
 import { Styles, HomeStyles } from '../constants/styles';
-import Colors from '../constants/colors';
+import { View, Text, TouchableOpacity, ScrollView, Animated, ActivityIndicator, RefreshControl, Alert } from 'react-native';
+import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
-import { list, remove } from 'aws-amplify/storage';
 import { MaterialIcons } from '@expo/vector-icons';
 import { signOut } from '@aws-amplify/auth';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -46,7 +45,7 @@ const CustHeader = ({title, index}) =>
                         try {
                             await signOut({global: true });
                         } catch (error) {
-                            console.log('error signing out', error);
+                            console.error('ERROR, could not sign out', error);
                             Alert.alert(
                                 'Error',
                                 error.message,
@@ -66,7 +65,7 @@ const CustHeader = ({title, index}) =>
     );
 };
 
-// wraps the page
+// wraps the (auth) pages
 const AuthBackground = ({children}) =>
 {
     return (
@@ -86,6 +85,7 @@ const AuthBackground = ({children}) =>
     );
 };
 
+// wraps the page
 const Background = ({children, style, refreshing, onRefresh}) =>
 {
     return (
@@ -112,6 +112,7 @@ const Background = ({children, style, refreshing, onRefresh}) =>
     )
 };
 
+// alternative background with no scroll view
 const BackgroundAlt = ({children, style}) =>
 {
     return (
@@ -184,7 +185,7 @@ const BinarySelect = ({text, selected, action, rightIcon}) =>
     )
 };
 
-// format number for readability
+// format phone number for readability
 const formatNumber = (phone) =>
 {
     const clean = phone.replace(/\D/g, '').slice(-10);
@@ -231,6 +232,7 @@ const formatTime = (timeString) =>
     });
 };
 
+// get remaining time left for tow driver to arrive
 const getRemainingETA = (isoStartTime, estimatedMinutes) =>
 {
     const start = new Date(isoStartTime); // e.g. "2025-07-09T13:25:00Z"
@@ -244,6 +246,7 @@ const getRemainingETA = (isoStartTime, estimatedMinutes) =>
     return remaining;
 };
 
+// component for home page to show a reminder for upcoming appointments
 const AppointmentReminder = ({appointments}) =>
 {
     const [ index, setIndex ] = useState(0);
@@ -285,24 +288,6 @@ const AppointmentReminder = ({appointments}) =>
     );
 };
 
-const handleDeleteStorage = async (identityId) =>
-{
-    try {
-        const files = await list({
-            path: `protected/${identityId}/`,
-        });
-
-        await Promise.all(
-            files.items.map((file) =>
-                remove({ path: file.path})
-            )
-        );
-
-    } catch (error) {
-        console.log('Error deleting storage:', error);
-    }
-};
-
 export {
     Loading,
     CustHeader,
@@ -317,6 +302,5 @@ export {
     formatDate,
     formatTime,
     getRemainingETA,
-    AppointmentReminder,
-    handleDeleteStorage
+    AppointmentReminder
 };

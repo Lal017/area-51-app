@@ -1,14 +1,15 @@
-import { Stack, router } from "expo-router";
+import AccountEdit from '../../src/screens/accountEdit';
+import Modal from 'react-native-modal';
 import { CustHeader, Loading } from "../../components/components";
 import { AppProvider, useApp } from "../../components/context";
+import { registerForPushNotifications } from "../../components/notifComponents";
+import { handleCreateUser, handleUpdateUser, handleGetUser } from '../../components/userComponents';
+import { handleGetCurrentUser } from "../../components/authComponents";
+import { Stack, router } from "expo-router";
 import { useEffect, useRef, useState } from 'react';
-import { Alert } from "react-native";
 import { generateClient } from "aws-amplify/api";
 import { addNotificationReceivedListener, addNotificationResponseReceivedListener, removeNotificationSubscription } from "expo-notifications";
-import { registerForPushNotifications, handleCreateUser, handleUpdateUser, handleCheckUser } from "../../components/notifComponents";
-import { handleGetCurrentUser } from "../../components/authComponents";
 import { fetchAuthSession, fetchUserAttributes } from "aws-amplify/auth";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AdminContent = () =>
 {
@@ -24,7 +25,6 @@ const AdminContent = () =>
         setIdentityId,
         pushToken,
         setPushToken,
-        setNotification,
         firstName,
         setFirstName,
         lastName,
@@ -33,14 +33,18 @@ const AdminContent = () =>
         setEmail,
         phoneNumber,
         setPhoneNumber,
+        isMissingAttr,
+        setIsMissingAttr
     } = useApp();
 
+    // load components when finished fetching data
     const [ ready, setReady ] = useState(false);
 
     // notification listeners
     const notificationListener = useRef();
     const responseListener = useRef();
 
+    // initialize data used for the app
     useEffect(() => {
         const initializeApp = async () =>
         {
@@ -61,7 +65,7 @@ const AdminContent = () =>
             } else if (userAtt.name) {
                 const nameSplit = userAtt.name.trim().split(/\s+/);
 
-                if (nameSplit?.length >= 2) {
+                if (nameSplit.length >= 2) {
                     setFirstName(nameSplit[0]);
                     setLastName(nameSplit.slice(1).join(' '));
                 } else {
@@ -72,66 +76,62 @@ const AdminContent = () =>
 
             // get and set cognito info
             const userInfo = await handleGetCurrentUser();
-            setAccess(userInfo.accessToken.payload["cognito:groups"]);
+            const access_arr = userInfo.accessToken.payload["cognito:groups"];
+            const getAccess = access_arr.includes('Admins') ? 'Admins' : access_arr.includes('TowDrivers') ? 'TowDrivers' : 'Customers';
+            setAccess(getAccess);
             setUserId(userInfo.accessToken.payload.sub);
 
             // identityId for amplify storage
             const getDetails = await fetchAuthSession();
             setIdentityId(getDetails.identityId);
 
-            // get local storage notification
-            const savedNotif = await AsyncStorage.getItem('notification');
-            setNotification(JSON.parse(savedNotif));
-
             if (!userAtt?.phone_number || ((!userAtt?.given_name || !userAtt?.family_name) && !userAtt?.name)) {
-                setIsStuck(true);
-                Alert.alert(
-                    'Notice',
-                    'Please add missing attributes before continuing',
-                    [
-                        {
-                            text: 'OK',
-                        }
-                    ]
-                );
-                router.push('accountEdit');
+                setIsMissingAttr(true);
             }
         }
 
         initializeApp();
     }, []);
 
-    // Send to database
+    // Send to database once all data has been generated and retrieved
     useEffect(() => {
-        const handleRegisterPushNotifications = async () => {
+        const handleRegisterUser = async () => {
             try {
                 // check if user already has entry in database
-                const alreadyExists = await handleCheckUser(client, userId);
+                const user = await handleGetUser(client, userId);
 
-                if (!alreadyExists) {
+                if (!user) {
                     await handleCreateUser(client, userId, identityId, pushToken, access, firstName, lastName, email, phoneNumber);
                 } else {
-                    await handleUpdateUser(client, userId, identityId, pushToken, access, firstName, lastName, email, phoneNumber);
+                    // check if anything has changed
+                    const isSame =
+                        identityId === user.identityId &&
+                        pushToken === user.pushToken &&
+                        access === user.access &&
+                        firstName === user.firstName &&
+                        lastName === user.lastName &&
+                        email === user.email &&
+                        phoneNumber === user.phone;
+
+                    if (!isSame) await handleUpdateUser(client, userId, identityId, pushToken, access, firstName, lastName, email, phoneNumber);
                 }
             } catch (error) {
-                console.error('Error registering for push notifications:', error);
+                console.error('ERROR, could not send info to database', error);
             }
         };
 
-        if (client && userId && identityId && access && pushToken) {
-            setReady(true);
+        if (client && userId) { setReady(true); }
+        if (client && userId && identityId && pushToken && access && firstName && lastName && email && phoneNumber) {
+            handleRegisterUser();
         }
 
-        if (client && userId && identityId && pushToken && access && firstName && lastName && email && phoneNumber) {
-            handleRegisterPushNotifications();
-        }
     }, [client, userId, identityId, pushToken, phoneNumber, firstName, lastName, email, access]);
 
     // Listeners for push notifications
     useEffect(() => {
         // triggered when the notification is actually received. foreground and background
         notificationListener.current = addNotificationReceivedListener(notification => {
-            setNotification(notification.request.content);
+            console.log('Notification recieved')
         });
 
         // triggered when the user taps on the notification
@@ -162,6 +162,15 @@ const AdminContent = () =>
         ) : (
             <Loading/>
         )}
+        <Modal
+            isVisible={isMissingAttr}
+            onBackdropPress={null}
+            onBackButtonPress={null}
+            swipeDirection={null}
+            style={{margin: 0}}
+        >
+            <AccountEdit/>
+        </Modal>
         </>
     );
 }

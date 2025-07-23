@@ -1,5 +1,5 @@
-import { createContext, useContext, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createContext, useContext, useState } from 'react';
 
 const AppContext = createContext();
 
@@ -9,7 +9,6 @@ const AppProvider = ({ children }) => {
   const [ identityId, setIdentityId ] = useState();
   const [ pushToken, setPushToken ] = useState();
   const [ access, setAccess ] = useState();
-  const [ notification, setNotification ] = useState();
   const [ email, setEmail ] = useState();
   const [ firstName, setFirstName ] = useState();
   const [ lastName, setLastName ] = useState();
@@ -17,34 +16,10 @@ const AppProvider = ({ children }) => {
   const [ vehicles, setVehicles ] = useState();
   const [ towRequest, setTowRequest ] = useState(undefined);
   const [ appointments, setAppointments ] = useState();
-  const [ isStuck, setIsStuck ] = useState(false);
   const [ newInvoice, setNewInvoice ] = useState();
   const [ newEstimate, setNewEstimate ] = useState();
   const [ vehiclePickup, setVehiclePickup ] = useState(false);
-
-  const updateNotification = async (newNotif) =>
-  {
-    try {
-      if (newNotif) {
-        await AsyncStorage.setItem('notification', JSON.stringify(newNotif));
-      } else {
-        await AsyncStorage.removeItem('notification');
-      }
-      setNotification(newNotif);
-    } catch (error) {
-      console.error('error updating notification:', error);
-    }
-  };
-
-  const clearNotification = async () =>
-  {
-    try {
-      await AsyncStorage.removeItem('notification');
-      setNotification(null);
-    } catch (error) {
-      console.error('error clearing notification:', error);
-    }
-  };
+  const [ isMissingAttr, setIsMissingAttr ] = useState(false);
 
   const handleNewInvoice = async (value) =>
   {
@@ -86,9 +61,6 @@ const AppProvider = ({ children }) => {
         setPushToken,
         access,
         setAccess,
-        notification,
-        setNotification: updateNotification,
-        clearNotification,
         email,
         setEmail,
         firstName,
@@ -101,8 +73,6 @@ const AppProvider = ({ children }) => {
         setVehicles,
         towRequest,
         setTowRequest,
-        isStuck,
-        setIsStuck,
         appointments,
         setAppointments,
         newInvoice,
@@ -110,7 +80,9 @@ const AppProvider = ({ children }) => {
         newEstimate,
         setNewEstimate: handleNewEstimate,
         vehiclePickup,
-        setVehiclePickup
+        setVehiclePickup,
+        isMissingAttr,
+        setIsMissingAttr
         }}>
       {children}
     </AppContext.Provider>

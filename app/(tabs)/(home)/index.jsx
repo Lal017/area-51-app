@@ -1,23 +1,25 @@
-import { Text, TouchableOpacity, Linking, View, Alert, Image, Dimensions, ActivityIndicator } from "react-native";
-import { router } from "expo-router";
-import { AppointmentReminder, Background } from "../../../components/components";
-import { HomeStyles, Styles } from "../../../constants/styles";
-import { Entypo, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { useApp } from "../../../components/context";
-import Animated, { Easing , useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from "react-native-reanimated";
-import { useEffect, useState, useRef } from "react";
 import Colors from "../../../constants/colors";
+import Carousel from 'react-native-reanimated-carousel';
 import { handleGetURLs } from "../../../components/adminComponents";
 import { handleGetVehicles } from "../../../components/vehicleComponents";
-import { handleGetMyAppointments, handleGetTowRequest } from "../../../components/scheduleComponents";
-import Carousel from 'react-native-reanimated-carousel';
+import { handleGetMyAppointments } from "../../../components/appointmentComponents";
+import { handleGetTowRequest } from '../../../components/towComponents';
+import { AppointmentReminder, Background } from "../../../components/components";
+import { HomeStyles, Styles } from "../../../constants/styles";
+import { useApp } from "../../../components/context";
+import { Text, TouchableOpacity, Linking, View, Alert, Image, Dimensions, ActivityIndicator } from "react-native";
+import { Entypo, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import Animated, { Easing , useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from "react-native-reanimated";
+import { useEffect, useState, useRef } from "react";
+import { router } from "expo-router";
 
 const screenWidth = Dimensions.get("window").width;
 
 // Home page after login
 const Index = () =>
 {
-  const { client, userId, firstName, towRequest, vehicles, appointments, setTowRequest, setAppointments, setVehicles, vehiclePickup, setVehiclePickup } = useApp();
+  const { client, userId, firstName, towRequest, vehicles, appointments, setTowRequest, setAppointments, setVehicles, vehiclePickup } = useApp();
+  
   const [ urls, setUrls ] = useState();
   const [ refreshing, setRefreshing ] = useState(false);
 
@@ -45,7 +47,7 @@ const Index = () =>
       const getUrls = await handleGetURLs();
       setUrls(getUrls);
     } catch (error) {
-      console.log('Error refreshing:', error);
+      console.error('ERROR, could not refresh:', error);
     }
 
     setRefreshing(false);
@@ -96,7 +98,7 @@ const Index = () =>
                   [
                     { text: 'Cancel' },
                     {
-                      text: 'Settings',
+                      text: 'Add Vehicle',
                       onPress: () => router.push('/vehicleList')
                     }
                   ]
@@ -110,14 +112,10 @@ const Index = () =>
               }
             }}
           >
-            { towRequest?.status === 'PENDING' ? (
-              <Animated.View style={[HomeStyles.activityContainer, animatedStyle, {backgroundColor: Colors.tertiary}]}>
-                  <Text style={[Styles.subTitle, {fontSize: 20, textAlign: 'center'}]}>!</Text>
-              </Animated.View>
+            { towRequest?.status === 'IN_PROGRESS' ? (
+              <Animated.View style={[HomeStyles.activityContainer, animatedStyle, {backgroundColor: Colors.primary}]}/>
             ) : towRequest?.status === 'REQUESTED' ? (
               <View style={[HomeStyles.activityContainer, {backgroundColor: Colors.secondary}]}/>
-            ) : towRequest?.status === 'IN_PROGRESS' ? (
-              <View style={[HomeStyles.activityContainer, {backgroundColor: Colors.primary}]}/>
             ) : null }
             <MaterialCommunityIcons name="tow-truck" size={30} color="white" />
           </TouchableOpacity>
@@ -131,7 +129,7 @@ const Index = () =>
                   [
                     { text: 'Cancel' },
                     {
-                      text: 'Settings',
+                      text: 'Add Vehicle',
                       onPress: () => router.push('/vehicleList')
                     }
                   ]
@@ -186,7 +184,7 @@ const Index = () =>
             <Carousel
               ref={ref}
               data={urls}
-              width={screenWidth * 0.9}
+              width={screenWidth * 0.95}
               height={225}
               autoPlay
               autoPlayInterval={5000}

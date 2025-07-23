@@ -5,11 +5,11 @@ import { AppProvider, useApp } from "../../components/context";
 import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { generateClient } from "aws-amplify/api";
-import { registerForPushNotifications, handleCheckUser, handleCreateUser, handleUpdateUser } from "../../components/notifComponents";
+import { registerForPushNotifications, handleCreateUser, handleUpdateUser } from "../../components/notifComponents";
 import { fetchUserAttributes, fetchAuthSession } from "@aws-amplify/auth";
 import { handleGetCurrentUser } from "../../components/authComponents";
 import { addNotificationReceivedListener, addNotificationResponseReceivedListener, removeNotificationSubscription } from "expo-notifications";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { handleGetUser } from "../../components/userComponents";
 
 const TowDriverContent = () =>
 {
@@ -32,7 +32,6 @@ const TowDriverContent = () =>
         setAccess,
         identityId,
         setIdentityId,
-        setNotification,
         setIsStuck
     } = useApp();
 
@@ -72,16 +71,14 @@ const TowDriverContent = () =>
 
             // get and set cognito info
             const userInfo = await handleGetCurrentUser();
-            setAccess(userInfo.accessToken.payload["cognito:groups"]);
+            const access_arr = userInfo.accessToken.payload["cognito:groups"];
+            const getAccess = access_arr.includes('Admins') ? 'Admins' : access_arr.includes('TowDrivers') ? 'TowDrivers' : 'Customers';
+            setAccess(getAccess);
             setUserId(userInfo.accessToken.payload.sub);
 
             // identityId for amplify storage
             const getDetails = await fetchAuthSession();
             setIdentityId(getDetails.identityId);
-
-            // get local storage notification
-            const savedNotif = await AsyncStorage.getItem('notification');
-            setNotification(JSON.parse(savedNotif));
 
             if (!userAtt?.phone_number || ((!userAtt?.given_name || !userAtt?.family_name) && !userAtt?.name)) {
                 setIsStuck(true);
@@ -100,37 +97,44 @@ const TowDriverContent = () =>
         initializeApp();
     }, []);
 
-    // Send to database
+    // Send to database once all data has been generated and retrieved
     useEffect(() => {
-        const handleRegisterPushNotifications = async () => {
+        const handleRegisterUser = async () => {
             try {
                 // check if user already has entry in database
-                const alreadyExists = await handleCheckUser(client, userId);
+                const user = await handleGetUser(client, userId);
 
-                if (!alreadyExists) {
+                if (!user) {
                     await handleCreateUser(client, userId, identityId, pushToken, access, firstName, lastName, email, phoneNumber);
                 } else {
-                    await handleUpdateUser(client, userId, identityId, pushToken, access, firstName, lastName, email, phoneNumber);
+                    // check if anything has changed
+                    const isSame =
+                        identityId === user.identityId &&
+                        pushToken === user.pushToken &&
+                        access === user.access &&
+                        firstName === user.firstName &&
+                        lastName === user.lastName &&
+                        email === user.email &&
+                        phoneNumber === user.phone;
+
+                    if (!isSame) await handleUpdateUser(client, userId, identityId, pushToken, access, firstName, lastName, email, phoneNumber);
                 }
             } catch (error) {
-                console.error('Error registering for push notifications:', error);
+                console.error('ERROR, could not send info to database', error);
             }
         };
 
-        if (client && userId && access && pushToken) {
-            setReady(true);
+        if (client && userId && identityId && pushToken && access && firstName && lastName && email && phoneNumber) {
+            handleRegisterUser();
         }
 
-        if (client && userId && pushToken && access && identityId && firstName && lastName && email && phoneNumber) {
-            handleRegisterPushNotifications();
-        }
-    }, [client, userId, pushToken, identityId, phoneNumber, firstName, lastName, email, access]);
+    }, [client, userId, identityId, pushToken, phoneNumber, firstName, lastName, email, access]);
 
     // Listeners for push notifications
     useEffect(() => {
         // triggered when the notification is actually received. foreground and background
         notificationListener.current = addNotificationReceivedListener(notification => {
-            setNotification(notification.request.content);
+
         });
 
         // triggered when the user taps on the notification

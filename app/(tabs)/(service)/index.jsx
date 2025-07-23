@@ -21,7 +21,7 @@ const ServiceConsole = () =>
               [
                 { text: 'Cancel' },
                 {
-                  text: 'Settings',
+                  text: 'Add Vehicle',
                   onPress: () => router.push('/vehicleList')
                 }
               ]
@@ -54,7 +54,7 @@ const ServiceConsole = () =>
               [
                 { text: 'Cancel' },
                 {
-                  text: 'Settings',
+                  text: 'Add Vehicle',
                   onPress: () => router.push('/vehicleList')
                 }
               ]

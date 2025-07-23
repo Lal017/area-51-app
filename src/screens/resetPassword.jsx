@@ -1,10 +1,10 @@
-import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
-import { useState } from 'react';
+import Colors from '../../constants/colors';
+import { Background } from '../../components/components';
 import { Styles } from '../../constants/styles';
 import { handleUpdatePassword } from '../../components/authComponents';
+import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import { useState } from 'react';
 import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
-import { Background } from '../../components/components';
-import Colors from '../../constants/colors';
 import { useNavigation } from '@react-navigation/native';
 
 const ResetPassword = () =>

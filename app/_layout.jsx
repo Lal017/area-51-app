@@ -1,18 +1,20 @@
+// CONFIGURATION FOR AMPLIFY DO NOT EDIT
 import { Amplify } from 'aws-amplify';
 import amplifyconfig from '../src/amplifyconfiguration.json';
 Amplify.configure(amplifyconfig);
-
+// ----------------------------------------------------------------
+import Colors from '../constants/colors';
+import { handleGetCurrentUser } from '../components/authComponents';
 import { Stack } from 'expo-router';
 import { setNotificationHandler } from 'expo-notifications';
-import { Hub } from 'aws-amplify/utils';
-import { useEffect } from 'react';
 import { router } from 'expo-router';
-import { handleGetCurrentUser } from '../components/authComponents';
 import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
-import Colors from '../constants/colors';
+import { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { Hub } from 'aws-amplify/utils';
 
+// Notification handler for recieved notifications
 setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -25,6 +27,7 @@ setNotificationHandler({
 
 const RootLayout = () =>
 {
+  // Font imports
   const [ fontsLoaded ] = useFonts({
     'Roboto-Condensed-Light': require('../assets/fonts/Roboto_Condensed-Light.ttf'),
     'Roboto-SemiCondensed-Bold': require('../assets/fonts/Roboto_SemiCondensed-Bold.ttf'),
@@ -35,6 +38,7 @@ const RootLayout = () =>
 
   const navigate = useNavigation();
 
+  // listener for auth event (sign in, sign out). handles redirects
   useEffect(() => {
     const listener = Hub.listen('auth', async (data) => {
       const { payload } = data;

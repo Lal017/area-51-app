@@ -1,42 +1,29 @@
-import { TextInput, View, Text, TouchableOpacity, Alert, KeyboardAvoidingView } from 'react-native';
-import { useEffect, useState } from 'react';
+import Colors from '../../constants/colors';
 import { Styles } from '../../constants/styles';
-import { AntDesign, FontAwesome, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { handleDeleteVehicle, handleUpdateVehicle } from '../../components/vehicleComponents';
+import { Background } from '../../components/components';
+import { handleCreateVehicle, handleDeleteVehicle, handleUpdateVehicle } from '../../components/vehicleComponents';
 import { useApp } from '../../components/context';
 import { useLocalSearchParams } from 'expo-router';
-import { Background } from '../../components/components';
-import Colors from '../../constants/colors';
+import { AntDesign, FontAwesome, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { TextInput, View, Text, TouchableOpacity, Alert, KeyboardAvoidingView } from 'react-native';
+import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 
-const EditVehicle = () =>
+const Vehicle = () =>
 {   
-    const { vehicleParam } = useLocalSearchParams();
-    const vehicle = JSON.parse(vehicleParam);
     const { client, userId, setVehicles } = useApp();
     const navigate = useNavigation();
 
-    const [ year, setYear ] = useState();
-    const [ make, setMake ] = useState();
-    const [ model, setModel ] = useState();
-    const [ color, setColor ] = useState();
-    const [ plate, setPlate ] = useState();
-    const [ vin, setVin ] = useState();
+    const { vehicleParam } = useLocalSearchParams();
+    const vehicle = vehicleParam ? JSON.parse(vehicleParam) : null;
+
+    const [ year, setYear ] = useState(vehicle?.year?.toString() ?? undefined);
+    const [ make, setMake ] = useState(vehicle?.make ?? undefined);
+    const [ model, setModel ] = useState(vehicle?.model ?? undefined);
+    const [ color, setColor ] = useState(vehicle?.color ?? undefined);
+    const [ plate, setPlate ] = useState(vehicle?.plate ?? undefined);
+    const [ vin, setVin ] = useState(vehicle?.vin ?? undefined);
     const [ loading, setLoading ] = useState(false);
-
-    useEffect(() => {
-        const handleGetVehicle = async () =>
-        {
-            setYear(vehicle.year?.toString());
-            setMake(vehicle.make);
-            setModel(vehicle.model);
-            setColor(vehicle.color);
-            setPlate(vehicle?.plate);
-            setVin(vehicle?.vin);
-        };
-
-        handleGetVehicle();
-    }, []);
 
     return (
         <KeyboardAvoidingView behavior='height' style={{flex: 1}}>
@@ -77,9 +64,6 @@ const EditVehicle = () =>
                                 style={Styles.input}
                             />
                         </View>
-                        <View style={Styles.infoContainer}>
-                            <Text style={Styles.subTitle}>Optional</Text>
-                        </View>
                         <View style={Styles.inputWrapper}>
                             <Ionicons name='color-palette' size={20} style={Styles.icon} />
                             <TextInput
@@ -89,6 +73,9 @@ const EditVehicle = () =>
                                 onChangeText={setColor}
                                 style={Styles.input}
                             />
+                        </View>
+                        <View style={Styles.infoContainer}>
+                            <Text style={Styles.subTitle}>Optional</Text>
                         </View>
                         <View style={Styles.inputWrapper}>
                             <FontAwesome name='id-card' size={20} style={Styles.icon} />
@@ -114,12 +101,16 @@ const EditVehicle = () =>
                 </View>
                 <View style={[Styles.block, {alignItems: 'center'}]}>
                     <TouchableOpacity
-                        style={[Styles.actionButton, loading && { opacity: 0.5 }]}
+                        style={[Styles.actionButton, {backgroundColor: Colors.primary}, loading && { opacity: 0.5 }]}
                         disabled={loading}
                         onPress={async () => {
                             if (loading) return;
                             setLoading(true);
-                            await handleUpdateVehicle(client, {year, make, model, color, plate, vin}, vehicle.id, userId, setVehicles);
+                            if (vehicle) {
+                                await handleUpdateVehicle(client, {year, make, model, color, plate, vin}, vehicle.id, userId, setVehicles);
+                            } else {
+                                await handleCreateVehicle(client, {year, make, model, color, plate, vin}, userId, setVehicles);
+                            }
                             navigate.reset({
                                 index: 0,
                                 routes: [{ name: '(profile)' }]
@@ -127,33 +118,35 @@ const EditVehicle = () =>
                             setLoading(false);
                         }}
                     >
-                        <Text style={Styles.actionText}>Update</Text>
+                        <Text style={Styles.actionText}>{vehicle ? 'Update' : 'Create'}</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity
-                        style={[Styles.actionButton, {backgroundColor: 'red'}]}
-                        onPress={() => Alert.alert(
-                            'Confirm',
-                            'Are you sure you want to delete this vehicle?',
-                            [
-                                { text: 'No' },
-                                {
-                                    text: 'Yes',
-                                    onPress: async () => {
-                                        await handleDeleteVehicle(client, vehicle.id, setVehicles);
-                                        navigate.reset({
-                                            index: 0,
-                                            routes: [{ name: '(profile)' }]
-                                        });
-                                }}
-                            ]
-                        )}
-                    >
-                        <Text style={Styles.actionText}>Delete</Text>
-                    </TouchableOpacity>
+                    { vehicle ? (
+                        <TouchableOpacity
+                            style={[Styles.actionButton, {backgroundColor: 'red'}]}
+                            onPress={() => Alert.alert(
+                                'Confirm',
+                                'Are you sure you want to delete this vehicle?',
+                                [
+                                    { text: 'No' },
+                                    {
+                                        text: 'Yes',
+                                        onPress: async () => {
+                                            await handleDeleteVehicle(client, vehicle.id, setVehicles);
+                                            navigate.reset({
+                                                index: 0,
+                                                routes: [{ name: '(profile)' }]
+                                            });
+                                    }}
+                                ]
+                            )}
+                        >
+                            <Text style={Styles.actionText}>Delete</Text>
+                        </TouchableOpacity>
+                    ) : null }
                 </View>
             </Background>
         </KeyboardAvoidingView>
     );
 };
 
-export default EditVehicle;
+export default Vehicle;

@@ -1,52 +1,52 @@
-import { useEffect, useState} from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, ScrollView } from "react-native";
-import { ServiceStyles, Styles } from "../../constants/styles";
-import { Calendar } from "react-native-calendars";
-import { handleGetAppointments, handleSetTimes, handleCreateAppointment, handleFinalCheck } from '../../components/scheduleComponents';
 import Colors from '../../constants/colors';
-import { Select, CalendarHeader, formatDate, formatTime, Background, Loading } from '../../components/components';
-import { MaterialIcons, Ionicons, FontAwesome, AntDesign, FontAwesome5, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
+import moment from 'moment';
+import { handleGetAppointments, handleSetTimes, handleCreateAppointment, handleFinalCheck, handleUpdateAppointment } from '../../components/appointmentComponents';
 import { useApp } from '../../components/context';
 import { handleSendAdminNotif } from '../../components/notifComponents';
-import moment from 'moment';
+import { Select, CalendarHeader, formatDate, formatTime, Background, Loading } from '../../components/components';
+import { ServiceStyles, Styles } from "../../constants/styles";
+import { MaterialIcons, Ionicons, FontAwesome, AntDesign, FontAwesome5, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
+import { useEffect, useState} from 'react';
+import { View, Text, TextInput, TouchableOpacity, Alert, ScrollView } from "react-native";
+import { Calendar } from "react-native-calendars";
 import { useNavigation } from '@react-navigation/native';
+import { useLocalSearchParams } from 'expo-router';
 
 const Schedule = () =>
 {
   const { client, vehicles, userId, setAppointments } = useApp();
   const navigate = useNavigation();
+  const { appointmentParam } = useLocalSearchParams();
+  const appointment = appointmentParam ? JSON.parse(appointmentParam) : null;
 
-  const [selectedDay, setSelectedDay] = useState();
-  const [selectedTime, setSelectedTime] = useState();
-  const [selectedService, setSelectedService] = useState();
-  const [selectedVehicle, setSelectedVehicle] = useState();
+  const [selectedDay, setSelectedDay] = useState(appointment?.date ?? undefined);
+  const [selectedTime, setSelectedTime] = useState(appointment?.time ?? undefined);
+  const [selectedService, setSelectedService] = useState(appointment?.service ?? undefined);
+  const [selectedVehicle, setSelectedVehicle] = useState(appointment?.vehicle ?? undefined);
   const [scheduledAppointments, setScheduledAppointments] = useState();
   const [availableAppointments, setAvailableAppointments] = useState();
-  const [notes, setNotes] = useState();
+  const [notes, setNotes] = useState(appointment?.notes ?? undefined);
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
-  const onRefresh = async () =>
-  {
-    setRefreshing(true);
-
-    try {
-      // refresh appointments
-      const getAppointments = await handleGetAppointments(client, userId);
-      setScheduledAppointments(getAppointments);
-
-    } catch (error) {
-      console.log('Error refreshing:', error);
-    }
-
-    setRefreshing(false);
-  };
+  // get available appointments
   useEffect(() => {
     const initializeAppointments = async () =>
     {
-      const scheduled = await handleGetAppointments();
+      let scheduled = await handleGetAppointments();
+
+      // Filter out the appointment being edited
+      if (appointment) {
+        scheduled = scheduled.filter(
+          (appt) => !(appt.date === appointment.date && appt.time === appointment.time)
+        );
+
+        const getDay = await handleSetTimes(scheduled, appointment.date);
+        setAvailableAppointments(getDay);
+      }
+
       setScheduledAppointments(scheduled);
       setIsReady(true);
     };
@@ -54,6 +54,24 @@ const Schedule = () =>
     initializeAppointments();
   }, []);
 
+  // refresh to get new available appointments
+  const onRefresh = async () =>
+  {
+    setRefreshing(true);
+
+    try {
+      // refresh appointments
+      const getAppointments = await handleGetAppointments();
+      setScheduledAppointments(getAppointments);
+
+    } catch (error) {
+      console.error('ERROR, could not refresh:', error);
+    }
+
+    setRefreshing(false);
+  };
+
+  // called when a user clicks on a new day on the calendar
   const handleDayPress = async (day) =>
   {
     setSelectedDay(day.dateString);
@@ -64,6 +82,7 @@ const Schedule = () =>
 
   const DISABLED_DAYS = ['Saturday', 'Sunday']
 
+  // used to disable certain days of the month
   const getDaysInMonth = (month, year, days) => {
     let pivot = moment().month(month).year(year).startOf('month')
     const end = moment().month(month).year(year).endOf('month')
@@ -196,10 +215,10 @@ const Schedule = () =>
                   <Select
                     key={index}
                     text={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
-                    selected={vehicle === selectedVehicle ? true : false}
+                    selected={vehicle?.id === selectedVehicle?.id ? true : false}
                     action={() => setSelectedVehicle(vehicle)}
-                    leftIcon={<Ionicons name="car-sport" size={30} style={Styles.icon} color={selectedVehicle === vehicle ? Colors.backDrop : null}/>}
-                    rightIcon={<FontAwesome name={selectedVehicle === vehicle ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedVehicle === vehicle ? Colors.backDrop : null}/>}
+                    leftIcon={<Ionicons name="car-sport" size={30} style={Styles.icon} color={Colors.backDrop}/>}
+                    rightIcon={<FontAwesome name={selectedVehicle?.id === vehicle?.id ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedVehicle === vehicle ? Colors.backDrop : null}/>}
                   />
                 ))}
               </View>
@@ -238,35 +257,35 @@ const Schedule = () =>
                   text="Oil Change"
                   selected={selectedService === 'Oil Change' ? true : false}
                   action={() => setSelectedService('Oil Change')}
-                  leftIcon={<FontAwesome5 name="oil-can" size={30} style={Styles.icon} color={selectedService === 'Oil Change' ? Colors.backDrop : null} />}
+                  leftIcon={<FontAwesome5 name="oil-can" size={30} style={Styles.icon} color={Colors.backDrop} />}
                   rightIcon={<FontAwesome name={selectedService === 'Oil Change' ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedService === 'Oil Change' ? Colors.backDrop : null}/>}
                 />
                 <Select
                   text="Diagnosis"
                   selected={selectedService === 'Diagnosis' ? true : false}
                   action={() => setSelectedService('Diagnosis')}
-                  leftIcon={<FontAwesome name="stethoscope" size={30} style={Styles.icon} color={selectedService === 'Diagnosis' ? Colors.backDrop : null}/>}
+                  leftIcon={<FontAwesome name="stethoscope" size={30} style={Styles.icon} color={Colors.backDrop}/>}
                   rightIcon={<FontAwesome name={selectedService === 'Diagnosis' ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedService === 'Diagnosis' ? Colors.backDrop : null}/>}
                 />
                 <Select
                   text="Tuning"
                   selected={selectedService === 'Tuning' ? true : false}
                   action={() => setSelectedService('Tuning')}
-                  leftIcon={<Entypo name="area-graph" size={30} style={Styles.icon} color={selectedService === 'Tuning' ? Colors.backDrop : null}/>}
+                  leftIcon={<Entypo name="area-graph" size={30} style={Styles.icon} color={Colors.backDrop}/>}
                   rightIcon={<FontAwesome name={selectedService === 'Tuning' ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedService === 'Tuning' ? Colors.backDrop : null}/>}
                 />
                 <Select
                   text="A/C"
                   selected={selectedService === 'A/C' ? true : false}
                   action={() => setSelectedService('A/C')}
-                  leftIcon={<MaterialIcons name="air" size={30} style={Styles.icon} color={selectedService === 'A/C' ? Colors.backDrop : null}/>}
+                  leftIcon={<MaterialIcons name="air" size={30} style={Styles.icon} color={Colors.backDrop}/>}
                   rightIcon={<FontAwesome name={selectedService === 'A/C' ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedService === 'A/C' ? Colors.backDrop : null}/>}
                 />
                 <Select
                   text="Other"
                   selected={selectedService === 'Other' ? true : false}
                   action={() => setSelectedService('Other')}
-                  leftIcon={<MaterialCommunityIcons name="dots-horizontal-circle" size={30} style={Styles.icon} color={selectedService === 'Other' ? Colors.backDrop : null} />}
+                  leftIcon={<MaterialCommunityIcons name="dots-horizontal-circle" size={30} style={Styles.icon} color={Colors.backDrop} />}
                   rightIcon={<FontAwesome name={selectedService === 'Other' ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedService === 'Other' ? Colors.backDrop : null}/>}
                 />
               </View>
@@ -362,9 +381,14 @@ const Schedule = () =>
                   setLoading(true);
                   const isTaken = await handleFinalCheck(selectedDay, selectedTime);
                   if (!isTaken) {
-                    await handleSendAdminNotif('Appointment Scheduled', 'A customer has scheduled an appointment');
-                    await handleCreateAppointment(client, selectedDay, selectedTime, selectedService, notes, userId, selectedVehicle.id, setAppointments);
-                    navigate.reset({
+                    if (appointment) {
+                      await handleSendAdminNotif('Appointment Edited', 'A customer has edited their appointment');
+                      await handleUpdateAppointment(client, appointment.id, selectedDay, selectedTime, selectedService, notes, userId, selectedVehicle.id, setAppointments);
+                    } else {
+                      await handleSendAdminNotif('Appointment Scheduled', 'A customer has scheduled an appointment');
+                      await handleCreateAppointment(client, selectedDay, selectedTime, selectedService, notes, userId, selectedVehicle.id, setAppointments);
+                    }
+                      navigate.reset({
                       index: 0,
                       routes: [{ name: '(tabs)'}]
                     });
@@ -388,7 +412,7 @@ const Schedule = () =>
                 style={[ServiceStyles.directionButton, loading && { opacity: 0.5 }, {backgroundColor: Colors.primary}]}
                 disabled={loading}
               >
-                <Text style={Styles.actionText}>Schedule</Text>
+                <Text style={Styles.actionText}>{appointment ? 'Update' : 'Schedule'}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -400,6 +424,6 @@ const Schedule = () =>
     )}
     </>
   )
-}
+};
 
 export default Schedule;

@@ -1,12 +1,11 @@
-import { View, Text, Alert } from 'react-native';
-import { router } from 'expo-router';
 import { Background, Tab } from '../../components/components';
-import { useEffect, useState } from 'react';
 import { useApp } from '../../components/context';
 import { Styles } from '../../constants/styles';
-import { Entypo, Ionicons } from '@expo/vector-icons';
 import { handleUpdateVehicleStatus } from '../../components/vehicleComponents';
 import Animated, { Easing , useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from "react-native-reanimated";
+import { View, Text, Alert } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Entypo, Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
 const VehiclePickup = () =>

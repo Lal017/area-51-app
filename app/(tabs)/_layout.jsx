@@ -1,21 +1,23 @@
-import { View, Alert } from "react-native";
-import { router, Tabs} from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
+import Colors from "../../constants/colors";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import AccountEdit from '../../src/screens/accountEdit';
+import Modal from 'react-native-modal';
+import { handleGetMyAppointments } from "../../components/appointmentComponents";
+import { handleGetTowRequest, handleNotifUpdateTowRequest } from '../../components/towComponents';
+import { Loading } from "../../components/components";
+import { handleGetVehicles, handleNotifUpdateVehicle } from "../../components/vehicleComponents";
+import { registerForPushNotifications } from "../../components/notifComponents";
+import { handleCreateUser, handleUpdateUser, handleGetUser } from '../../components/userComponents';
+import { handleGetCurrentUser } from "../../components/authComponents";
 import { Styles } from "../../constants/styles";
 import { AppProvider, useApp } from "../../components/context";
+import { View } from "react-native";
+import { router, Tabs} from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useRef, useState } from 'react';
 import { generateClient } from "aws-amplify/api";
 import { addNotificationReceivedListener, addNotificationResponseReceivedListener, removeNotificationSubscription, getLastNotificationResponseAsync } from "expo-notifications";
-import { registerForPushNotifications, handleCreateUser, handleUpdateUser, handleCheckUser } from "../../components/notifComponents";
-import Colors from "../../constants/colors";
-import { handleGetCurrentUser } from "../../components/authComponents";
 import { fetchUserAttributes, fetchAuthSession } from "aws-amplify/auth";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { handleGetMyAppointments, handleGetTowRequest, handleNotifUpdateTowRequest } from "../../components/scheduleComponents";
-import { Loading } from "../../components/components";
-import { handleGetVehicles, handleUpdateVehiclePickup } from "../../components/vehicleComponents";
-import { useNavigation } from "@react-navigation/native";
-
 const TabsContent = () =>
 {
     // get variables and setters from context
@@ -30,7 +32,6 @@ const TabsContent = () =>
         setAccess,
         pushToken,
         setPushToken,
-        setNotification,
         firstName,
         setFirstName,
         lastName,
@@ -43,22 +44,24 @@ const TabsContent = () =>
         towRequest,
         setTowRequest,
         setAppointments,
-        setIsStuck,
         newInvoice,
         setNewInvoice,
         newEstimate,
         setNewEstimate,
         vehiclePickup,
-        setVehiclePickup
+        setVehiclePickup,
+        isMissingAttr,
+        setIsMissingAttr
     } = useApp();
 
-    const navigate = useNavigation();
+    // load components when finished fetching data
     const [ ready, setReady ] = useState(false);
 
     // notification listeners
     const notificationListener = useRef();
     const responseListener = useRef();
 
+    // initialize data used for the app
     useEffect(() => {
         const initializeApp = async () =>
         {
@@ -90,19 +93,17 @@ const TabsContent = () =>
 
             // get and set cognito info
             const userInfo = await handleGetCurrentUser();
-            setAccess(userInfo.accessToken.payload["cognito:groups"]);
+            const access_arr = userInfo.accessToken.payload["cognito:groups"];
+            const getAccess = access_arr.includes('Admins') ? 'Admins' : access_arr.includes('TowDrivers') ? 'TowDrivers' : 'Customers';
+            setAccess(getAccess);
             setUserId(userInfo.accessToken.payload.sub);
 
             // identityId for amplify storage
             const getDetails = await fetchAuthSession();
             setIdentityId(getDetails.identityId);
 
-            // get local storage notification
-            const savedNotif = await AsyncStorage.getItem('notification');
-            setNotification(JSON.parse(savedNotif));
-
+            // triggered when a user opens the app by tapping on a notification
             const lastNotificationResponse = await getLastNotificationResponseAsync();
-
             if (lastNotificationResponse) {
                 const type = lastNotificationResponse.notification.request.content.data.type;
                 if (type === "NEW_INVOICE") {
@@ -123,23 +124,14 @@ const TabsContent = () =>
             setNewEstimate(JSON.parse(savedEstimate));
 
             if (!userAtt?.phone_number || ((!userAtt?.given_name || !userAtt?.family_name) && !userAtt?.name)) {
-                setIsStuck(true);
-                Alert.alert(
-                    'Notice',
-                    'Please add missing attributes before continuing',
-                    [
-                        {
-                            text: 'OK',
-                        }
-                    ]
-                );
-                router.push('/(tabs)/(profile)/accountEdit');
+                setIsMissingAttr(true);
             }
         }
 
         initializeApp();
     }, []);
 
+    // called once client and userId have been set
     useEffect(() => {
         const handleGetRequests = async () =>
         {
@@ -158,7 +150,7 @@ const TabsContent = () =>
                 const filterVehicles = getVehicles?.some(item => item.readyForPickup === true);
                 setVehiclePickup(filterVehicles);
             } catch (error) {
-                console.log('Error getting request:', error);
+                console.error('ERROR, could not get requests:', error);
             }
         }
 
@@ -168,20 +160,30 @@ const TabsContent = () =>
         }
     }, [client, userId])
 
-    // Send to database
+    // Send to database once all data has been generated and retrieved
     useEffect(() => {
         const handleRegisterUser = async () => {
             try {
                 // check if user already has entry in database
-                const alreadyExists = await handleCheckUser(client, userId);
+                const user = await handleGetUser(client, userId);
 
-                if (!alreadyExists) {
+                if (!user) {
                     await handleCreateUser(client, userId, identityId, pushToken, access, firstName, lastName, email, phoneNumber);
                 } else {
-                    await handleUpdateUser(client, userId, identityId, pushToken, access, firstName, lastName, email, phoneNumber);
+                    // check if anything has changed
+                    const isSame =
+                        identityId === user.identityId &&
+                        pushToken === user.pushToken &&
+                        access === user.access &&
+                        firstName === user.firstName &&
+                        lastName === user.lastName &&
+                        email === user.email &&
+                        phoneNumber === user.phone;
+
+                    if (!isSame) await handleUpdateUser(client, userId, identityId, pushToken, access, firstName, lastName, email, phoneNumber);
                 }
             } catch (error) {
-                console.error('Error registering for push notifications:', error);
+                console.error('ERROR, could not send info to database', error);
             }
         };
 
@@ -198,7 +200,6 @@ const TabsContent = () =>
 
         // triggered when the notification is actually received. foreground and background
         notificationListener.current = addNotificationReceivedListener(notification => {
-            setNotification(notification.request.content);
 
             if (notification.request.content.data.type === "TOW_RESPONSE") {
                 handleNotifUpdateTowRequest(client, userId, setTowRequest);
@@ -210,7 +211,7 @@ const TabsContent = () =>
                 setNewEstimate(true);
             }
             else if (notification.request.content.data.type === "VEHICLE_PICKUP") {
-                handleUpdateVehiclePickup(client, userId, setVehicles);
+                handleNotifUpdateVehicle(client, userId, setVehicles);
                 setVehiclePickup(prev => !prev);
             }
         });
@@ -248,18 +249,6 @@ const TabsContent = () =>
                     tabBarInactiveTintColor: Colors.backDropAccent,
                     tabBarShowLabel: false,
                 }}
-                screenListeners={{
-                    tabPress: (e) => {
-                        if (!firstName || !lastName || !phoneNumber || !email) {
-                            e.preventDefault();
-                            Alert.alert(
-                                'Notice',
-                                'Please add missing attributes before continuing',
-                                [{ text: 'OK'}]
-                            );
-                        }
-                    }
-                }}
             >
                 <Tabs.Screen
                     name="(home)"
@@ -270,7 +259,7 @@ const TabsContent = () =>
                         tabBarIcon: ({ color, size }) => (
                             <Ionicons name="home" size={size} color={color}/>
                         ),
-                        tabBarBadge: towRequest?.status === 'PENDING' ? (1) : undefined,
+                        tabBarBadge: towRequest?.status === 'IN_PROGRESS' ? (1) : undefined,
                     }}
                 />
                 <Tabs.Screen
@@ -306,6 +295,15 @@ const TabsContent = () =>
         ) : (
             <Loading/>
         )}
+        <Modal
+            isVisible={isMissingAttr}
+            onBackdropPress={null}
+            onBackButtonPress={null}
+            swipeDirection={null}
+            style={{margin: 0}}
+        >
+            <AccountEdit/>
+        </Modal>
         </>
     );
 };

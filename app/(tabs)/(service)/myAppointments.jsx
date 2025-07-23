@@ -1,10 +1,10 @@
-import { View, Text, TouchableOpacity, Alert } from 'react-native';
-import { Styles, ServiceStyles } from '../../../constants/styles';
-import { useEffect } from 'react';
 import { Background, formatDate, formatTime } from '../../../components/components';
-import { handleDeleteAppointment, handleGetMyAppointments } from '../../../components/scheduleComponents';
+import { handleDeleteAppointment, handleGetMyAppointments } from '../../../components/appointmentComponents';
 import { useApp } from '../../../components/context';
 import { handleSendAdminNotif } from '../../../components/notifComponents';
+import { Styles, ServiceStyles } from '../../../constants/styles';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
+import { useEffect } from 'react';
 import { router } from 'expo-router';
 import { useNavigation } from '@react-navigation/native';
 
