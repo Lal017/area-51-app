@@ -1,13 +1,14 @@
-import { TouchableOpacity, Text, Image, View, Dimensions, Alert, TextInput, KeyboardAvoidingView } from 'react-native';
-import { AdminStyles, Styles } from '../../constants/styles';
-import { useEffect, useRef, useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
-import { Background, Loading } from '../../components/components';
-import { handleUploadHomeImage, handleGetURLs, handleRemoveImage, sendMassPushNotification } from '../../components/adminComponents';
-import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import Carousel from 'react-native-reanimated-carousel';
 import Colors from '../../constants/colors';
 import { useApp } from '../../components/context';
+import { AdminStyles, Styles } from '../../constants/styles';
+import { Background, Loading } from '../../components/components';
+import { sendMassPushNotification } from '../../components/notifComponents';
+import { handleUploadHomeImage, handleGetURLs, handleRemoveImage } from '../../components/adminComponents';
+import { TouchableOpacity, Text, Image, View, Dimensions, Alert, TextInput, KeyboardAvoidingView } from 'react-native';
+import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { useEffect, useRef, useState } from 'react';
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -192,7 +193,12 @@ const HomeSettings = () =>
                                         { text: 'No'},
                                         {
                                             text: 'Yes',
-                                            onPress: async () => { await sendMassPushNotification(title, body, client) }
+                                            onPress: async () => {
+                                                const data = {
+                                                    type: "CUSTOM_NOTIFICATION"
+                                                };
+                                                await sendMassPushNotification(client, title, body, data);
+                                            }
                                         }
                                     ]
                                 )

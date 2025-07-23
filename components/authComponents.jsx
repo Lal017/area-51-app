@@ -306,7 +306,6 @@ const handleResetPassword = async (username) =>
         const { nextStep } = await resetPassword({ username });
         handleResetPasswordNextSteps(nextStep, username);
     } catch (error) {
-        console.error('ERROR, could not reset password', error);
         Alert.alert(
             'Error',
             error.name === 'UserNotFoundException' ? 'A user with this email does not exist' : error.name === 'InvalidParameterException' ? 'Please sign in with Google/Amazon' : error.message,

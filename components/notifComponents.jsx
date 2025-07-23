@@ -36,7 +36,7 @@ const sendPushNotification = async (expoPushToken, title, body, data) =>
 
 // used to send a notification to all users
 // (may need to edit to only send to customers group)
-const sendMassPushNotification = async (title, body, client) =>
+const sendMassPushNotification = async (client, title, body, data) =>
 {
     try {
         const users = await handleListUsers(client);
@@ -46,7 +46,8 @@ const sendMassPushNotification = async (title, body, client) =>
             to: expoPushTokens,
             sound: 'default',
             title: title,
-            body: body
+            body: body,
+            data: data
         };
 
         await fetch('https://exp.host/--/api/v2/push/send', {

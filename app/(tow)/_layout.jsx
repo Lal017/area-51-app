@@ -1,15 +1,16 @@
-import { Stack } from "expo-router";
-import { Alert } from "react-native";
-import { CustHeader } from "../../components/components";
+import AccountEdit from '../../src/screens/accountEdit';
+import Modal from 'react-native-modal';
+import { CustHeader, Loading } from "../../components/components";
 import { AppProvider, useApp } from "../../components/context";
+import { registerForPushNotifications } from "../../components/notifComponents";
+import { handleGetCurrentUser } from "../../components/authComponents";
+import { addNotificationReceivedListener, addNotificationResponseReceivedListener, removeNotificationSubscription } from "expo-notifications";
+import { handleGetUser, handleCreateUser, handleUpdateUser } from "../../components/userComponents";
+import { Stack } from "expo-router";
 import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { generateClient } from "aws-amplify/api";
-import { registerForPushNotifications, handleCreateUser, handleUpdateUser } from "../../components/notifComponents";
 import { fetchUserAttributes, fetchAuthSession } from "@aws-amplify/auth";
-import { handleGetCurrentUser } from "../../components/authComponents";
-import { addNotificationReceivedListener, addNotificationResponseReceivedListener, removeNotificationSubscription } from "expo-notifications";
-import { handleGetUser } from "../../components/userComponents";
 
 const TowDriverContent = () =>
 {
@@ -32,24 +33,28 @@ const TowDriverContent = () =>
         setAccess,
         identityId,
         setIdentityId,
-        setIsStuck
+        isMissingAttr,
+        setIsMissingAttr,
     } = useApp();
 
-    const [ ready, setReady ] = useState();
+    // load components when finished fetching data
+    const [ ready, setReady ] = useState(false);
 
+    // notification listeners
     const notificationListener = useRef();
     const responseListener = useRef();
 
+    // initialize data used for the app
     useEffect(() => {
         const initializeApp = async () =>
         {
             // generate client
-            const getClient = generateClient();
-            setClient(getClient);
+            const genClient = generateClient();
+            setClient(genClient);
 
             // get push token for notifications
-            const getPushToken = await registerForPushNotifications();
-            setPushToken(getPushToken);
+            const genPushToken = await registerForPushNotifications();
+            setPushToken(genPushToken);
 
             // get and set user attributes
             const userAtt = await fetchUserAttributes();
@@ -60,7 +65,7 @@ const TowDriverContent = () =>
             } else if (userAtt.name) {
                 const nameSplit = userAtt.name.trim().split(/\s+/);
 
-                if (nameSplit?.length >= 2) {
+                if (nameSplit.length >= 2) {
                     setFirstName(nameSplit[0]);
                     setLastName(nameSplit.slice(1).join(' '));
                 } else {
@@ -81,18 +86,9 @@ const TowDriverContent = () =>
             setIdentityId(getDetails.identityId);
 
             if (!userAtt?.phone_number || ((!userAtt?.given_name || !userAtt?.family_name) && !userAtt?.name)) {
-                setIsStuck(true);
-                Alert.alert(
-                    'Notice',
-                    'Please add missing attributes before continuing',
-                    [
-                        {
-                            text: 'OK',
-                        }
-                    ]
-                );
+                setIsMissingAttr(true);
             }
-        };
+        }
 
         initializeApp();
     }, []);
@@ -124,6 +120,7 @@ const TowDriverContent = () =>
             }
         };
 
+        if (client && userId) { setReady(true); }
         if (client && userId && identityId && pushToken && access && firstName && lastName && email && phoneNumber) {
             handleRegisterUser();
         }
@@ -134,7 +131,7 @@ const TowDriverContent = () =>
     useEffect(() => {
         // triggered when the notification is actually received. foreground and background
         notificationListener.current = addNotificationReceivedListener(notification => {
-
+            console.log('Notification received');
         });
 
         // triggered when the user taps on the notification
@@ -149,15 +146,30 @@ const TowDriverContent = () =>
     }, []);
     
     return(
-        <Stack
-            screenOptions={{
-                headerShown: true
-            }}
+        <>
+        { ready ? (
+            <Stack
+                screenOptions={{
+                    headerShown: true
+                }}
+            >
+                <Stack.Screen name="index" options={{title: 'Console', header: () => <CustHeader title='Console'/>}}/>
+                <Stack.Screen name="(settings)" options={{headerShown: false}}/>
+                <Stack.Screen name="(requests)" options={{headerShown: false}}/>
+            </Stack>
+        ) : (
+            <Loading/>
+        )}
+        <Modal
+            isVisible={isMissingAttr}
+            onBackdropPress={null}
+            onBackButtonPress={null}
+            swipeDirection={null}
+            style={{margin: 0}}
         >
-            <Stack.Screen name="index" options={{title: 'Console', header: () => <CustHeader title='Console'/>}}/>
-            <Stack.Screen name="(settings)" options={{headerShown: false}}/>
-            <Stack.Screen name="(requests)" options={{headerShown: false}}/>
-        </Stack>
+            <AccountEdit/>
+        </Modal>
+        </>
     );
 };
 

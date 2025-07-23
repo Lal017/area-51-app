@@ -47,7 +47,7 @@ const ResetPassword = () =>
                     style={[Styles.actionButton, loading && { opacity: 0.5 }]}
                     disabled={loading}
                 >
-                    <Text style={Styles.actionText}>Reset</Text>
+                    <Text style={Styles.actionText}>Continue</Text>
                 </TouchableOpacity>
                 <Link href="/(auth)/signIn" style={[Styles.text, {textAlign: 'center'}]}>Sign In</Link>
             </View>

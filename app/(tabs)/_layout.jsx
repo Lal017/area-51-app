@@ -51,7 +51,8 @@ const TabsContent = () =>
         vehiclePickup,
         setVehiclePickup,
         isMissingAttr,
-        setIsMissingAttr
+        setIsMissingAttr,
+        setCustomNotification
     } = useApp();
 
     // load components when finished fetching data
@@ -114,14 +115,19 @@ const TabsContent = () =>
                     router.push('(profile)');
                 } else if (type === "VEHICLE_PICKUP") {
                     router.push('(profile)');
+                } else if (type === "CUSTOM_NOTIFICATION") {
+                    setCustomNotification(lastNotificationResponse.notification.request.content);
                 }
             }
 
-            // get local storage invoice and estimate
+            // get local storage data
             const savedInvoice = await AsyncStorage.getItem('invoice');
             setNewInvoice(JSON.parse(savedInvoice));
             const savedEstimate = await AsyncStorage.getItem('estimate');
             setNewEstimate(JSON.parse(savedEstimate));
+            const savedCustomNotif = await AsyncStorage.getItem('customNotification');
+            setCustomNotification(JSON.parse(savedCustomNotif));
+
 
             if (!userAtt?.phone_number || ((!userAtt?.given_name || !userAtt?.family_name) && !userAtt?.name)) {
                 setIsMissingAttr(true);
@@ -199,35 +205,41 @@ const TabsContent = () =>
         if(!client || !userId) return;
 
         // triggered when the notification is actually received. foreground and background
-        notificationListener.current = addNotificationReceivedListener(notification => {
+        notificationListener.current = addNotificationReceivedListener(async (notification) => {
+            const { type } = notification.request.content.data;
 
-            if (notification.request.content.data.type === "TOW_RESPONSE") {
-                handleNotifUpdateTowRequest(client, userId, setTowRequest);
+            if (type === "TOW_RESPONSE") {
+                await handleNotifUpdateTowRequest(client, userId, setTowRequest);
             }
-            else if (notification.request.content.data.type === "NEW_INVOICE") {
-                setNewInvoice(true);
+            else if (type === "NEW_INVOICE") {
+                await setNewInvoice(true);
             }
-            else if (notification.request.content.data.type === "NEW_ESTIMATE") {
-                setNewEstimate(true);
+            else if (type === "NEW_ESTIMATE") {
+                await setNewEstimate(true);
             }
-            else if (notification.request.content.data.type === "VEHICLE_PICKUP") {
-                handleNotifUpdateVehicle(client, userId, setVehicles);
+            else if (type === "VEHICLE_PICKUP") {
+                await handleNotifUpdateVehicle(client, userId, setVehicles);
                 setVehiclePickup(prev => !prev);
+            }
+            else if (type === "CUSTOM_NOTIFICATION") {
+                await setCustomNotification(notification.request.content);
             }
         });
 
         // triggered when the user taps on the notification
         responseListener.current = addNotificationResponseReceivedListener(response => {
-            if (response.notification.request.content.data.type === "TOW_RESPONSE") {
+            const { type } = response.notification.request.content.data;
+
+            if (type === "TOW_RESPONSE") {
                 router.push('(tabs)');
             }
-            else if (response.notification.request.content.data.type === "NEW_INVOICE") {
+            else if (type === "NEW_INVOICE") {
                 router.push('(profile)');
             }
-            else if (response.notification.request.content.data.type === "NEW_ESTIMATE") {
+            else if (type === "NEW_ESTIMATE") {
                 router.push('(profile)');
             }
-            else if (response.notification.request.content.data.type === "VEHICLE_PICKUP") {
+            else if (type === "VEHICLE_PICKUP") {
                 router.push('(profile)');
             }
         });

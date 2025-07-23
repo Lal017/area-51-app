@@ -8,7 +8,7 @@ import { AppointmentReminder, Background } from "../../../components/components"
 import { HomeStyles, Styles } from "../../../constants/styles";
 import { useApp } from "../../../components/context";
 import { Text, TouchableOpacity, Linking, View, Alert, Image, Dimensions, ActivityIndicator } from "react-native";
-import { Entypo, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { AntDesign, Entypo, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import Animated, { Easing , useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from "react-native-reanimated";
 import { useEffect, useState, useRef } from "react";
 import { router } from "expo-router";
@@ -18,7 +18,20 @@ const screenWidth = Dimensions.get("window").width;
 // Home page after login
 const Index = () =>
 {
-  const { client, userId, firstName, towRequest, vehicles, appointments, setTowRequest, setAppointments, setVehicles, vehiclePickup } = useApp();
+  const {
+    client,
+    userId,
+    firstName,
+    towRequest,
+    vehicles,
+    appointments,
+    setTowRequest,
+    setAppointments,
+    setVehicles,
+    vehiclePickup,
+    customNotification,
+    setCustomNotification
+  } = useApp();
   
   const [ urls, setUrls ] = useState();
   const [ refreshing, setRefreshing ] = useState(false);
@@ -202,8 +215,24 @@ const Index = () =>
           </View>
         )}
       </View>
+      { customNotification ? (
+        <View style={HomeStyles.panel}>
+          <View style={[HomeStyles.panelContainer, {backgroundColor: Colors.backgroundAccent, paddingTop: 25, paddingBottom: 25, position: 'relative'}]}>
+            <TouchableOpacity
+              style={{position: 'absolute', right: 10, top: 10}}
+              onPress={() => setCustomNotification()}
+            >
+              <AntDesign name="closecircle" size={20} color={Colors.backDropAccent}/>
+            </TouchableOpacity>
+            <View style={[Styles.infoContainer, {rowGap: 0}]}>
+              <Text style={HomeStyles.appointmentTitle}>{customNotification?.title}</Text>
+              <Text style={HomeStyles.appointmentText}>{customNotification?.body}</Text>
+            </View>
+          </View>
+        </View>
+      ) : null }
     </Background>
   );
-}
+};
 
 export default Index;

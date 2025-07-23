@@ -168,7 +168,10 @@ const UserView = () =>
                                     {
                                         text: 'Yes',
                                         onPress: async () => {
-                                            await sendPushNotification(customer.pushToken, title, body);
+                                            const data = {
+                                                type: "CUSTOM_NOTIFICATION"
+                                            };
+                                            await sendPushNotification(customer.pushToken, title, body, data);
                                             Alert.alert(
                                                 'Notification Sent',
                                                 'Your notification has been sent!',

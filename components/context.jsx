@@ -20,6 +20,7 @@ const AppProvider = ({ children }) => {
   const [ newEstimate, setNewEstimate ] = useState();
   const [ vehiclePickup, setVehiclePickup ] = useState(false);
   const [ isMissingAttr, setIsMissingAttr ] = useState(false);
+  const [ customNotification, setCustomNotification ] = useState();
 
   const handleNewInvoice = async (value) =>
   {
@@ -31,7 +32,7 @@ const AppProvider = ({ children }) => {
       }
       setNewInvoice(value);
     } catch (error) {
-      console.error('error setting new invoice:', error);
+      console.error('ERROR, could not set new invoice:', error);
     }
   };
 
@@ -45,7 +46,21 @@ const AppProvider = ({ children }) => {
       }
       setNewEstimate(value);
     } catch (error) {
-      console.error('error setting new estimate:', error);
+      console.error('ERROR, could not set new estimate:', error);
+    }
+  };
+
+  const handleCustomNotification = async (value) =>
+  {
+    try {
+      if (value) {
+        await AsyncStorage.setItem('customNotification', JSON.stringify(value));
+      } else {
+        await AsyncStorage.removeItem('customNotification');
+      }
+      setCustomNotification(value);
+    } catch (error) {
+      console.error('ERROR, could not set custom notification:', error);
     }
   };
 
@@ -82,7 +97,9 @@ const AppProvider = ({ children }) => {
         vehiclePickup,
         setVehiclePickup,
         isMissingAttr,
-        setIsMissingAttr
+        setIsMissingAttr,
+        customNotification,
+        setCustomNotification: handleCustomNotification
         }}>
       {children}
     </AppContext.Provider>
@@ -91,7 +108,7 @@ const AppProvider = ({ children }) => {
 
 const useApp = () =>
 {
-    return useContext(AppContext);
+  return useContext(AppContext);
 }
 
 export { AppProvider, useApp };

@@ -79,7 +79,7 @@ const ResetPasswordConfirm = () =>
                         style={[Styles.actionButton, loading && { opacity: 0.5 }]}
                         disabled={loading}
                     >
-                        <Text style={Styles.actionText}>Confirm</Text>
+                        <Text style={Styles.actionText}>Reset</Text>
                     </TouchableOpacity>
                 </View>
             </AuthBackground>

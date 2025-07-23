@@ -131,7 +131,7 @@ const AdminContent = () =>
     useEffect(() => {
         // triggered when the notification is actually received. foreground and background
         notificationListener.current = addNotificationReceivedListener(notification => {
-            console.log('Notification recieved')
+            console.log('Notification recieved');
         });
 
         // triggered when the user taps on the notification
