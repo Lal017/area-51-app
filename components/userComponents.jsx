@@ -132,11 +132,35 @@ const handleListUsers = async (client) =>
     }
 };
 
+
+// -------------------------------------------
+//                  CUSTOMERS
+// -------------------------------------------
+
+// used to request a tow driver account while already authenticated as a customer
+const handleRequestDriverAccount = async (client, userId) =>
+{
+    try {
+        await client.graphql({
+            query: updateUser,
+            variables: {
+                input: {
+                    id: userId,
+                    driverId: '1'
+                }
+            }
+        });
+    } catch (error) {
+        console.error('ERROR, could not request a driver account:', error);
+    }
+};
+
 export {
     handleGetUser,
     handleCreateUser,
     handleUpdateUser,
     handleDeleteUser,
     handleDeleteStorage,
-    handleListUsers
+    handleListUsers,
+    handleRequestDriverAccount
 }

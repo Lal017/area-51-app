@@ -45,7 +45,8 @@ const handleAssignTowDriverId = async (client, userId) =>
             variables: {
                 input: {
                     id: userId,
-                    driverId: driverId
+                    driverId: driverId,
+                    access: 'TowDrivers'
                 }
             }
         });

@@ -160,7 +160,6 @@ const SignUp = () =>
                                 setLoading(true);
                                 try {
                                     await handleSignUp(firstName, lastName, email, password, phoneNumber);
-                                    console.log(JSON.stringify(check));
                                     await AsyncStorage.setItem('wantsToBeTowDriver', JSON.stringify(check));
                                 } catch (error) {
                                     console.error('ERROR, could not sign up:', error);

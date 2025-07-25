@@ -23,6 +23,7 @@ const ProfileLayout = () =>
             <Stack.Screen name="vehiclePickup" options={{title: "Pickup Vehicle", header: () => <CustHeader title="Vehicle Pickup" />}}/>
             <Stack.Screen name="invoices" options={{title: "Invoices", header: () => <CustHeader title="Invoices" />}}/>
             <Stack.Screen name="estimates" options={{title: "Estimates", header: () => <CustHeader title="Estimates" />}}/>
+            <Stack.Screen name="driverAccountRequest" options={{title: "Driver Account", header: () => <CustHeader title='Driver Account'/>}}/>
         </Stack>
     );
 }
