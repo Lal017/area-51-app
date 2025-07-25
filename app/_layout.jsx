@@ -4,6 +4,7 @@ import amplifyconfig from '../src/amplifyconfiguration.json';
 Amplify.configure(amplifyconfig);
 // ----------------------------------------------------------------
 import Colors from '../constants/colors';
+import * as TaskManager from 'expo-task-manager';
 import { handleGetCurrentUser } from '../components/authComponents';
 import { Stack } from 'expo-router';
 import { setNotificationHandler } from 'expo-notifications';
@@ -23,6 +24,19 @@ setNotificationHandler({
     vibrationPattern: [0, 200, 200, 200],
     priority: 'high',
   })
+});
+
+// define task to track tow truck drivers location
+const LOCATION_TASK_NAME = "area51-background-location-task";
+TaskManager.defineTask(LOCATION_TASK_NAME, ({data, error}) => {
+  if (error) {
+    console.error(error);
+    return;
+  }
+  if (data) {
+    const { locations } = data;
+    console.log('Location:', locations[0]);
+  }
 });
 
 const RootLayout = () =>

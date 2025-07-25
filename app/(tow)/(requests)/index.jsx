@@ -10,7 +10,7 @@ import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 
 const RequestList = () =>
 {
-    const { client } = useApp();
+    const { client, driverId } = useApp();
 
     const [ towRequests, setTowRequests ] = useState();
     const [ ready, setReady ] = useState(false);
@@ -31,7 +31,13 @@ const RequestList = () =>
         {
             try {
                 const getTowRequests = await handleGetAllTowRequests(client);
-                setTowRequests(getTowRequests);
+                const getActiveRequest = getTowRequests.find(item => item.driverId === driverId);
+                if (getActiveRequest) {
+                    setTowRequests([getActiveRequest]);
+                } else {
+                    const filteredRequests = getTowRequests.filter(item => item.status === 'REQUESTED');
+                    setTowRequests(filteredRequests);
+                }
                 setReady(true);
             } catch (error) {
                 console.log('Error getting tow requests:', error);
@@ -43,12 +49,12 @@ const RequestList = () =>
 
     return (
         <>
-        { ready ? (
+        { ready && towRequests ? (
             <Background refreshing={refresing} onRefresh={onRefresh}>
                 { towRequests?.map((request, index) => (
                     <Tab
                         key={index}
-                        text={<Text style={[Styles.headerTitle, {paddingLeft: 75}, request.status === 'REQUESTED' ? {color: Colors.primary} : request.status === 'IN_PROGRESS' ? {color: Colors.secondary} : null ]}><Text style={Styles.tabText}>{request.user.firstName}</Text>{'\n'}{request.status === 'IN_PROGRESS' ? 'IN PROGRESS' : request.status}</Text>}
+                        text={<Text style={[Styles.headerTitle, {paddingLeft: 75}, request.status === 'REQUESTED' ? {color: Colors.primary} : request.status === 'IN_PROGRESS' ? {color: Colors.secondary} : null ]}><Text style={Styles.tabText}>{request?.user?.firstName}</Text>{'\n'}{request.status === 'IN_PROGRESS' ? 'ACTIVE REQUEST' : request.status}</Text>}
                         action={() => router.push({
                             pathname: 'towResponse',
                             params: { towParam: JSON.stringify(request)}

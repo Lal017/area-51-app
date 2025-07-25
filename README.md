@@ -3,7 +3,6 @@ ToDo:
     - Try to make styling for tow request look better and maybe also for scheduling
     - Try to make styling for admin pages better
     - update notification listeners for Admins and TowDrivers
-    - allow users to request to become a towdriver while inside of the app
     - fix handleResetPassword error message codes
     - use expo location subscription to get tow drivers coordinates once they accept a tow request and upload to database
     - use a subscription to listen for updates to tow drivers coordinates in database for customer and then display these coordinates on a map.

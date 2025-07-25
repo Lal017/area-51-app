@@ -608,12 +608,14 @@ const TowStyles = StyleSheet.create({
     dualButtonContainer: {
         width: '100%',
         flexDirection: 'row',
-        justifyContent: 'space-evenly',
-        alignItems: 'center'
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingLeft: 20,
+        paddingRight: 20
     },
     button: {
-        width: '40%',
-        height: 50,
+        width: '45%',
+        height: 55,
         borderRadius: 10,
         justifyContent: 'center',
         alignItems: 'center',

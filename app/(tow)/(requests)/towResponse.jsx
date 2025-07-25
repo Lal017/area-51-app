@@ -1,24 +1,30 @@
 import Colors from "../../../constants/colors";
-import { handleAcceptTowRequest } from "../../../components/towComponents";
+import * as Location from 'expo-location';
+import { handleAcceptTowRequest, handleCompleteTowRequest } from "../../../components/towComponents";
 import { useApp } from "../../../components/context";
 import { sendPushNotification } from '../../../components/notifComponents'
 import { Background, formatNumber } from "../../../components/components";
 import { TowStyles, ServiceStyles, Styles } from "../../../constants/styles";
 import { handleGetAddress } from "../../../components/adminComponents";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, router } from "expo-router";
 import { TouchableOpacity, View, Text, TextInput, KeyboardAvoidingView, Alert } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import { useEffect, useState } from "react";
 import { AntDesign, Entypo, FontAwesome5 } from "@expo/vector-icons";
 import { openURL } from "expo-linking";
+import { useNavigation } from "@react-navigation/native";
+
+const LOCATION_TASK_NAME = "area51-background-location-task";
 
 const TowResponse = () =>
 {
     const { towParam } = useLocalSearchParams();
     const request = JSON.parse(towParam);
 
-    const { client, firstName, phone } = useApp();
+    const { client, driverId, firstName, phone } = useApp();
+    const navigate = useNavigation();
 
+    const [ location, setLocation ] = useState();
     const [ address, setAddress ] = useState();
     const [ waitTime, setWaitTime ] = useState();
 
@@ -42,7 +48,63 @@ const TowResponse = () =>
         };
 
         fetchAddress();
-    });
+
+    }, []);
+
+    const startWatchingLocation = async () =>
+    {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+            Alert.alert(
+                'NOTICE',
+                'You must give location permissions to accept a tow request',
+                [{
+                    text: 'Back',
+                    onPress: () => router.back()
+                }]
+            );
+            return;
+        } else {
+            const { status } = await Location.requestBackgroundPermissionsAsync();
+            if (status !== 'granted') {
+                Alert.alert(
+                    'NOTICE',
+                    'You must give background location permissions to accept a tow request',
+                    [{
+                        text: 'Back',
+                        onPress: () => router.back()
+                    }]
+                );
+                return;
+            }
+        }
+
+        const isTracking = await Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME);
+        if (!isTracking) {
+            await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+                timeInterval: 30000,
+                distanceInterval: 0,
+                foregroundService: {
+                    notificationTitle: 'Location Sharing',
+                    notificationBody: 'The customer is currently seeing your location',
+                },
+                activityType: Location.ActivityType.AutomotiveNavigation
+            });
+            console.log('started tracking location');
+        } else {
+            console.error('location tracking has already started');
+        }
+    };
+
+    const stopWatchingLocation = async () => {
+        const hasStarted = Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME);
+        if (hasStarted) {
+            await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
+            console.log('stopped tracking location');
+        } else {
+            console.log('not currently tracking');
+        }
+    };
 
     return (
         <KeyboardAvoidingView behavior="height" style={{flex: 1}}>
@@ -86,7 +148,7 @@ const TowResponse = () =>
                             onPress={() => openInGoogleMaps(request.latitude, request.longitude)}
                             style={{flexDirection: 'row', columnGap: 10}}
                         >
-                            <Text style={[Styles.text, {fontWeight: 'bold', color: Colors.secondary}]}>| Open in Maps</Text>
+                            <Text style={[Styles.text, {fontWeight: 'bold', color: Colors.secondary}]}>| Preview in Maps</Text>
                             <FontAwesome5 name='map-marked-alt' size={25} color={Colors.secondary}/>
                             <Text style={[Styles.text, {fontWeight: 'bold', color: Colors.secondary}]}>|</Text>
                         </TouchableOpacity>
@@ -108,62 +170,98 @@ const TowResponse = () =>
                             <Text style={Styles.text}>{request?.notes}</Text>
                         </View>
                     ) : null }
-                    { request.status === 'REQUESTED' ? (
-                        <>
-                            <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                                <Text style={Styles.subTitle}>Wait Time</Text>
-                                <Text style={Styles.text}>Set an estimated wait time for the customer (in minutes)</Text>
-                                <View style={{flexDirection: 'row', columnGap: 10, paddingTop: 10, alignItems: 'center'}}>
-                                    <View style={TowStyles.inputWrapper}>
-                                        <AntDesign name="clockcircle" size={25} color='white' style={Styles.icon}/>
-                                        <TextInput
-                                            placeholder='wait time'
-                                            placeholderTextColor={Colors.text}
-                                            value={waitTime}
-                                            onChangeText={setWaitTime}
-                                            keyboardType='number-pad'
-                                            style={TowStyles.input}
-                                        />
-                                    </View>
-                                    <Text style={Styles.text}>minutes</Text>
+                    { request?.status === 'REQUESTED' ? (
+                        <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                            <Text style={Styles.subTitle}>Wait Time</Text>
+                            <Text style={Styles.text}>Set an estimated wait time for the customer (in minutes)</Text>
+                            <View style={{flexDirection: 'row', columnGap: 10, paddingTop: 10, alignItems: 'center'}}>
+                                <View style={TowStyles.inputWrapper}>
+                                    <AntDesign name="clockcircle" size={25} color='white' style={Styles.icon}/>
+                                    <TextInput
+                                        placeholder='wait time'
+                                        placeholderTextColor={Colors.text}
+                                        value={waitTime}
+                                        onChangeText={setWaitTime}
+                                        keyboardType='number-pad'
+                                        style={TowStyles.input}
+                                    />
                                 </View>
+                                <Text style={Styles.text}>minutes</Text>
                             </View>
-                            <View style={TowStyles.dualButtonContainer}>
-                                <TouchableOpacity
-                                    style={[TowStyles.button, {backgroundColor: Colors.primary}]}
-                                    onPress={() => {Alert.alert(
-                                        'Confirm',
-                                        'Once you accept this request, the customer will be able to view your location. Are you sure you want to accept the request?',
-                                        [
-                                            { text: 'No' },
-                                            {
-                                                text: 'Yes',
-                                                onPress: async () => {
-                                                    const data = {
-                                                        type: 'TOW_RESPONSE'
-                                                    };
-                                                    await sendPushNotification(request.pushToken, 'Tow Request', 'A driver is on the way!', data);
-                                                    await handleAcceptTowRequest(client, request.id, 'IN_PROGRESS', waitTime, firstName, phone);
-                                                }
-                                            }
-                                        ]
-                                    )}}
-                                >
-                                    <AntDesign name="check" size={25} color='white'/>
-                                    <Text style={Styles.actionText}>Accept</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    style={[TowStyles.button, {backgroundColor: Colors.secondary}]}
-                                    onPress={() => openCallCustomer(request?.user?.phone)}
-                                >
-                                    <Entypo name="phone" size={25} color='white'/>
-                                    <Text style={Styles.actionText}>Call Customer</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </>
-                    ) : request.status === 'IN_PROGRESS' ? (
-                        <View></View>
+                        </View>
                     ) : null }
+                </View>
+                <View style={Styles.block}>
+                    <View style={TowStyles.dualButtonContainer}>
+                        <TouchableOpacity
+                            style={[TowStyles.button, {backgroundColor: Colors.secondary}]}
+                            onPress={() => openCallCustomer(request?.user?.phone)}
+                        >
+                            <Entypo name="phone" size={25} color='white'/>
+                            <Text style={Styles.actionText}>Call customer</Text>
+                        </TouchableOpacity>
+                        { request?.status === 'REQUESTED' ? (
+                            <TouchableOpacity
+                                style={[TowStyles.button, {backgroundColor: Colors.primary}]}
+                                onPress={() => {Alert.alert(
+                                    'Confirmation',
+                                    'Once you accept this request, the customer will be able to view your location. Are you sure you want to accept the request?',
+                                    [
+                                        { text: 'No' },
+                                        {
+                                            text: 'Yes',
+                                            onPress: async () => {
+                                                await startWatchingLocation();
+                                                const data = {
+                                                    type: 'TOW_RESPONSE'
+                                                };
+                                                await sendPushNotification(request.pushToken, 'Tow Request', 'A driver is on the way!', data);
+                                                await handleAcceptTowRequest(client, request.id, 'IN_PROGRESS', waitTime, driverId, firstName, phone);
+                                                navigate.reset({
+                                                    index: 0,
+                                                    routes: [{ name: '(tow)'}]
+                                                });
+                                                openInGoogleMaps(request?.latitude, request?.longitude);
+                                            }
+                                        }
+                                    ]
+                                )}}
+                            >
+                                <AntDesign name="check" size={25} color='white'/>
+                                <Text style={Styles.actionText}>Accept</Text>
+                            </TouchableOpacity>
+                        ) : (
+                            <TouchableOpacity
+                                style={[TowStyles.button, {backgroundColor: Colors.secondary}]}
+                                onPress={() => {Alert.alert(
+                                    'Completed',
+                                    'Mark this tow request as completed?',
+                                    [
+                                        { text: 'No' },
+                                        {
+                                            text: 'Yes',
+                                            onPress: async () => {
+                                                await stopWatchingLocation();
+                                                await handleCompleteTowRequest(client, request.id);
+                                                Alert.alert(
+                                                    'Completed',
+                                                    'Tow request has been completed!',
+                                                    [{ text: 'OK' }]
+                                                );
+                                                navigate.reset({
+                                                    index: 0,
+                                                    routes: [{ name: '(tow)'}]
+                                                });
+                                            }
+                                        }
+                                    ]
+                                )}}
+                            >
+                                <AntDesign name="check" size={25} color='white'/>
+                                <Text style={Styles.actionText}>Complete</Text>
+                            </TouchableOpacity>
+                        )}
+                    </View>
                 </View>
             </Background>
         </KeyboardAvoidingView>

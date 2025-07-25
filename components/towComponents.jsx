@@ -17,8 +17,7 @@ const handleGetAllTowRequests = async (client) =>
                 filter: {
                     and: [
                         { status: { ne: 'COMPLETED' }},
-                        { status: { ne: 'CANCELLED' }},
-                        { status: { ne: 'IN_PROGRESS' }}
+                        { status: { ne: 'CANCELLED' }}
                     ]
                 }
             }
@@ -71,7 +70,7 @@ const handleUpdateCustomersTowRequestStatus = async (client, requestId, status, 
 // -----------------------------------------
 
 // used to update tow request with drivers info
-const handleAcceptTowRequest = async (client, requestId, status, waitTime, firstName, phone) =>
+const handleAcceptTowRequest = async (client, requestId, status, waitTime, driverId, firstName, phone) =>
 {
     try {
         await client.graphql({
@@ -81,13 +80,32 @@ const handleAcceptTowRequest = async (client, requestId, status, waitTime, first
                     id: requestId,
                     status: status,
                     waitTime: waitTime,
-                    firstName: firstName,
-                    phone: phone
+                    driverId: driverId,
+                    driverFirstName: firstName,
+                    driverPhoneNumber: phone
                 }
             }
         });
     } catch (error) {
         console.error('ERROR, could not accept tow request:', error);
+    }
+};
+
+// used to mark the tow request as completed
+const handleCompleteTowRequest = async (client, requestId) =>
+{
+    try {
+        await client.graphql({
+            query: updateTowRequest,
+            variables: {
+                input: {
+                    id: requestId,
+                    status: 'COMPLETED'
+                }
+            }
+        });
+    } catch (error) {
+        console.error('ERROR, could not mark as complete:', error);
     }
 };
 
@@ -231,6 +249,7 @@ export {
     handleGetAllTowRequests,
     handleUpdateCustomersTowRequestStatus,
     handleAcceptTowRequest,
+    handleCompleteTowRequest,
     handleUpdateDriversLocation,
     handleCreateTowRequest,
     handleGetTowRequest,
