@@ -3,9 +3,9 @@ import { createTowRequest, updateTowRequest, deleteTowRequest } from "../src/gra
 import { Alert } from 'react-native';
 import { router } from "expo-router";
 
-// -------------------------------------
+// ---------------------------------------
 //           ADMINS & TOWDRIVERS
-// -------------------------------------
+// ---------------------------------------
 
 // get all active Tow Requests
 const handleGetAllTowRequests = async (client) =>
@@ -29,6 +29,11 @@ const handleGetAllTowRequests = async (client) =>
         console.error('ERROR, could not get all tow requests:', error);
     }
 };
+
+
+// -----------------------------------------
+//                  ADMINS
+// -----------------------------------------
 
 // used to update the status of a customers tow request
 const handleUpdateCustomersTowRequestStatus = async (client, requestId, status, waitTime) =>
@@ -57,6 +62,43 @@ const handleUpdateCustomersTowRequestStatus = async (client, requestId, status, 
         }
     } catch (error) {
         console.error('ERROR, could not update tow request:', error);
+    }
+};
+
+
+// -----------------------------------------
+//               TOW DRIVERS
+// -----------------------------------------
+
+// used to update tow request with drivers info
+const handleAcceptTowRequest = async (client, requestId, status, waitTime, firstName, phone) =>
+{
+    try {
+        await client.graphql({
+            query: updateTowRequest,
+            variables: {
+                input: {
+                    id: requestId,
+                    status: status,
+                    waitTime: waitTime,
+                    firstName: firstName,
+                    phone: phone
+                }
+            }
+        });
+    } catch (error) {
+        console.error('ERROR, could not accept tow request:', error);
+    }
+};
+
+// used to update the drivers location every 30 seconds
+const handleUpdateDriversLocation = () =>
+{
+    try {
+
+        console.log('Current location:');
+    } catch (error) {
+        console.error('ERROR, could not update drivers location', error);
     }
 };
 
@@ -186,8 +228,10 @@ const handleDeleteAllTowRequests = async (client, userID) =>
 };
 
 export {
-    handleUpdateCustomersTowRequestStatus,
     handleGetAllTowRequests,
+    handleUpdateCustomersTowRequestStatus,
+    handleAcceptTowRequest,
+    handleUpdateDriversLocation,
     handleCreateTowRequest,
     handleGetTowRequest,
     handleNotifUpdateTowRequest,

@@ -6,11 +6,13 @@ import { View, Text, Alert, TextInput, TouchableOpacity, KeyboardAvoidingView } 
 import { router, useLocalSearchParams } from 'expo-router';
 import { AntDesign, FontAwesome6, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useState } from 'react';
-import { handleMakeUserTowDriver } from '../../../components/adminComponents';
+import { handleAssignTowDriverId, handleMakeUserTowDriver } from '../../../components/adminComponents';
 import { useNavigation } from '@react-navigation/native';
+import { useApp } from '../../../components/context';
 
 const UserView = () =>
 {
+    const { client } = useApp();
     const { userParam } = useLocalSearchParams();
     const customer = JSON.parse(userParam);
     const navigate = useNavigation();
@@ -57,12 +59,16 @@ const UserView = () =>
                                                 onPress: async () => {
                                                     try {
                                                         await handleMakeUserTowDriver(customer?.email);
+                                                        await handleAssignTowDriverId(client, customer?.id);
                                                         Alert.alert(
                                                             'Driver Created',
                                                             'The user has been converted into a tow truck driver',
                                                             [{ text: 'OK' }]
                                                         );
-                                                        await sendPushNotification(customer.pushToken, 'Driver Account Request', 'Your account is ready!');
+                                                        const data = {
+                                                            type: "DRIVER_ACCOUNT"
+                                                        };
+                                                        await sendPushNotification(customer.pushToken, 'Driver Account Request', 'Your account is ready!', data);
                                                         navigate.reset({
                                                             index: 0,
                                                             routes: [{ name: '(admin)'}]

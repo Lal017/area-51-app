@@ -3,6 +3,7 @@ type User
   @auth(rules: [
     {allow: owner},
     {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]},
+    {allow: groups, groups: ["TowDrivers"], operations: [read]},
     {allow: private, provider: identityPool, operations: [read]}
   ])
 {
@@ -24,7 +25,8 @@ type Vehicle
   @model
   @auth(rules: [
     {allow: owner},
-    {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]}
+    {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]},
+    {allow: groups, groups: ["TowDrivers"], operations: [read]},
     {allow: private, provider: identityPool, operations: [read]}
   ])
 {
@@ -71,7 +73,7 @@ type TowRequest
   @auth(rules: [
     {allow: owner},
     {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]},
-    {allow: groups, groups: ["TowDrivers"], operations: [read]}
+    {allow: groups, groups: ["TowDrivers"], operations: [read, update]}
   ])
 {
   id: ID!

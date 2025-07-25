@@ -2,22 +2,25 @@ import Colors from "../../constants/colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AccountEdit from '../../src/screens/accountEdit';
 import Modal from 'react-native-modal';
+import LottieView from "lottie-react-native";
 import { handleGetMyAppointments } from "../../components/appointmentComponents";
 import { handleGetTowRequest, handleNotifUpdateTowRequest } from '../../components/towComponents';
-import { Loading } from "../../components/components";
+import { Background, Loading } from "../../components/components";
 import { handleGetVehicles, handleNotifUpdateVehicle } from "../../components/vehicleComponents";
 import { handleSendAdminNotif, registerForPushNotifications } from "../../components/notifComponents";
 import { handleCreateUser, handleUpdateUser, handleGetUser } from '../../components/userComponents';
 import { handleGetCurrentUser } from "../../components/authComponents";
 import { Styles } from "../../constants/styles";
 import { AppProvider, useApp } from "../../components/context";
-import { View } from "react-native";
+import { View, Text, TouchableOpacity, Alert } from "react-native";
 import { router, Tabs} from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useEffect, useRef, useState } from 'react';
 import { generateClient } from "aws-amplify/api";
 import { addNotificationReceivedListener, addNotificationResponseReceivedListener, removeNotificationSubscription, getLastNotificationResponseAsync } from "expo-notifications";
-import { fetchUserAttributes, fetchAuthSession } from "aws-amplify/auth";
+import { fetchUserAttributes, fetchAuthSession, signOut } from "aws-amplify/auth";
+import { useNavigation } from "@react-navigation/native";
+
 const TabsContent = () =>
 {
     // get variables and setters from context
@@ -52,17 +55,33 @@ const TabsContent = () =>
         setVehiclePickup,
         isMissingAttr,
         setIsMissingAttr,
-        setCustomNotification
+        setCustomNotification,
+        driverId,
+        setDriverId
     } = useApp();
 
+    const navigate = useNavigation();
     // load components when finished fetching data
     const [ ready, setReady ] = useState(false);
     // if user is requesting to be a tow driver
-    const [ towDriverRequest, setTowDriverRequest ] = useState();
+    const [ waitingScreen, setWaitingScreen ] = useState();
+    // ask user to refresh screen once they have been made a tow truck driver
+    const [ refreshPrompt, setRefreshPrompt ] = useState(false);
+    const [ refreshing, setRefreshing ] = useState(false);
 
     // notification listeners
     const notificationListener = useRef();
     const responseListener = useRef();
+
+    const onRefresh = async () =>
+    {
+        setRefreshing(true);
+        navigate.reset({
+            index: 0,
+            routes: [{ name: '(tow)'}]
+        });
+        setRefreshing(false);
+    };
 
     // initialize data used for the app
     useEffect(() => {
@@ -130,7 +149,6 @@ const TabsContent = () =>
             const savedCustomNotif = await AsyncStorage.getItem('customNotification');
             setCustomNotification(JSON.parse(savedCustomNotif));
 
-
             if (!userAtt?.phone_number || ((!userAtt?.given_name || !userAtt?.family_name) && !userAtt?.name)) {
                 setIsMissingAttr(true);
             }
@@ -157,14 +175,18 @@ const TabsContent = () =>
                 setVehicles(getVehicles);
                 const filterVehicles = getVehicles?.some(item => item.readyForPickup === true);
                 setVehiclePickup(filterVehicles);
+
+                // set driverId
+                const user = await handleGetUser(client, userId);
+                if (user?.driverId) { setDriverId(user?.driverId); }
+                else { setDriverId('0'); }
             } catch (error) {
                 console.error('ERROR, could not get requests:', error);
             }
-        }
+        };
 
         if (client && userId) {
             handleGetRequests();
-            setReady(true);
         }
     }, [client, userId])
 
@@ -178,11 +200,18 @@ const TabsContent = () =>
                 // check if user request to be a tow driver
                 const getTowDriverRequest = await AsyncStorage.getItem('wantsToBeTowDriver');
                 const check = JSON.parse(getTowDriverRequest);
-                console.log(check, getTowDriverRequest);
                 if (check) {
                     await AsyncStorage.removeItem('wantsToBeTowDriver');
+                    setWaitingScreen(true);
                     await handleSendAdminNotif('Tow Driver Account Request', 'A user is requesting to become a tow driver');
                 }
+                else {
+                    // set waiting screen if they've requested a tow account
+                    if (driverId === '1') {
+                        setWaitingScreen(true);
+                    } else { setWaitingScreen(false); }
+                }
+
                 if (!user) {
                     await handleCreateUser(client, userId, identityId, pushToken, access, firstName, lastName, email, phoneNumber, check);
                 } else {
@@ -201,13 +230,14 @@ const TabsContent = () =>
             } catch (error) {
                 console.error('ERROR, could not send info to database', error);
             }
+            setReady(true);
         };
 
-        if (client && userId && identityId && pushToken && access && firstName && lastName && email && phoneNumber) {
+        if (client && userId && identityId && pushToken && access && firstName && lastName && email && phoneNumber && driverId) {
             handleRegisterUser();
         }
 
-    }, [client, userId, identityId, pushToken, phoneNumber, firstName, lastName, email, access]);
+    }, [client, userId, identityId, pushToken, phoneNumber, firstName, lastName, email, access, driverId]);
 
     // Listeners for push notifications
     useEffect(() => {
@@ -230,6 +260,9 @@ const TabsContent = () =>
             else if (type === "VEHICLE_PICKUP") {
                 await handleNotifUpdateVehicle(client, userId, setVehicles);
                 setVehiclePickup(prev => !prev);
+            }
+            else if (type === "DRIVER_ACCOUNT") {
+                setRefreshPrompt(true);
             }
             else if (type === "CUSTOM_NOTIFICATION") {
                 await setCustomNotification(notification.request.content);
@@ -262,7 +295,50 @@ const TabsContent = () =>
 
     return (
         <>
-        { ready ? (
+        { waitingScreen === true ? (
+            <Background style={{justifyContent: 'center'}} refreshing={refreshing} onRefresh={onRefresh}>
+                <TouchableOpacity
+                    style={Styles.signOutButton}
+                    onPress={async () => {
+                        try {
+                            await signOut({global: true });
+                        } catch (error) {
+                            console.error('ERROR, could not sign out', error);
+                            Alert.alert(
+                                'Error',
+                                error.message,
+                                [
+                                    { text: 'Ok'}
+                                ]
+                            );
+                        }
+                    }}
+                >
+                    <MaterialIcons name='logout' size={30} color='white'/>
+                </TouchableOpacity>
+                { refreshPrompt ? (
+                    <View style={{position: 'absolute', top: 25}}>
+                        <LottieView
+                            source={require('../../assets/animations/scrollDown.json')}
+                            loop={true}
+                            autoPlay={true}
+                            style={{width: 150, height: 150}}
+                        />
+                    </View>
+                ) : null }
+                <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                    <Text style={[Styles.title, {textAlign: 'center'}]}>{ refreshPrompt ? `Refresh` : `Tow Driver Account`}</Text>
+                    <Text style={[Styles.text, {textAlign: 'center'}]}>{ refreshPrompt ? `Please refresh the screen` : `We're reviewing your request. We'll notify you once you've been granted access.`}</Text>
+                </View>
+                <LottieView
+                    source={require('../../assets/animations/astronaut.json')}
+                    loop={true}
+                    autoPlay={true}
+                    speed={0.5}
+                    style={{width: 150, height: 150}}
+                />
+            </Background>
+        ) : ready && waitingScreen === false ? (
             <Tabs
                 screenOptions={{
                     headerShown: false,

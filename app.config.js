@@ -55,7 +55,8 @@ export const expo = {
     [
       "expo-location",
       {
-        isAndroidForegroundServiceEnabled: false,
+        isAndroidForegroundServiceEnabled: true,
+        isAndroidBackgroundLocationEnabled: true
       }
     ]
   ],

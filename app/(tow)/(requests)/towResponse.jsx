@@ -1,5 +1,5 @@
 import Colors from "../../../constants/colors";
-import { handleUpdateCustomersTowRequestStatus } from "../../../components/towComponents";
+import { handleAcceptTowRequest } from "../../../components/towComponents";
 import { useApp } from "../../../components/context";
 import { sendPushNotification } from '../../../components/notifComponents'
 import { Background, formatNumber } from "../../../components/components";
@@ -17,7 +17,7 @@ const TowResponse = () =>
     const { towParam } = useLocalSearchParams();
     const request = JSON.parse(towParam);
 
-    const { client } = useApp();
+    const { client, firstName, phone } = useApp();
 
     const [ address, setAddress ] = useState();
     const [ waitTime, setWaitTime ] = useState();
@@ -143,7 +143,7 @@ const TowResponse = () =>
                                                         type: 'TOW_RESPONSE'
                                                     };
                                                     await sendPushNotification(request.pushToken, 'Tow Request', 'A driver is on the way!', data);
-                                                    await handleUpdateCustomersTowRequestStatus(client, request.id, 'IN_PROGRESS', waitTime);
+                                                    await handleAcceptTowRequest(client, request.id, 'IN_PROGRESS', waitTime, firstName, phone);
                                                 }
                                             }
                                         ]

@@ -2,14 +2,14 @@ ToDo:
     - Add appointments to google calendar and make visual calendar for app to display appointments
     - Try to make styling for tow request look better and maybe also for scheduling
     - Try to make styling for admin pages better
-    - assign driverId field after becoming a towdriver
     - update notification listeners for Admins and TowDrivers
-    - add a waiting page for when a user signs up to be a tow driver
     - allow users to request to become a towdriver while inside of the app
     - fix handleResetPassword error message codes
+    - use expo location subscription to get tow drivers coordinates once they accept a tow request and upload to database
+    - use a subscription to listen for updates to tow drivers coordinates in database for customer and then display these coordinates on a map.
 
 PotentialChanges:
-    - Add notification tab in header for home page
+    - Add notification tab in header for home page (only do this if you add a datamodel for notifications)
     - Add dataModel to save data for notifications instead of sending data directly through a notification
     - newEstimate and newInvoice do not update if you launch the app from the terminated state by clicking on the app itself (Adding dataModel for notification data would fix this)
     - move initialize app functions to components file

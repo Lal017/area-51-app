@@ -35,14 +35,14 @@ const handleCreateUser = async (client, user_id, identityId, token, access, firs
         };
 
         // set driverId to 1 to show the admin that they are requesting to become a towDriver.
-        if (towDriverRequest) { input.driverId = 1 }
+        if (towDriverRequest) { input.driverId = '1' }
 
         await client.graphql({
             query: createUser,
             variables: { input }
         });
     } catch (error) {
-        console.error('ERROR, could not create user database entry:', error);
+        console.error('ERROR, could not create user database entry:', error.errors);
     }
 };
 

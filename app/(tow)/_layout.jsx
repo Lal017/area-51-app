@@ -35,6 +35,7 @@ const TowDriverContent = () =>
         setIdentityId,
         isMissingAttr,
         setIsMissingAttr,
+        setDriverId
     } = useApp();
 
     // load components when finished fetching data
@@ -120,9 +121,21 @@ const TowDriverContent = () =>
             }
         };
 
+        const handleGetDriverId = async () =>
+        {
+            try {
+                // set driverId
+                const user = await handleGetUser(client, userId);
+                setDriverId(user?.driverId);
+            } catch (error) {
+                console.error('ERROR, could not get driverId from database:', error);
+            }
+        };
+
         if (client && userId) { setReady(true); }
         if (client && userId && identityId && pushToken && access && firstName && lastName && email && phoneNumber) {
             handleRegisterUser();
+            handleGetDriverId(client, userId);
         }
 
     }, [client, userId, identityId, pushToken, phoneNumber, firstName, lastName, email, access]);

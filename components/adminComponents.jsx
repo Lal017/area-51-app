@@ -1,9 +1,11 @@
 import * as FileSystem from 'expo-file-system';
+import { updateUser } from '../src/graphql/mutations';
 import { reverseGeocodeAsync } from 'expo-location';
 import { uploadData, list, getUrl, remove } from 'aws-amplify/storage';
 import { router } from 'expo-router';
 import { Alert } from 'react-native';
 import { post } from 'aws-amplify/api';
+import { v4 as uuidv4 } from 'uuid';
 
 // --------------------------------------------------------
 //              ADD USER TO TOWDRIVERS GROUP
@@ -29,6 +31,26 @@ const handleMakeUserTowDriver = async (username) =>
         return str;
     } catch (error) {
         console.error('ERROR, could not make user a tow driver:', error);
+    }
+};
+
+const handleAssignTowDriverId = async (client, userId) =>
+{
+    try {
+        const driverId = uuidv4();
+        console.log(userId, driverId);
+
+        await client.graphql({
+            query: updateUser,
+            variables: {
+                input: {
+                    id: userId,
+                    driverId: driverId
+                }
+            }
+        });
+    } catch (error) {
+        console.error('ERROR, could not assign tow driver Id:', error);
     }
 };
 
@@ -272,6 +294,7 @@ const extractPath = (url) => {
 
 export {
     handleMakeUserTowDriver,
+    handleAssignTowDriverId,
     handleListHomeImages,
     handleGetURLs,
     handleUploadHomeImage,

@@ -95,8 +95,8 @@ const SignUp = () =>
                                 }
                                 else if (email && password && confPassword && check) {
                                     Alert.alert(
-                                        'Notice',
-                                        'You are signing up for a tow truck driver account. If this was a mistake please go back and uncheck the box. Otherwise, hit continue.',
+                                        'Confirmation',
+                                        'Are you sure you want to sign up for a tow truck driver account?',
                                         [
                                             { text: 'Back'},
                                             {
@@ -160,6 +160,7 @@ const SignUp = () =>
                                 setLoading(true);
                                 try {
                                     await handleSignUp(firstName, lastName, email, password, phoneNumber);
+                                    console.log(JSON.stringify(check));
                                     await AsyncStorage.setItem('wantsToBeTowDriver', JSON.stringify(check));
                                 } catch (error) {
                                     console.error('ERROR, could not sign up:', error);

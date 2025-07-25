@@ -355,6 +355,13 @@
           ],
           "category": "auth",
           "resourceName": "userPoolGroups"
+        },
+        {
+          "attributes": [
+            "TowDriversGroupRole"
+          ],
+          "category": "auth",
+          "resourceName": "userPoolGroups"
         }
       ],
       "providerPlugin": "awscloudformation",

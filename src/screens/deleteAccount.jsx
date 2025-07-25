@@ -5,7 +5,7 @@ import { ServiceStyles, Styles } from '../../constants/styles';
 import { useApp } from '../../components/context';
 import { View, Text, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
 import { useState } from 'react';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, FontAwesome } from '@expo/vector-icons';
 
 const DeleteAccount = () =>
 {
@@ -28,12 +28,20 @@ const DeleteAccount = () =>
                             <Text style={[Styles.text, {fontWeight: 'bold'}]}>THIS ACTION CANNOT BE UNDONE</Text>
                         </View>
                     </View>
-                    <View style={[Styles.block, {alignItems: 'center'}]}>
+                    <View style={ServiceStyles.buttonContainer}>
+                        <TouchableOpacity
+                        style={[ServiceStyles.directionButton, {opacity: 0}]}
+                        disabled={true}
+                        >
+                            <FontAwesome name='arrow-left' size={24} color='white'/>
+                            <Text style={Styles.actionText}>Back</Text>
+                        </TouchableOpacity>
                         <TouchableOpacity
                             style={[ServiceStyles.directionButton, {backgroundColor: 'red'}]}
                             onPress={() => setStep(2)}
                         >
                             <Text style={Styles.actionText}>Continue</Text>
+                            <FontAwesome name='arrow-right' size={24} color='white'/>
                         </TouchableOpacity>
                     </View>
                 </>

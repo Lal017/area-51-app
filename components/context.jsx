@@ -15,6 +15,7 @@ const AppProvider = ({ children }) => {
   const [ phoneNumber, setPhoneNumber ] = useState();
   const [ vehicles, setVehicles ] = useState();
   const [ towRequest, setTowRequest ] = useState(undefined);
+  const [ driverId, setDriverId ] = useState();
   const [ appointments, setAppointments ] = useState();
   const [ newInvoice, setNewInvoice ] = useState();
   const [ newEstimate, setNewEstimate ] = useState();
@@ -88,6 +89,8 @@ const AppProvider = ({ children }) => {
         setVehicles,
         towRequest,
         setTowRequest,
+        driverId,
+        setDriverId,
         appointments,
         setAppointments,
         newInvoice,
