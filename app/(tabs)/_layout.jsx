@@ -95,34 +95,12 @@ const TabsContent = () =>
             const genPushToken = await registerForPushNotifications();
             setPushToken(genPushToken);
 
-            // get and set user attributes
-            const userAtt = await fetchUserAttributes();
-            setEmail(userAtt?.email);
-            if (userAtt.given_name && userAtt.family_name) {
-                setFirstName(userAtt.given_name);
-                setLastName(userAtt.family_name);
-            } else if (userAtt.name) {
-                const nameSplit = userAtt.name.trim().split(/\s+/);
-
-                if (nameSplit.length >= 2) {
-                    setFirstName(nameSplit[0]);
-                    setLastName(nameSplit.slice(1).join(' '));
-                } else {
-                    setFirstName(nameSplit[0]);
-                }
-            }
-            setPhoneNumber(userAtt?.phone_number);
-
             // get and set cognito info
             const userInfo = await handleGetCurrentUser();
             const access_arr = userInfo.accessToken.payload["cognito:groups"];
             const getAccess = access_arr.includes('Admins') ? 'Admins' : access_arr.includes('TowDrivers') ? 'TowDrivers' : 'Customers';
             setAccess(getAccess);
             setUserId(userInfo.accessToken.payload.sub);
-
-            // identityId for amplify storage
-            const getDetails = await fetchAuthSession();
-            setIdentityId(getDetails.identityId);
 
             // triggered when a user opens the app by tapping on a notification
             const lastNotificationResponse = await getLastNotificationResponseAsync();
@@ -148,10 +126,6 @@ const TabsContent = () =>
             setNewEstimate(JSON.parse(savedEstimate));
             const savedCustomNotif = await AsyncStorage.getItem('customNotification');
             setCustomNotification(JSON.parse(savedCustomNotif));
-
-            if (!userAtt?.phone_number || ((!userAtt?.given_name || !userAtt?.family_name) && !userAtt?.name)) {
-                setIsMissingAttr(true);
-            }
         };
 
         initializeApp();
@@ -180,15 +154,60 @@ const TabsContent = () =>
                 const user = await handleGetUser(client, userId);
                 if (user?.driverId) { setDriverId(user?.driverId); }
                 else { setDriverId('0'); }
+
+                let userAtt;
+                if (!user?.email || !user?.firstName || !user?.lastName || !user?.phone || !user?.identityId) {
+                    userAtt = await fetchUserAttributes();
+                }
+                
+                // set email
+                if (!user?.email) { 
+                    setEmail(userAtt?.email);
+                } else { setEmail(user?.email); }
+
+                // set name
+                if (!user?.firstName || !user?.lastName) {
+                    if (userAtt.given_name && userAtt.family_name) {
+                        setFirstName(userAtt.given_name);
+                        setLastName(userAtt.family_name);
+                    } else if (userAtt.name) {
+                        const nameSplit = userAtt.name.trim().split(/\s+/);
+
+                        if (nameSplit.length >= 2) {
+                            setFirstName(nameSplit[0]);
+                            setLastName(nameSplit.slice(1).join(' '));
+                        } else {
+                            setFirstName(nameSplit[0]);
+                        }
+                    }
+
+                    if ((!userAtt?.given_name || !userAtt?.family_name) && !userAtt?.name) {
+                        setIsMissingAttr(true);
+                    }
+                } else { setFirstName(user?.firstName); setLastName(user?.lastName); }
+
+                // set phone number
+                if (!user?.phone) {
+                    setPhoneNumber(userAtt?.phone_number);
+                    if (!userAtt?.phone_number) {
+                        setIsMissingAttr(true);
+                    }
+                } else { setPhoneNumber(user?.phone); }
+
+                // set identityId (for amplify storage)
+                if (!user?.identityId) {
+                    const getDetails = await fetchAuthSession();
+                    setIdentityId(getDetails.identityId);
+                } else { setIdentityId(user?.identityId); }
             } catch (error) {
-                console.error('ERROR, could not get requests:', error);
+                console.error('ERROR, could not get user info:', error);
             }
         };
 
         if (client && userId) {
             handleGetRequests();
         }
-    }, [client, userId])
+    }, [client, userId]);
 
     // Send to database once all data has been generated and retrieved
     useEffect(() => {

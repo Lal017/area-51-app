@@ -6,7 +6,6 @@ ToDo:
     - fix handleResetPassword error message codes
     - upload drivers coordinates to database from location subscription
     - use a subscription to listen for updates to tow drivers coordinates in database for customer and then display these coordinates on a map.
-    - signing in with google or amazon re-sets attributes after every login
     - use a notification or a database listener to end the location task from the admin console
 
 PotentialChanges:
