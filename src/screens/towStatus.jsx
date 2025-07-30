@@ -1,18 +1,23 @@
 import LottieView from 'lottie-react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Styles, ServiceStyles } from '../../constants/styles';
 import { useApp } from "../../components/context";
 import { Background, getRemainingETA, formatTime } from "../../components/components";
 import { handleSendAdminNotif } from '../../components/notifComponents';
-import { handleUpdateTowRequestStatus } from '../../components/towComponents';
-import { View, Text, TouchableOpacity, Alert } from 'react-native';
+import { handleUpdateTowRequestStatus, handleGetTowRequest } from '../../components/towComponents';
+import { onUpdateTowRequest } from '../graphql/subscriptions';
+import { View, Text, TouchableOpacity, Alert, Image } from 'react-native';
 import { useEffect, useState } from "react";
 import { useNavigation } from '@react-navigation/native';
+import { router } from 'expo-router';
 
 const TowStatus = () =>
 {
-    const { userId, towRequest, client, setTowRequest } = useApp();
+    const { client, userId, towRequest, setTowRequest } = useApp();
     const navigate = useNavigation();
     
+    const [ driverLocation, setDriverLocation ] = useState();
     const [ timeLeft, setTimeLeft ] = useState();
     const [ refreshing, setRefreshing ] = useState();
 
@@ -20,20 +25,58 @@ const TowStatus = () =>
     {
         setRefreshing(true);
 
-        const getTimeLeft = getRemainingETA(towRequest.updatedAt, parseMinutes(towRequest.waitTime));
+        // reset active tow request
+        const getTowRequest = await handleGetTowRequest(client, userId);
+        setTowRequest(getTowRequest);
+        // get minutes left
+        const getTimeLeft = getRemainingETA(getTowRequest?.acceptedAt, getTowRequest?.waitTime);
         setTimeLeft(getTimeLeft);
 
         setRefreshing(false);
     }
 
     useEffect(() => {
-        const getTimeLeft = getRemainingETA(towRequest.updatedAt, towRequest.waitTime);
+        if (towRequest === undefined) { router.replace('(tabs)'); }
+        const getTimeLeft = getRemainingETA(towRequest?.acceptedAt, towRequest?.waitTime);
         setTimeLeft(getTimeLeft);
     }, [towRequest]);
 
+    useEffect(() => {
+        const loadDriversLocation = async () =>
+        {
+            const stored = await AsyncStorage.getItem('driverLocation');
+            try {
+                const parsed = JSON.parse(stored);
+                setDriverLocation(parsed);
+            } catch (error) {
+                console.error('ERROR, could not get last stored location:', error);
+            }
+        };
+
+        loadDriversLocation();
+
+        const subscription = client.graphql({
+            query: onUpdateTowRequest
+        }).subscribe({
+            next: async ({ data }) => {
+                const getDriverLocation = {
+                    latitude: data?.onUpdateTowRequest.driverLatitude,
+                    longitude: data?.onUpdateTowRequest.driverLongitude
+                };
+                setDriverLocation(getDriverLocation);
+                await AsyncStorage.setItem('driverLocation', JSON.stringify(getDriverLocation));
+            },
+            error: (error) => console.error(error)
+        });
+
+        return () => {
+            subscription.unsubscribe();
+        }
+    }, []);
+
     return (
         <Background refreshing={refreshing} onRefresh={onRefresh}>
-            { towRequest && towRequest.status === "REQUESTED" ? (
+            { towRequest && towRequest?.status === "REQUESTED" ? (
             <>
                 <View style={Styles.infoContainer}>
                     <View style={ServiceStyles.titleWrapper}>
@@ -80,33 +123,60 @@ const TowStatus = () =>
                 </View>
             </>
             ) : towRequest?.status === "IN_PROGRESS" ? (
-            <View style={Styles.infoContainer}>
-                <View style={ServiceStyles.titleWrapper}>
-                    <Text style={Styles.subTitle}>Tow Request</Text>
-                    <LottieView
-                        source={require('../../assets/animations/truck.json')}
-                        loop
-                        autoPlay
-                        style={{width: 75, height: 75}}
-                    />
+            <>
+                { driverLocation ? (
+                    <View style={ServiceStyles.mapContainer}>
+                        <MapView
+                            provider={PROVIDER_GOOGLE}
+                            style={{width: '100%', height: '100%'}}
+                            showsUserLocation={true}
+                            zoomControlEnabled={true}
+                            region={{
+                                latitude: driverLocation?.latitude,
+                                longitude: driverLocation?.longitude,
+                                latitudeDelta: 0.01,
+                                longitudeDelta: 0.01
+                            }}
+                        >
+                            <Marker
+                                title='Driver'
+                                coordinate={{
+                                    latitude: driverLocation?.latitude,
+                                    longitude: driverLocation?.longitude
+                                }}
+                            >
+                                <Image
+                                    source={require('../../assets/images/towTruck.png')}
+                                    style={{width: 35, height: 35}}
+                                    resizeMode='contain'
+                                />
+                            </Marker>
+                        </MapView>
+                    </View>
+                ) : null }
+                <View style={Styles.infoContainer}>
+                    <View style={ServiceStyles.titleWrapper}>
+                        <Text style={Styles.subTitle}>Tow Request</Text>
+                        <LottieView
+                            source={require('../../assets/animations/truck.json')}
+                            loop
+                            autoPlay
+                            style={{width: 75, height: 75}}
+                        />
+                    </View>
+                    { timeLeft > 0 ? (
+                        <>
+                        <Text style={Styles.text}>Your driver is on route! Estimated Wait time is {timeLeft} minutes.</Text>
+                        <Text style={Styles.text}>Driver departed at: {formatTime(towRequest?.acceptedAt)}</Text>
+                        </>
+                    ) : (
+                        <Text style={Styles.text}>Your driver is running late. we are sorry for the inconvenience</Text>
+                    )}
                 </View>
-                { timeLeft > 0 ? (
-                    <>
-                    <Text style={Styles.text}>Your driver is on route! Estimated Wait time is {timeLeft} minutes.</Text>
-                    <Text style={Styles.text}>Requested at: {formatTime(towRequest.updatedAt)}</Text>
-                    </>
-                ) : (
-                    <Text style={Styles.text}>Your driver is running late. we are sorry for the inconvenience</Text>
-                )}
-            </View>
+            </>
             ) : null}
         </Background>
     );
 };
 
-const TowStatusComponent = ({towRequest, client, setTowRequest}) =>
-{
-
-
-};
 export default TowStatus;

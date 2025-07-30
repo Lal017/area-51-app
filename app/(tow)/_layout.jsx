@@ -1,5 +1,6 @@
 import AccountEdit from '../../src/screens/accountEdit';
 import Modal from 'react-native-modal';
+import * as TaskManager from 'expo-task-manager';
 import { CustHeader, Loading } from "../../components/components";
 import { AppProvider, useApp } from "../../components/context";
 import { registerForPushNotifications } from "../../components/notifComponents";
@@ -11,6 +12,36 @@ import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { generateClient } from "aws-amplify/api";
 import { fetchUserAttributes, fetchAuthSession } from "@aws-amplify/auth";
+import { updateTowRequest } from '../../src/graphql/mutations';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const LOCATION_TASK_NAME = "area51-background-location-task";
+
+// define task to track tow truck drivers location
+TaskManager.defineTask(LOCATION_TASK_NAME, async ({data, error}) => {
+    if (error || !data) return;
+
+    const { locations } = data;
+    const { latitude, longitude } = locations[0].coords;
+    const client = generateClient();
+    const requestId = await AsyncStorage.getItem('requestId');
+
+    try {
+        await client.graphql({
+            query: updateTowRequest,
+            variables: {
+                input: {
+                    id: requestId,
+                    driverLatitude: latitude,
+                    driverLongitude: longitude
+                }
+            }
+        });
+    } catch (error) {
+        console.error('ERROR, could not send coordinates to database:', error);
+    }
+
+});
 
 const TowDriverContent = () =>
 {

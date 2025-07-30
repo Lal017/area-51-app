@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { handleDeleteStorage, handleDeleteUser } from './userComponents';
 import { handleDeleteAllAppointments } from './appointmentComponents'
-import { handleDeleteAllTowRequests } from './towComponents';
+import { handleDeleteAllTowRequests, stopWatchingLocation } from './towComponents';
 import { handleDeleteAllVehicles } from './vehicleComponents';
 import { AuthStyles } from '../constants/styles';
 import { TouchableOpacity, Image, Text, Alert } from 'react-native';
@@ -443,6 +443,7 @@ const handleDeleteAccount = async (client, userId, identityId, email, inputEmail
     }
 
     try {
+        await stopWatchingLocation();
         await handleDeleteAllTowRequests(client, userId);
         await handleDeleteAllAppointments(client, userId);
         await handleDeleteAllVehicles(client, userId);

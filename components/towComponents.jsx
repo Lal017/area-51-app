@@ -1,3 +1,4 @@
+import * as Location from 'expo-location';
 import { listTowRequests, towRequestsByUserId } from "../src/graphql/queries";
 import { createTowRequest, updateTowRequest, deleteTowRequest } from "../src/graphql/mutations";
 import { Alert } from 'react-native';
@@ -73,6 +74,8 @@ const handleUpdateCustomersTowRequestStatus = async (client, requestId, status, 
 const handleAcceptTowRequest = async (client, requestId, status, waitTime, driverId, firstName, phone) =>
 {
     try {
+        const currentTime = new Date().toISOString();
+
         await client.graphql({
             query: updateTowRequest,
             variables: {
@@ -82,7 +85,8 @@ const handleAcceptTowRequest = async (client, requestId, status, waitTime, drive
                     waitTime: waitTime,
                     driverId: driverId,
                     driverFirstName: firstName,
-                    driverPhoneNumber: phone
+                    driverPhoneNumber: phone,
+                    acceptedAt: currentTime
                 }
             }
         });
@@ -120,6 +124,17 @@ const handleUpdateDriversLocation = () =>
     }
 };
 
+const stopWatchingLocation = async () => {
+    const LOCATION_TASK_NAME = "area51-background-location-task";
+    const hasStarted = await Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME);
+    console.log('hasStarted:',hasStarted);
+    if (hasStarted) {
+        await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
+        console.log('stopped tracking location');
+    } else {
+        console.log('not currently tracking');
+    }
+};
 
 // -------------------------------------
 //              CUSTOMERS
@@ -251,6 +266,7 @@ export {
     handleAcceptTowRequest,
     handleCompleteTowRequest,
     handleUpdateDriversLocation,
+    stopWatchingLocation,
     handleCreateTowRequest,
     handleGetTowRequest,
     handleNotifUpdateTowRequest,

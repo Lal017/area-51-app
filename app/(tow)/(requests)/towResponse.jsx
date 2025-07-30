@@ -1,6 +1,7 @@
 import Colors from "../../../constants/colors";
 import * as Location from 'expo-location';
-import { handleAcceptTowRequest, handleCompleteTowRequest } from "../../../components/towComponents";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { handleAcceptTowRequest, handleCompleteTowRequest, stopWatchingLocation } from "../../../components/towComponents";
 import { useApp } from "../../../components/context";
 import { sendPushNotification } from '../../../components/notifComponents'
 import { Background, formatNumber } from "../../../components/components";
@@ -21,10 +22,9 @@ const TowResponse = () =>
     const { towParam } = useLocalSearchParams();
     const request = JSON.parse(towParam);
 
-    const { client, driverId, firstName, phone } = useApp();
+    const { client, driverId, firstName, phoneNumber } = useApp();
     const navigate = useNavigation();
 
-    const [ location, setLocation ] = useState();
     const [ address, setAddress ] = useState();
     const [ waitTime, setWaitTime ] = useState();
 
@@ -88,21 +88,11 @@ const TowResponse = () =>
                     notificationTitle: 'Location Sharing',
                     notificationBody: 'The customer is currently seeing your location',
                 },
-                activityType: Location.ActivityType.AutomotiveNavigation
+                activityType: Location.ActivityType.AutomotiveNavigation,
             });
             console.log('started tracking location');
         } else {
             console.error('location tracking has already started');
-        }
-    };
-
-    const stopWatchingLocation = async () => {
-        const hasStarted = Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME);
-        if (hasStarted) {
-            await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
-            console.log('stopped tracking location');
-        } else {
-            console.log('not currently tracking');
         }
     };
 
@@ -211,12 +201,13 @@ const TowResponse = () =>
                                         {
                                             text: 'Yes',
                                             onPress: async () => {
+                                                await AsyncStorage.setItem('requestId', request?.id);
                                                 await startWatchingLocation();
                                                 const data = {
                                                     type: 'TOW_RESPONSE'
                                                 };
-                                                await sendPushNotification(request.pushToken, 'Tow Request', 'A driver is on the way!', data);
-                                                await handleAcceptTowRequest(client, request.id, 'IN_PROGRESS', waitTime, driverId, firstName, phone);
+                                                await sendPushNotification(request?.user?.pushToken, 'Tow Request', 'A driver is on the way!', data);
+                                                await handleAcceptTowRequest(client, request.id, 'IN_PROGRESS', waitTime, driverId, firstName, phoneNumber);
                                                 navigate.reset({
                                                     index: 0,
                                                     routes: [{ name: '(tow)'}]
@@ -243,6 +234,10 @@ const TowResponse = () =>
                                             onPress: async () => {
                                                 await stopWatchingLocation();
                                                 await handleCompleteTowRequest(client, request.id);
+                                                const data = {
+                                                    type: 'TOW_RESPONSE'
+                                                };
+                                                await sendPushNotification(request?.user?.pushToken, 'Tow Request', 'Your tow request has been completed!', data);
                                                 Alert.alert(
                                                     'Completed',
                                                     'Tow request has been completed!',

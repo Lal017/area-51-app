@@ -1,6 +1,7 @@
 import Colors from '../constants/colors';
 import { useApp } from './context';
 import { Styles, HomeStyles } from '../constants/styles';
+import { stopWatchingLocation } from './towComponents';
 import { View, Text, TouchableOpacity, ScrollView, Animated, ActivityIndicator, RefreshControl, Alert } from 'react-native';
 import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -44,6 +45,7 @@ const CustHeader = ({title, index}) =>
                         setLoading(true);
                         try {
                             await signOut({global: true });
+                            await stopWatchingLocation();
                         } catch (error) {
                             console.error('ERROR, could not sign out', error);
                             Alert.alert(

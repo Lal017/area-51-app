@@ -95,4 +95,5 @@ type TowRequest
   driverPhoneNumber: AWSPhone
   driverLatitude: Float
   driverLongitude: Float
+  acceptedAt: AWSDateTime
 }

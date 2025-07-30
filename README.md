@@ -4,8 +4,10 @@ ToDo:
     - Try to make styling for admin pages better
     - update notification listeners for Admins and TowDrivers
     - fix handleResetPassword error message codes
-    - use expo location subscription to get tow drivers coordinates once they accept a tow request and upload to database
+    - upload drivers coordinates to database from location subscription
     - use a subscription to listen for updates to tow drivers coordinates in database for customer and then display these coordinates on a map.
+    - signing in with google or amazon re-sets attributes after every login
+    - use a notification or a database listener to end the location task from the admin console
 
 PotentialChanges:
     - Add notification tab in header for home page (only do this if you add a datamodel for notifications)

@@ -20,8 +20,19 @@ const RequestList = () =>
     {
         setRefreshing(true);
 
-        const getTowRequests = await handleGetAllTowRequests(client);
-        setTowRequests(getTowRequests);
+        try {
+            const getTowRequests = await handleGetAllTowRequests(client);
+            const getActiveRequest = getTowRequests.find(item => item.driverId === driverId);
+            if (getActiveRequest) {
+                setTowRequests([getActiveRequest]);
+            } else {
+                const filteredRequests = getTowRequests.filter(item => item.status === 'REQUESTED');
+                setTowRequests(filteredRequests);
+            }
+            setReady(true);
+        } catch (error) {
+            console.log('Error getting tow requests:', error);
+        }
 
         setRefreshing(false);
     };
