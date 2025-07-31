@@ -1,6 +1,6 @@
 import Colors from '../../constants/colors';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
-import { handleUpdateTowRequest } from '../../components/towComponents';
+import { handleUpdateCustomersTowRequestStatus } from '../../components/towComponents';
 import { sendPushNotification } from '../../components/notifComponents';
 import { handleGetAddress } from '../../components/adminComponents';
 import { useApp } from '../../components/context';
@@ -151,8 +151,12 @@ const TowResponse = () =>
                                     onPress={async () => {
                                         if (loading) return;
                                         setLoading(true);
-                                        await sendPushNotification(customer.pushToken, 'Tow Request', 'Your Tow Driver is on the way', data);
-                                        await handleUpdateTowRequest(client, customer.id, 'IN_PROGRESS', waitTime);
+                                        await handleUpdateCustomersTowRequestStatus(client, customer.id, 'IN_PROGRESS', waitTime);
+                                        await sendPushNotification(customer?.user?.pushToken, 'Tow Request', 'Your Tow Driver is on the way', data);
+                                        navigate.reset({
+                                            index: 0,
+                                            routes: [{ name: '(admin)' }]
+                                        });
                                         setLoading(false);
                                     }}
                                 >
@@ -161,7 +165,7 @@ const TowResponse = () =>
                                 </TouchableOpacity>
                             ) : (
                                 <TouchableOpacity
-                                    style={[Styles.actionButton, {backgroundColor: Colors.button}]}
+                                    style={[TowStyles.button, {backgroundColor: Colors.button}]}
                                     onPress={() => {
                                         Alert.alert(
                                             'Complete Tow Request',
@@ -171,7 +175,7 @@ const TowResponse = () =>
                                                 {
                                                     text: 'Yes',
                                                     onPress: async () => {
-                                                        await handleUpdateTowRequest(client, customer.id, 'COMPLETED');
+                                                        await handleUpdateCustomersTowRequestStatus(client, customer.id, 'COMPLETED');
                                                         const data = {
                                                             type: 'TOW_RESPONSE'
                                                         };
@@ -182,11 +186,8 @@ const TowResponse = () =>
                                                             [{ text: 'OK' }]
                                                         );
                                                         navigate.reset({
-                                                            index: 1,
-                                                            routes: [
-                                                                { name: 'index' },
-                                                                { name: 'towRequests' }
-                                                            ]
+                                                            index: 0,
+                                                            routes: [{ name: '(admin)' }]
                                                         });
                                                     }
                                                 }

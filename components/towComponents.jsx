@@ -40,10 +40,14 @@ const handleUpdateCustomersTowRequestStatus = async (client, requestId, status, 
 {
     let input = {
         id: requestId,
-        status: status
+        status: status,
     };
 
-    if (waitTime !== undefined) { input.waitTime = waitTime; }
+    if (waitTime !== undefined) {
+        input.waitTime = waitTime;
+        const currentTime = new Date().toISOString();
+        input.acceptedAt = currentTime;
+    }
 
     try {
         await client.graphql({
@@ -205,6 +209,7 @@ const handleNotifUpdateTowRequest = async (client, userId, setTowRequest) =>
 
     try {
         const update = await handleGetTowRequest(client, userId);
+        console.log(update);
         setTowRequest(update);
     } catch (error) {
         console.error('ERROR, could not update tow request after receiving notification:', error);

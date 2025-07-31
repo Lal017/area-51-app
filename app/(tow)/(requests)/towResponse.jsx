@@ -90,7 +90,6 @@ const TowResponse = () =>
                 },
                 activityType: Location.ActivityType.AutomotiveNavigation,
             });
-            console.log('started tracking location');
         } else {
             console.error('location tracking has already started');
         }

@@ -10,6 +10,7 @@ import { onUpdateTowRequest } from '../graphql/subscriptions';
 import { View, Text, TouchableOpacity, Alert, Image } from 'react-native';
 import { useEffect, useState } from "react";
 import { useNavigation } from '@react-navigation/native';
+import { openURL } from 'expo-linking';
 import { router } from 'expo-router';
 
 const TowStatus = () =>
@@ -20,6 +21,12 @@ const TowStatus = () =>
     const [ driverLocation, setDriverLocation ] = useState();
     const [ timeLeft, setTimeLeft ] = useState();
     const [ refreshing, setRefreshing ] = useState();
+
+    const openCallCustomer = (phone) =>
+    {
+        const url = `tel:${phone}`;
+        openURL(url);
+    };
 
     const onRefresh = async () =>
     {
@@ -47,7 +54,9 @@ const TowStatus = () =>
             const stored = await AsyncStorage.getItem('driverLocation');
             try {
                 const parsed = JSON.parse(stored);
-                setDriverLocation(parsed);
+                if (parsed.latitude !== null && parsed.longitude !== null) {
+                    setDriverLocation(parsed);
+                }
             } catch (error) {
                 console.error('ERROR, could not get last stored location:', error);
             }
@@ -63,7 +72,9 @@ const TowStatus = () =>
                     latitude: data?.onUpdateTowRequest.driverLatitude,
                     longitude: data?.onUpdateTowRequest.driverLongitude
                 };
-                setDriverLocation(getDriverLocation);
+                if (getDriverLocation.latitude !== null && getDriverLocation.longitude !== null) {
+                    setDriverLocation(getDriverLocation);
+                }
                 await AsyncStorage.setItem('driverLocation', JSON.stringify(getDriverLocation));
             },
             error: (error) => console.error(error)
@@ -166,15 +177,25 @@ const TowStatus = () =>
                     </View>
                     { timeLeft > 0 ? (
                         <>
-                        <Text style={Styles.text}>Your driver is on route! Estimated Wait time is {timeLeft} minutes.</Text>
-                        <Text style={Styles.text}>Driver departed at: {formatTime(towRequest?.acceptedAt)}</Text>
+                            <Text style={Styles.text}>{towRequest?.driverFirstName ? `${towRequest?.driverFirstName}` : 'Your driver'} is on route! Estimated Wait time is {timeLeft} minutes.</Text>
+                            <Text style={Styles.text}>Driver departed at: {formatTime(towRequest?.acceptedAt)}</Text>
                         </>
                     ) : (
-                        <Text style={Styles.text}>Your driver is running late. we are sorry for the inconvenience</Text>
+                        <Text style={Styles.text}>{towRequest?.driverFirstName ? `${towRequest?.driverFirstName}` : 'Your driver'} is running late. we are sorry for the inconvenience</Text>
                     )}
                 </View>
             </>
             ) : null}
+            { towRequest?.driverPhoneNumber ? (
+                <View style={[Styles.block, {alignItems: 'center'}]}>
+                    <TouchableOpacity
+                        style={Styles.actionButton}
+                        onPress={() => openCallCustomer(towRequest?.driverPhoneNumber)}
+                    >
+                        <Text style={Styles.actionText}>Call Driver</Text>
+                    </TouchableOpacity>
+                </View>
+            ) : null }
         </Background>
     );
 };
