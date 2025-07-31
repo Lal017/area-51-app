@@ -205,8 +205,8 @@ const TowResponse = () =>
                                                 const data = {
                                                     type: 'TOW_RESPONSE'
                                                 };
-                                                await sendPushNotification(request?.user?.pushToken, 'Tow Request', 'A driver is on the way!', data);
                                                 await handleAcceptTowRequest(client, request.id, 'IN_PROGRESS', waitTime, driverId, firstName, phoneNumber);
+                                                await sendPushNotification(request?.user?.pushToken, 'Tow Request', 'A driver is on the way!', data);
                                                 navigate.reset({
                                                     index: 0,
                                                     routes: [{ name: '(tow)'}]

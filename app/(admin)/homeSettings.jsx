@@ -5,7 +5,7 @@ import { useApp } from '../../components/context';
 import { AdminStyles, Styles } from '../../constants/styles';
 import { Background, Loading } from '../../components/components';
 import { sendMassPushNotification } from '../../components/notifComponents';
-import { handleUploadHomeImage, handleGetURLs, handleRemoveImage } from '../../components/adminComponents';
+import { handleUploadHomeImage, handleGetURLs, handleRemoveHomeImage } from '../../components/adminComponents';
 import { TouchableOpacity, Text, Image, View, Dimensions, Alert, TextInput, KeyboardAvoidingView } from 'react-native';
 import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
@@ -105,7 +105,7 @@ const HomeSettings = () =>
                                                         setLoading(true);
                                                         const imageUrl = urls?.[currentIndex]?.url;
                                                         if (!imageUrl) return;
-                                                        await handleRemoveImage(imageUrl);
+                                                        await handleRemoveHomeImage(imageUrl);
                                                         setLoading(false);
                                                     }
                                                 }

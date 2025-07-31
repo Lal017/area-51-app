@@ -41,7 +41,18 @@ const AppointmentView = () =>
                 <View style={[Styles.infoContainer, {rowGap: 0}]}>
                     <Text style={Styles.subTitle}>Vehicle</Text>
                     <Text style={Styles.text}>{appointment?.vehicle?.year} {appointment?.vehicle?.make} {appointment?.vehicle?.model} ({appointment?.vehicle?.color})</Text>
-                    { appointment?.vehicle?.plate || appointment?.vehicle?.vin ? <Text style={Styles.text}>{appointment?.vehicle?.plate}{appointment?.vehicle?.plate && appointment?.vehicle?.vin ? ' | ' : null}{appointment?.vehicle?.vin}</Text> : null }
+                    { appointment?.vehicle?.plate ? (    
+                        <View style={AdminStyles.labelContainer}>
+                            <Text style={Styles.text}>Plate:</Text>
+                            <Text style={Styles.text}>{appointment?.vehicle?.plate}</Text>
+                        </View>
+                    ) : null }
+                    { appointment?.vehicle?.vin ? (
+                        <View style={AdminStyles.labelContainer}>
+                            <Text style={Styles.text}>VIN:</Text>
+                            <Text style={Styles.text}>{appointment?.vehicle?.vin}</Text>
+                        </View>
+                    ) : null }
                 </View>
                 { appointment?.notes ? (
                     <View style={[Styles.infoContainer, {rowGap: 0}]}>

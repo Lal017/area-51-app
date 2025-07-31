@@ -353,19 +353,29 @@ const Schedule = () =>
           </>
         ) : step === 5 ? (
           <>
-          <View style={{width: '100%', flex: 1, justifyContent: 'center'}}>
-            <View style={Styles.infoContainer}>
+          <View style={[Styles.block, {rowGap: 10}]}>
+            <View style={[Styles.infoContainer, {rowGap: 0}]}>
               <Text style={Styles.subTitle}>Date</Text>
               <Text style={Styles.text}>{formatDate(selectedDay)}</Text>
+            </View>
+            <View style={[Styles.infoContainer, {rowGap: 0}]}>
               <Text style={Styles.subTitle}>Time</Text>
               <Text style={Styles.text}>{formatTime(selectedTime)}</Text>
+            </View>
+            <View style={[Styles.infoContainer, {rowGap: 0}]}>
               <Text style={Styles.subTitle}>Vehicle</Text>
-              <Text style={Styles.text}>{`${selectedVehicle.year} ${selectedVehicle.make} ${selectedVehicle.model}`}</Text>
+              <Text style={Styles.text}>{`${selectedVehicle.year} ${selectedVehicle.make} ${selectedVehicle.model} (${selectedVehicle.color})`}</Text>
+            </View>
+            <View style={[Styles.infoContainer, {rowGap: 0}]}>
               <Text style={Styles.subTitle}>Service</Text>
               <Text style={Styles.text}>{selectedService}</Text>
-              <Text style={Styles.subTitle}>Notes</Text>
-              <Text style={Styles.text}>{notes}</Text>
             </View>
+            { notes ? (
+              <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                <Text style={Styles.subTitle}>Notes</Text>
+                <Text style={Styles.text}>{notes}</Text>
+              </View>
+            ) : null }
           </View>
           <View style={{flex: 1, justifyContent: 'flex-end', alignItems: 'center', paddingBottom: 25, width: '100%'}}>
             <View style={ServiceStyles.buttonContainer}>

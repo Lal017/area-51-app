@@ -5,6 +5,8 @@ import { CustHeader, Loading } from "../../components/components";
 import { AppProvider, useApp } from "../../components/context";
 import { registerForPushNotifications } from "../../components/notifComponents";
 import { handleGetCurrentUser } from "../../components/authComponents";
+import { getTowRequest } from '../../src/graphql/queries';
+import { updateTowRequest } from '../../src/graphql/mutations';
 import { addNotificationReceivedListener, addNotificationResponseReceivedListener, removeNotificationSubscription } from "expo-notifications";
 import { handleGetUser, handleCreateUser, handleUpdateUser } from "../../components/userComponents";
 import { Stack } from "expo-router";
@@ -12,8 +14,8 @@ import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { generateClient } from "aws-amplify/api";
 import { fetchUserAttributes, fetchAuthSession } from "@aws-amplify/auth";
-import { updateTowRequest } from '../../src/graphql/mutations';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { stopWatchingLocation } from '../../components/towComponents';
 
 const LOCATION_TASK_NAME = "area51-background-location-task";
 
@@ -27,6 +29,16 @@ TaskManager.defineTask(LOCATION_TASK_NAME, async ({data, error}) => {
     const requestId = await AsyncStorage.getItem('requestId');
 
     try {
+        const result = await client.graphql({
+            query: getTowRequest,
+            variables: {
+                id: requestId
+            }
+        });
+
+        if (result?.data?.getTowRequest?.status !== 'IN_PROGRESS') {
+            await stopWatchingLocation();
+        }
         await client.graphql({
             query: updateTowRequest,
             variables: {
@@ -40,7 +52,6 @@ TaskManager.defineTask(LOCATION_TASK_NAME, async ({data, error}) => {
     } catch (error) {
         console.error('ERROR, could not send coordinates to database:', error);
     }
-
 });
 
 const TowDriverContent = () =>

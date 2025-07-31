@@ -148,16 +148,25 @@ const TowResponse = () =>
                             { customer?.status === 'REQUESTED' ? (
                                 <TouchableOpacity
                                     style={[TowStyles.button, {backgroundColor: Colors.button}]}
-                                    onPress={async () => {
-                                        if (loading) return;
-                                        setLoading(true);
-                                        await handleUpdateCustomersTowRequestStatus(client, customer.id, 'IN_PROGRESS', waitTime);
-                                        await sendPushNotification(customer?.user?.pushToken, 'Tow Request', 'Your Tow Driver is on the way', data);
-                                        navigate.reset({
-                                            index: 0,
-                                            routes: [{ name: '(admin)' }]
-                                        });
-                                        setLoading(false);
+                                    onPress={() => {
+                                        Alert.alert(
+                                            'Confirmation',
+                                            'Are you sure you would like to accept the tow request?',
+                                            [
+                                                { text: 'No' },
+                                                {
+                                                    text: 'Yes',
+                                                    onPress: async () => {
+                                                        await handleUpdateCustomersTowRequestStatus(client, customer.id, 'IN_PROGRESS', waitTime);
+                                                        await sendPushNotification(customer?.user?.pushToken, 'Tow Request', 'Your Tow Driver is on the way', data);
+                                                        navigate.reset({
+                                                            index: 0,
+                                                            routes: [{ name: '(admin)' }]
+                                                        });
+                                                    }
+                                                }
+                                            ]
+                                        );
                                     }}
                                 >
                                     <AntDesign name="check" size={25} color='white'/>

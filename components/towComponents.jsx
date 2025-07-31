@@ -117,17 +117,6 @@ const handleCompleteTowRequest = async (client, requestId) =>
     }
 };
 
-// used to update the drivers location every 30 seconds
-const handleUpdateDriversLocation = () =>
-{
-    try {
-
-        console.log('Current location:');
-    } catch (error) {
-        console.error('ERROR, could not update drivers location', error);
-    }
-};
-
 const stopWatchingLocation = async () => {
     const LOCATION_TASK_NAME = "area51-background-location-task";
     const hasStarted = await Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME);
@@ -270,7 +259,6 @@ export {
     handleUpdateCustomersTowRequestStatus,
     handleAcceptTowRequest,
     handleCompleteTowRequest,
-    handleUpdateDriversLocation,
     stopWatchingLocation,
     handleCreateTowRequest,
     handleGetTowRequest,
