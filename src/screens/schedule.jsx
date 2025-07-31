@@ -11,6 +11,7 @@ import { View, Text, TextInput, TouchableOpacity, Alert, ScrollView } from "reac
 import { Calendar } from "react-native-calendars";
 import { useNavigation } from '@react-navigation/native';
 import { useLocalSearchParams } from 'expo-router';
+import { RFValue } from 'react-native-responsive-fontsize';
 
 const Schedule = () =>
 {
@@ -135,7 +136,7 @@ const Schedule = () =>
                 }}
                 theme={{
                   todayTextColor: Colors.secondary,
-                  textDayFontSize: 18,
+                  textDayFontSize: RFValue(15),
                   calendarBackground: 'transparent',
                   dayTextColor: Colors.secondary,
                   textDisabledColor: 'grey'

@@ -1,86 +1,100 @@
-import { View, Text } from 'react-native';
-import { AdminStyles, Styles } from '../../../constants/styles';
-import { useLocalSearchParams } from 'expo-router';
+import Colors from '../../../constants/colors';
+import { Styles, TowStyles, AdminStyles } from '../../../constants/styles';
+import { handleUpdateVehiclePickupStatus } from '../../../components/vehicleComponents';
 import { formatNumber, formatDate, formatTime, Background } from '../../../components/components';
+import { sendPushNotification } from '../../../components/notifComponents';
+import { router, useLocalSearchParams } from 'expo-router';
+import { openURL } from 'expo-linking';
+import { Entypo } from '@expo/vector-icons';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
+import { useState } from 'react';
+import { useApp } from '../../../components/context';
+import { useNavigation } from '@react-navigation/native';
 
 const AppointmentView = () =>
 {
     const { appointmentParam } = useLocalSearchParams();
     const appointment = JSON.parse(appointmentParam);
+    const { client } = useApp();
+    const navigate = useNavigation();
+
+    const [ loading, setLoading ] = useState(false);
+
+    const openCallCustomer = (phone) =>
+    {
+        const url = `tel:${phone}`;
+        openURL(url);
+    };
 
     return (
         <Background>
             <View style={Styles.block}>
-                <View style={Styles.infoContainer}>
-                    <Text style={Styles.title}>Customer</Text>
-                    <View style={AdminStyles.labelContainer}>
-                        <Text style={Styles.subTitle}>Name</Text>
-                        <Text style={Styles.text}>{appointment.user.firstName} {appointment.user.lastName}</Text>
+                <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                    <Text style={Styles.subTitle}>Customer</Text>
+                    <Text style={Styles.text}>{appointment?.user?.firstName} {appointment?.user?.lastName} | {formatNumber(appointment?.user?.phone)} | {appointment?.user?.email}</Text>
+                </View>
+                <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                    <Text style={Styles.subTitle}>Appointment Details</Text>
+                    <Text style={Styles.text}>{formatDate(appointment?.date)}   |   {formatTime(appointment?.time)}</Text>
+                    <Text style={Styles.text}>{appointment?.service}</Text>
+                </View>
+                <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                    <Text style={Styles.subTitle}>Vehicle</Text>
+                    <Text style={Styles.text}>{appointment?.vehicle?.year} {appointment?.vehicle?.make} {appointment?.vehicle?.model} ({appointment?.vehicle?.color})</Text>
+                    { appointment?.vehicle?.plate || appointment?.vehicle?.vin ? <Text style={Styles.text}>{appointment?.vehicle?.plate}{appointment?.vehicle?.plate && appointment?.vehicle?.vin ? ' | ' : null}{appointment?.vehicle?.vin}</Text> : null }
+                </View>
+                { appointment?.notes ? (
+                    <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                        <Text style={Styles.subTitle}>Notes</Text>
+                        <Text style={Styles.text}>{appointment?.notes}</Text>
                     </View>
+                ) : null }
+                <View style={[Styles.infoContainer, {rowGap: 0}]}>
                     <View style={AdminStyles.labelContainer}>
-                        <Text style={Styles.subTitle}>Email</Text>
-                        <Text style={Styles.text}>{appointment.user.email}</Text>
-                    </View>
-                    <View style={AdminStyles.labelContainer}>
-                        <Text style={Styles.subTitle}>Phone Number</Text>
-                        <Text style={Styles.text}>{formatNumber(appointment.user.phone)}</Text>
+                        <Text style={Styles.subTitle}>Pickup Status</Text>
+                        <Text style={[Styles.text, appointment?.vehicle.readyForPickup ? {color: 'green'} : {color: 'red'}]}>{ appointment?.vehicle.readyForPickup ? 'Ready for pickup' : 'Not ready for pickup'}</Text>
                     </View>
                 </View>
             </View>
             <View style={Styles.block}>
-                <View style={Styles.infoContainer}>
-                    <Text style={Styles.title}>Details</Text>
-                    <View style={AdminStyles.labelContainer}>
-                        <Text style={Styles.subTitle}>Date</Text>
-                        <Text style={Styles.text}>{formatDate(appointment.date)}</Text>
-                    </View>
-                    <View style={AdminStyles.labelContainer}>
-                        <Text style={Styles.subTitle}>Time</Text>
-                        <Text style={Styles.text}>{formatTime(appointment.time)}</Text>
-                    </View>
-                    <View style={AdminStyles.labelContainer}>
-                        <Text style={Styles.subTitle}>Service</Text>
-                        <Text style={Styles.text}>{appointment.service}</Text>
-                    </View>
-                    <View style={AdminStyles.labelContainer}>
-                        <Text style={Styles.subTitle}>Scheduled on</Text>
-                        <Text style={Styles.text}>{formatDate(appointment.createdAt)}</Text>
-                    </View>
-                </View>
-            </View>
-            <View style={Styles.block}>
-                <Text style={[Styles.title, {paddingLeft: 20}]}>Vehicle</Text>
-                <View style={AdminStyles.vehicleContainer}>
-                    <View style={AdminStyles.labelContainer}>
-                        <Text style={Styles.subTitle}>Year</Text>
-                        <Text style={Styles.text}>{appointment.vehicle.year}</Text>
-                    </View>
-                    <View style={AdminStyles.labelContainer}>
-                        <Text style={Styles.subTitle}>Make</Text>
-                        <Text style={Styles.text}>{appointment.vehicle.make}</Text>
-                    </View>
-                    <View style={AdminStyles.labelContainer}>
-                        <Text style={Styles.subTitle}>Model</Text>
-                        <Text style={Styles.text}>{appointment.vehicle.model}</Text>
-                    </View>
-                    { appointment.vehicle.color ? (
-                    <View style={AdminStyles.labelContainer}>
-                        <Text style={Styles.subTitle}>Color</Text>
-                        <Text style={Styles.text}>{appointment.vehicle.color}</Text>
-                    </View>
-                    ) : null }
-                    { appointment.vehicle.plate ? (
-                    <View style={AdminStyles.labelContainer}>
-                        <Text style={Styles.subTitle}>Plate</Text>
-                        <Text style={Styles.text}>{appointment.vehicle.plate}</Text>
-                    </View>
-                    ) : null }
-                    { appointment.vehicle.vin ? (
-                    <View style={AdminStyles.labelContainer}>
-                        <Text style={Styles.subTitle}>VIN</Text>
-                        <Text style={Styles.text}>{appointment.vehicle.vin}</Text>
-                    </View>
-                    ) : null }
+                <View style={TowStyles.dualButtonContainer}>
+                    <TouchableOpacity
+                        style={[TowStyles.button, {backgroundColor: Colors.button, columnGap: 5}]}
+                        onPress={() => openCallCustomer(appointment?.user?.phone)}
+                    >
+                        <Entypo name="phone" size={25} color='white'/>
+                        <Text style={Styles.actionText}>Call Customer</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={[TowStyles.button, {backgroundColor: Colors.button}, loading && {opacity: 0.5}]}
+                        onPress={() => {
+                            Alert.alert(
+                                'Confirmation',
+                                'Mark the vehicle as ready for pickup?',
+                                [
+                                    { text: 'No' },
+                                    {
+                                        text: 'Yes',
+                                        onPress: async () => {
+                                            let title = !appointment?.vehicle.readyForPickup ? 'Vehicle Pickup' : 'Vehicle Picked Up';
+                                            let body = !appointment?.vehicle.readyForPickup ? `Your ${appointment?.vehicle.year} ${appointment?.vehicle.make} ${appointment?.vehicle.model} is ready for pickup!` : `Your ${appointment?.vehicle.year} ${appointment?.vehicle.make} ${appointment?.vehicle.model} has been picked up!`;
+                                            const data = {
+                                                type: "VEHICLE_PICKUP"
+                                            };
+                                            await handleUpdateVehiclePickupStatus(client, appointment?.vehicle?.id, !appointment?.vehicle?.readyForPickup);
+                                            await sendPushNotification(appointment?.user.pushToken, title, body, data);
+                                            navigate.reset({
+                                                index: 0,
+                                                routes: [{ name: '(admin)' }]
+                                            });
+                                        }
+                                    }
+                                ]
+                            )
+                        }}
+                    >
+                        <Text style={Styles.actionText}>{appointment?.vehicle.readyForPickup ? 'Completed' : 'Set Ready for pickup'}</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         </Background>

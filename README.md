@@ -1,12 +1,10 @@
 ToDo:
-    - Add appointments to google calendar and make visual calendar for app to display appointments
+ -> - Add appointments to google calendar
     - Try to make styling for tow request look better and maybe also for scheduling
     - Try to make styling for admin pages better
-    - update notification listeners for Admins and TowDrivers
     - fix handleResetPassword error message codes
-    - upload drivers coordinates to database from location subscription
-    - use a subscription to listen for updates to tow drivers coordinates in database for customer and then display these coordinates on a map.
     - use a notification or a database listener to end the location task from the admin console
+    - test out from customers console what happens if the admin accepts the tow request
 
 PotentialChanges:
     - Add notification tab in header for home page (only do this if you add a datamodel for notifications)
@@ -15,3 +13,4 @@ PotentialChanges:
     - move initialize app functions to components file
     - make a function to catch certain error messages so i can output my desired user friendly error message
     - add button to view password when inputing it
+    - update notification listeners for Admins and TowDrivers

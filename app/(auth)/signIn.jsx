@@ -59,7 +59,7 @@ const SignIn = () =>
                         await handleSignIn(email, password);
                         setLoading(false);
                     }}
-                    style={[Styles.actionButton, loading && { opacity: 0.5 }]}
+                    style={[Styles.actionButton, {backgroundColor: Colors.secondary}, loading && { opacity: 0.5 }]}
                     disabled={loading}
                 >
                     <Text style={Styles.actionText}>Login</Text>

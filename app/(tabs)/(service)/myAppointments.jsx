@@ -28,18 +28,28 @@ const MyAppointments = () => {
                 <Background>
                     {appointments?.map((appointment, index) => (
                         <View key={index} style={ServiceStyles.fieldContainer}>
-                            <View style={Styles.infoContainer}>
+                            <View style={[Styles.infoContainer, {rowGap: 0}]}>
                                 <Text style={Styles.subTitle}>Date</Text>
                                 <Text style={Styles.text}>{formatDate(appointment?.date)}</Text>
+                            </View>
+                            <View style={[Styles.infoContainer, {rowGap: 0}]}>
                                 <Text style={Styles.subTitle}>Time</Text>
                                 <Text style={Styles.text}>{formatTime(appointment?.time)}</Text>
+                            </View>
+                            <View style={[Styles.infoContainer, {rowGap: 0}]}>
                                 <Text style={Styles.subTitle}>Vehicle</Text>
                                 <Text style={Styles.text}>{`${appointment?.vehicle?.year} ${appointment?.vehicle?.make} ${appointment?.vehicle?.model}`}</Text>
+                            </View>
+                            <View style={[Styles.infoContainer, {rowGap: 0}]}>
                                 <Text style={Styles.subTitle}>Service</Text>
                                 <Text style={Styles.text}>{appointment?.service}</Text>
-                                <Text style={Styles.subTitle}>Description</Text>
-                                <Text style={Styles.text}>{appointment?.notes}</Text>
                             </View>
+                            { appointment?.notes ? (
+                                <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                                    <Text style={Styles.subTitle}>Description</Text>
+                                    <Text style={Styles.text}>{appointment?.notes}</Text>
+                                </View>
+                            ) : null }
                             <TouchableOpacity
                                 style={Styles.actionButton}
                                 onPress={() => {

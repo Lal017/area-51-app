@@ -1,13 +1,15 @@
-import { View, Text, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView } from 'react-native';
+import Colors from '../../constants/colors';
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+import { handleUpdateTowRequest } from '../../components/towComponents';
+import { sendPushNotification } from '../../components/notifComponents';
+import { handleGetAddress } from '../../components/adminComponents';
+import { useApp } from '../../components/context';
+import { Background, formatNumber } from '../../components/components';
 import { Styles, ServiceStyles, TowStyles } from '../../constants/styles';
+import { View, Text, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { AntDesign, FontAwesome5, Entypo } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
-import { handleUpdateTowRequest, handleGetAddress, sendPushNotification } from '../../components/adminComponents';
-import { useApp } from '../../components/context';
-import { Background, formatNumber } from '../../components/components';
-import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
-import Colors from '../../constants/colors';
 import { useNavigation } from '@react-navigation/native';
 import { openURL } from 'expo-linking';
 
@@ -89,7 +91,7 @@ const TowResponse = () =>
                             <Text style={[Styles.text, {fontWeight: 'bold', color: Colors.secondary}]}>|</Text>
                         </TouchableOpacity>
                     </View>
-                    { customer.vehicle ? (
+                    { customer?.vehicle ? (
                         <View style={[Styles.infoContainer, {rowGap: 0}]}>
                             <Text style={Styles.subTitle}>Vehicle Info</Text>
                             <Text style={Styles.text}>{customer?.vehicle?.year} {customer?.vehicle?.make} {customer?.vehicle?.model} ({customer?.vehicle?.color})</Text>
@@ -108,35 +110,44 @@ const TowResponse = () =>
                         <Text style={Styles.text}> - Keys included?                     {customer?.keyIncluded ? 'Yes' : 'No' }</Text>
                         <Text style={Styles.text}> - Vehicle is obstructed?         {customer?.isObstructed ? 'Yes' : 'No' }</Text>
                     </View>
-                    { customer.notes ? (
+                    { customer?.notes ? (
                         <View style={Styles.infoContainer}>
                             <Text style={Styles.subTitle}>Notes</Text>
                             <Text style={Styles.text}>{customer?.notes}</Text>
                         </View>
                     ) : null }
-                    { customer.status === 'REQUESTED' ? (
-                        <>
-                            <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                                <Text style={Styles.subTitle}>Wait Time</Text>
-                                <Text style={Styles.text}>Set an estimated wait time for the customer</Text>
-                                <View style={{flexDirection: 'row', columnGap: 10, paddingTop: 10, alignItems: 'center'}}>
-                                    <View style={TowStyles.inputWrapper}>
-                                        <AntDesign name="clockcircle" size={25} color='white' style={Styles.icon} />
-                                        <TextInput
-                                            style={TowStyles.input}
-                                            placeholder='wait time'
-                                            placeholderTextColor={Colors.text}
-                                            value={waitTime}
-                                            onChangeText={setWaitTime}
-                                            keyboardType='number-pad'
-                                        />
-                                    </View>
-                                    <Text style={Styles.text}>minutes</Text>
+                    { customer?.status === 'REQUESTED' ? (
+                        <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                            <Text style={Styles.subTitle}>Wait Time</Text>
+                            <Text style={Styles.text}>Set an estimated wait time for the customer</Text>
+                            <View style={{flexDirection: 'row', columnGap: 10, paddingTop: 10, alignItems: 'center'}}>
+                                <View style={TowStyles.inputWrapper}>
+                                    <AntDesign name="clockcircle" size={25} color='white' style={Styles.icon} />
+                                    <TextInput
+                                        style={TowStyles.input}
+                                        placeholder='wait time'
+                                        placeholderTextColor={Colors.text}
+                                        value={waitTime}
+                                        onChangeText={setWaitTime}
+                                        keyboardType='number-pad'
+                                    />
                                 </View>
+                                <Text style={Styles.text}>minutes</Text>
                             </View>
-                            <View style={TowStyles.dualButtonContainer}>
+                        </View>
+                    ) : null }
+                    { customer?.status !== 'COMPLETED' && customer?.status !== 'CANCELLED' ? (
+                        <View style={TowStyles.dualButtonContainer}>
+                            <TouchableOpacity
+                                style={[TowStyles.button, {backgroundColor: Colors.button}]}
+                                onPress={() => openCallCustomer(customer?.user?.phone)}
+                            >
+                                <Entypo name="phone" size={25} color='white'/>
+                                <Text style={Styles.actionText}>Call Customer</Text>
+                            </TouchableOpacity>
+                            { customer?.status === 'REQUESTED' ? (
                                 <TouchableOpacity
-                                    style={[TowStyles.button, {backgroundColor: Colors.primary}]}
+                                    style={[TowStyles.button, {backgroundColor: Colors.button}]}
                                     onPress={async () => {
                                         if (loading) return;
                                         setLoading(true);
@@ -148,48 +159,45 @@ const TowResponse = () =>
                                     <AntDesign name="check" size={25} color='white'/>
                                     <Text style={Styles.actionText}>Respond</Text>
                                 </TouchableOpacity>
+                            ) : (
                                 <TouchableOpacity
-                                    style={[TowStyles.button, {backgroundColor: Colors.secondary}]}
-                                    onPress={() => openCallCustomer(customer?.user?.phone)}
+                                    style={[Styles.actionButton, {backgroundColor: Colors.button}]}
+                                    onPress={() => {
+                                        Alert.alert(
+                                            'Complete Tow Request',
+                                            'Mark tow request as completed?',
+                                            [
+                                                { text: 'No' },
+                                                {
+                                                    text: 'Yes',
+                                                    onPress: async () => {
+                                                        await handleUpdateTowRequest(client, customer.id, 'COMPLETED');
+                                                        const data = {
+                                                            type: 'TOW_RESPONSE'
+                                                        };
+                                                        await sendPushNotification(customer?.user?.pushToken, 'Tow Request', 'Your tow request has been completed!', data);
+                                                        Alert.alert(
+                                                            'Completed',
+                                                            'Tow request has been marked as completed.',
+                                                            [{ text: 'OK' }]
+                                                        );
+                                                        navigate.reset({
+                                                            index: 1,
+                                                            routes: [
+                                                                { name: 'index' },
+                                                                { name: 'towRequests' }
+                                                            ]
+                                                        });
+                                                    }
+                                                }
+                                            ]
+                                        )
+                                    }}
                                 >
-                                    <Entypo name="phone" size={25} color='white'/>
-                                    <Text style={Styles.actionText}>Call Customer</Text>
+                                    <Text style={Styles.actionText}>Completed</Text>
                                 </TouchableOpacity>
-                            </View>
-                        </>
-                    ) : customer.status === 'IN_PROGRESS' ? (
-                        <TouchableOpacity
-                            style={[Styles.actionButton, {backgroundColor: Colors.primary}]}
-                            onPress={() => {
-                                Alert.alert(
-                                    'Complete Tow Request',
-                                    'Mark tow request as completed?',
-                                    [
-                                        { text: 'No' },
-                                        {
-                                            text: 'Yes',
-                                            onPress: async () => {
-                                                await handleUpdateTowRequest(client, customer.id, 'COMPLETED');
-                                                Alert.alert(
-                                                    'Completed',
-                                                    'Tow request has been marked as completed.',
-                                                    [{ text: 'OK' }]
-                                                );
-                                                navigate.reset({
-                                                    index: 1,
-                                                    routes: [
-                                                        { name: 'index' },
-                                                        { name: 'towRequests' }
-                                                    ]
-                                                });
-                                            }
-                                        }
-                                    ]
-                                )
-                            }}
-                        >
-                            <Text style={Styles.actionText}>Completed</Text>
-                        </TouchableOpacity>
+                            )}
+                        </View>
                     ) : null }
                 </View>
             </Background>

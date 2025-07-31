@@ -61,8 +61,8 @@ const HomeSettings = () =>
             >
                 <Background>
                     <View style={Styles.block}>
-                        <View style={Styles.infoContainer}>
-                            <Text style={Styles.title}>Current Images</Text>
+                        <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                            <Text style={Styles.subTitle}>Current Images</Text>
                             <Text style={Styles.text}>Preview of images currently on the home screen</Text>
                         </View>
                         { urls ? (
@@ -119,8 +119,8 @@ const HomeSettings = () =>
                         ) : null}
                     </View>
                     <View style={Styles.block}>
-                        <View style={Styles.infoContainer}>
-                            <Text style={Styles.title}>Image Upload</Text>
+                        <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                            <Text style={Styles.subTitle}>Image Upload</Text>
                             <Text style={Styles.text}>Upload an image to appear on the home screen for customers</Text>
                         </View>
                         <View style={AdminStyles.imgPickContainer}>
@@ -137,7 +137,7 @@ const HomeSettings = () =>
                             )}
                         </View>
                         <TouchableOpacity
-                            style={[Styles.actionButton, loading && {opacity: 0.5}, {alignSelf: 'center'}]}
+                            style={[Styles.actionButton, image && {backgroundColor: Colors.secondary}, loading && {opacity: 0.5}, {alignSelf: 'center'}]}
                             disabled={loading}
                             onPress={async () => {
                                 if (loading) return;
@@ -155,9 +155,9 @@ const HomeSettings = () =>
                             </Text>
                         </TouchableOpacity>
                     </View>
-                    <View style={[Styles.block, {alignItems: 'center'}]}>
-                        <View style={Styles.infoContainer}>
-                            <Text style={Styles.title}>Send Notification</Text>
+                    <View style={Styles.block}>
+                        <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                            <Text style={Styles.subTitle}>Send Notification</Text>
                             <Text style={Styles.text}>Send a push notification to all users</Text>
                         </View>
                         <View style={Styles.inputContainer}>
@@ -204,7 +204,7 @@ const HomeSettings = () =>
                                 )
                                 setLoading(false);
                             }}
-                            style={[Styles.actionButton, loading && {opacity: 0.5}]}
+                            style={[Styles.actionButton, {alignSelf: 'center'}, loading && {opacity: 0.5}]}
                             disabled={loading}
                         >
                             <Text style={Styles.actionText}>Send</Text>

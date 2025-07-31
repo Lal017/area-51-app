@@ -40,7 +40,7 @@ const Profile = () =>
     return(
         <Background>
             <View style={Styles.block}>
-                <View style={Styles.infoContainer}>
+                <View style={[Styles.infoContainer, {rowGap: 0}]}>
                     <Text style={ProfileStyles.name}>{firstName} {lastName}</Text>
                     <Text style={[Styles.text, {fontSize: 17}]}>{email}</Text>
                 </View>

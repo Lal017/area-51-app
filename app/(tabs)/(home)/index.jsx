@@ -30,7 +30,8 @@ const Index = () =>
     setVehicles,
     vehiclePickup,
     customNotification,
-    setCustomNotification
+    setCustomNotification,
+    setVehiclePickup
   } = useApp();
   
   const [ urls, setUrls ] = useState();
@@ -47,6 +48,8 @@ const Index = () =>
       // refresh vehicles
       const getVehicles = await handleGetVehicles(client, userId);
       setVehicles(getVehicles);
+      const filterVehicles = getVehicles?.some(item => item.readyForPickup === true);
+      setVehiclePickup(filterVehicles);
 
       // refresh tow requests
       const getTowRequest = await handleGetTowRequest(client, userId);

@@ -237,14 +237,17 @@ export const listAppointments = /* GraphQL */ `
           lastName
           email
           phone
+          pushToken
         }
         vehicle {
+          id
           year
           make
           model
           color
           plate
           vin
+          readyForPickup
         }
         createdAt
         updatedAt

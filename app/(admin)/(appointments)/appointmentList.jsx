@@ -52,10 +52,9 @@ const AppointmentList = () =>
                             <Tab
                                 key={index}
                                 action={() => {
-                                    console.log(appointment)
                                     router.push({
                                         params: { appointmentParam: JSON.stringify(appointment)},
-                                        pathname: '/(admin)/appointmentView'
+                                        pathname: '/appointmentView'
                                     })}
                                 }
                                 text={`${appointment.user.firstName} ${appointment.user.lastName}\n${formatDate(appointment.date)} ${formatTime(appointment.time)}`}

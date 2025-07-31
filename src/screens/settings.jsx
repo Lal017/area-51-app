@@ -14,7 +14,7 @@ const Settings = () =>
     return(
         <Background>
             <View style={Styles.block}>
-                <View style={Styles.infoContainer}>
+                <View style={[Styles.infoContainer, {rowGap: 0}]}>
                     <Text style={ProfileStyles.name}>{firstName} {lastName}</Text>
                     <Text style={Styles.text}>{email}</Text>
                     <Text style={Styles.text}>{readableNumber}</Text>

@@ -1,12 +1,13 @@
-import { View, Text, TouchableOpacity, Alert } from 'react-native';
-import { Background, formatNumber } from '../../components/components';
-import { useLocalSearchParams } from 'expo-router';
-import { AdminStyles, Styles } from '../../constants/styles';
 import Colors from '../../constants/colors';
-import { useState } from 'react';
-import { handleUpdateVehicleStatus, sendPushNotification } from '../../components/adminComponents';
+import { Background, formatNumber } from '../../components/components';
+import { AdminStyles, Styles } from '../../constants/styles';
+import { handleUpdateVehiclePickupStatus } from '../../components/vehicleComponents';
+import { sendPushNotification } from '../../components/notifComponents';
 import { useApp } from '../../components/context';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
 import { useNavigation } from '@react-navigation/native';
+import { useState } from 'react';
 
 const VehicleView = () =>
 {
@@ -18,77 +19,32 @@ const VehicleView = () =>
 
     const [ loading, setLoading ] = useState(false);
 
-    const data = {
-        type: "VEHICLE_PICKUP"
-    };
-
     return (
         <Background>
             <View style={Styles.block}>
-                <View style={Styles.infoContainer}>
-                    <Text style={Styles.title}>Vehicle</Text>
-                    <View style={AdminStyles.labelContainer}>
-                        <Text style={Styles.subTitle}>Year</Text>
-                        <Text style={Styles.text}>{vehicle.year}</Text>
-                    </View>
-                    <View style={AdminStyles.labelContainer}>
-                        <Text style={Styles.subTitle}>Make</Text>
-                        <Text style={Styles.text}>{vehicle.make}</Text>
-                    </View>
-                    <View style={AdminStyles.labelContainer}>
-                        <Text style={Styles.subTitle}>Model</Text>
-                        <Text style={Styles.text}>{vehicle.model}</Text>
-                    </View>
-                    { vehicle?.color ? (
-                        <View style={AdminStyles.labelContainer}>
-                            <Text style={Styles.subTitle}>Color</Text>
-                            <Text style={Styles.text}>{vehicle.color}</Text>
-                        </View>
-                    ) : null}
-                    { vehicle?.plate ? (
-                        <View style={AdminStyles.labelContainer}>
-                            <Text style={Styles.subTitle}>Plate</Text>
-                            <Text style={Styles.text}>{vehicle.plate}</Text>
-                        </View>
-                    ) : null}
-                    { vehicle?.vin ? (
-                        <View style={AdminStyles.labelContainer}>
-                            <Text style={Styles.subTitle}>VIN</Text>
-                            <Text style={Styles.text}>{vehicle.vin}</Text>
-                        </View>
-                    ) : null}
+                <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                    <Text style={Styles.subTitle}>Customer</Text>
+                    <Text style={Styles.text}>{vehicle?.user?.firstName} {vehicle?.user?.lastName} | {formatNumber(vehicle?.user?.phone)} | {vehicle?.user?.email}</Text>
                 </View>
-            </View>
-            <View style={Styles.block}>
-                <View style={Styles.infoContainer}>
-                    <Text style={Styles.title}>User</Text>
-                    <View style={AdminStyles.labelContainer}>
-                        <Text style={Styles.subTitle}>Name</Text>
-                        <Text style={Styles.text}>{vehicle.user.firstName} {vehicle.user.lastName}</Text>
-                    </View>
-                    <View style={AdminStyles.labelContainer}>
-                        <Text style={Styles.subTitle}>Email</Text>
-                        <Text style={Styles.text}>{vehicle.user.email}</Text>
-                    </View>
-                    <View style={AdminStyles.labelContainer}>
-                        <Text style={Styles.subTitle}>Phone Number</Text>
-                        <Text style={Styles.text}>{formatNumber(vehicle.user.phone)}</Text>
-                    </View>
+                <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                    <Text style={Styles.subTitle}>Vehicle</Text>
+                    <Text style={Styles.text}>{vehicle?.year} {vehicle?.make} {vehicle?.model} ({vehicle?.color})</Text>
+                    { vehicle?.plate || vehicle?.vin ? <Text style={Styles.text}>{vehicle?.plate}{vehicle?.plate && vehicle?.vin ? ' | ' : null}{vehicle?.vin}</Text> : null }
                 </View>
-            </View>
-            <View style={[Styles.block, {alignItems: 'center'}]}>
-                <View style={Styles.infoContainer}>
-                    <Text style={Styles.title}>Pickup</Text>
+                <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                    <Text style={Styles.subTitle}>Pickup</Text>
                     <Text style={Styles.text}>Let the customer know their vehicle is ready for pickup</Text>
+                </View>
+                <View style={[Styles.infoContainer, {rowGap: 0}]}>
                     <View style={AdminStyles.labelContainer}>
-                        <Text style={Styles.subTitle}>Status</Text>
+                        <Text style={Styles.subTitle}>Pickup Status</Text>
                         <Text style={[Styles.text, vehicle.readyForPickup ? {color: 'green'} : {color: 'red'}]}>{ vehicle.readyForPickup ? 'Ready for pickup' : 'Not ready for pickup'}</Text>
                     </View>
                 </View>
                 <TouchableOpacity
-                    style={[Styles.actionButton, vehicle.readyForPickup && {backgroundColor: Colors.primary }, loading && {opacity: 0.7}]}
+                    style={[Styles.actionButton, {backgroundColor: Colors.button}, {alignSelf: 'center'}, vehicle.readyForPickup && {backgroundColor: Colors.button }, loading && {opacity: 0.7}]}
                     onPress={() => Alert.alert(
-                        'Confirm',
+                        'Confirmation',
                         'Mark the vehicle as ready for pickup?',
                         [
                             { text: 'No' },
@@ -99,7 +55,10 @@ const VehicleView = () =>
                                     setLoading(true);
                                     let title = !vehicle.readyForPickup ? 'Vehicle Pickup' : 'Vehicle Picked Up';
                                     let body = !vehicle.readyForPickup ? `Your ${vehicle.year} ${vehicle.make} ${vehicle.model} is ready for pickup!` : `Your ${vehicle.year} ${vehicle.make} ${vehicle.model} has been picked up!`;
-                                    await handleUpdateVehicleStatus(client, vehicle.id, !vehicle.readyForPickup);
+                                    const data = {
+                                        type: "VEHICLE_PICKUP"
+                                    };
+                                    await handleUpdateVehiclePickupStatus(client, vehicle.id, !vehicle.readyForPickup);
                                     await sendPushNotification(vehicle.user.pushToken, title, body, data);
                                     navigate.reset({
                                         index: 1,
@@ -115,7 +74,7 @@ const VehicleView = () =>
                     )}
                     disabled={loading}
                 >
-                    <Text style={Styles.actionText}>{ vehicle.readyForPickup ? 'Finished' : 'Ready for pickup'}</Text>
+                    <Text style={Styles.actionText}>{ vehicle.readyForPickup ? 'Completed' : 'Ready for pickup'}</Text>
                 </TouchableOpacity>
             </View>
         </Background>

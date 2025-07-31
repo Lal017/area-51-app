@@ -47,7 +47,7 @@ const UserView = () =>
                                 <Text style={Styles.text}>The user is requesting to become a tow truck driver. Would you like to make them into a driver?</Text>
                             </View>
                             <TouchableOpacity
-                                style={[Styles.actionButton, {backgroundColor: Colors.primary, alignSelf: 'center'}]}
+                                style={[Styles.actionButton, {backgroundColor: Colors.secondary, alignSelf: 'center'}]}
                                 onPress={() => {
                                     Alert.alert(
                                         'Confirmation',
@@ -87,19 +87,30 @@ const UserView = () =>
                         </>
                     ) : null}
                 </View>
-                <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                <View style={Styles.infoContainer}>
                     { customer?.vehicles?.items?.length > 0 ? (<Text style={Styles.subTitle}>Vehicles</Text>)
                         : customer?.access === 'Customers' && customer?.vehicle?.items?.lenth === 0 ? (<Text style={[Styles.subTitle, {alignSelf: 'center'}]}>Customer has no vehicles</Text>) : null}
                     { customer?.vehicles?.items?.map((vehicle, index) => (
                         <View key={index}>
                             <Text style={Styles.text}>{vehicle?.year} {vehicle?.make} {vehicle?.model} ({vehicle?.color})</Text>
-                            { vehicle?.plate || vehicle?.vin ? <Text style={Styles.text}>{vehicle?.plate}{vehicle?.plate && vehicle?.vin ? ' | ' : null}{vehicle?.vin}</Text> : null }
+                            { vehicle?.plate ? (
+                                <View style={AdminStyles.labelContainer}>
+                                    <Text style={Styles.text}>Plate:</Text>
+                                    <Text style={Styles.text}>{vehicle?.plate}</Text>
+                                </View>
+                            ) : null}
+                            { vehicle?.vin ? (
+                                <View style={AdminStyles.labelContainer}>
+                                    <Text style={Styles.text}>VIN:</Text>
+                                    <Text style={Styles.text}>{vehicle?.vin}</Text>
+                                </View>
+                            ) : null}
                         </View>
                     ))}
                 </View>
                 <View style={Styles.block}>
                     <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                        <Text style={Styles.title}>Invoice Upload</Text>
+                        <Text style={Styles.subTitle}>Invoice Upload</Text>
                         <Text style={Styles.text}>Upload an invoice to this customers account</Text>
                     </View>
                     <Tab
@@ -121,7 +132,7 @@ const UserView = () =>
                         rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon} />}
                     />
                     <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                        <Text style={Styles.title}>Estimate Upload</Text>
+                        <Text style={Styles.subTitle}>Estimate Upload</Text>
                         <Text style={Styles.text}>Upload an estimate to this customers account</Text>
                     </View>
                     <Tab
@@ -143,7 +154,7 @@ const UserView = () =>
                         rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon} />}
                     />
                     <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                        <Text style={Styles.title}>Send Notification</Text>
+                        <Text style={Styles.subTitle}>Send Notification</Text>
                         <Text style={Styles.text}>Send a push notification to {customer.firstName}</Text>
                     </View>
                     <View style={Styles.inputContainer}>

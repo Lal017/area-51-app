@@ -115,7 +115,7 @@ const Styles = StyleSheet.create({
     },
     // button
     actionButton: {
-        backgroundColor: Colors.secondary,
+        backgroundColor: Colors.button,
         height: 50,
         width: '90%',
         justifyContent: 'center',
@@ -350,7 +350,7 @@ const HomeStyles = StyleSheet.create({
         width: 50,
         height: 50,
         borderRadius: 10,
-        backgroundColor: Colors.primary,
+        backgroundColor: Colors.button,
         justifyContent: 'center',
         alignItems: 'center'
     }
@@ -402,7 +402,7 @@ const ServiceStyles = StyleSheet.create({
         flexDirection: 'row'
     },
     directionButton: {
-        backgroundColor: Colors.secondary,
+        backgroundColor: Colors.button,
         borderRadius: 10,
         alignItems: 'center',
         justifyContent: 'center',
@@ -560,6 +560,7 @@ const AdminStyles = StyleSheet.create({
     labelContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+        alignItems: 'center',
         width: '100%'
     },
     pdfContainer: {
@@ -601,6 +602,11 @@ const AdminStyles = StyleSheet.create({
         padding: 25,
         textAlign: 'center',
         backgroundColor: Colors.backgroundAccent,
+    },
+    // (appointment)/index.jsx
+    agendaList: {
+        width: '100%',
+        padding: 20
     }
 });
 
@@ -614,13 +620,12 @@ const TowStyles = StyleSheet.create({
         paddingRight: 20
     },
     button: {
-        width: '45%',
-        height: 55,
+        width: '48%',
+        height: 65,
         borderRadius: 10,
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'row',
-        columnGap: 5
     },
     inputWrapper: {
         flexDirection: 'row',

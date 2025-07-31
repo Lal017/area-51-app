@@ -9,6 +9,7 @@ const Colors = {
     backDropAccent: 'white',
     text: 'white',
     textAlt: 'black',
+    button: '#4c4c63'
 };
 
 export default Colors;

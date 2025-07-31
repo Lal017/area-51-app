@@ -1,12 +1,12 @@
-import { View, TextInput } from "react-native";
-import { Styles } from '../../constants/styles';
-import { handleListVehicles } from "../../components/adminComponents";
-import { useApp } from '../../components/context';
-import { useEffect, useState } from "react";
+import Colors from "../../constants/colors";
 import { Background, Tab } from "../../components/components";
+import { Styles } from '../../constants/styles';
+import { handleListVehicles } from "../../components/vehicleComponents";
+import { useApp } from '../../components/context';
+import { View, TextInput } from "react-native";
+import { useEffect, useState } from "react";
 import { router } from "expo-router";
 import { AntDesign, Entypo, Ionicons } from "@expo/vector-icons";
-import Colors from "../../constants/colors";
 
 const VehicleList = () =>
 {
