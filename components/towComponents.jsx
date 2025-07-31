@@ -1,5 +1,5 @@
 import * as Location from 'expo-location';
-import { listTowRequests, towRequestsByUserId } from "../src/graphql/queries";
+import { getTowRequest, listTowRequests, towRequestsByUserId } from "../src/graphql/queries";
 import { createTowRequest, updateTowRequest, deleteTowRequest } from "../src/graphql/mutations";
 import { Alert } from 'react-native';
 import { router } from "expo-router";
@@ -27,6 +27,25 @@ const handleGetAllTowRequests = async (client) =>
         return result.data.listTowRequests.items;
     } catch (error) {
         console.error('ERROR, could not get all tow requests:', error);
+    }
+};
+
+const handleFinalTowCheck = async (client, towId) =>
+{
+    try {
+        const result = await client.graphql({
+            query: getTowRequest,
+            variables: {
+                id: towId
+            }
+        });
+
+        if (result.data.getTowRequest.status === 'REQUESTED') {
+            return false;
+        }
+        return true;
+    } catch (error) {
+        console.error('ERROR, could not get tow request:', error);
     }
 };
 
@@ -256,6 +275,7 @@ const handleDeleteAllTowRequests = async (client, userID) =>
 
 export {
     handleGetAllTowRequests,
+    handleFinalTowCheck,
     handleUpdateCustomersTowRequestStatus,
     handleAcceptTowRequest,
     handleCompleteTowRequest,

@@ -1,6 +1,5 @@
 ToDo:
     - fix handleResetPassword error message codes
-    - make sure two truck drivers cant accept the same request
     - handle notification when a truck driver accepts a request and an admin marks it as completed
     - DECIDE IF YOU SHOULD KEEP APPOINTMENT LIST OR NOT
 

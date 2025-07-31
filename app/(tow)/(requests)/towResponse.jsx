@@ -1,7 +1,7 @@
 import Colors from "../../../constants/colors";
 import * as Location from 'expo-location';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { handleAcceptTowRequest, handleCompleteTowRequest, stopWatchingLocation } from "../../../components/towComponents";
+import { handleAcceptTowRequest, handleCompleteTowRequest, stopWatchingLocation, handleFinalTowCheck } from "../../../components/towComponents";
 import { useApp } from "../../../components/context";
 import { sendPushNotification } from '../../../components/notifComponents'
 import { Background, formatNumber } from "../../../components/components";
@@ -200,6 +200,19 @@ const TowResponse = () =>
                                         {
                                             text: 'Yes',
                                             onPress: async () => {
+                                                const isAccepted = await handleFinalTowCheck(client, request.id);
+                                                if (isAccepted) {
+                                                    Alert.alert(
+                                                        'Tow Request',
+                                                        'The request has already been accepted by another driver',
+                                                        [{ text: 'OK' }]
+                                                    );
+                                                    navigate.reset({
+                                                        index: 0,
+                                                        routes: [{ name: '(tow)' }]
+                                                    });
+                                                    return;
+                                                }
                                                 await AsyncStorage.setItem('requestId', request?.id);
                                                 await startWatchingLocation();
                                                 const data = {

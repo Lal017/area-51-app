@@ -1,6 +1,6 @@
 import Colors from '../../constants/colors';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
-import { handleUpdateCustomersTowRequestStatus } from '../../components/towComponents';
+import { handleFinalTowCheck, handleUpdateCustomersTowRequestStatus } from '../../components/towComponents';
 import { sendPushNotification } from '../../components/notifComponents';
 import { handleGetAddress } from '../../components/adminComponents';
 import { useApp } from '../../components/context';
@@ -157,6 +157,19 @@ const TowResponse = () =>
                                                 {
                                                     text: 'Yes',
                                                     onPress: async () => {
+                                                        const isAccepted = await handleFinalTowCheck(client, customer.id);
+                                                        if (isAccepted) {
+                                                            Alert.alert(
+                                                                'Tow Request',
+                                                                'The request has already been accepted by a tow driver',
+                                                                [{ text: 'OK' }]
+                                                            );
+                                                            navigate.reset({
+                                                                index: 0,
+                                                                routes: [{ name: '(admin)' }]
+                                                            });
+                                                            return;
+                                                        }
                                                         await handleUpdateCustomersTowRequestStatus(client, customer.id, 'IN_PROGRESS', waitTime);
                                                         await sendPushNotification(customer?.user?.pushToken, 'Tow Request', 'Your Tow Driver is on the way', data);
                                                         navigate.reset({
