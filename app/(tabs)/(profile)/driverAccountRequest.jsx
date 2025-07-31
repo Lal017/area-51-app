@@ -31,7 +31,7 @@ const DriverAccountRequest = () =>
                 </View>
             </View>
             <TouchableOpacity
-                style={[Styles.actionButton, loading && {opacity: 0.5}, {backgroundColor: Colors.primary}]}
+                style={[Styles.actionButton, loading && {opacity: 0.5}, {backgroundColor: Colors.secondary}]}
                 onPress={() => Alert.alert(
                     'Confirmation',
                     'Are you sure you want to convert your account to a tow driver account?',

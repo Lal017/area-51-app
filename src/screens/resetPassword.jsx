@@ -14,6 +14,9 @@ const ResetPassword = () =>
     const [ newPassword, setNewPassword ] = useState();
     const [ confNewPassword, setConfNewPassword ] = useState();
     const [ loading, setLoading ] = useState(false);
+    const [ showOldPassword, setShowOldPassword ] = useState(false);
+    const [ showPassword, setShowPassword ] = useState(false);
+    const [ showConfirmPassword, setShowConfirmPassword ] = useState(false);
 
     return(
         <KeyboardAvoidingView
@@ -30,10 +33,20 @@ const ResetPassword = () =>
                             placeholderTextColor={Colors.text}
                             value={oldPassword}
                             onChangeText={setOldPassword}
-                            secureTextEntry
+                            secureTextEntry={!showOldPassword}
                             autoCapitalize='none'
                             style={Styles.input}
                         />
+                        <TouchableOpacity
+                            style={{padding: 10, position: 'absolute', right: 10}}
+                            onPress={() => {
+                                setShowOldPassword(prev => !prev);
+                            }}
+                        >
+                            { showOldPassword ? (
+                                <Ionicons name='eye-off' size={20} color={Colors.backDropAccent}/>
+                            ) : <Ionicons name='eye' size={20} color={Colors.backDropAccent}/> }
+                        </TouchableOpacity>
                     </View>
                     <Text style={[Styles.subTitle, {paddingLeft: 20}]}>New Password</Text>
                     <View style={Styles.inputWrapper}>
@@ -43,10 +56,20 @@ const ResetPassword = () =>
                             placeholderTextColor={Colors.text}
                             value={newPassword}
                             onChangeText={setNewPassword}
-                            secureTextEntry
+                            secureTextEntry={!showPassword}
                             autoCapitalize='none'
                             style={Styles.input}
                         />
+                        <TouchableOpacity
+                            style={{padding: 10, position: 'absolute', right: 10}}
+                            onPress={() => {
+                                setShowPassword(prev => !prev);
+                            }}
+                        >
+                            { showPassword ? (
+                                <Ionicons name='eye-off' size={20} color={Colors.backDropAccent}/>
+                            ) : <Ionicons name='eye' size={20} color={Colors.backDropAccent}/> }
+                        </TouchableOpacity>
                     </View>
                     <Text style={[Styles.subTitle, {paddingLeft: 20}]}>Confirm New Password</Text>
                     <View style={Styles.inputWrapper}>
@@ -56,10 +79,20 @@ const ResetPassword = () =>
                             placeholderTextColor={Colors.text}
                             value={confNewPassword}
                             onChangeText={setConfNewPassword}
-                            secureTextEntry
+                            secureTextEntry={!showConfirmPassword}
                             autoCapitalize='none'
                             style={Styles.input}
                         />
+                        <TouchableOpacity
+                            style={{padding: 10, position: 'absolute', right: 10}}
+                            onPress={() => {
+                                setShowConfirmPassword(prev => !prev);
+                            }}
+                        >
+                            { showConfirmPassword ? (
+                                <Ionicons name='eye-off' size={20} color={Colors.backDropAccent}/>
+                            ) : <Ionicons name='eye' size={20} color={Colors.backDropAccent}/> }
+                        </TouchableOpacity>
                     </View>
                 </View>
                 <TouchableOpacity

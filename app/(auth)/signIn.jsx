@@ -15,6 +15,7 @@ const SignIn = () =>
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     return (
         <AuthBackground>
@@ -47,9 +48,19 @@ const SignIn = () =>
                             value={password}
                             onChangeText={setPassword}
                             autoCapitalize='none'
-                            secureTextEntry
+                            secureTextEntry={!showPassword}
                             style={Styles.input}
                         />
+                        <TouchableOpacity
+                            style={{padding: 10, position: 'absolute', right: 10}}
+                            onPress={() => {
+                                setShowPassword(prev => !prev);
+                            }}
+                        >
+                            { showPassword ? (
+                                <Ionicons name='eye-off' size={20} color={Colors.backDropAccent}/>
+                            ) : <Ionicons name='eye' size={20} color={Colors.backDropAccent}/> }
+                        </TouchableOpacity>
                     </View>
                 </View>
                 <TouchableOpacity

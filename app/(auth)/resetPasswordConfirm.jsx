@@ -16,6 +16,8 @@ const ResetPasswordConfirm = () =>
     const [newPassword, setNewPassword] = useState();
     const [confNewPassword, setConfNewPassword] = useState();
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     return (
         <KeyboardAvoidingView behavior='height' style={{flex: 1}} >
@@ -51,10 +53,20 @@ const ResetPasswordConfirm = () =>
                                 placeholderTextColor={Colors.text}
                                 value={newPassword}
                                 onChangeText={setNewPassword}
-                                secureTextEntry
+                                secureTextEntry={!showPassword}
                                 autoCapitalize="none"
                                 style={Styles.input}
                             />
+                            <TouchableOpacity
+                                style={{padding: 10, position: 'absolute', right: 10}}
+                                onPress={() => {
+                                    setShowPassword(prev => !prev);
+                                }}
+                            >
+                                { showPassword ? (
+                                    <Ionicons name='eye-off' size={20} color={Colors.backDropAccent}/>
+                                ) : <Ionicons name='eye' size={20} color={Colors.backDropAccent}/> }
+                            </TouchableOpacity>
                         </View>
                         <View style={Styles.inputWrapper}>
                             <Ionicons name="lock-open" size={20} style={Styles.icon} />
@@ -63,10 +75,20 @@ const ResetPasswordConfirm = () =>
                                 placeholderTextColor={Colors.text}
                                 value={confNewPassword}
                                 onChangeText={setConfNewPassword}
-                                secureTextEntry
+                                secureTextEntry={!showConfirmPassword}
                                 autoCapitalize="none"
                                 style={Styles.input}
                             />
+                            <TouchableOpacity
+                                style={{padding: 10, position: 'absolute', right: 10}}
+                                onPress={() => {
+                                    setShowConfirmPassword(prev => !prev);
+                                }}
+                            >
+                                { showConfirmPassword ? (
+                                    <Ionicons name='eye-off' size={20} color={Colors.backDropAccent}/>
+                                ) : <Ionicons name='eye' size={20} color={Colors.backDropAccent}/> }
+                            </TouchableOpacity>
                         </View>
                     </View>
                     <TouchableOpacity

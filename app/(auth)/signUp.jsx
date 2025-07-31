@@ -1,4 +1,5 @@
 import Colors from "../../constants/colors";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthBackground } from "../../components/components";
 import { handleSignUp, GoogleSignInButton, AmazonSignInButton } from "../../components/authComponents";
 import { AuthStyles, Styles } from "../../constants/styles";
@@ -6,7 +7,6 @@ import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Image, A
 import { useState } from "react";
 import { Link } from "expo-router";
 import { Entypo, Ionicons } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SignUp = () =>
 {
@@ -19,6 +19,8 @@ const SignUp = () =>
     const [check, setCheck] = useState(false);
     const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     return(
         <KeyboardAvoidingView
@@ -55,9 +57,19 @@ const SignUp = () =>
                                 value={password}
                                 onChangeText={setPassword}
                                 autoCapitalize="none"
-                                secureTextEntry={true}
+                                secureTextEntry={!showPassword}
                                 style={Styles.input}
                             />
+                            <TouchableOpacity
+                                style={{padding: 10, position: 'absolute', right: 10}}
+                                onPress={() => {
+                                    setShowPassword(prev => !prev);
+                                }}
+                            >
+                                { showPassword ? (
+                                    <Ionicons name='eye-off' size={20} color={Colors.backDropAccent}/>
+                                ) : <Ionicons name='eye' size={20} color={Colors.backDropAccent}/> }
+                            </TouchableOpacity>
                         </View>
                         <View style={Styles.inputWrapper}>
                             <Ionicons name="lock-open" size={20} style={Styles.icon} />
@@ -67,9 +79,19 @@ const SignUp = () =>
                                 value={confPassword}
                                 onChangeText={setConfPassword}
                                 autoCapitalize="none"
-                                secureTextEntry={true}
+                                secureTextEntry={!showConfirmPassword}
                                 style={Styles.input}
                             />
+                            <TouchableOpacity
+                                style={{padding: 10, position: 'absolute', right: 10}}
+                                onPress={() => {
+                                    setShowConfirmPassword(prev => !prev);
+                                }}
+                            >
+                                { showConfirmPassword ? (
+                                    <Ionicons name='eye-off' size={20} color={Colors.backDropAccent}/>
+                                ) : <Ionicons name='eye' size={20} color={Colors.backDropAccent}/> }
+                            </TouchableOpacity>
                         </View>
                         <View style={{width: '90%', flexDirection: 'row', columnGap: 10, alignItems: 'center', justifyContent: 'center'}}>
                             <TouchableOpacity
