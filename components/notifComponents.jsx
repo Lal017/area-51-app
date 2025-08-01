@@ -129,13 +129,7 @@ const handleSendDriversNotif = async (title, content, data) =>
 
 const handleRegistrationError = (errMessage) =>
 {
-    Alert.alert(
-        'Registration Error',
-        errMessage,
-        [
-            { text: 'OK' }
-        ]
-    );
+    console.error('ERROR,', errMessage);
     throw new Error(errMessage);
 };
 

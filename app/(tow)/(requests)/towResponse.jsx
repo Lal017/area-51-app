@@ -7,7 +7,7 @@ import { sendPushNotification } from '../../../components/notifComponents'
 import { Background, formatNumber } from "../../../components/components";
 import { TowStyles, ServiceStyles, Styles } from "../../../constants/styles";
 import { handleGetAddress } from "../../../components/adminComponents";
-import { useLocalSearchParams, router } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { TouchableOpacity, View, Text, TextInput, KeyboardAvoidingView, Alert } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import { useEffect, useState } from "react";
@@ -53,32 +53,6 @@ const TowResponse = () =>
 
     const startWatchingLocation = async () =>
     {
-        const { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-            Alert.alert(
-                'NOTICE',
-                'You must give location permissions to accept a tow request',
-                [{
-                    text: 'Back',
-                    onPress: () => router.back()
-                }]
-            );
-            return;
-        } else {
-            const { status } = await Location.requestBackgroundPermissionsAsync();
-            if (status !== 'granted') {
-                Alert.alert(
-                    'NOTICE',
-                    'You must give background location permissions to accept a tow request',
-                    [{
-                        text: 'Back',
-                        onPress: () => router.back()
-                    }]
-                );
-                return;
-            }
-        }
-
         const isTracking = await Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME);
         if (!isTracking) {
             await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {

@@ -7,6 +7,7 @@ import { handleGetTowRequest } from '../../../components/towComponents';
 import { AppointmentReminder, Background } from "../../../components/components";
 import { HomeStyles, Styles } from "../../../constants/styles";
 import { useApp } from "../../../components/context";
+import { requestForegroundPermissionsAsync } from "expo-location";
 import { Text, TouchableOpacity, Linking, View, Alert, Image, Dimensions, ActivityIndicator } from "react-native";
 import { AntDesign, Entypo, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import Animated, { Easing , useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from "react-native-reanimated";
@@ -106,7 +107,7 @@ const Index = () =>
         <View style={HomeStyles.shortcutContainer}>
           <TouchableOpacity
             style={HomeStyles.shortcutButton}
-            onPress={() => {
+            onPress={async () => {
               if (vehicles?.length === 0) {
                 Alert.alert(
                   'Notice',
@@ -119,12 +120,26 @@ const Index = () =>
                     }
                   ]
                 );
+                return;
+              }
+              const { status } = await requestForegroundPermissionsAsync();
+              if (status !== 'granted') {
+                Alert.alert(
+                  'NOTICE',
+                  'You must give location permissions to make a tow request',
+                  [
+                    {
+                      text: 'Settings',
+                      onPress: () => Linking.openSettings()
+                    }
+                  ]
+                );
+                return;
+              }
+              if (towRequest !== undefined) {
+                router.push('/towStatus');
               } else {
-                if (towRequest !== undefined) {
-                  router.push('/towStatus');
-                } else {
-                  router.push('/towRequest');
-                }
+                router.push('/towRequest');
               }
             }}
           >

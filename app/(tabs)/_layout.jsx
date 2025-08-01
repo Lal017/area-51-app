@@ -12,12 +12,12 @@ import { handleCreateUser, handleUpdateUser, handleGetUser } from '../../compone
 import { handleGetCurrentUser } from "../../components/authComponents";
 import { Styles } from "../../constants/styles";
 import { AppProvider, useApp } from "../../components/context";
-import { View, Text, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TouchableOpacity, Alert, Linking } from "react-native";
 import { router, Tabs} from "expo-router";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useEffect, useRef, useState } from 'react';
 import { generateClient } from "aws-amplify/api";
-import { addNotificationReceivedListener, addNotificationResponseReceivedListener, removeNotificationSubscription, getLastNotificationResponseAsync } from "expo-notifications";
+import { addNotificationReceivedListener, addNotificationResponseReceivedListener, removeNotificationSubscription, getLastNotificationResponseAsync, getPermissionsAsync } from "expo-notifications";
 import { fetchUserAttributes, fetchAuthSession, signOut } from "aws-amplify/auth";
 import { useNavigation } from "@react-navigation/native";
 
@@ -68,6 +68,7 @@ const TabsContent = () =>
     // ask user to refresh screen once they have been made a tow truck driver
     const [ refreshPrompt, setRefreshPrompt ] = useState(false);
     const [ refreshing, setRefreshing ] = useState(false);
+    const [ permissionScreen, setPermissionScreen ] = useState(false);
 
     // notification listeners
     const notificationListener = useRef();
@@ -83,17 +84,37 @@ const TabsContent = () =>
         setRefreshing(false);
     };
 
+    const onPermissionRefresh = async () =>
+    {
+        setRefreshing(true);
+        const permission = await getPermissionsAsync();
+        if (permission.granted) {
+            setPermissionScreen(false);
+            navigate.reset({
+                index: 0,
+                routes: [{ name: '(tabs)' }]
+            });
+        }
+        setRefreshing(false);
+    };
+
     // initialize data used for the app
     useEffect(() => {
         const initializeApp = async () =>
         {
+            // get push token for notifications
+            try {
+                const genPushToken = await registerForPushNotifications();
+                setPushToken(genPushToken);
+            } catch (error) {
+                setPermissionScreen(true);
+                setReady(true);
+                return;
+            }
+
             // generate client
             const genClient = generateClient();
             setClient(genClient);
-
-            // get push token for notifications
-            const genPushToken = await registerForPushNotifications();
-            setPushToken(genPushToken);
 
             // get and set cognito info
             const userInfo = await handleGetCurrentUser();
@@ -413,14 +434,38 @@ const TabsContent = () =>
             <Loading/>
         )}
         <Modal
-            isVisible={isMissingAttr}
+            isVisible={permissionScreen}
             onBackdropPress={null}
             onBackButtonPress={null}
             swipeDirection={null}
             style={{margin: 0}}
         >
-            <AccountEdit/>
+            <Background style={{justifyContent: 'center'}} refreshing={refreshing} onRefresh={onPermissionRefresh}>
+                <View style={Styles.infoContainer}>
+                    <Text style={Styles.subTitle}>NOTICE</Text>
+                    <Text style={Styles.text}>This app requires push notification permissions to function properly</Text>
+                </View>
+                <View style={Styles.block}>
+                    <TouchableOpacity
+                        style={[Styles.actionButton, {alignSelf: 'center'}]}
+                        onPress={() => Linking.openSettings()}
+                    >
+                        <Text style={Styles.actionText}>Settings</Text>
+                    </TouchableOpacity>
+                </View>
+            </Background>
         </Modal>
+        { !permissionScreen ? (
+            <Modal
+                isVisible={isMissingAttr}
+                onBackdropPress={null}
+                onBackButtonPress={null}
+                swipeDirection={null}
+                style={{margin: 0}}
+            >
+                <AccountEdit/>
+            </Modal>
+        ) : null }
         </>
     );
 };

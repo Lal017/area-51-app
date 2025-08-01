@@ -1,10 +1,11 @@
-import { Text, TouchableOpacity, Alert, View } from "react-native";
-import { ServiceStyles, Styles } from "../../../constants/styles";
 import LottieView from "lottie-react-native";
 import Colors from "../../../constants/colors";
-import { router } from "expo-router";
 import { useApp } from "../../../components/context";
 import { Background } from "../../../components/components";
+import { ServiceStyles, Styles } from "../../../constants/styles";
+import { router } from "expo-router";
+import { requestForegroundPermissionsAsync } from "expo-location";
+import { Text, TouchableOpacity, Alert, View, Linking } from "react-native";
 
 const ServiceConsole = () =>
 {
@@ -13,7 +14,7 @@ const ServiceConsole = () =>
   return (
     <Background style={{rowGap: 5}}>
       <TouchableOpacity
-        onPress={() => {
+        onPress={async () => {
           if (vehicles.length === 0) {
             Alert.alert(
               'Notice',
@@ -26,12 +27,26 @@ const ServiceConsole = () =>
                 }
               ]
             );
+            return;
+          }
+          const { status } = await requestForegroundPermissionsAsync();
+          if (status !== 'granted') {
+            Alert.alert(
+              'NOTICE',
+              'You must give location permissions to make a tow request',
+              [
+                {
+                  text: 'Settings',
+                  onPress: () => Linking.openSettings()
+                }
+              ]
+            );
+            return;
+          }
+          if (towRequest !== undefined) {
+            router.push('/towStatus');
           } else {
-            if (towRequest !== undefined) {
-              router.push('/towStatus');
-            } else {
-              router.push('/towRequest');
-            }
+            router.push('/towRequest');
           }
         }}
         style={[Styles.consoleBubble, {backgroundColor: Colors.secondary}]}

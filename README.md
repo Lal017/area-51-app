@@ -11,3 +11,4 @@ PotentialChanges:
     - make a function to catch certain error messages so i can output my desired user friendly error message
     - update notification listeners for Admins and TowDrivers
     - Add appointments to google calendar
+    - incorporate more images to make the UI more user friendly

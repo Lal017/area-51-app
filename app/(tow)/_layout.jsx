@@ -1,21 +1,23 @@
 import AccountEdit from '../../src/screens/accountEdit';
 import Modal from 'react-native-modal';
 import * as TaskManager from 'expo-task-manager';
-import { CustHeader, Loading } from "../../components/components";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Background, CustHeader, Loading } from "../../components/components";
 import { AppProvider, useApp } from "../../components/context";
 import { registerForPushNotifications } from "../../components/notifComponents";
 import { handleGetCurrentUser } from "../../components/authComponents";
 import { getTowRequest } from '../../src/graphql/queries';
 import { updateTowRequest } from '../../src/graphql/mutations';
-import { addNotificationReceivedListener, addNotificationResponseReceivedListener, removeNotificationSubscription } from "expo-notifications";
+import { stopWatchingLocation } from '../../components/towComponents';
+import { Styles } from '../../constants/styles';
 import { handleGetUser, handleCreateUser, handleUpdateUser } from "../../components/userComponents";
-import { Stack } from "expo-router";
-import { router } from "expo-router";
+import { getPermissionsAsync, addNotificationReceivedListener, addNotificationResponseReceivedListener, removeNotificationSubscription } from "expo-notifications";
+import { Stack, router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
+import { View, Text, TouchableOpacity, Linking, Settings } from 'react-native';
 import { generateClient } from "aws-amplify/api";
 import { fetchUserAttributes, fetchAuthSession } from "@aws-amplify/auth";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { stopWatchingLocation } from '../../components/towComponents';
+import { useNavigation } from '@react-navigation/native';
 
 const LOCATION_TASK_NAME = "area51-background-location-task";
 
@@ -82,22 +84,45 @@ const TowDriverContent = () =>
 
     // load components when finished fetching data
     const [ ready, setReady ] = useState(false);
+    const [ permissionScreen, setPermissionScreen ] = useState(false);
+    const [ refreshing, setRefreshing ] = useState(false);
+    const navigate = useNavigation();
 
     // notification listeners
     const notificationListener = useRef();
     const responseListener = useRef();
 
+    const onRefresh = async () =>
+    {
+        setRefreshing(true);
+        const permission = await getPermissionsAsync();
+        if (permission.granted) {
+            setPermissionScreen(false);
+            navigate.reset({
+                index: 0,
+                routes: [{ name: '(tow)' }]
+            });
+        }
+        setRefreshing(false);
+    }
+
     // initialize data used for the app
     useEffect(() => {
         const initializeApp = async () =>
         {
+            // get push token for notifications
+            try {
+                const genPushToken = await registerForPushNotifications();
+                setPushToken(genPushToken);
+            } catch (error) {
+                setPermissionScreen(true);
+                setReady(true);
+                return;
+            }
+
             // generate client
             const genClient = generateClient();
             setClient(genClient);
-
-            // get push token for notifications
-            const genPushToken = await registerForPushNotifications();
-            setPushToken(genPushToken);
 
             // get and set cognito info
             const userInfo = await handleGetCurrentUser();
@@ -249,14 +274,38 @@ const TowDriverContent = () =>
             <Loading/>
         )}
         <Modal
-            isVisible={isMissingAttr}
+            isVisible={permissionScreen}
             onBackdropPress={null}
             onBackButtonPress={null}
             swipeDirection={null}
             style={{margin: 0}}
         >
-            <AccountEdit/>
+            <Background style={{justifyContent: 'center'}} refreshing={refreshing} onRefresh={onRefresh}>
+                <View style={Styles.infoContainer}>
+                    <Text style={Styles.subTitle}>NOTICE</Text>
+                    <Text style={Styles.text}>This app requires push notification permissions to function properly</Text>
+                </View>
+                <View style={Styles.block}>
+                    <TouchableOpacity
+                        style={[Styles.actionButton, {alignSelf: 'center'}]}
+                        onPress={() => Linking.openSettings()}
+                    >
+                        <Text style={Styles.actionText}>Settings</Text>
+                    </TouchableOpacity>
+                </View>
+            </Background>
         </Modal>
+        { !permissionScreen ? (
+            <Modal
+                isVisible={isMissingAttr}
+                onBackdropPress={null}
+                onBackButtonPress={null}
+                swipeDirection={null}
+                style={{margin: 0}}
+            >
+                <AccountEdit/>
+            </Modal>
+        ) : null }
         </>
     );
 };

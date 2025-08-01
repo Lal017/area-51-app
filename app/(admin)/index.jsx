@@ -1,9 +1,10 @@
-import { Text, TouchableOpacity, View } from 'react-native';
-import { Background } from '../../components/components';
-import { AdminStyles, ServiceStyles, Styles } from "../../constants/styles";
-import { router } from 'expo-router';
 import LottieView from 'lottie-react-native';
 import Colors from '../../constants/colors';
+import { Background } from '../../components/components';
+import { AdminStyles, ServiceStyles, Styles } from "../../constants/styles";
+import { requestForegroundPermissionsAsync } from 'expo-location';
+import { Text, TouchableOpacity, View, Alert, Linking } from 'react-native';
+import { router } from 'expo-router';
 
 const AdminConsole = () =>
 {
@@ -54,7 +55,23 @@ const AdminConsole = () =>
             </TouchableOpacity>
             <TouchableOpacity
                 style={[Styles.consoleBubble, {backgroundColor: Colors.secondary}]}
-                onPress={() => router.push('/(admin)/towRequestList')}
+                onPress={async () => {
+                    const { status } = await requestForegroundPermissionsAsync();
+                    if (status !== 'granted') {
+                        Alert.alert(
+                        'NOTICE',
+                        'You must give location permissions to make a tow request',
+                        [
+                            {
+                            text: 'Settings',
+                            onPress: () => Linking.openSettings()
+                            }
+                        ]
+                        );
+                        return;
+                    }
+                    router.push('/(admin)/towRequestList');
+                }}
             >
                 <Text style={ServiceStyles.title}>Tow Requests</Text>
                 <LottieView

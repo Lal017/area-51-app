@@ -3,7 +3,7 @@ import { useApp } from '../../../components/context';
 import { Background, Loading, Tab } from '../../../components/components';
 import { Styles } from '../../../constants/styles';
 import { handleGetAllTowRequests } from '../../../components/towComponents';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -62,6 +62,11 @@ const RequestList = () =>
         <>
         { ready && towRequests ? (
             <Background refreshing={refresing} onRefresh={onRefresh}>
+                { towRequests?.length === 0 ? (
+                    <View style={{flex: 1, justifyContent: 'center'}}>
+                        <Text style={Styles.subTitle}>No Tow Requests</Text>
+                    </View>
+                ) : null }
                 { towRequests?.map((request, index) => (
                     <Tab
                         key={index}
