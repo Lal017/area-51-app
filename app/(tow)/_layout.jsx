@@ -14,7 +14,7 @@ import { handleGetUser, handleCreateUser, handleUpdateUser } from "../../compone
 import { getPermissionsAsync, addNotificationReceivedListener, addNotificationResponseReceivedListener, removeNotificationSubscription } from "expo-notifications";
 import { Stack, router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { View, Text, TouchableOpacity, Linking, Settings } from 'react-native';
+import { View, Text, TouchableOpacity, Linking } from 'react-native';
 import { generateClient } from "aws-amplify/api";
 import { fetchUserAttributes, fetchAuthSession } from "@aws-amplify/auth";
 import { useNavigation } from '@react-navigation/native';
@@ -27,33 +27,31 @@ TaskManager.defineTask(LOCATION_TASK_NAME, async ({data, error}) => {
 
     const { locations } = data;
     const { latitude, longitude } = locations[0].coords;
+    console.log('Driver Side:', latitude, longitude);
+
     const client = generateClient();
     const requestId = await AsyncStorage.getItem('requestId');
-
-    try {
-        const result = await client.graphql({
-            query: getTowRequest,
-            variables: {
-                id: requestId
-            }
-        });
-
-        if (result?.data?.getTowRequest?.status !== 'IN_PROGRESS') {
-            await stopWatchingLocation();
+    const result = await client.graphql({
+        query: getTowRequest,
+        variables: {
+            id: requestId
         }
-        await client.graphql({
-            query: updateTowRequest,
-            variables: {
-                input: {
-                    id: requestId,
-                    driverLatitude: latitude,
-                    driverLongitude: longitude
-                }
-            }
-        });
-    } catch (error) {
-        console.error('ERROR, could not send coordinates to database:', error);
+    });
+
+    if (result?.data?.getTowRequest?.status !== 'IN_PROGRESS') {
+        await stopWatchingLocation();
     }
+
+    await client.graphql({
+        query: updateTowRequest,
+        variables: {
+            input: {
+                id: requestId,
+                driverLatitude: latitude,
+                driverLongitude: longitude
+            }
+        }
+    });
 });
 
 const TowDriverContent = () =>

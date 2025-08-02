@@ -40,7 +40,7 @@ const DocumentUpload = () =>
                 setDocument(result.assets[0].uri);
             }
         } catch (error) {
-            console.log(`Error picking ${DOCUMENT_TYPE}:`, error);
+            console.error(`ERROR, could not pick ${DOCUMENT_TYPE}:`, error);
         }
     };
 

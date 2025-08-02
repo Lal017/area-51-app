@@ -56,13 +56,13 @@ const TowResponse = () =>
         const isTracking = await Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME);
         if (!isTracking) {
             await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-                timeInterval: 30000,
+                accuracy: Location.Accuracy.High,
+                timeInterval: 15000,
                 distanceInterval: 0,
                 foregroundService: {
                     notificationTitle: 'Location Sharing',
                     notificationBody: 'The customer is currently seeing your location',
-                },
-                activityType: Location.ActivityType.AutomotiveNavigation,
+                }
             });
         } else {
             console.error('location tracking has already started');
@@ -188,12 +188,12 @@ const TowResponse = () =>
                                                     return;
                                                 }
                                                 await AsyncStorage.setItem('requestId', request?.id);
-                                                await startWatchingLocation();
                                                 const data = {
                                                     type: 'TOW_RESPONSE'
                                                 };
                                                 await handleAcceptTowRequest(client, request.id, 'IN_PROGRESS', waitTime, driverId, firstName, phoneNumber);
                                                 await sendPushNotification(request?.user?.pushToken, 'Tow Request', 'A driver is on the way!', data);
+                                                await startWatchingLocation();
                                                 navigate.reset({
                                                     index: 0,
                                                     routes: [{ name: '(tow)'}]

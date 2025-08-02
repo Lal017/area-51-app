@@ -38,7 +38,6 @@ const handleAssignTowDriverId = async (client, userId) =>
 {
     try {
         const driverId = uuidv4();
-        console.log(userId, driverId);
 
         await client.graphql({
             query: updateUser,

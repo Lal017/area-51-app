@@ -139,7 +139,6 @@ const handleCompleteTowRequest = async (client, requestId) =>
 const stopWatchingLocation = async () => {
     const LOCATION_TASK_NAME = "area51-background-location-task";
     const hasStarted = await Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME);
-    console.log('hasStarted:',hasStarted);
     if (hasStarted) {
         await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
         console.log('stopped tracking location');
@@ -217,7 +216,6 @@ const handleNotifUpdateTowRequest = async (client, userId, setTowRequest) =>
 
     try {
         const update = await handleGetTowRequest(client, userId);
-        console.log(update);
         setTowRequest(update);
     } catch (error) {
         console.error('ERROR, could not update tow request after receiving notification:', error);

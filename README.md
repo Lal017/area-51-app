@@ -2,6 +2,10 @@ ToDo:
     - fix handleResetPassword error message codes
     - handle notification when a truck driver accepts a request and an admin marks it as completed
     - DECIDE IF YOU SHOULD KEEP APPOINTMENT LIST OR NOT
+    - header styling on different device
+    -  (NOBRIDGE) ERROR, could not get last stored location: [TypeError: Cannot read property 'latitude' of null]
+    - change react native responsive font size package because it is not longer supported
+    - use foreground service android instead of expo task manager to update drivers location
 
 PotentialChanges:
     - Add notification tab in header for home page (only do this if you add a datamodel for notifications)

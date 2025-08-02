@@ -72,6 +72,7 @@ const TowStatus = () =>
                     latitude: data?.onUpdateTowRequest.driverLatitude,
                     longitude: data?.onUpdateTowRequest.driverLongitude
                 };
+                console.log('Customer Side:', getDriverLocation.latitude, getDriverLocation.longitude);
                 if (getDriverLocation.latitude !== null && getDriverLocation.longitude !== null) {
                     setDriverLocation(getDriverLocation);
                 }
@@ -82,6 +83,7 @@ const TowStatus = () =>
 
         return () => {
             subscription.unsubscribe();
+            setDriverLocation(undefined);
         }
     }, []);
 

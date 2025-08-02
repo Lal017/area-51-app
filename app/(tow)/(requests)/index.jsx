@@ -31,7 +31,7 @@ const RequestList = () =>
             }
             setReady(true);
         } catch (error) {
-            console.log('Error getting tow requests:', error);
+            console.error('ERROR, could not get tow requests:', error);
         }
 
         setRefreshing(false);
@@ -51,7 +51,7 @@ const RequestList = () =>
                 }
                 setReady(true);
             } catch (error) {
-                console.log('Error getting tow requests:', error);
+                console.error('ERROR, could not get tow requests:', error);
             }
         };
 
