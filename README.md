@@ -5,7 +5,8 @@ ToDo:
     - header styling on different device
     -  (NOBRIDGE) ERROR, could not get last stored location: [TypeError: Cannot read property 'latitude' of null]
     - change react native responsive font size package because it is not longer supported
-    - use foreground service android instead of expo task manager to update drivers location
+    - DO NOT PUSH UNTIL HIDE API KEY FOR MAP *********************
+    - try to embed the map instead of using an api key.
 
 PotentialChanges:
     - Add notification tab in header for home page (only do this if you add a datamodel for notifications)

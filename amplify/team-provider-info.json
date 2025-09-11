@@ -10,8 +10,7 @@
       "StackName": "amplify-troplocksmithapp-staging-cfc74",
       "StackId": "arn:aws:cloudformation:us-east-2:677276104203:stack/amplify-troplocksmithapp-staging-cfc74/ba094cd0-eef3-11ef-a09b-0a27a0c1adaf",
       "AmplifyAppId": "d2subzs4m4how",
-      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-troplocksmithapp-staging-cfc74-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json",
-      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-troplocksmithapp-staging-cfc74-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-troplocksmithapp-staging-cfc74-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
     },
     "categories": {
       "function": {
@@ -20,14 +19,17 @@
           "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
           "s3Key": "amplify-builds/troplocksmithappPostConfirmation-4d2b633679375a74596e-build.zip"
         },
+        "area51AddUserToTowDriversGroup": {
+          "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
+          "s3Key": "amplify-builds/area51AddUserToTowDriversGroup-6a444f616c2b4a504d44-build.zip"
+        },
         "area51GetAppointments": {
           "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
           "s3Key": "amplify-builds/area51GetAppointments-5166774c477735434c33-build.zip"
         },
-        "PostAuthUserLinking": {},
-        "troplocksmithappPreSignup": {
+        "area51GetMapStyle": {
           "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
-          "s3Key": "amplify-builds/troplocksmithappPreSignup-75354b624d723843686d-build.zip"
+          "s3Key": "amplify-builds/area51GetMapStyle-4f69316e515532496157-build.zip"
         },
         "area51SendNotifToAdmins": {
           "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
@@ -37,9 +39,9 @@
           "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
           "s3Key": "amplify-builds/area51SendNotifToDrivers-532f624979434e445370-build.zip"
         },
-        "area51AddUserToTowDriversGroup": {
+        "troplocksmithappPreSignup": {
           "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
-          "s3Key": "amplify-builds/area51AddUserToTowDriversGroup-6a444f616c2b4a504d44-build.zip"
+          "s3Key": "amplify-builds/troplocksmithappPreSignup-75354b624d723843686d-build.zip"
         }
       },
       "auth": {
@@ -52,6 +54,10 @@
       "api": {
         "area51RestApi": {},
         "area51app": {}
+      },
+      "geo": {
+        "area51LocationSearch": {},
+        "area51Map": {}
       }
     }
   }

@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "geo": {
+      "area51Map": [
+        "read"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}

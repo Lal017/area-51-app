@@ -43,6 +43,13 @@ export type AmplifyDependentResourcesAttributes = {
       "Name": "string",
       "Region": "string"
     },
+    "area51GetMapStyle": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
     "area51SendNotifToAdmins": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
@@ -70,6 +77,19 @@ export type AmplifyDependentResourcesAttributes = {
       "LambdaExecutionRoleArn": "string",
       "Name": "string",
       "Region": "string"
+    }
+  },
+  "geo": {
+    "area51LocationSearch": {
+      "Arn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
+    "area51Map": {
+      "Arn": "string",
+      "Name": "string",
+      "Region": "string",
+      "Style": "string"
     }
   },
   "storage": {

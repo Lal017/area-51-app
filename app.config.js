@@ -35,6 +35,7 @@ export const expo = {
   plugins: [
     "expo-router",
     "expo-font",
+    "@maplibre/maplibre-react-native",
     "expo-image-picker",
     [
       "expo-splash-screen",
@@ -64,7 +65,6 @@ export const expo = {
     typedRoutes: true
   },
   extra: {
-    amplifyConfig: process.env.AMPLIFY_CONFIG,
     router: {
       origin: false
     },

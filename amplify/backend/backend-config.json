@@ -54,6 +54,21 @@
           ],
           "category": "auth",
           "resourceName": "userPoolGroups"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "area51GetMapStyle"
+        },
+        {
+          "attributes": [
+            "TowDriversGroupRole"
+          ],
+          "category": "auth",
+          "resourceName": "userPoolGroups"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -185,6 +200,20 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "area51GetMapStyle": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name"
+          ],
+          "category": "geo",
+          "resourceName": "area51Map"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "area51SendNotifToAdmins": {
       "build": true,
       "dependsOn": [
@@ -226,6 +255,41 @@
       "service": "Lambda"
     }
   },
+  "geo": {
+    "area51LocationSearch": {
+      "accessType": "AuthorizedUsers",
+      "dataProvider": "Here",
+      "dataSourceIntendedUse": "SingleUse",
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "troplocksmithapp"
+        }
+      ],
+      "isDefault": true,
+      "providerPlugin": "awscloudformation",
+      "service": "PlaceIndex"
+    },
+    "area51Map": {
+      "accessType": "AuthorizedUsers",
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "troplocksmithapp"
+        }
+      ],
+      "isDefault": true,
+      "mapStyle": "VectorHereBerlin",
+      "providerPlugin": "awscloudformation",
+      "service": "Map"
+    }
+  },
   "parameters": {
     "AMPLIFY_function_area51AddUserToTowDriversGroup_deploymentBucketName": {
       "usedBy": [
@@ -256,6 +320,22 @@
         {
           "category": "function",
           "resourceName": "area51GetAppointments"
+        }
+      ]
+    },
+    "AMPLIFY_function_area51GetMapStyle_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "area51GetMapStyle"
+        }
+      ]
+    },
+    "AMPLIFY_function_area51GetMapStyle_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "area51GetMapStyle"
         }
       ]
     },

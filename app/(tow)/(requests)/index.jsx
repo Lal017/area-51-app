@@ -72,7 +72,7 @@ const RequestList = () =>
                         key={index}
                         text={<Text style={[Styles.headerTitle, {paddingLeft: 75}, request.status === 'REQUESTED' ? {color: Colors.primary} : request.status === 'IN_PROGRESS' ? {color: Colors.secondary} : null ]}><Text style={Styles.tabText}>{request?.user?.firstName}</Text>{'\n'}{request.status === 'IN_PROGRESS' ? 'ACTIVE REQUEST' : request.status}</Text>}
                         action={() => router.push({
-                            pathname: 'towResponse',
+                            pathname: 'towProgress',
                             params: { towParam: JSON.stringify(request)}
                         })}
                         leftIcon={<MaterialCommunityIcons name='tow-truck' size={35} style={Styles.icon}/>}

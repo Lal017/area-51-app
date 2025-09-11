@@ -1,7 +1,7 @@
 // CONFIGURATION FOR AMPLIFY DO NOT EDIT
 import { Amplify } from 'aws-amplify';
-import amplifyconfig from '../src/amplifyconfiguration.json';
-Amplify.configure(amplifyconfig);
+import awsconfig from '../src/aws-exports';
+Amplify.configure(awsconfig);
 // ----------------------------------------------------------------
 import Colors from '../constants/colors';
 import { handleGetCurrentUser } from '../components/authComponents';

@@ -73,7 +73,8 @@ type TowRequest
   @auth(rules: [
     {allow: owner},
     {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]},
-    {allow: groups, groups: ["TowDrivers"], operations: [read, update]}
+    {allow: groups, groups: ["TowDrivers"], operations: [read, update]},
+    {allow: private, provider: identityPool, operations: [read, update]}
   ])
 {
   id: ID!

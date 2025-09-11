@@ -48,6 +48,24 @@
         },
         "setting": "private"
       }
+    },
+    "/getMapStyle": {
+      "name": "/getMapStyle",
+      "lambdaFunction": "area51GetMapStyle",
+      "permissions": {
+        "groups": {
+          "Admins": [
+            "read"
+          ],
+          "TowDrivers": [
+            "read"
+          ],
+          "Customers": [
+            "read"
+          ]
+        },
+        "setting": "private"
+      }
     }
   }
 }
