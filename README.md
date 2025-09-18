@@ -7,6 +7,9 @@ ToDo:
     - change react native responsive font size package because it is not longer supported
     - DO NOT PUSH UNTIL HIDE API KEY FOR MAP *********************
     - try to embed the map instead of using an api key.
+    - Display UI for route. 
+    - set rotation for camera when moving along route
+    - handle rerouting
 
 PotentialChanges:
     - Add notification tab in header for home page (only do this if you add a datamodel for notifications)

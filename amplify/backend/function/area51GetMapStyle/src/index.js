@@ -8,7 +8,7 @@ exports.handler = async () =>
 {
     const region = process.env.REGION;
     const mapName = process.env.GEO_AREA51MAP_NAME;
-    const apiKey = '' // API KEY REMOVED FOR COMMIT
+    const apiKey = '';
     const url = `https://maps.geo.${region}.amazonaws.com/maps/v0/maps/${mapName}/style-descriptor?key=${apiKey}`;
 
     return {
