@@ -1,11 +1,8 @@
 ToDo:
     - fix handleResetPassword error message codes
+    - fix sign in account links / process
     - handle notification when a truck driver accepts a request and an admin marks it as completed
-    - DECIDE IF YOU SHOULD KEEP APPOINTMENT LIST OR NOT
     - header styling on different device
-    -  (NOBRIDGE) ERROR, could not get last stored location: [TypeError: Cannot read property 'latitude' of null]
-    - change react native responsive font size package because it is not longer supported
-    - DO NOT PUSH UNTIL HIDE API KEY FOR MAP *********************
     - try to embed the map instead of using an api key.
     - Display UI for route. 
     - set rotation for camera when moving along route

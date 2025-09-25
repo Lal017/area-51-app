@@ -1,6 +1,6 @@
 // CONFIGURATION FOR AMPLIFY DO NOT EDIT
 import { Amplify } from 'aws-amplify';
-import awsconfig from '../src/aws-exports';
+import awsconfig from '../src/aws-exports.js';
 Amplify.configure(awsconfig);
 // ----------------------------------------------------------------
 import Colors from '../constants/colors';

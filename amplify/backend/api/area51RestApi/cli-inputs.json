@@ -49,8 +49,8 @@
         "setting": "private"
       }
     },
-    "/getMapStyle": {
-      "name": "/getMapStyle",
+    "/getMapStyling": {
+      "name": "/getMapStyling",
       "lambdaFunction": "area51GetMapStyle",
       "permissions": {
         "groups": {

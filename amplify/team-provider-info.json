@@ -29,7 +29,7 @@
         },
         "area51GetMapStyle": {
           "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
-          "s3Key": "amplify-builds/area51GetMapStyle-4f69316e515532496157-build.zip"
+          "s3Key": "amplify-builds/area51GetMapStyle-4273476b666d5051774e-build.zip"
         },
         "area51SendNotifToAdmins": {
           "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",

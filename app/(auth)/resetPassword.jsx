@@ -1,11 +1,11 @@
-import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
-import { Link } from "expo-router";
+import Colors from "../../constants/colors";
 import { Styles, AuthStyles } from "../../constants/styles";
+import { handleResetPassword } from "../../components/authComponents";
+import { AuthBackground } from "../../components/components";
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from "react";
-import { handleResetPassword } from "../../components/authComponents";
-import Colors from "../../constants/colors";
-import { AuthBackground } from "../../components/components";
+import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
+import { Link } from "expo-router";
 
 const ResetPassword = () =>
 {

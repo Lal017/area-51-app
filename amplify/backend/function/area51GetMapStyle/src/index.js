@@ -8,8 +8,8 @@ exports.handler = async () =>
 {
     const region = process.env.REGION;
     const mapName = process.env.GEO_AREA51MAP_NAME;
-    const apiKey = '';
-    const url = `https://maps.geo.${region}.amazonaws.com/maps/v0/maps/${mapName}/style-descriptor?key=${apiKey}`;
+    const API_KEY = ''; // API KEY OMMITED FOR COMMIT
+    const url = `https://maps.geo.${region}.amazonaws.com/maps/v0/maps/${mapName}/style-descriptor?key=${API_KEY}`;
 
     return {
         statusCode: 200,

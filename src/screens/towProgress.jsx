@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { MapView, Camera, ShapeSource, LineLayer, SymbolLayer, Images } from '@maplibre/maplibre-react-native';
+import { MapView, Camera, ShapeSource, LineLayer, SymbolLayer, Images, CircleLayer } from '@maplibre/maplibre-react-native';
 import { get } from 'aws-amplify/api';
 import { fetchAuthSession } from 'aws-amplify/auth';
 import { LocationClient, CalculateRouteCommand } from '@aws-sdk/client-location';
@@ -10,8 +10,10 @@ import { Loading } from '../../components/components';
 import { point, lineString } from '@turf/helpers';
 import { distance } from '@turf/distance';
 import { bearing } from '@turf/bearing';
+import { along } from '@turf/along';
 import nearestPointOnLine from '@turf/nearest-point-on-line';
 import Colors from '../../constants/colors';
+import length from '@turf/length';
 
 const TowProgress = () =>
 {
@@ -22,8 +24,9 @@ const TowProgress = () =>
     const [ routeCoords, setRouteCoords ] = useState();
     const [ userLocation, setUserLocation ] = useState();
     const [ mapBearing, setMapBearing ] = useState();
+    const [ lookAheadPoint, setLookAheadPoint ] = useState();
 
-    const API_KEY = ''; // ONLY FOR TESTING DO NOT COMMIT
+    const API_KEY = ''; // API KEY FOR TESTING OMMITED FOR COMMIT
     const Snap_URL = `https://routes.geo.us-east-2.amazonaws.com/v2/snap-to-roads?key=${API_KEY}`
 
     // get the array of coordinates to map the route
@@ -82,7 +85,10 @@ const TowProgress = () =>
         const snapped = nearestPointOnLine(line, pt);
         const offRouteDistance = distance(pt, snapped, { units: 'meters' });
 
-        return { coords: snapped.geometry.coordinates, offRouteDistance };
+        // convert to meters from kilometers
+        const distanceAlongRoute = snapped.properties.location * 1000;
+
+        return { coords: snapped.geometry.coordinates, offRouteDistance, distanceAlongRoute };
     };
 
     useEffect(() => {
@@ -92,7 +98,7 @@ const TowProgress = () =>
                 // set map style
                 const restOperation = get({
                     apiName: 'area51RestApi',
-                    path: '/getMapStyle'
+                    path: '/getMapStyling'
                 });
 
                 const { body } = await restOperation.response;
@@ -135,27 +141,36 @@ const TowProgress = () =>
         if (!routeCoords) return;
 
         let locationSubscription;
+        const line = lineString(routeCoords);
 
         (async () => {
             locationSubscription = await watchPositionAsync({
                 accuracy: Accuracy.BestForNavigation,
-                timeInterval: 1000,
-                distanceInterval: 1,
+                timeInterval: 3000,
+                distanceInterval: 3,
             },
             (location) => {
                 const rawCoords = [location.coords.longitude, location.coords.latitude];
-                const { coords: snappedCoords, offRouteDistance } = snapToRoute(rawCoords, routeCoords);
+                const { coords: snappedCoords, offRouteDistance, distanceAlongRoute } = snapToRoute(rawCoords, routeCoords);
 
-                const prev = userLocation;
-                const next = offRouteDistance > 20 ? rawCoords : snappedCoords;
+                // add 10 meters to current distance along route
+                const lookAheadDistance = 10 + distanceAlongRoute;
 
-                setUserLocation(next);
-                
-                if (prev) {
-                    const getMapBearing = bearing(point(prev), point(next));
-                    console.log('bearing:', getMapBearing);
-                    setMapBearing(getMapBearing);
-                }
+                console.log('lookAheadDistance:', lookAheadDistance);
+                // calculate total length of route so you dont go off the route
+                const routeLength = length(line, { units: 'meters' });
+                const clampedDistance = Math.min(lookAheadDistance, routeLength);
+
+                const pointAhead = along(line, clampedDistance, { units: 'meters'});
+                console.log('pointAhead:', pointAhead.geometry.coordinates);
+
+                const getMapBearing = bearing(point(snappedCoords), point(pointAhead.geometry.coordinates));
+                setMapBearing(getMapBearing);
+                //const prev = userLocation;
+                //const next = offRouteDistance > 20 ? rawCoords : snappedCoords;
+
+                setLookAheadPoint(pointAhead.geometry.coordinates);
+                setUserLocation(snappedCoords);
             });
         })();
 
@@ -227,6 +242,27 @@ const TowProgress = () =>
                         animationDuration={10}
                     />
                 </ShapeSource>
+                { lookAheadPoint && (
+                    <ShapeSource
+                        id='lookAheadSource'
+                        shape={{
+                            type: 'Feature',
+                            geometry: {
+                                type: 'Point',
+                                coordinates: lookAheadPoint,
+                            }
+                        }}
+                    >
+                        <CircleLayer
+                            id='lookAheadCircle'
+                            style={{
+                                circleRadius: 6,
+                                circleColor: 'red',
+                                circleStrokeWidth: 2
+                            }}
+                        />
+                    </ShapeSource>
+                )}
             </MapView>
         ) : <Loading/> }
         </>
