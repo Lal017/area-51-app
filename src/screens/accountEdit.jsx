@@ -3,7 +3,7 @@ import { Styles } from "../../constants/styles";
 import { Background } from "../../components/components";
 import { handleUpdateAttributes } from "../../components/authComponents";
 import { useApp } from "../../components/context";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { View, Text, TextInput, KeyboardAvoidingView, TouchableOpacity, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";

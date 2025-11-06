@@ -3,9 +3,6 @@ ToDo:
     - fix sign in account links / process
     - handle notification when a truck driver accepts a request and an admin marks it as completed
     - header styling on different device
-    - try to embed the map instead of using an api key.
-    - Display UI for route. 
-    - set rotation for camera when moving along route
     - handle rerouting
 
 PotentialChanges:
@@ -17,3 +14,4 @@ PotentialChanges:
     - update notification listeners for Admins and TowDrivers
     - Add appointments to google calendar
     - incorporate more images to make the UI more user friendly
+    - try to embed the map instead of using an api key.

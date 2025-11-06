@@ -69,6 +69,14 @@
           ],
           "category": "auth",
           "resourceName": "userPoolGroups"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "area51GetRoute"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -214,6 +222,20 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "area51GetRoute": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name"
+          ],
+          "category": "geo",
+          "resourceName": "area51Map"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "area51SendNotifToAdmins": {
       "build": true,
       "dependsOn": [
@@ -336,6 +358,22 @@
         {
           "category": "function",
           "resourceName": "area51GetMapStyle"
+        }
+      ]
+    },
+    "AMPLIFY_function_area51GetRoute_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "area51GetRoute"
+        }
+      ]
+    },
+    "AMPLIFY_function_area51GetRoute_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "area51GetRoute"
         }
       ]
     },

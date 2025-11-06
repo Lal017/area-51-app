@@ -1,5 +1,4 @@
 import Colors from "../../../constants/colors";
-import * as Location from 'expo-location';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { handleAcceptTowRequest, handleCompleteTowRequest, stopWatchingLocation, handleFinalTowCheck } from "../../../components/towComponents";
 import { useApp } from "../../../components/context";
@@ -15,8 +14,6 @@ import { AntDesign, Entypo, FontAwesome5 } from "@expo/vector-icons";
 import { openURL } from "expo-linking";
 import { useNavigation } from "@react-navigation/native";
 
-const LOCATION_TASK_NAME = "area51-background-location-task";
-
 const TowResponse = () =>
 {
     const { towParam } = useLocalSearchParams();
@@ -27,12 +24,6 @@ const TowResponse = () =>
 
     const [ address, setAddress ] = useState();
     const [ waitTime, setWaitTime ] = useState();
-
-    const openInGoogleMaps = (latitude, longitude) =>
-    {
-        const url = `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}&travelmode=driving`;
-        openURL(url);
-    };
 
     const openCallCustomer = (phone) =>
     {
@@ -51,24 +42,6 @@ const TowResponse = () =>
 
     }, []);
 
-    const startWatchingLocation = async () =>
-    {
-        const isTracking = await Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME);
-        if (!isTracking) {
-            await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-                accuracy: Location.Accuracy.High,
-                timeInterval: 15000,
-                distanceInterval: 0,
-                foregroundService: {
-                    notificationTitle: 'Location Sharing',
-                    notificationBody: 'The customer is currently seeing your location',
-                }
-            });
-        } else {
-            console.error('location tracking has already started');
-        }
-    };
-
     return (
         <KeyboardAvoidingView behavior="height" style={{flex: 1}}>
             <Background>
@@ -82,6 +55,7 @@ const TowResponse = () =>
                             zoomControlEnabled={true}
                             showsTraffic={false}
                             loadingEnabled={true}
+                            userInterfaceStyle='dark'
                             region={{
                                 latitude: request.latitude,
                                 longitude: request.longitude,

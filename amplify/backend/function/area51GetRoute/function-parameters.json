@@ -1,0 +1,10 @@
+{
+  "lambdaLayers": [],
+  "permissions": {
+    "geo": {
+      "area51Map": [
+        "create"
+      ]
+    }
+  }
+}

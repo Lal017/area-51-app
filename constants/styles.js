@@ -645,6 +645,53 @@ const TowStyles = StyleSheet.create({
         borderRadius: 5,
         borderColor: Colors.text,
     },
+    // mapstyles
+    mainContainer: {
+        position: 'absolute',
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        top: 25
+    },
+    secondaryContainer: {
+        position: 'absolute',
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+        bottom: 0,
+        padding: 15,
+        paddingBottom: 30,
+        borderTopLeftRadius: 15,
+        borderTopRightRadius: 15,
+        backgroundColor: Colors.backgroundFade
+    },
+    stepContainer: {
+        width: '95%',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+        borderRadius: 15,
+        padding: 15,
+        backgroundColor: Colors.tertiary
+    },
+    textContainer: {
+        width: '60%',
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        textAlign: 'left'
+    },
+    lowerTextContainer: {
+        width: '60%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        textAlign: 'center'
+    },
+    iconContainer: {
+        width: '20%',
+        justifyContent: 'center',
+        alignItems: 'center'
+    }
 });
 
 export { Styles, AuthStyles, HomeStyles, ServiceStyles, ProfileStyles, AdminStyles, TowStyles };

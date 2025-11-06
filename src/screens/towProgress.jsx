@@ -1,19 +1,22 @@
-import { useEffect, useState } from 'react';
-import { MapView, Camera, ShapeSource, LineLayer, SymbolLayer, Images, CircleLayer } from '@maplibre/maplibre-react-native';
-import { get } from 'aws-amplify/api';
-import { fetchAuthSession } from 'aws-amplify/auth';
-import { LocationClient, CalculateRouteCommand } from '@aws-sdk/client-location';
-import { decode } from '@here/flexpolyline';
-import { getCurrentPositionAsync, watchPositionAsync, Accuracy } from 'expo-location';
-import { useLocalSearchParams } from 'expo-router';
-import { Loading } from '../../components/components';
-import { point, lineString } from '@turf/helpers';
-import { distance } from '@turf/distance';
-import { bearing } from '@turf/bearing';
-import { along } from '@turf/along';
-import nearestPointOnLine from '@turf/nearest-point-on-line';
 import Colors from '../../constants/colors';
 import length from '@turf/length';
+import lineSlice from '@turf/line-slice';
+import { Loading } from '../../components/components';
+import { Styles, TowStyles } from '../../constants/styles';
+import { getDistance, getInstructionText, snapToRoute, getArrivalTime } from '../../components/towComponents';
+import { useEffect, useRef, useState } from 'react';
+import { View, Text, SafeAreaView, TouchableOpacity } from 'react-native';
+import { MapView, Camera, ShapeSource, LineLayer, SymbolLayer, Images } from '@maplibre/maplibre-react-native';
+import { get, post } from 'aws-amplify/api';
+import { decode } from '@here/flexpolyline';
+import { getCurrentPositionAsync, watchPositionAsync, Accuracy } from 'expo-location';
+import { router, useLocalSearchParams } from 'expo-router';
+import { point, lineString } from '@turf/helpers';
+import { bearing } from '@turf/bearing';
+import { along } from '@turf/along';
+import { Entypo, MaterialIcons, Feather } from '@expo/vector-icons';
+import { speak, stop } from 'expo-speech';
+import { openURL } from 'expo-linking';
 
 const TowProgress = () =>
 {
@@ -22,73 +25,78 @@ const TowProgress = () =>
 
     const [ mapStyle, setMapStyle ] = useState();
     const [ routeCoords, setRouteCoords ] = useState();
+    const [ steps, setSteps ] = useState();
+    const [ currentInstruction, setCurrentInstruction ] = useState();
+    const [ totalDuration, setTotalDuration ] = useState();
+    const [ estimatedTravelTime, setEstimatedTravelTime ] = useState();
+    const [ estimatedArrivalTime, setEstimatedArrivalTime ] = useState();
+    const [ estimatedDistance, setEstimatedDistance ] = useState()
+    const [ direction, setDirection ] = useState();
     const [ userLocation, setUserLocation ] = useState();
     const [ mapBearing, setMapBearing ] = useState();
-    const [ lookAheadPoint, setLookAheadPoint ] = useState();
+    const [ isMute, setIsMute ] = useState(false);
+    const [ rerouting, setRerouting ] = useState(false);
 
-    const API_KEY = ''; // API KEY FOR TESTING OMMITED FOR COMMIT
-    const Snap_URL = `https://routes.geo.us-east-2.amazonaws.com/v2/snap-to-roads?key=${API_KEY}`
-
-    // get the array of coordinates to map the route
-    const getRoute = async (start, destination, locationClient) => {
-        // calculates the route
-        const command = new CalculateRouteCommand({
-            CalculatorName: 'area51RouteCalculator',
-            DeparturePosition: start,
-            DestinationPosition: destination,
-            TravelMode: 'Car'
-        });
-
-        const response = await locationClient.send(command);
-
-        // extracts the coordinates from the response
-        const routeCoords = [];
-        response?.Legs?.forEach(leg => {
-            leg.Steps?.forEach(step => {
-                routeCoords.push(step.StartPosition);
-                routeCoords.push(step.EndPosition);
-            });
-        });
-        
-        // gets the snapped geometry polyline from the API using the array from before
-        const body = {
-            TracePoints: routeCoords.map(([lon, lat]) => ({
-                Position: [lon, lat],
-                Timestamp: new Date().toISOString(),
-            })),
-            TravelMode: 'Car',
-        };
-
-        const snapResponse = await fetch(Snap_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify(body),
-        });
-
-        // decodes the polyline into coordinates and returns them
-        const data = await snapResponse.json();
-        const decoded = decode(data.SnappedGeometry?.Polyline);
-        const snappedCoords = decoded.polyline.map(([lat, lon]) => [lon, lat]); 
-        
-        return snappedCoords;
+    const isMuteRef = useRef(isMute);
+    
+    const openCallCustomer = (phone) =>
+    {
+        const url = `tel:${phone}`;
+        openURL(url);
     };
 
-    const snapToRoute = (userCoords, routeCoords) => {
-        if (!routeCoords || routeCoords.length === 0) {
-            // no route yet → just use raw coords
-            return { coords: userCoords, offRouteDistance: 0 };
+    // get the array of coordinates to map the route
+    const getRoute = async (start, destination) => {
+        // calculates the route
+        const request = post({
+            apiName: 'area51RestApi',
+            path: '/getRoute',
+            options: {
+                body: {
+                    start,
+                    destination
+                }
+            }
+        });
+
+        const { body } = await request.response;
+        const routeData = await body.json();
+
+        const steps = routeData.Routes[0].Legs[0].VehicleLegDetails.TravelSteps;
+        setTotalDuration(routeData.Routes[0].Summary.Duration);
+
+        const {travelTime, arrivalTime} = getArrivalTime(routeData.Routes[0].Summary.Duration);
+        setEstimatedDistance(getDistance(routeData.Routes[0].Summary.Distance));
+        setEstimatedTravelTime(travelTime);
+        setEstimatedArrivalTime(arrivalTime);
+        
+        // decode polyline
+        const decoded = decode(routeData.Routes[0].Legs[0].Geometry.Polyline);
+        const snappedCoords = decoded.polyline.map(([lat, lon]) => [lon, lat]);
+        const line = lineString(snappedCoords);
+
+        const stepRanges = steps.map((step, i) => {
+            const startIndex = step.GeometryOffset;
+            const endIndex = i < steps.length - 1 ? steps[i + 1].GeometryOffset : snappedCoords.length - 1;
+
+            const startCoord = snappedCoords[startIndex];
+            const endCoord = snappedCoords[endIndex];
+
+            const segment = lineSlice(point(startCoord), point(endCoord), line);
+            const segmentDistance = length(segment, { units: 'meters' });
+
+            return { ...step, startCoord, endCoord, segmentDistance };
+        });
+
+        let cumulative = 0;
+        for (let i = 0; i < stepRanges.length; i++) {
+            stepRanges[i].startDistance = cumulative;
+            cumulative += stepRanges[i].segmentDistance;
+            stepRanges[i].endDistance = cumulative;
         }
 
-        const pt = point(userCoords);
-        const line = lineString(routeCoords);
-
-        const snapped = nearestPointOnLine(line, pt);
-        const offRouteDistance = distance(pt, snapped, { units: 'meters' });
-
-        // convert to meters from kilometers
-        const distanceAlongRoute = snapped.properties.location * 1000;
-
-        return { coords: snapped.geometry.coordinates, offRouteDistance, distanceAlongRoute };
+        setSteps(stepRanges);
+        return snappedCoords;
     };
 
     useEffect(() => {
@@ -113,13 +121,7 @@ const TowProgress = () =>
                 const start = [driverLocation.coords.longitude, driverLocation.coords.latitude];
                 const destination = [request.longitude, request.latitude];
 
-                const { credentials } = await fetchAuthSession();
-                const locationClient = new LocationClient({
-                    region: 'us-east-2',
-                    credentials
-                });
-
-                const route = await getRoute(start, destination, locationClient);
+                const route = await getRoute(start, destination);
                 setRouteCoords(route);
 
                 // snap user to route
@@ -141,50 +143,102 @@ const TowProgress = () =>
         if (!routeCoords) return;
 
         let locationSubscription;
+        let lastIndex = -1;
         const line = lineString(routeCoords);
+        const routeLength = length(line, { units: 'meters' });
 
         (async () => {
             locationSubscription = await watchPositionAsync({
                 accuracy: Accuracy.BestForNavigation,
-                timeInterval: 3000,
-                distanceInterval: 3,
+                timeInterval: 1000,
+                distanceInterval: 1,
             },
-            (location) => {
+            async (location) => {
                 const rawCoords = [location.coords.longitude, location.coords.latitude];
                 const { coords: snappedCoords, offRouteDistance, distanceAlongRoute } = snapToRoute(rawCoords, routeCoords);
 
+                // handle rerouting
+                if (offRouteDistance > 50) {
+                    setRerouting(true);
+                    // get route polyline
+                    const start = [location.coords.longitude, location.coords.latitude];
+                    const destination = [request.longitude, request.latitude];
+
+                    const route = await getRoute(start, destination);
+                    setRouteCoords(route);
+
+                    // snap user to route
+                    const { coords: initialSnap } = snapToRoute(rawCoords, route);
+                    setUserLocation(initialSnap);
+
+                    // set direction for camera
+                    const getMapBearing = bearing(point(route[0]), point(route[1]));
+                    setMapBearing(getMapBearing);
+                    setRerouting(false);
+                    return;
+                }
+                if (steps && steps.length > 0) {
+                    const currentStep = steps.find(
+                        step => distanceAlongRoute >= step.startDistance && distanceAlongRoute < step.endDistance
+                    );
+
+                if (currentStep) {
+                    let currentIndex = steps.indexOf(currentStep);
+                    if (steps[currentIndex + 1].Type === 'Continue') { currentIndex++; }
+                    const distanceUntilNextStep = steps[currentIndex].endDistance - distanceAlongRoute;
+
+                    const progress = distanceAlongRoute / routeLength;
+                    const remainingTime = totalDuration * (1 - progress);
+
+                    const { travelTime } = getArrivalTime(remainingTime);
+                    setEstimatedTravelTime(travelTime);
+
+                    setEstimatedDistance(getDistance(routeLength - distanceAlongRoute));
+
+                    const { instructionText, instructionIcon, speechText } = getInstructionText(steps[currentIndex + 1], getDistance(distanceUntilNextStep));
+
+                    // speak
+                    if (!isMuteRef.current && (currentIndex !== lastIndex || distanceUntilNextStep === 60)) {
+                        speak(speechText);
+                        lastIndex = currentIndex;
+                    }
+
+                    setCurrentInstruction(instructionText);
+                    setDirection(instructionIcon);
+                } else if (distanceAlongRoute >= steps[steps.length - 1].endDistance - 10) {
+                    console.log('Arrived at destination');
+                }
+                }
                 // add 10 meters to current distance along route
-                const lookAheadDistance = 10 + distanceAlongRoute;
+                const lookAheadDistance = Math.min(distanceAlongRoute + 10, routeLength);
 
-                console.log('lookAheadDistance:', lookAheadDistance);
                 // calculate total length of route so you dont go off the route
-                const routeLength = length(line, { units: 'meters' });
-                const clampedDistance = Math.min(lookAheadDistance, routeLength);
-
-                const pointAhead = along(line, clampedDistance, { units: 'meters'});
-                console.log('pointAhead:', pointAhead.geometry.coordinates);
-
+                const pointAhead = along(line, lookAheadDistance, { units: 'meters' });
                 const getMapBearing = bearing(point(snappedCoords), point(pointAhead.geometry.coordinates));
+   
                 setMapBearing(getMapBearing);
-                //const prev = userLocation;
-                //const next = offRouteDistance > 20 ? rawCoords : snappedCoords;
-
-                setLookAheadPoint(pointAhead.geometry.coordinates);
                 setUserLocation(snappedCoords);
             });
         })();
 
         return () => {
             if (locationSubscription) locationSubscription.remove();
-        }
+        };
+
     }, [routeCoords]);
 
+    // update ref if isMute changes
+    useEffect(() => {
+        isMuteRef.current = isMute;
+    }, [isMute]);
+
     return (
-        <>
+        <SafeAreaView style={{flex: 1}}>
         { mapStyle && userLocation ? (
             <MapView
                 style={{flex: 1}}
                 mapStyle={mapStyle}
+                compassEnabled={false}
             >
                 <Camera
                     zoomLevel={17}
@@ -192,9 +246,13 @@ const TowProgress = () =>
                     animationMode='linearTo'
                     animationDuration={250}
                     heading={mapBearing}
+                    pitch={35}
                 />
                 <Images
-                    images={{ marker: require('../../assets/images/navigation_icon.png')}}
+                    images={{
+                        marker: require('../../assets/images/navigation_icon.png'),
+                        destination: require('../../assets/images/marker.png')
+                    }}
                 />
                 { routeCoords?.length > 0 && (
                     <ShapeSource
@@ -212,10 +270,10 @@ const TowProgress = () =>
                             sourceID='routeSource'
                             style={{
                                 lineColor: Colors.tertiary,
-                                lineWidth: 7,
+                                lineWidth: 9,
                                 lineCap: 'round',
                                 lineJoin: 'round',
-                                lineOpacity: 0.8
+                                lineOpacity: 1
                             }}
                         />
                     </ShapeSource>
@@ -242,30 +300,98 @@ const TowProgress = () =>
                         animationDuration={10}
                     />
                 </ShapeSource>
-                { lookAheadPoint && (
-                    <ShapeSource
-                        id='lookAheadSource'
-                        shape={{
-                            type: 'Feature',
-                            geometry: {
-                                type: 'Point',
-                                coordinates: lookAheadPoint,
-                            }
+                <ShapeSource
+                    id='destinationMarker'
+                    shape={{
+                        type: 'Feature',
+                        geometry: {
+                            type: 'Point',
+                            coordinates: [request.longitude, request.latitude]
+                        }
+                    }}
+                >
+                    <SymbolLayer
+                        id='destinationSymbol'
+                        style={{
+                            iconImage: 'destination',
+                            iconSize: 0.5,
+                            iconAnchor: 'center'
                         }}
-                    >
-                        <CircleLayer
-                            id='lookAheadCircle'
-                            style={{
-                                circleRadius: 6,
-                                circleColor: 'red',
-                                circleStrokeWidth: 2
-                            }}
-                        />
-                    </ShapeSource>
-                )}
+                    />
+                </ShapeSource>
             </MapView>
         ) : <Loading/> }
-        </>
+        { currentInstruction ? (
+            <View style={TowStyles.mainContainer}>
+                <View style={TowStyles.stepContainer}>
+                    <View style={TowStyles.iconContainer}>
+                        <MaterialIcons
+                            name={direction}
+                            size={50}
+                            color='white'
+                        />
+                    </View>
+                    <View style={TowStyles.textContainer}>
+                        <Text style={Styles.subTitle}>{currentInstruction || 'Calculating Route...'}</Text>
+                    </View>
+                    <TouchableOpacity
+                        style={TowStyles.iconContainer}
+                        onPress={() => {
+                            setIsMute(!isMute);
+                            if (!isMute) stop();
+                        }}
+                    >
+                        <MaterialIcons
+                            name={isMute ? 'volume-off' : 'volume-up'}
+                            size={35}
+                            color='white'
+                        />
+                    </TouchableOpacity>
+                </View>
+            </View>
+        ) : rerouting ? (
+            <View style={TowStyles.mainContainer}>
+                <View style={TowStyles.stepContainer}>
+                    <Text style={Styles.subTitle}>Rerouting...</Text>
+                </View>
+            </View>
+        ) : null}
+        <View style={{width: '100%'}}>
+            <TouchableOpacity
+                onPress={() => setUserLocation([userLocation.longitude, userLocation.latitude + 0.01])}
+            >
+                <Text>Up</Text>
+            </TouchableOpacity>
+        </View>
+        { estimatedTravelTime && estimatedDistance && estimatedArrivalTime ? (
+            <View style={TowStyles.secondaryContainer}>
+                <TouchableOpacity
+                    style={TowStyles.iconContainer}
+                    onPress={() => router.back()}
+                >
+                    <Feather
+                        name='x'
+                        size={45}
+                        color='white'
+                    />
+                </TouchableOpacity>
+                <View style={TowStyles.lowerTextContainer}>
+                    <Text style={Styles.subTitle}>{estimatedTravelTime}</Text>
+                    <Text style={Styles.text}>{estimatedDistance} | {estimatedArrivalTime}</Text>
+                </View>
+                <TouchableOpacity
+                    style={TowStyles.iconContainer}
+                    onPress={() => openCallCustomer(request?.user?.phone)}
+                >
+                    <Entypo
+                        name='phone'
+                        size={45}
+                        color='white'
+                    />
+                </TouchableOpacity>
+            </View>
+        ) : null }
+        </SafeAreaView>
     );
 };
 

@@ -66,6 +66,20 @@
         },
         "setting": "private"
       }
+    },
+    "/getRoute": {
+      "name": "/getRoute",
+      "lambdaFunction": "area51GetRoute",
+      "permissions": {
+        "groups": {
+          "TowDrivers": [
+            "create",
+            "read",
+            "update"
+          ]
+        },
+        "setting": "private"
+      }
     }
   }
 }
