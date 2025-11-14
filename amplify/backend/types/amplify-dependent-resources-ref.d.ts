@@ -71,6 +71,13 @@ export type AmplifyDependentResourcesAttributes = {
       "Name": "string",
       "Region": "string"
     },
+    "area51UpdateTrackerLocation": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
     "troplocksmithappPostConfirmation": {
       "Arn": "string",
       "LambdaExecutionRole": "string",

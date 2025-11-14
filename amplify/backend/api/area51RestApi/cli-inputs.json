@@ -80,6 +80,18 @@
         },
         "setting": "private"
       }
+    },
+    "/updateTrackerLocation": {
+      "name": "/updateTrackerLocation",
+      "lambdaFunction": "area51UpdateTrackerLocation",
+      "permissions": {
+        "groups": {
+          "TowDrivers": [
+            "create"
+          ]
+        },
+        "setting": "private"
+      }
     }
   }
 }

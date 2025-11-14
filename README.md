@@ -3,7 +3,7 @@ ToDo:
     - fix sign in account links / process
     - handle notification when a truck driver accepts a request and an admin marks it as completed
     - header styling on different device
-    - handle rerouting
+    - speech fix when no street name
 
 PotentialChanges:
     - Add notification tab in header for home page (only do this if you add a datamodel for notifications)

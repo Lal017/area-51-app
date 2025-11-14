@@ -77,6 +77,14 @@
           ],
           "category": "function",
           "resourceName": "area51GetRoute"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "area51UpdateTrackerLocation"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -266,6 +274,12 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "area51UpdateTrackerLocation": {
+      "build": true,
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "troplocksmithappPostConfirmation": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -406,6 +420,22 @@
         {
           "category": "function",
           "resourceName": "area51SendNotifToDrivers"
+        }
+      ]
+    },
+    "AMPLIFY_function_area51UpdateTrackerLocation_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "area51UpdateTrackerLocation"
+        }
+      ]
+    },
+    "AMPLIFY_function_area51UpdateTrackerLocation_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "area51UpdateTrackerLocation"
         }
       ]
     },

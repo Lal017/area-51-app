@@ -6,6 +6,8 @@ import { Alert } from 'react-native';
 import { router } from "expo-router";
 import { distance } from '@turf/distance';
 import { point, lineString } from '@turf/helpers';
+import { post } from 'aws-amplify/api';
+import { Magnetometer } from 'expo-sensors';
 
 // ---------------------------------------
 //           ADMINS & TOWDRIVERS
@@ -172,6 +174,7 @@ const getDistance = (distanceUntilNextStep) =>
 const setDirectionIcon = (direction, angle) =>
 {
     if (direction === 'Straight') return 'straight';
+    else if (direction === 'UTurn') return 'u-turn-left';
     else if (direction === 'Left') {
         if (angle >= 70 && angle < 110) {
             return 'turn-left';
@@ -220,7 +223,8 @@ const getInstructionText = (step, distance) =>
 
         return {
             instructionText: `Turn ${turnDirection.toLowerCase()} onto ${highway} ${highwayDirection}`,
-            instructionIcon: setDirectionIcon(turnDirection, turnAngle)
+            instructionIcon: setDirectionIcon(turnDirection, turnAngle),
+            speechText: `In ${distance} turn ${turnDirection} onto ${highwayDirection} ${highway}`
         };
     }
     else if (step.Type === 'EnterHighway') {
@@ -229,7 +233,8 @@ const getInstructionText = (step, distance) =>
 
         return {
             instructionText: `Merge onto ${highway} ${highwayDirection}`,
-            instructionIcon: setDirectionIcon('Straight')
+            instructionIcon: setDirectionIcon('Straight'),
+            speechText: `In ${distance} merge onto ${highwayDirection} ${highway}`
         };
     }
     else if (step.Type === 'ContinueHighway') {
@@ -238,7 +243,8 @@ const getInstructionText = (step, distance) =>
 
         return {
             instructionText: `Continue on ${highway} ${highwayDirection}`,
-            instructionIcon: setDirectionIcon('Straight')
+            instructionIcon: setDirectionIcon('Straight'),
+            speechText: `Continue on ${highwayDirection} ${highway} for ${distance}`
         };
     }
     else if (step.Type === 'Exit') {
@@ -249,7 +255,8 @@ const getInstructionText = (step, distance) =>
 
         return {
             instructionText: `Take exit ${exitNumber} onto ${exitRoad}`,
-            instructionIcon: setDirectionIcon(exitDirection, exitAngle)
+            instructionIcon: setDirectionIcon(exitDirection, exitAngle),
+            speechText: `In ${distance} take exit ${exitNumber} onto ${exitRoad}`
         };
     }
     else if (step.Type === 'Keep') {
@@ -258,14 +265,23 @@ const getInstructionText = (step, distance) =>
         const nextRoad = step.CurrentRoad?.Towards[0].Value;
 
         return {
-            instructionText: `Keep on ${keepDirection.toLowerCase()} lane towards ${nextRoad}`,
-            instructionIcon: setDirectionIcon(keepDirection, keepAngle)
+            instructionText: `Keep on ${keepDirection} lane towards ${nextRoad}`,
+            instructionIcon: setDirectionIcon(keepDirection, keepAngle),
+            speechText: `Keep on ${keepDirection} lane towards ${nextRoad}`
+        };
+    }
+    else if (step.Type === 'UTurn') {
+        return {
+            instructionText: `Make a U-Turn`,
+            instructionIcon: setDirectionIcon('UTurn'),
+            speechText: `In ${distance} make a U-turn`
         };
     }
     else if (step.Type === 'Arrive') {
         return {
             instructionText: 'Arriving at your destination',
-            instructionIcon: setDirectionIcon('Straight')
+            instructionIcon: setDirectionIcon('Straight'),
+            speechText: `Arriving at your destination in ${distance}`
         };
     }
     else {
@@ -315,6 +331,45 @@ const getArrivalTime = (duration) =>
         travelTime: hours ? `${hours.toFixed(0)} hr ${minutes.toFixed(0)} min` : `${minutes.toFixed(0)} min`,
         arrivalTime: arrivalTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})
     };
+};
+
+const sendDriverLocation = async (driver_id, latitude, longitude) =>
+{
+    try {
+        post({
+            apiName: 'area51UpdateTrackerLocation',
+            path: '/updateTrackerLocation',
+            options: {
+                body: {
+                    driverId: driver_id,
+                    latitude,
+                    longitude
+                }
+            }
+        });
+
+        console.log('sent!');
+    } catch (error) {
+        console.error('ERROR, could not update driver location:', error);
+    }
+};
+
+const getInitialCompassHeading = async () =>
+{
+    return new Promise((resolve, reject) => {
+        const subscription = Magnetometer.addListener(data => {
+            const { x, y } = data;
+            let angle = Math.atan2(y, x) * (180 / Math.PI); // radians -> degrees
+            if (angle < 0) angle += 360
+            resolve(angle);
+            subscription.remove();
+        });
+
+        setTimeout(() => {
+            subscription.remove();
+            reject(new Error('Failed to get compass heading'));
+        }, 2000);
+    });
 };
 
 // -------------------------------------
@@ -452,6 +507,8 @@ export {
     getInstructionText,
     snapToRoute,
     getArrivalTime,
+    sendDriverLocation,
+    getInitialCompassHeading,
     handleCreateTowRequest,
     handleGetTowRequest,
     handleNotifUpdateTowRequest,

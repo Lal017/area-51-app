@@ -30,7 +30,7 @@
         },
         "area51GetMapStyle": {
           "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
-          "s3Key": "amplify-builds/area51GetMapStyle-4d6e7556445051642f4d-build.zip"
+          "s3Key": "amplify-builds/area51GetMapStyle-32392b2f354753627271-build.zip"
         },
         "area51SendNotifToAdmins": {
           "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
@@ -46,7 +46,11 @@
         },
         "area51GetRoute": {
           "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
-          "s3Key": "amplify-builds/area51GetRoute-5a386132495675692f50-build.zip"
+          "s3Key": "amplify-builds/area51GetRoute-5977497035675a684467-build.zip"
+        },
+        "area51UpdateTrackerLocation": {
+          "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
+          "s3Key": "amplify-builds/area51UpdateTrackerLocation-494244713057774a5a58-build.zip"
         }
       },
       "auth": {

@@ -3,7 +3,7 @@ import length from '@turf/length';
 import lineSlice from '@turf/line-slice';
 import { Loading } from '../../components/components';
 import { Styles, TowStyles } from '../../constants/styles';
-import { getDistance, getInstructionText, snapToRoute, getArrivalTime } from '../../components/towComponents';
+import { getDistance, getInstructionText, snapToRoute, getArrivalTime, sendDriverLocation, getInitialCompassHeading } from '../../components/towComponents';
 import { useEffect, useRef, useState } from 'react';
 import { View, Text, SafeAreaView, TouchableOpacity } from 'react-native';
 import { MapView, Camera, ShapeSource, LineLayer, SymbolLayer, Images } from '@maplibre/maplibre-react-native';
@@ -17,11 +17,14 @@ import { along } from '@turf/along';
 import { Entypo, MaterialIcons, Feather } from '@expo/vector-icons';
 import { speak, stop } from 'expo-speech';
 import { openURL } from 'expo-linking';
+import { useApp } from '../../components/context';
 
 const TowProgress = () =>
 {
     const { towParam } = useLocalSearchParams();
     const request = JSON.parse(towParam);
+
+    const { driverId } = useApp();
 
     const [ mapStyle, setMapStyle ] = useState();
     const [ routeCoords, setRouteCoords ] = useState();
@@ -46,7 +49,7 @@ const TowProgress = () =>
     };
 
     // get the array of coordinates to map the route
-    const getRoute = async (start, destination) => {
+    const getRoute = async (start, destination, driverBearing) => {
         // calculates the route
         const request = post({
             apiName: 'area51RestApi',
@@ -54,7 +57,8 @@ const TowProgress = () =>
             options: {
                 body: {
                     start,
-                    destination
+                    destination,
+                    userHeading: driverBearing
                 }
             }
         });
@@ -116,12 +120,14 @@ const TowProgress = () =>
                 // fetch initial coordinates
                 const driverLocation = await getCurrentPositionAsync({ accuracy: Accuracy.BestForNavigation });
                 const rawStart = [driverLocation.coords.longitude, driverLocation.coords.latitude];
+                const driverBearing = await getInitialCompassHeading();
+                console.log(driverBearing);
 
                 // get route polyline
                 const start = [driverLocation.coords.longitude, driverLocation.coords.latitude];
                 const destination = [request.longitude, request.latitude];
 
-                const route = await getRoute(start, destination);
+                const route = await getRoute(start, destination, driverBearing);
                 setRouteCoords(route);
 
                 // snap user to route
@@ -132,7 +138,7 @@ const TowProgress = () =>
                 const getMapBearing = bearing(point(route[0]), point(route[1]));
                 setMapBearing(getMapBearing);
             } catch (error) {
-                console.error('ERROR:', error);
+                console.error('ERROR, could not initialize map:', error);
             }
         };
 
@@ -157,14 +163,17 @@ const TowProgress = () =>
                 const rawCoords = [location.coords.longitude, location.coords.latitude];
                 const { coords: snappedCoords, offRouteDistance, distanceAlongRoute } = snapToRoute(rawCoords, routeCoords);
 
+                // send coordinates to backend
+                await sendDriverLocation(driverId, location.coords.latitude, location.coords.longitude);
+
                 // handle rerouting
-                if (offRouteDistance > 50) {
+                if (offRouteDistance > 25) {
                     setRerouting(true);
                     // get route polyline
                     const start = [location.coords.longitude, location.coords.latitude];
                     const destination = [request.longitude, request.latitude];
 
-                    const route = await getRoute(start, destination);
+                    const route = await getRoute(start, destination, location.coords.heading);
                     setRouteCoords(route);
 
                     // snap user to route
@@ -196,7 +205,7 @@ const TowProgress = () =>
                     setEstimatedDistance(getDistance(routeLength - distanceAlongRoute));
 
                     const { instructionText, instructionIcon, speechText } = getInstructionText(steps[currentIndex + 1], getDistance(distanceUntilNextStep));
-
+                    
                     // speak
                     if (!isMuteRef.current && (currentIndex !== lastIndex || distanceUntilNextStep === 60)) {
                         speak(speechText);

@@ -18,7 +18,10 @@ exports.handler = async (event) => {
         Origin: body.start,
         Destination: body.destination,
         TravelStepType: 'TurnByTurn',
-        TravelMode: 'Car'
+        TravelMode: 'Car',
+        OriginOptions: {
+            Heading: body.userHeading
+        }
     }
 
     try {
