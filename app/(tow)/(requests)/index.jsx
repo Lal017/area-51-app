@@ -71,10 +71,11 @@ const RequestList = () =>
                     <Tab
                         key={index}
                         text={<Text style={[Styles.headerTitle, {paddingLeft: 75}, request.status === 'REQUESTED' ? {color: Colors.primary} : request.status === 'IN_PROGRESS' ? {color: Colors.secondary} : null ]}><Text style={Styles.tabText}>{request?.user?.firstName}</Text>{'\n'}{request.status === 'IN_PROGRESS' ? 'ACTIVE REQUEST' : request.status}</Text>}
-                        action={() => router.push({
-                            pathname: 'towProgress',
-                            params: { towParam: JSON.stringify(request)}
-                        })}
+                        action={() => 
+                            router.push({
+                                pathname: request.status === 'REQUESTED' ? 'towResponse' : 'towProgress',
+                                params: { towParam: JSON.stringify(request)}
+                            })}
                         leftIcon={<MaterialCommunityIcons name='tow-truck' size={35} style={Styles.icon}/>}
                         rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon} />}
                     />

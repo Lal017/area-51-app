@@ -2,7 +2,7 @@
 	ENV
 	REGION
 Amplify Params - DO NOT EDIT */
-import { LocationClient, BatchUpdateDevicePositionCommand } from '@aws-sdk/client-location';
+const { LocationClient, BatchUpdateDevicePositionCommand } = require('@aws-sdk/client-location');
 
 const client = new LocationClient({ region: process.env.REGION });
 const TRACKER_NAME = "area51TowDriverTracker";
@@ -40,7 +40,7 @@ exports.handler = async (event) => {
             body: JSON.stringify({ message: "Driver location succesfully updated." })
         };
     } catch (error) {
-        console.error("Error updating driver location:", error);
+        console.error("Error updating driver location:", JSON.stringify(error, null, 2));
 
         return {
             statusCode: 500,

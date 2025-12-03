@@ -1,7 +1,8 @@
-import * as Location from 'expo-location';
 import nearestPointOnLine from '@turf/nearest-point-on-line';
 import { getTowRequest, listTowRequests, towRequestsByUserId } from "../src/graphql/queries";
 import { createTowRequest, updateTowRequest, deleteTowRequest } from "../src/graphql/mutations";
+import { LocationClient } from '@aws-sdk/client-location';
+import { fetchAuthSession } from 'aws-amplify/auth'
 import { Alert } from 'react-native';
 import { router } from "expo-router";
 import { distance } from '@turf/distance';
@@ -141,18 +142,6 @@ const handleCompleteTowRequest = async (client, requestId) =>
     }
 };
 
-const stopWatchingLocation = async () =>
-{
-    const LOCATION_TASK_NAME = "area51-background-location-task";
-    const hasStarted = await Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME);
-    if (hasStarted) {
-        await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
-        console.log('stopped tracking location');
-    } else {
-        console.log('not currently tracking');
-    }
-};
-
 // used to get the distance until the next step
 const getDistance = (distanceUntilNextStep) =>
 {
@@ -207,10 +196,13 @@ const getInstructionText = (step, distance) =>
         const turnDirection = step.TurnStepDetails?.SteeringDirection;
         const turnAngle = Math.abs(step.TurnStepDetails?.TurnAngle);
 
+        // set speech text
+        const speechText = road === "" ? `turn ${turnDirection} in ${distance}` : `In ${distance} turn ${turnDirection} onto ${road}`;
+
         return {
             instructionText: `${distance}\n${road}`,
             instructionIcon: setDirectionIcon(turnDirection, turnAngle),
-            speechText: `In ${distance} turn ${turnDirection} onto ${road}`
+            speechText: speechText
         };
     }
     else if (step.Type === 'Highway') {
@@ -336,8 +328,8 @@ const getArrivalTime = (duration) =>
 const sendDriverLocation = async (driver_id, latitude, longitude) =>
 {
     try {
-        post({
-            apiName: 'area51UpdateTrackerLocation',
+        const response = post({
+            apiName: 'area51RestApi',
             path: '/updateTrackerLocation',
             options: {
                 body: {
@@ -348,7 +340,10 @@ const sendDriverLocation = async (driver_id, latitude, longitude) =>
             }
         });
 
-        console.log('sent!');
+        const { body } = await response.response;
+        const result = await body.json();
+        console.log(result);
+
     } catch (error) {
         console.error('ERROR, could not update driver location:', error);
     }
@@ -496,13 +491,25 @@ const handleDeleteAllTowRequests = async (client, userID) =>
     }
 };
 
+const createLocationClient = async () => {
+    const session = await fetchAuthSession();
+
+    return new LocationClient({
+        region: "us-east-2",
+        credentials: {
+            accessKeyId: session.credentials.accessKeyId,
+            secretAccessKey: session.credentials.secretAccessKey,
+            sessionToken: session.credentials.sessionToken
+        }
+    });
+}
+
 export {
     handleGetAllTowRequests,
     handleFinalTowCheck,
     handleUpdateCustomersTowRequestStatus,
     handleAcceptTowRequest,
     handleCompleteTowRequest,
-    stopWatchingLocation,
     getDistance,
     getInstructionText,
     snapToRoute,
@@ -513,5 +520,6 @@ export {
     handleGetTowRequest,
     handleNotifUpdateTowRequest,
     handleUpdateTowRequestStatus,
-    handleDeleteAllTowRequests
+    handleDeleteAllTowRequests,
+    createLocationClient
 }

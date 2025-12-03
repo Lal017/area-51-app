@@ -1,17 +1,18 @@
 import LottieView from 'lottie-react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import { Styles, ServiceStyles } from '../../constants/styles';
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+import Colors from '../../constants/colors';
+import { Styles, ServiceStyles, TowStyles } from '../../constants/styles';
 import { useApp } from "../../components/context";
 import { Background, getRemainingETA, formatTime } from "../../components/components";
 import { handleSendAdminNotif } from '../../components/notifComponents';
-import { handleUpdateTowRequestStatus, handleGetTowRequest } from '../../components/towComponents';
-import { onUpdateTowRequest } from '../graphql/subscriptions';
-import { View, Text, TouchableOpacity, Alert, Image } from 'react-native';
+import { handleUpdateTowRequestStatus, handleGetTowRequest, createLocationClient, getArrivalTime } from '../../components/towComponents';
+import { View, Text, TouchableOpacity, Alert} from 'react-native';
+import { GetDevicePositionCommand } from '@aws-sdk/client-location';
 import { useEffect, useState } from "react";
 import { useNavigation } from '@react-navigation/native';
 import { openURL } from 'expo-linking';
 import { router } from 'expo-router';
+import { MaterialCommunityIcons, AntDesign, Entypo } from '@expo/vector-icons';
 
 const TowStatus = () =>
 {
@@ -19,78 +20,111 @@ const TowStatus = () =>
     const navigate = useNavigation();
     
     const [ driverLocation, setDriverLocation ] = useState();
-    const [ timeLeft, setTimeLeft ] = useState();
-    const [ refreshing, setRefreshing ] = useState();
+    const [ estimatedArrivalTime, setEstimatedArrivalTime ] = useState();
+    const [ estimatedTravelTime, setEstimatedTravelTime ] = useState();
+    const [ estimatedTimeLeft, setEstimatedTimeLeft ] = useState();
+    const [ locationClient, setLocationClient ] = useState();
 
-    const openCallCustomer = (phone) =>
+    const getDriverPosition = async (driverId) =>
+    {
+        const command = new GetDevicePositionCommand({
+            TrackerName: "area51TowDriverTracker",
+            DeviceId: driverId
+        });
+
+        const response = await locationClient.send(command);
+        return response;
+    };
+
+    const getTimeLeft = (acceptedAt, waitTime) =>
+    {
+        const timeAccepted = new Date(acceptedAt);
+        const currentTime = new Date();
+
+        const arrivalTime = new Date(timeAccepted.getTime() + waitTime * 1000);
+        const remainingMs = arrivalTime - currentTime;
+
+        const remainingMin = Math.max(Math.ceil(remainingMs / 60000), 0);
+        let timeLeft;
+
+        if (remainingMin <= 60) timeLeft = `${remainingMin} min`;
+        else {
+            const hours = remainingMin / 60;
+            const minutes = remainingMin % 60;
+
+            timeLeft = `${Math.floor(hours)} hr ${minutes} min`;
+        }
+
+        return {
+            timeLeft: timeLeft,
+            arrivalTime: formatTime(arrivalTime)
+        };
+    };
+
+    const openCallDriver = (phone) =>
     {
         const url = `tel:${phone}`;
         openURL(url);
     };
 
-    const onRefresh = async () =>
-    {
-        setRefreshing(true);
-
-        // reset active tow request
-        const getTowRequest = await handleGetTowRequest(client, userId);
-        setTowRequest(getTowRequest);
-        // get minutes left
-        const getTimeLeft = getRemainingETA(getTowRequest?.acceptedAt, getTowRequest?.waitTime);
-        setTimeLeft(getTimeLeft);
-
-        setRefreshing(false);
-    }
-
+    // if no tow request, go back to home page
     useEffect(() => {
         if (towRequest === undefined) { router.replace('(tabs)'); }
-        const getTimeLeft = getRemainingETA(towRequest?.acceptedAt, towRequest?.waitTime);
-        setTimeLeft(getTimeLeft);
     }, [towRequest]);
 
     useEffect(() => {
-        const loadDriversLocation = async () =>
+        const initializeRequest = async () =>
         {
-            const stored = await AsyncStorage.getItem('driverLocation');
             try {
-                const parsed = JSON.parse(stored);
-                if (parsed.latitude !== null && parsed.longitude !== null) {
-                    setDriverLocation(parsed);
-                }
+                // set tow request
+                const getTowRequest = await handleGetTowRequest(client, userId);
+                setTowRequest(getTowRequest);
+
+                // set Location Client
+                const getLocationClient = await createLocationClient();
+                setLocationClient(getLocationClient);
+            
+                // set estimated wait time and arrival time
+                const { travelTime } = getArrivalTime(getTowRequest.waitTime);
+                setEstimatedTravelTime(travelTime);
+                const { timeLeft, arrivalTime } = getTimeLeft(towRequest?.acceptedAt, towRequest?.waitTime);
+                setEstimatedTimeLeft(timeLeft);
+                setEstimatedArrivalTime(arrivalTime);
             } catch (error) {
-                console.error('ERROR, could not get last stored location:', error);
+                console.log('error initializing', error);
             }
-        };
+        }
 
-        loadDriversLocation();
+        initializeRequest();
 
-        const subscription = client.graphql({
-            query: onUpdateTowRequest
-        }).subscribe({
-            next: async ({ data }) => {
-                const getDriverLocation = {
-                    latitude: data?.onUpdateTowRequest.driverLatitude,
-                    longitude: data?.onUpdateTowRequest.driverLongitude
-                };
-                console.log('Customer Side:', getDriverLocation.latitude, getDriverLocation.longitude);
-                if (getDriverLocation.latitude !== null && getDriverLocation.longitude !== null) {
-                    setDriverLocation(getDriverLocation);
-                }
-                await AsyncStorage.setItem('driverLocation', JSON.stringify(getDriverLocation));
-            },
-            error: (error) => console.error(error)
-        });
+    } ,[]);
+
+    useEffect(() => {
+        const interval = setInterval(async () => {
+            try {
+                if (!locationClient) { console.log('none'); return; }
+
+                // get drivers last position
+                const position = await getDriverPosition(towRequest?.driverId);
+                setDriverLocation(position.Position);
+
+                // get remaining time left
+                const { timeLeft } = getTimeLeft(towRequest?.acceptedAt, towRequest?.waitTime);
+                setEstimatedTimeLeft(timeLeft);
+            } catch (error) {
+                console.log('error here', error);
+            }
+        }, 3000);
 
         return () => {
-            subscription.unsubscribe();
-            setDriverLocation(undefined);
-        }
-    }, []);
+            clearInterval(interval);
+        };
+    }, [locationClient]);
 
     return (
-        <Background refreshing={refreshing} onRefresh={onRefresh}>
-            { towRequest && towRequest?.status === "REQUESTED" ? (
-            <>
+        <Background style={{paddingBottom: 0, paddingTop: 0}}>
+            { towRequest?.status === 'REQUESTED' ? (
+                <>
                 <View style={Styles.infoContainer}>
                     <View style={ServiceStyles.titleWrapper}>
                     <Text style={Styles.subTitle}>Tow Request</Text>
@@ -101,7 +135,7 @@ const TowStatus = () =>
                         style={{width: 50, height: 50}}
                     />
                     </View>
-                    <Text style={Styles.text}>Your request is being processed. We'll notify you with a estimated wait time shortly.</Text>
+                    <Text style={Styles.text}>Your request has been made and is being processed. We'll notify you when a driver is on route!</Text>
                 </View>
                 <View style={Styles.block}>
                     <TouchableOpacity
@@ -114,7 +148,7 @@ const TowStatus = () =>
                                 {
                                     text: 'Yes',
                                     onPress: async () => {
-                                        handleSendAdminNotif('Tow Request Cancelled', 'Customer has cancelled the tow request');
+                                        await handleSendAdminNotif('Tow Request Cancelled', 'Customer has cancelled the tow request');
                                         await handleUpdateTowRequestStatus(client, towRequest.id, userId, 'CANCELLED', setTowRequest);
                                         Alert.alert(
                                             'Cancelled',
@@ -134,69 +168,75 @@ const TowStatus = () =>
                         <Text style={Styles.actionText}>Cancel</Text>
                     </TouchableOpacity>
                 </View>
-            </>
-            ) : towRequest?.status === "IN_PROGRESS" ? (
-            <>
-                { driverLocation ? (
-                    <View style={ServiceStyles.mapContainer}>
-                        <MapView
-                            provider={PROVIDER_GOOGLE}
-                            style={{width: '100%', height: '100%'}}
-                            showsUserLocation={true}
-                            zoomControlEnabled={true}
-                            region={{
-                                latitude: driverLocation?.latitude,
-                                longitude: driverLocation?.longitude,
-                                latitudeDelta: 0.01,
-                                longitudeDelta: 0.01
-                            }}
+                </>
+            ) : towRequest?.status === 'IN_PROGRESS' ? (
+                <>
+                { driverLocation && (
+                    <MapView
+                        provider={PROVIDER_GOOGLE}
+                        style={{width: '100%', height: '100%'}}
+                        showsUserLocation={true}
+                        zoomControlEnabled={true}
+                        zoomControlPosition={{ x: 0, y: 0}}
+                        loadingEnabled={true}
+                        showsCompass={false}
+                        region={{
+                            latitude: driverLocation[1],
+                            longitude: driverLocation[0],
+                            latitudeDelta: 0.01,
+                            longitudeDelta: 0.01
+                        }}
+                    >
+                        { driverLocation && (
+                        <Marker
+                            title='Driver Location'
+                            description='This is where the driver currently is'
+                            coordinate={{ latitude: driverLocation[1], longitude: driverLocation[0]}}
+                            anchor={{ x: 0.5, y: 0.5}}
                         >
-                            <Marker
-                                title='Driver'
-                                coordinate={{
-                                    latitude: driverLocation?.latitude,
-                                    longitude: driverLocation?.longitude
+                            <View
+                                style={{
+                                    backgroundColor: Colors.secondary,
+                                    borderRadius: 50,
+                                    width: 38,
+                                    height: 38,
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
                                 }}
                             >
-                                <Image
-                                    source={require('../../assets/images/towTruck.png')}
-                                    style={{width: 35, height: 35}}
-                                    resizeMode='contain'
+                                <MaterialCommunityIcons
+                                    name='tow-truck'
+                                    color='white'
+                                    size={25}
                                 />
-                            </Marker>
-                        </MapView>
-                    </View>
-                ) : null }
-                <View style={Styles.infoContainer}>
-                    <View style={ServiceStyles.titleWrapper}>
-                        <Text style={Styles.subTitle}>Tow Request</Text>
-                        <LottieView
-                            source={require('../../assets/animations/truck.json')}
-                            loop
-                            autoPlay
-                            style={{width: 75, height: 75}}
-                        />
-                    </View>
-                    { timeLeft > 0 ? (
-                        <>
-                            <Text style={Styles.text}>{towRequest?.driverFirstName ? `${towRequest?.driverFirstName}` : 'Your driver'} is on route! Estimated Wait time is {timeLeft} minutes.</Text>
-                            <Text style={Styles.text}>Driver departed at: {formatTime(towRequest?.acceptedAt)}</Text>
-                        </>
-                    ) : (
-                        <Text style={Styles.text}>{towRequest?.driverFirstName ? `${towRequest?.driverFirstName}` : 'Your driver'} is running late. we are sorry for the inconvenience</Text>
-                    )}
-                </View>
-            </>
-            ) : null}
-            { towRequest?.driverPhoneNumber ? (
-                <View style={[Styles.block, {alignItems: 'center'}]}>
+                            </View>
+                        </Marker>
+                        )}
+                    </MapView>
+                )}
+                <View style={TowStyles.secondaryContainer}>
                     <TouchableOpacity
-                        style={Styles.actionButton}
-                        onPress={() => openCallCustomer(towRequest?.driverPhoneNumber)}
+                        style={TowStyles.iconContainer}
+                        onPress={() => router.back()}
                     >
-                        <Text style={Styles.actionText}>Call Driver</Text>
+                        <AntDesign name='left' size={45} color='white' />
+                    </TouchableOpacity>
+                    <View style={TowStyles.lowerTextContainer}>
+                        <Text style={[estimatedTimeLeft === `0 min` ? [Styles.text, {fontWeight: 'bold'}] : Styles.subTitle, {textAlign: 'center'}]}>{estimatedTimeLeft === `0 min` ? 'Driver is running late...' : estimatedTimeLeft}</Text>
+                        <Text style={Styles.text}>{estimatedTravelTime} | {estimatedArrivalTime}</Text>
+                    </View>
+                    <TouchableOpacity
+                        style={TowStyles.iconContainer}
+                        onPress={() => openCallDriver(request?.user?.phone)}
+                    >
+                        <Entypo
+                            name='phone'
+                            size={45}
+                            color='white'
+                        />
                     </TouchableOpacity>
                 </View>
+                </>
             ) : null }
         </Background>
     );

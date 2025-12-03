@@ -415,8 +415,6 @@ export const onCreateTowRequest = /* GraphQL */ `
       driverId
       driverFirstName
       driverPhoneNumber
-      driverLatitude
-      driverLongitude
       acceptedAt
       createdAt
       updatedAt
@@ -476,8 +474,6 @@ export const onUpdateTowRequest = /* GraphQL */ `
       driverId
       driverFirstName
       driverPhoneNumber
-      driverLatitude
-      driverLongitude
       acceptedAt
       createdAt
       updatedAt
@@ -537,8 +533,6 @@ export const onDeleteTowRequest = /* GraphQL */ `
       driverId
       driverFirstName
       driverPhoneNumber
-      driverLatitude
-      driverLongitude
       acceptedAt
       createdAt
       updatedAt

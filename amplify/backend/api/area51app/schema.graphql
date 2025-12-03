@@ -94,7 +94,5 @@ type TowRequest
   driverId: ID
   driverFirstName: String
   driverPhoneNumber: AWSPhone
-  driverLatitude: Float
-  driverLongitude: Float
   acceptedAt: AWSDateTime
 }

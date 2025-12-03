@@ -3,7 +3,9 @@ ToDo:
     - fix sign in account links / process
     - handle notification when a truck driver accepts a request and an admin marks it as completed
     - header styling on different device
-    - speech fix when no street name
+    - set estimated wait time for customer
+    - update address to new shop address
+    - try to delete tow drivers location from aws once tow request is finished
 
 PotentialChanges:
     - Add notification tab in header for home page (only do this if you add a datamodel for notifications)
@@ -15,3 +17,4 @@ PotentialChanges:
     - Add appointments to google calendar
     - incorporate more images to make the UI more user friendly
     - try to embed the map instead of using an api key.
+    - send a notif to admin after 10 minutes if no tow driver has accepted a request

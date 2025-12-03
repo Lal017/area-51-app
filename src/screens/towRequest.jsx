@@ -149,6 +149,7 @@ const TowRequest = () =>
                                     style={{width: '100%', height: '100%'}}
                                     showsUserLocation={true}
                                     zoomControlEnabled={true}
+                                    userInterfaceStyle='dark'
                                     region={{
                                         latitude: location?.latitude,
                                         longitude: location?.longitude,
@@ -310,6 +311,7 @@ const TowRequest = () =>
                                     longitudeDelta: 0.01
                                 }}
                                 liteMode={true}
+                                userInterfaceStyle='dark'
                             >
                                 <Marker
                                     title="Pickup Location"

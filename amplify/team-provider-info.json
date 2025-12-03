@@ -50,7 +50,7 @@
         },
         "area51UpdateTrackerLocation": {
           "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
-          "s3Key": "amplify-builds/area51UpdateTrackerLocation-494244713057774a5a58-build.zip"
+          "s3Key": "amplify-builds/area51UpdateTrackerLocation-754e4957646a73796d6e-build.zip"
         }
       },
       "auth": {

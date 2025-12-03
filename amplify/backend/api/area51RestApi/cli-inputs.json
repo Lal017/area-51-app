@@ -73,9 +73,10 @@
       "permissions": {
         "groups": {
           "TowDrivers": [
-            "create",
-            "read",
-            "update"
+            "create"
+          ],
+          "Customers": [
+            "create"
           ]
         },
         "setting": "private"

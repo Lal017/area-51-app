@@ -345,8 +345,6 @@ export const getTowRequest = /* GraphQL */ `
       driverId
       driverFirstName
       driverPhoneNumber
-      driverLatitude
-      driverLongitude
       acceptedAt
       createdAt
       updatedAt
@@ -394,8 +392,6 @@ export const listTowRequests = /* GraphQL */ `
         driverId
         driverFirstName
         driverPhoneNumber
-        driverLatitude
-        driverLongitude
         acceptedAt
         createdAt
         updatedAt
@@ -438,8 +434,6 @@ export const towRequestsByUserId = /* GraphQL */ `
         driverId
         driverFirstName
         driverPhoneNumber
-        driverLatitude
-        driverLongitude
         acceptedAt
         createdAt
         updatedAt
