@@ -4,92 +4,96 @@
 
 const {
   CognitoIdentityProviderClient,
-  AdminLinkProviderForUserCommand,
-  ListUsersCommand
+  ListUsersCommand,
+  AdminListGroupsForUserCommand,
+  AdminLinkProviderForUserCommand
 } = require("@aws-sdk/client-cognito-identity-provider");
-const cognito = new CognitoIdentityProviderClient({});
+
+const client = new CognitoIdentityProviderClient({});
 
 exports.handler = async (event) => {
-  const userPoolId = event.userPoolId;
-  const email = event.request.userAttributes.email;
+  console.log(event);
+  // check if another user has this email
+  const response = await client.send(new ListUsersCommand({
+    UserPoolId: event.userPoolId,
+    Filter: `email = "${event.request.userAttributes.email}"`,
+    Limit: 5
+  }));
 
-  if (event.triggerSource === 'PreSignUp_ExternalProvider') {
+  const incomingSub = event.request.userAttributes.sub;
 
-    const [providerName, providerUserId] = event.userName.split('_');
-    let providerNameNormalize;
-    if (providerName.toLowerCase() === 'google') { providerNameNormalize = 'Google'; }
-    else if (providerName.toLowerCase() === 'loginwithamazon') { providerNameNormalize = 'LoginWithAmazon'; }
-    else { throw new Error(`unsuported provider: ${providerName}`); }
+  const existingUser = response?.Users?.find(user => {
+    const subAttr = user.Attributes?.find(attr => attr.Name === 'sub')?.Value;
+    return subAttr && subAttr !== incomingSub;
+  })
 
-    const sourceUser = {
-      ProviderName: providerNameNormalize,                                // google, amazon
-      ProviderAttributeName: 'Cognito_Subject',
-      ProviderAttributeValue: providerUserId
-    };
+  console.log(existingUser);
+  console.log('users:', response?.Users);
 
-    // ------------------------------------------------------
-    // get destination user info
-    const users = await cognito.send(new ListUsersCommand({               // check userpool for email
-      UserPoolId: userPoolId,
-      Filter: `email = "${email}"`,
-      Limit: 5
-    }));
+  if (!existingUser) {
+    console.log('exiting to continue sign up');
+    // continue with sign up
+    return event;
+  }
 
-    // avoid linking to current email user account so filter it out
-    const existingCognitoUser = users?.Users?.find(user => {
-      const identitiesAttr = user.Attributes?.find(attr => attr.Name === 'identities');
-      const subAttr = user.Attributes?.find(attr => attr.Name === 'sub');
-      return !identitiesAttr && subAttr;
-    });
+  // block SIGN UP IF SIGNING UP WITH COGNITO PAST THIS POINT
+  // check how the user is trying to sign up
+  let newUserProvider;
 
-    // if no other user exists with same email
-    if (!existingCognitoUser) {
-      console.log('No other user with same email found');
-      return event;
-    }
+  if (event.triggerSource === "PreSignUp_ExternalProvider") {
+    newUserProvider = event.userName.split("_")[0];
+  } else {
+    throw new Error('Account with this email already exists. Try signing in with Google');
+  }
 
-    const destinationUser = {
-      ProviderName: 'Cognito',
-      ProviderAttributeName: 'Cognito_Subject',
-      ProviderAttributeValue: existingCognitoUser.Username
-    };
+  // check how user originally signed up
+  const groupResponse = await client.send(new AdminListGroupsForUserCommand({
+    Username: existingUser.Username,
+    UserPoolId: event.userPoolId
+  }));
+
+  const groups = groupResponse.Groups.map(group => group.GroupName);
+
+  let existingUserProvider;
+
+  if (groups.some(group => group.includes("Google"))) {
+    existingUserProvider = "google";
+  } else {
+    existingUserProvider = "cognito";
+  }
+
+  // check old and new provider
+  if (newUserProvider === 'google' && existingUserProvider === 'cognito') {
+    // link accounts
 
     try {
-      await cognito.send(new AdminLinkProviderForUserCommand({
-        UserPoolId: userPoolId,
+      const [ providerName, providerUserId ] = event.userName.split('_');
+
+      const sourceUser = {
+        ProviderName: providerName.toLowerCase() === 'google' ? 'Google' : null,
+        ProviderAttributeValue: providerUserId,
+        ProviderAttributeName: 'Cognito_Subject'
+      };
+
+      const destinationUser = {
+        ProviderName: 'Cognito',
+        ProviderAttributeValue: existingUser.Username,
+        ProviderAttributeName: 'Cognito_Subject'
+      };
+
+      await client.send(new AdminLinkProviderForUserCommand({
+        UserPoolId: event.userPoolId,
         SourceUser: sourceUser,
         DestinationUser: destinationUser
       }));
-
-      console.log('Successfully linked users');
     } catch (error) {
-      console.log('Error linking user:', error);
-      throw new Error('Account already exists with this email. Please sign in instead');
+      console.error(error);
+      throw new Error('ERROR:', error);
     }
 
     return event;
   }
-  else if (event.triggerSource === 'PreSignUp_SignUp') {
-    const users = await cognito.send(new ListUsersCommand({               // check userpool for email
-      UserPoolId: userPoolId,
-      Filter: `email = "${email}"`,
-      Limit: 5
-    }));
+  else if ((newUserProvider === 'cognito' && existingUserProvider === 'google')) throw new Error(`Account with this email already exists. Try signing in with ${existingUserProvider}`);
 
-    const federatedUser = users?.Users?.find(user => {
-      const identitiesAttr = user.Attributes?.find(attr => attr.Name === 'identities');
-      return !!identitiesAttr;
-    });
-
-    if (federatedUser) {
-      console.log('Federated user already exists with this email, blocking signup');
-      throw new Error('An account already exists with this email using a social provider. Please sign in with that method.');
-    }
-
-    return event; // Allow sign-up
-  }
-
-  // block other trigger sources
-  console.log(`Unhandled trigger source: ${event.triggerSource}`);
-  throw new Error('Unsupported sign-up method.');
+  return event;
 };

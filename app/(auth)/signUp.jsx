@@ -1,7 +1,7 @@
 import Colors from "../../constants/colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthBackground } from "../../components/components";
-import { handleSignUp, GoogleSignInButton, AmazonSignInButton } from "../../components/authComponents";
+import { handleSignUp, GoogleSignInButton } from "../../components/authComponents";
 import { AuthStyles, Styles } from "../../constants/styles";
 import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Image, Alert } from "react-native";
 import { useState } from "react";
@@ -93,14 +93,14 @@ const SignUp = () =>
                                 ) : <Ionicons name='eye' size={20} color={Colors.backDropAccent}/> }
                             </TouchableOpacity>
                         </View>
-                        <View style={{width: '90%', flexDirection: 'row', columnGap: 10, alignItems: 'center', justifyContent: 'center'}}>
+                        <View style={{width: '90%', flexDirection: 'row', columnGap: 20, alignItems: 'center', justifyContent: 'flex-start'}}>
                             <TouchableOpacity
                                 style={AuthStyles.checkBox}
                                 onPress={() => setCheck(prev => !prev)}
                             >
                                 { check ? <Entypo name='check' size={25}/> : null}
                             </TouchableOpacity>
-                            <Text style={Styles.text}>Request a tow truck driver account?</Text>
+                            <Text style={Styles.text}>Are you a tow truck driver?</Text>
                         </View>
                         <TouchableOpacity
                             onPress={() => {
@@ -180,11 +180,23 @@ const SignUp = () =>
                             onPress={async () => {
                                 if (loading) return;
                                 setLoading(true);
-                                try {
-                                    await handleSignUp(firstName, lastName, email, password, phoneNumber);
-                                    await AsyncStorage.setItem('wantsToBeTowDriver', JSON.stringify(check));
-                                } catch (error) {
-                                    console.error('ERROR, could not sign up:', error);
+                                if (!firstName || !lastName || !phoneNumber) {
+                                    Alert.alert(
+                                        'Error',
+                                        'Required fields cannot be empty',
+                                        [{ text: 'Ok' }]
+                                    );
+                                } else {
+                                    try {
+                                        await handleSignUp(firstName, lastName, email, password, phoneNumber);
+                                        await AsyncStorage.setItem('wantsToBeTowDriver', JSON.stringify(check));
+                                    } catch (error) {
+                                        Alert.alert(
+                                            'Error',
+                                            error.message,
+                                            [{ text: 'Ok' }]
+                                        );
+                                    }
                                 }
                                 setLoading(false);
                             }}
@@ -197,11 +209,10 @@ const SignUp = () =>
                 ) : null}
                 <View style={Styles.hr} />
                 <View style={Styles.block}>
-                    <View style={AuthStyles.providerContainer}>
-                        <GoogleSignInButton text='Sign Up'/>
-                        <AmazonSignInButton text='Sign Up'/>
+                    <View style={[AuthStyles.providerContainer, step === 1 ? {display: 'flex'} : {display: 'none'}]}>
+                        <GoogleSignInButton text='Sign Up with Google'/>
                     </View>
-                    <Link href="/(auth)/signIn" style={[Styles.text, {textAlign: 'center'}]}>Sign In</Link>
+                    <Link href="/(auth)/signIn" style={[Styles.text, {textAlign: 'center'}]}>{step === 1 ? 'Sign in' : 'Back to sign in'}</Link>
                 </View>
             </AuthBackground>
         </KeyboardAvoidingView>

@@ -57,6 +57,13 @@ export type AmplifyDependentResourcesAttributes = {
       "Name": "string",
       "Region": "string"
     },
+    "area51LookUpUser": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
     "area51SendNotifToAdmins": {
       "Arn": "string",
       "LambdaExecutionRole": "string",

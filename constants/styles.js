@@ -224,7 +224,7 @@ const AuthStyles = StyleSheet.create({
     },
     providerContainer: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         width: '100%',
         paddingRight: 20,
         paddingLeft: 20
@@ -235,7 +235,7 @@ const AuthStyles = StyleSheet.create({
     },
     providerSignIn: {
         backgroundColor: 'white',
-        width: '47%',
+        width: '100%',
         padding: 10,
         borderRadius: 5,
         flexDirection: 'row',

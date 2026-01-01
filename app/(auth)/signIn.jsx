@@ -4,7 +4,7 @@ import { handleSignIn } from '../../components/authComponents';
 import { Ionicons } from '@expo/vector-icons';
 import { Link } from 'expo-router';
 import { AuthStyles, Styles } from '../../constants/styles';
-import { GoogleSignInButton, AmazonSignInButton } from '../../components/authComponents';
+import { GoogleSignInButton } from '../../components/authComponents';
 import Colors from '../../constants/colors';
 import { AuthBackground } from '../../components/components';
 import { useNavigation } from '@react-navigation/native';
@@ -79,8 +79,7 @@ const SignIn = () =>
             <View style={Styles.hr}/>
             <View style={Styles.block}>
                 <View style={AuthStyles.providerContainer}>
-                    <GoogleSignInButton text='Sign in' navigate={navigate}/>
-                    <AmazonSignInButton text='Sign in' navigate={navigate}/>
+                    <GoogleSignInButton text='Sign in with Google' navigate={navigate}/>
                 </View>
                 <View style={[Styles.infoContainer, {alignItems: 'center', rowGap: 20}]}>
                     <Link href="/(auth)/signUp" style={Styles.text}>Need an account? <Text style={{textDecorationLine: 'underline'}}>Sign Up</Text></Link>

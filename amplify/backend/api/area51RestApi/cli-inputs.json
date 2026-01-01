@@ -93,6 +93,13 @@
         },
         "setting": "private"
       }
+    },
+    "/lookUpUser": {
+      "name": "/lookUpUser",
+      "lambdaFunction": "area51LookUpUser",
+      "permissions": {
+        "setting": "open"
+      }
     }
   }
 }

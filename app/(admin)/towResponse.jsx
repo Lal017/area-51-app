@@ -139,7 +139,7 @@ const TowResponse = () =>
                     { customer?.status !== 'COMPLETED' && customer?.status !== 'CANCELLED' ? (
                         <View style={TowStyles.dualButtonContainer}>
                             <TouchableOpacity
-                                style={[TowStyles.button, {backgroundColor: Colors.button}]}
+                                style={[TowStyles.button, {backgroundColor: Colors.button, columnGap: 10}]}
                                 onPress={() => openCallCustomer(customer?.user?.phone)}
                             >
                                 <Entypo name="phone" size={25} color='white'/>
@@ -147,7 +147,7 @@ const TowResponse = () =>
                             </TouchableOpacity>
                             { customer?.status === 'REQUESTED' ? (
                                 <TouchableOpacity
-                                    style={[TowStyles.button, {backgroundColor: Colors.button}]}
+                                    style={[TowStyles.button, {backgroundColor: Colors.button, columnGap: 10}]}
                                     onPress={() => {
                                         Alert.alert(
                                             'Confirmation',
@@ -187,7 +187,7 @@ const TowResponse = () =>
                                 </TouchableOpacity>
                             ) : (
                                 <TouchableOpacity
-                                    style={[TowStyles.button, {backgroundColor: Colors.button}]}
+                                    style={[TowStyles.button, {backgroundColor: Colors.button, columnGap: 10}]}
                                     onPress={() => {
                                         Alert.alert(
                                             'Complete Tow Request',
@@ -217,6 +217,7 @@ const TowResponse = () =>
                                         )
                                     }}
                                 >
+                                    <AntDesign name="check" size={25} color='white'/>
                                     <Text style={Styles.actionText}>Completed</Text>
                                 </TouchableOpacity>
                             )}

@@ -26,7 +26,7 @@
         },
         "area51GetAppointments": {
           "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
-          "s3Key": "amplify-builds/area51GetAppointments-5166774c477735434c33-build.zip"
+          "s3Key": "amplify-builds/area51GetAppointments-4e684f4c49534b595665-build.zip"
         },
         "area51GetMapStyle": {
           "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
@@ -42,7 +42,7 @@
         },
         "troplocksmithappPreSignup": {
           "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
-          "s3Key": "amplify-builds/troplocksmithappPreSignup-75354b624d723843686d-build.zip"
+          "s3Key": "amplify-builds/troplocksmithappPreSignup-667071687968786e7345-build.zip"
         },
         "area51GetRoute": {
           "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
@@ -51,6 +51,10 @@
         "area51UpdateTrackerLocation": {
           "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
           "s3Key": "amplify-builds/area51UpdateTrackerLocation-754e4957646a73796d6e-build.zip"
+        },
+        "area51LookUpUser": {
+          "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
+          "s3Key": "amplify-builds/area51LookUpUser-7343395a566b666c5542-build.zip"
         }
       },
       "auth": {

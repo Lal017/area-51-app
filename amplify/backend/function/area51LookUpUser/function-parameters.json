@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "auth": {
+      "troplocksmithapp": [
+        "read"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}

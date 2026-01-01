@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { handleDeleteStorage, handleDeleteUser } from './userComponents';
 import { handleDeleteAllAppointments } from './appointmentComponents'
-import { handleDeleteAllTowRequests, stopWatchingLocation } from './towComponents';
+import { handleDeleteAllTowRequests } from './towComponents';
 import { handleDeleteAllVehicles } from './vehicleComponents';
 import { AuthStyles } from '../constants/styles';
 import { TouchableOpacity, Image, Text, Alert } from 'react-native';
@@ -72,11 +72,10 @@ const handleSignUp = async (given_name, family_name, email, password, phoneNumbe
             );
         }
     } catch (error) {
-        console.error('ERROR, could not sign up:', error);
-        const contains = error.message.includes('account already exists');
+        const googleSignUp = error.message.includes('Try signing in with Google');
         Alert.alert(
             'Error',
-            contains ? 'An account already exists with this email' : error.message,
+            googleSignUp ? 'Account with this email already exists. Try signing in with Google.' : error.message,
             [
                 { text: 'Ok'}
             ]
@@ -210,7 +209,7 @@ const handleAutoSignIn = async (navigate, username) =>
     }
 };
 
-// used to sign in with an external provider (Google, Amazon)
+// used to sign in with an external provider Google
 const handleSignInWithRedirect = async (providerName, navigate) =>
 {
     try {
@@ -244,20 +243,6 @@ const GoogleSignInButton = ({text, navigate}) =>
                 style={AuthStyles.signInImg}
             />
             <Text style={{fontFamily: 'Roboto-Regular', fontSize: 17}}>{text}</Text>
-        </TouchableOpacity>
-    );
-};
-
-// Amazon sign in button component
-const AmazonSignInButton = ({text, navigate}) =>
-{
-    return(
-        <TouchableOpacity
-            onPress={() => handleSignInWithRedirect('Amazon', navigate)}
-            style={[AuthStyles.providerSignIn, {backgroundColor: '#37475A'}]}
-        >
-            <FontAwesome name='amazon' size={24} color='white' />
-            <Text style={{fontFamily: 'Roboto-Regular', color: 'white', fontSize: 17}}>{text}</Text>
         </TouchableOpacity>
     );
 };
@@ -308,7 +293,7 @@ const handleResetPassword = async (username) =>
     } catch (error) {
         Alert.alert(
             'Error',
-            error.name === 'UserNotFoundException' ? 'A user with this email does not exist' : error.name === 'InvalidParameterException' ? 'Please sign in with Google/Amazon' : error.message,
+            error.name === 'UserNotFoundException' ? 'A user with this email does not exist' : error.name === 'InvalidParameterException' ? 'Please sign in with Google' : error.message,
             [
                 { text: 'Ok'}
             ]
@@ -443,7 +428,6 @@ const handleDeleteAccount = async (client, userId, identityId, email, inputEmail
     }
 
     try {
-        await stopWatchingLocation();
         await handleDeleteAllTowRequests(client, userId);
         await handleDeleteAllAppointments(client, userId);
         await handleDeleteAllVehicles(client, userId);
@@ -626,7 +610,6 @@ export {
     handleUpdatePassword,
     handleDeleteAccount,
     GoogleSignInButton,
-    AmazonSignInButton,
     handleUpdateAttributes,
     handleConfirmUserAttribute
 };

@@ -1,11 +1,11 @@
 ToDo:
     - fix handleResetPassword error message codes
-    - fix sign in account links / process
-    - handle notification when a truck driver accepts a request and an admin marks it as completed
+    - add reset password option while signed in to change password tab
+    - handle notification when a truck driver accepts a request and an admin marks it as completed (using two phones for real time viewing)
     - header styling on different device
-    - set estimated wait time for customer
-    - update address to new shop address
-    - try to delete tow drivers location from aws once tow request is finished
+    - fix amazon login error.
+    - once finished and ready for production build, check error messages and console error messages
+    - fix handle reset password alert
 
 PotentialChanges:
     - Add notification tab in header for home page (only do this if you add a datamodel for notifications)

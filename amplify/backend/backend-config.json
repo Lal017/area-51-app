@@ -85,6 +85,14 @@
           ],
           "category": "function",
           "resourceName": "area51UpdateTrackerLocation"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "area51LookUpUser"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -244,6 +252,20 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "area51LookUpUser": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "troplocksmithapp"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "area51SendNotifToAdmins": {
       "build": true,
       "dependsOn": [
@@ -388,6 +410,22 @@
         {
           "category": "function",
           "resourceName": "area51GetRoute"
+        }
+      ]
+    },
+    "AMPLIFY_function_area51LookUpUser_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "area51LookUpUser"
+        }
+      ]
+    },
+    "AMPLIFY_function_area51LookUpUser_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "area51LookUpUser"
         }
       ]
     },
