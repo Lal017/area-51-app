@@ -5,7 +5,6 @@ import { handleDeleteAllTowRequests } from './towComponents';
 import { handleDeleteAllVehicles } from './vehicleComponents';
 import { AuthStyles } from '../constants/styles';
 import { TouchableOpacity, Image, Text, Alert } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import {
     signUp,
@@ -35,14 +34,7 @@ const handleSignUp = async (given_name, family_name, email, password, phoneNumbe
     const phoneNumberCheck = phoneNumber.replace(/\D/g, '');
     if (phoneNumberCheck.length !== 10)
     {
-        Alert.alert(
-            "Error",
-            "Invalid phone number",
-            [
-                { text: "Ok" }
-            ]
-        );
-        return;
+        return "The number you entered is not a valid phone number";
     }
     try {
         const { nextStep } = await signUp({
@@ -63,19 +55,11 @@ const handleSignUp = async (given_name, family_name, email, password, phoneNumbe
                 pathname: '/signUpConfirm',
                 params: {username: email}
             });
-            Alert.alert(
-                'Verification',
-                'Check your email for your verification code',
-                [
-                    { text: 'Ok' }
-                ]
-            );
         }
     } catch (error) {
-        const googleSignUp = error.message.includes('Try signing in with Google');
         Alert.alert(
-            'Error',
-            googleSignUp ? 'Account with this email already exists. Try signing in with Google.' : error.message,
+            'Account Not Created',
+            getErrorMessage(error)
             [
                 { text: 'Ok'}
             ]
@@ -84,7 +68,7 @@ const handleSignUp = async (given_name, family_name, email, password, phoneNumbe
 };
 
 // used to confirm signing up with confirmation code
-const handleSignUpConfirm = async (navigate, username, confirmationCode) =>
+const handleSignUpConfirm = async (navigate, username, confirmationCode, password) =>
 {
     try {
         const { nextStep } = await confirmSignUp({
@@ -93,29 +77,10 @@ const handleSignUpConfirm = async (navigate, username, confirmationCode) =>
         });
 
         if (nextStep.signUpStep === 'COMPLETE_AUTO_SIGN_IN') {
-            handleAutoSignIn(username);
-            Alert.alert(
-                "Account Created",
-                "Sign up successful!",
-                [
-                    { text: "Ok" }
-                ]
-            );
-        }
-        else if(nextStep.signUpStep === 'DONE') {
-            navigate.reset({
-                index: 0,
-                routes: [{ name: '(auth)' }]
-            });
-            Alert.alert(
-                "Account Created",
-                "Sign up successful!",
-                [
-                    { text: "Ok" }
-                ]
-            );
-        }
-        else {
+            await handleAutoSignIn(navigate, username);
+        } else if (nextStep.signUpStep === 'DONE') {
+            await handleSignIn(username, password);
+        } else {
             console.error('ERROR, could not auto sign in');
             navigate.reset({
                 index: 0,
@@ -123,14 +88,7 @@ const handleSignUpConfirm = async (navigate, username, confirmationCode) =>
             });
         }
     } catch (error) {
-        console.error('ERROR, could not confirm sign up', error);
-        Alert.alert(
-            "Error",
-            error.message,
-            [
-                { text: "Ok" }
-            ]
-        );
+        return getErrorMessage(error);
     }
 };
 
@@ -139,16 +97,8 @@ const handleResendSignUpCode = async (username) =>
 {
     try {
         await resendSignUpCode({ username });
-        return;
     } catch (error) {
-        console.error('ERROR, could not resend sign up code', error);
-        Alert.alert(
-            'Error',
-            error.message,
-            [
-                { text: "Ok" }
-            ]
-        );
+        throw error;
     }
 };
 
@@ -162,35 +112,25 @@ const handleSignIn = async (username, password) =>
 {
     try {
         const { nextStep } = await signIn({ username, password });
-        signInConfirm(username, nextStep);
+        await signInConfirm(username, nextStep, password);
     } catch (error) {
-        console.error('ERROR, could not sign in', error);
-        Alert.alert(
-            'Error',
-            error.message,
-            [
-                { text: 'Ok'}
-            ]
-        );
+        return getErrorMessage(error);
     }
 };
 
 // used to check if user has confirmed sign up before signing them in
-const signInConfirm = async (username, nextStep) =>
+const signInConfirm = async (username, nextStep, password) =>
 {
     if (nextStep.signInStep === 'CONFIRM_SIGN_UP') {
-        handleResendSignUpCode(username);
-        router.push({
-            pathname: '/signUpConfirm',
-            params: {username}
-        });
-        Alert.alert(
-            'Verification',
-            'Check your email for your verification code',
-            [
-                { text: 'Ok' }
-            ]
-        );
+        try {
+            await handleResendSignUpCode(username);
+            router.push({
+                pathname: '/signUpConfirm',
+                params: {username, password}
+            });
+        } catch (error) {
+            throw error;
+        }
     }
 };
 
@@ -199,7 +139,7 @@ const handleAutoSignIn = async (navigate, username) =>
 {
     try {
         const signInOutput = await autoSignIn();
-        signInConfirm(navigate, username, signInOutput.isSignedIn, signInOutput.nextStep)
+        await signInConfirm(username, signInOutput.nextStep)
     } catch (error) {
         console.error('ERROR, could not auto sign in', error);
         navigate.reset({
@@ -292,8 +232,8 @@ const handleResetPassword = async (username) =>
         handleResetPasswordNextSteps(nextStep, username);
     } catch (error) {
         Alert.alert(
-            'Error',
-            error.name === 'UserNotFoundException' ? 'A user with this email does not exist' : error.name === 'InvalidParameterException' ? 'Please sign in with Google' : error.message,
+            'Error Reseting Password',
+            getErrorMessage(error),
             [
                 { text: 'Ok'}
             ]
@@ -336,8 +276,8 @@ const handleConfirmResetPassword = async (navigate, username, confirmationCode, 
     if (newPassword !== confNewPassword)
     {
         Alert.alert(
-            "Error",
-            "Passwords do not match",
+            "Password Error",
+            "Passwords do not match. Please try again.",
             [
                 { text: 'Ok'}
             ]
@@ -359,10 +299,9 @@ const handleConfirmResetPassword = async (navigate, username, confirmationCode, 
             routes: [{ name: '(auth)'}]
         });
     } catch (error) {
-        console.error(error);
         Alert.alert(
-            "Error",
-            error.message,
+            "Password Reset Error",
+            getErrorMessage(error),
             [
                 { text: 'Ok'}
             ]
@@ -592,6 +531,36 @@ const handleGetCurrentUser = async () =>
     } catch (error) {
         console.log('no user signed in');
         // this means there is currently no user signed in
+    }
+};
+
+// used to return a UI friendly string for an error message
+const getErrorMessage = (error) =>
+{
+    console.log(error);
+    switch(error?.name) {
+        case 'UserNotFoundException':
+            return 'A user with that email does not exist';
+        case 'NotAuthorizedException':
+            return 'The password you entered is incorrect, please try again';
+        case 'CodeMismatchException':
+            return 'The code you entered is incorrect, please try again';
+        case 'EmptyConfirmResetPasswordNewPassword':
+            return 'Please input a new password to continue';
+        case 'EmptySignInUsername':
+            return 'Please enter an email and password to sign in';
+        case 'EmptySignInPassword':
+            return 'Please enter a password to sign in';
+        case 'EmptyConfirmSignUpCode':
+            return 'Verification code must be entered to continue';
+        case 'LimitExceededException':
+            return 'Verification attempts exceeded, please try again later';
+        case 'InvalidPasswordException':
+            return 'Password must be at least 8 characters long';
+        case 'InvalidParameterException':
+            return 'N/A'
+        default:
+            return 'Something went wrong, please try again later';
     }
 };
 

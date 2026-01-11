@@ -1,7 +1,7 @@
 import Colors from '../constants/colors';
 import { useApp } from './context';
 import { Styles, HomeStyles } from '../constants/styles';
-import { View, Text, TouchableOpacity, ScrollView, Animated, ActivityIndicator, RefreshControl, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Animated, ActivityIndicator, RefreshControl, Alert, Pressable } from 'react-native';
 import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign } from '@expo/vector-icons';

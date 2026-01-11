@@ -21,6 +21,13 @@ const SignUp = () =>
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(undefined);
+    const [missingEmail, setMissingEmail] = useState(false);
+    const [missingPassword, setMissingPassword] = useState(false);
+    const [missingConfPassword, setMissingConfPassword] = useState(false);
+    const [missingFirstName, setMissingFirstName] = useState(false);
+    const [missingLastName, setMissingLastName] = useState(false);
+    const [missingPhoneNumber, setMissingPhoneNumber] = useState(false);
 
     return(
         <KeyboardAvoidingView
@@ -46,7 +53,7 @@ const SignUp = () =>
                                 onChangeText={setEmail}
                                 keyboardType="email-address"
                                 autoCapitalize="none"
-                                style={Styles.input}
+                                style={[Styles.input, missingEmail && {borderColor: 'red'}]}
                             />
                         </View>
                         <View style={Styles.inputWrapper}>
@@ -58,7 +65,7 @@ const SignUp = () =>
                                 onChangeText={setPassword}
                                 autoCapitalize="none"
                                 secureTextEntry={!showPassword}
-                                style={Styles.input}
+                                style={[Styles.input, missingPassword && {borderColor: 'red'}]}
                             />
                             <TouchableOpacity
                                 style={{padding: 10, position: 'absolute', right: 10}}
@@ -80,7 +87,7 @@ const SignUp = () =>
                                 onChangeText={setConfPassword}
                                 autoCapitalize="none"
                                 secureTextEntry={!showConfirmPassword}
-                                style={Styles.input}
+                                style={[Styles.input, missingConfPassword && {borderColor: 'red'}]}
                             />
                             <TouchableOpacity
                                 style={{padding: 10, position: 'absolute', right: 10}}
@@ -100,16 +107,24 @@ const SignUp = () =>
                             >
                                 { check ? <Entypo name='check' size={25}/> : null}
                             </TouchableOpacity>
-                            <Text style={Styles.text}>Are you a tow truck driver?</Text>
+                            <Text style={Styles.text}>Request a tow truck driver account?</Text>
                         </View>
+                        { errorMessage && step === 1 ? (
+                            <View style={Styles.errorContainer}>
+                                <Text style={[Styles.text, {color: 'red'}]}>{errorMessage}</Text>
+                            </View>
+                        ) : null}
                         <TouchableOpacity
                             onPress={() => {
+                                if (!email) setMissingEmail(true);
+                                else setMissingEmail(false);
+                                if (!password) setMissingPassword(true);
+                                else setMissingPassword(false);
+                                if (!confPassword) setMissingConfPassword(true);
+                                else setMissingConfPassword(false);
+                                
                                 if (password !== confPassword) {
-                                    Alert.alert(
-                                        "Error",
-                                        "Passwords do not match",
-                                        [{ text: 'OK' }]
-                                    );
+                                    setErrorMessage('Passwords do not match');
                                     return;
                                 }
                                 if (email && password && confPassword && !check) {
@@ -129,11 +144,7 @@ const SignUp = () =>
                                     );
                                 }
                                 else {
-                                    Alert.alert(
-                                        'Error',
-                                        'Required fields cannot be empty',
-                                        [{ text: 'OK' }]
-                                    )
+                                    setErrorMessage('All fields are required to continue');
                                 }
                             }}
                             style={Styles.actionButton}
@@ -151,7 +162,7 @@ const SignUp = () =>
                                 placeholderTextColor={Colors.text}
                                 value={firstName}
                                 onChangeText={setFirstName}
-                                style={Styles.input}
+                                style={[Styles.input, missingFirstName && {borderColor: 'red'}]}
                             />
                         </View>
                         <View style={Styles.inputWrapper}>
@@ -161,7 +172,7 @@ const SignUp = () =>
                                 placeholderTextColor={Colors.text}
                                 value={lastName}
                                 onChangeText={setLastName}
-                                style={Styles.input}
+                                style={[Styles.input, missingLastName && {borderColor: 'red'}]}
                             />
                         </View>
                         <View style={Styles.inputWrapper}>
@@ -173,30 +184,31 @@ const SignUp = () =>
                                 onChangeText={setPhoneNumber}
                                 autoCapitalize="none"
                                 keyboardType="phone-pad"
-                                style={Styles.input}
+                                style={[Styles.input, missingPhoneNumber && {borderColor: 'red'}]}
                             />
                         </View>
+                        { errorMessage && step === 2 ? (
+                            <View style={Styles.errorContainer}>
+                                <Text style={[Styles.text, {color: 'red'}]}>{errorMessage}</Text>
+                            </View>
+                        ) : null}
                         <TouchableOpacity
                             onPress={async () => {
                                 if (loading) return;
                                 setLoading(true);
+
+                                if (!firstName) setMissingFirstName(true);
+                                else setMissingFirstName(false);
+                                if (!lastName) setMissingLastName(true);
+                                else setMissingLastName(false);
+                                if (!phoneNumber) setMissingPhoneNumber(true);
+                                else setMissingPhoneNumber(false);
+                                
                                 if (!firstName || !lastName || !phoneNumber) {
-                                    Alert.alert(
-                                        'Error',
-                                        'Required fields cannot be empty',
-                                        [{ text: 'Ok' }]
-                                    );
+                                    setErrorMessage('All fields are required to continue');
                                 } else {
-                                    try {
-                                        await handleSignUp(firstName, lastName, email, password, phoneNumber);
-                                        await AsyncStorage.setItem('wantsToBeTowDriver', JSON.stringify(check));
-                                    } catch (error) {
-                                        Alert.alert(
-                                            'Error',
-                                            error.message,
-                                            [{ text: 'Ok' }]
-                                        );
-                                    }
+                                    setErrorMessage(await handleSignUp(firstName, lastName, email, password, phoneNumber));
+                                    await AsyncStorage.setItem('wantsToBeTowDriver', JSON.stringify(check));
                                 }
                                 setLoading(false);
                             }}

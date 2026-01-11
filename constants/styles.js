@@ -197,6 +197,14 @@ const Styles = StyleSheet.create({
         rowGap: 20,
         width: '100%',
     },
+    errorContainer: {
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        textAlign: 'center',
+        paddingLeft: 20,
+        paddingRight: 20
+    }
 });
 
 const AuthStyles = StyleSheet.create({
@@ -237,7 +245,7 @@ const AuthStyles = StyleSheet.create({
         backgroundColor: 'white',
         width: '100%',
         padding: 10,
-        borderRadius: 5,
+        borderRadius: 25,
         flexDirection: 'row',
         columnGap: 10,
         alignItems: 'center',

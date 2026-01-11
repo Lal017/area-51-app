@@ -1,12 +1,12 @@
-import { Text, TextInput, View, TouchableOpacity, Image } from 'react-native';
-import { useState } from 'react';
-import { handleSignIn } from '../../components/authComponents';
-import { Ionicons } from '@expo/vector-icons';
-import { Link } from 'expo-router';
+import Colors from '../../constants/colors';
 import { AuthStyles, Styles } from '../../constants/styles';
 import { GoogleSignInButton } from '../../components/authComponents';
-import Colors from '../../constants/colors';
 import { AuthBackground } from '../../components/components';
+import { handleSignIn } from '../../components/authComponents';
+import { Text, TextInput, View, TouchableOpacity, Image } from 'react-native';
+import { useState } from 'react';
+import { Ionicons } from '@expo/vector-icons';
+import { Link } from 'expo-router';
 import { useNavigation } from '@react-navigation/native';
 
 const SignIn = () =>
@@ -16,6 +16,9 @@ const SignIn = () =>
     const [password, setPassword] = useState();
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(undefined);
+    const [missingEmail, setMissingEmail] = useState(false);
+    const [missingPassword, setMissingPassword] = useState(false);
 
     return (
         <AuthBackground>
@@ -37,7 +40,7 @@ const SignIn = () =>
                             onChangeText={setEmail}
                             keyboardType='email-address'
                             autoCapitalize='none'
-                            style={Styles.input}
+                            style={[Styles.input, missingEmail && {borderColor: 'red'}]}
                         />
                     </View>
                     <View style={Styles.inputWrapper}>
@@ -49,7 +52,7 @@ const SignIn = () =>
                             onChangeText={setPassword}
                             autoCapitalize='none'
                             secureTextEntry={!showPassword}
-                            style={Styles.input}
+                            style={[Styles.input, missingPassword && {borderColor: 'red'}]}
                         />
                         <TouchableOpacity
                             style={{padding: 10, position: 'absolute', right: 10}}
@@ -63,11 +66,20 @@ const SignIn = () =>
                         </TouchableOpacity>
                     </View>
                 </View>
+                { errorMessage ? (
+                    <View style={Styles.errorContainer}>
+                        <Text style={[Styles.text, {color: 'red'}]}>{errorMessage}</Text>
+                    </View>
+                ) : null }
                 <TouchableOpacity
                     onPress={async () => {
                         if (loading) return;
                         setLoading(true);
-                        await handleSignIn(email, password);
+                        setErrorMessage(await handleSignIn(email, password));
+                        if (!email) setMissingEmail(true);
+                        else setMissingEmail(false);
+                        if (!password) setMissingPassword(true);
+                        else setMissingPassword(false);
                         setLoading(false);
                     }}
                     style={[Styles.actionButton, {backgroundColor: Colors.secondary}, loading && { opacity: 0.5 }]}

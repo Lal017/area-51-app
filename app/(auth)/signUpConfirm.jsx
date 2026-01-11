@@ -10,10 +10,13 @@ import { useNavigation } from '@react-navigation/native';
 
 const SignUpConfirm = () =>
 {
-    const { username } = useLocalSearchParams();
+    const { username, password } = useLocalSearchParams();
     const [confirmationCode, setCode] = useState();
     const [loading, setLoading] = useState(false);
     const [cooldown, setCooldown] = useState(30);
+    const [errorMessage, setErrorMessage] = useState(undefined);
+    const [resendMessage, setResendMessage] = useState(undefined);
+    const [missingConfirmationCode, setMissingConfirmationCode] = useState(false);
 
     const navigate = useNavigation();
 
@@ -48,14 +51,29 @@ const SignUpConfirm = () =>
                         onChangeText={setCode}
                         autoCapitalize='none'
                         keyboardType='number-pad'
-                        style={Styles.input}
+                        style={[Styles.input, missingConfirmationCode && {borderColor: 'red'}]}
                     />
                 </View>
+                { errorMessage ? (
+                    <View style={Styles.errorContainer}>
+                        <Text style={[Styles.text, {color: 'red'}]}>{errorMessage}</Text>
+                    </View>
+                ) : null}
+                { resendMessage ? (
+                    <View style={Styles.errorContainer}>
+                        <Text style={[Styles.text, {color: Colors.primary}]}>{resendMessage}</Text>
+                    </View>
+                ) : null}
                 <TouchableOpacity
                     onPress={async () => {
                         if (loading) return;
                         setLoading(true);
-                        await handleSignUpConfirm(navigate, username, confirmationCode);
+
+                        if (!confirmationCode) setMissingConfirmationCode(true);
+                        else setMissingConfirmationCode(false);
+                        setResendMessage(undefined);
+
+                        setErrorMessage(await handleSignUpConfirm(navigate, username, confirmationCode, password));
                         setLoading(false);
                     }}
                     style={[Styles.actionButton, loading && { opacity: 0.5 }]}
@@ -66,22 +84,18 @@ const SignUpConfirm = () =>
                 <TouchableOpacity
                     onPress={() => {
                         if (cooldown > 0) {
-                            Alert.alert(
-                                'Cooldown',
-                                `Please wait ${cooldown} seconds before requesting a new code.`,
-                                [{ text: 'OK' }]
-                            );
+                            setErrorMessage(`Please wait ${cooldown} seconds before requesting a new code`);
+                            setResendMessage(undefined);
                             return;
                         }
-                        handleResendSignUpCode(username);
-                        Alert.alert(
-                            'Code Resent',
-                            'Check your email for your verification code',
-                            [
-                                { text: "Ok" }
-                            ]
-                        );
-                        setCooldown(30);
+                        setErrorMessage(handleResendSignUpCode(username));
+
+                        if (!errorMessage) {
+                            setResendMessage('Code has been Resent!');
+                            setCooldown(30);
+                        } else {
+                            setResendMessage(undefined);
+                        }
                     }}
                 >
                     <Text style={Styles.actionText}>Resend Code</Text>

@@ -87,13 +87,12 @@ exports.handler = async (event) => {
         DestinationUser: destinationUser
       }));
     } catch (error) {
-      console.error(error);
-      throw new Error('ERROR:', error);
+      throw new Error(error);
     }
 
     return event;
   }
-  else if ((newUserProvider === 'cognito' && existingUserProvider === 'google')) throw new Error(`Account with this email already exists. Try signing in with ${existingUserProvider}`);
+  else if ((newUserProvider === 'cognito' && existingUserProvider === 'google')) throw new Error('Account with this email already exists. Try signing in with Google');
 
   return event;
 };
