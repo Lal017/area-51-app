@@ -3,7 +3,7 @@ ToDo:
     - handle notification when a truck driver accepts a request and an admin marks it as completed (using two phones for real time viewing)
     - header styling on different device
     - check out error that says email not verified when you try to reset the password from an email thats verified.
-    - change alerts to more UI friendly messages
+    - change alerts to more UI friendly messages inside of app
     - check UI message for when a user trys to sign in to a non verified account that has invoked too many resend verification code emails
 
 PotentialChanges:

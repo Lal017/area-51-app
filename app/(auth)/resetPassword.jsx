@@ -9,9 +9,10 @@ import { Link } from "expo-router";
 
 const ResetPassword = () =>
 {
-    const [username, setUsername] = useState();
+    const [email, setEmail] = useState();
     const [loading, setLoading] = useState(false);
-
+    const [errorMessage, setErrorMessage] = useState(undefined);
+    const [missingEmail, setMissingEmail] = useState(false);
     return (
         <AuthBackground>
             <View style={AuthStyles.imgContainer}>
@@ -30,18 +31,27 @@ const ResetPassword = () =>
                     <TextInput
                         placeholder="email"
                         placeholderTextColor={Colors.text}
-                        value={username}
-                        onChangeText={setUsername}
+                        value={email}
+                        onChangeText={setEmail}
                         keyboardType="email-address"
                         autoCapitalize="none"
-                        style={Styles.input}
+                        style={[Styles.input, missingEmail && {borderColor: 'red'}]}
                     />
                 </View>
+                { errorMessage ? (
+                    <View style={Styles.errorContainer}>
+                        <Text style={[Styles.text, {color: 'red'}]}>{errorMessage}</Text>
+                    </View>
+                ) : null}
                 <TouchableOpacity
                     onPress={async () => {
                         if (loading) return;
                         setLoading(true);
-                        await handleResetPassword(username);
+
+                        setErrorMessage(await handleResetPassword(email));
+                        if (!email) setMissingEmail(true);
+                        else setMissingEmail(false);
+                        
                         setLoading(false);
                     }}
                     style={[Styles.actionButton, loading && { opacity: 0.5 }]}

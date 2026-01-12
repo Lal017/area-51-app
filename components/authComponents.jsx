@@ -57,13 +57,7 @@ const handleSignUp = async (given_name, family_name, email, password, phoneNumbe
             });
         }
     } catch (error) {
-        Alert.alert(
-            'Account Not Created',
-            getErrorMessage(error)
-            [
-                { text: 'Ok'}
-            ]
-        )
+        return getErrorMessage(error)
     }
 };
 
@@ -231,65 +225,40 @@ const handleResetPassword = async (username) =>
         const { nextStep } = await resetPassword({ username });
         handleResetPasswordNextSteps(nextStep, username);
     } catch (error) {
-        Alert.alert(
-            'Error Reseting Password',
-            getErrorMessage(error),
-            [
-                { text: 'Ok'}
-            ]
-        );
+        return getErrorMessage(error);
     }
 };
 
 // used to evaluate what step of the process the user is on
 const handleResetPasswordNextSteps = (nextStep, username) =>
 {
-    switch (nextStep.resetPasswordStep) {
-        case 'CONFIRM_RESET_PASSWORD_WITH_CODE':
-            router.push({
-                pathname: '/resetPasswordConfirm',
-                params: {username}
-            });
-            Alert.alert(
-                "Verification",
-                "Check your email for your Verification code",
-                [
-                    { text: 'Ok'}
-                ]
-            );
-            break;
-        case 'DONE':
-            Alert.alert(
-                'Password Reset',
-                "Your password has been reset",
-                [
-                    { text: 'Ok'}
-                ]
-            );
-            break;
+    if (nextStep.resetPasswordStep === 'CONFIRM_RESET_PASSWORD_WITH_CODE') {
+        router.push({
+            pathname: '/resetPasswordConfirm',
+            params: {username}
+        });
+    }
+    if (nextStep.resetPasswordStep === 'DONE') {
+        Alert.alert(
+            'Password Reset',
+            "Your password has been reset",
+            [
+                { text: 'Ok'}
+            ]
+        );
     }
 };
 
 // used to confirm the password reset
 const handleConfirmResetPassword = async (navigate, username, confirmationCode, newPassword, confNewPassword) =>
 {
-    if (newPassword !== confNewPassword)
-    {
-        Alert.alert(
-            "Password Error",
-            "Passwords do not match. Please try again.",
-            [
-                { text: 'Ok'}
-            ]
-        );
-        return;
-    }
+    if (newPassword !== confNewPassword) return "Passwords do not match";
 
     try {
         await confirmResetPassword({username, confirmationCode, newPassword});
         Alert.alert(
             "Password Reset",
-            "Your password has been reset",
+            "Your password has succesfully been reset!",
             [
                 { text: 'Ok'}
             ]
@@ -299,13 +268,7 @@ const handleConfirmResetPassword = async (navigate, username, confirmationCode, 
             routes: [{ name: '(auth)'}]
         });
     } catch (error) {
-        Alert.alert(
-            "Password Reset Error",
-            getErrorMessage(error),
-            [
-                { text: 'Ok'}
-            ]
-        );
+        return getErrorMessage(error);
     }
 };
 
@@ -553,6 +516,10 @@ const getErrorMessage = (error) =>
             return 'Please enter a password to sign in';
         case 'EmptyConfirmSignUpCode':
             return 'Verification code must be entered to continue';
+        case 'EmptyResetPasswordUsername':
+            return 'Email is required to reset password';
+        case 'EmptyConfirmResetPasswordConfirmationCode':
+            return 'Verification code cannot be empty';
         case 'LimitExceededException':
             return 'Verification attempts exceeded, please try again later';
         case 'InvalidPasswordException':

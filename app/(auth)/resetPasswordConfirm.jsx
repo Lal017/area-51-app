@@ -18,6 +18,10 @@ const ResetPasswordConfirm = () =>
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(undefined);
+    const [missingConfCode, setMissingConfCode] = useState(false);
+    const [missingNewPassword, setMissingNewPassword] = useState(false);
+    const [missingConfNewPassword, setMissingConfNewPassword] = useState(false);
 
     return (
         <KeyboardAvoidingView behavior='height' style={{flex: 1}} >
@@ -43,7 +47,7 @@ const ResetPasswordConfirm = () =>
                                 onChangeText={setConfirmationCode}
                                 keyboardType='number-pad'
                                 autoCapitalize="none"
-                                style={Styles.input}
+                                style={[Styles.input, missingConfCode && {borderColor: 'red'}]}
                             />
                         </View>
                         <View style={Styles.inputWrapper}>
@@ -55,7 +59,7 @@ const ResetPasswordConfirm = () =>
                                 onChangeText={setNewPassword}
                                 secureTextEntry={!showPassword}
                                 autoCapitalize="none"
-                                style={Styles.input}
+                                style={[Styles.input, missingNewPassword && {borderColor: 'red'}]}
                             />
                             <TouchableOpacity
                                 style={{padding: 10, position: 'absolute', right: 10}}
@@ -77,7 +81,7 @@ const ResetPasswordConfirm = () =>
                                 onChangeText={setConfNewPassword}
                                 secureTextEntry={!showConfirmPassword}
                                 autoCapitalize="none"
-                                style={Styles.input}
+                                style={[Styles.input, missingConfNewPassword && {borderColor: 'red'}]}
                             />
                             <TouchableOpacity
                                 style={{padding: 10, position: 'absolute', right: 10}}
@@ -91,11 +95,24 @@ const ResetPasswordConfirm = () =>
                             </TouchableOpacity>
                         </View>
                     </View>
+                    { errorMessage ? (
+                        <View style={Styles.errorContainer}>
+                            <Text style={[Styles.text, {color: 'red'}]}>{errorMessage}</Text>
+                        </View>
+                    ) : null}
                     <TouchableOpacity
                         onPress={async () => {
                             if (loading) return;
                             setLoading(true);
-                            await handleConfirmResetPassword(navigate, username, confirmationCode, newPassword, confNewPassword);
+                            
+                            setErrorMessage(await handleConfirmResetPassword(navigate, username, confirmationCode, newPassword, confNewPassword));
+                            if (!confirmationCode) setMissingConfCode(true);
+                            else setMissingConfCode(false);
+                            if (!newPassword) setMissingNewPassword(true);
+                            else setMissingNewPassword(false);
+                            if (!confNewPassword) setMissingConfNewPassword(true);
+                            else setMissingConfNewPassword(false);
+
                             setLoading(false);
                         }}
                         style={[Styles.actionButton, loading && { opacity: 0.5 }]}
