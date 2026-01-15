@@ -42,7 +42,7 @@
         },
         "troplocksmithappPreSignup": {
           "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",
-          "s3Key": "amplify-builds/troplocksmithappPreSignup-4d42354b714f4b6e355a-build.zip"
+          "s3Key": "amplify-builds/troplocksmithappPreSignup-58744a47536a4b65372f-build.zip"
         },
         "area51GetRoute": {
           "deploymentBucketName": "amplify-troplocksmithapp-staging-cfc74-deployment",

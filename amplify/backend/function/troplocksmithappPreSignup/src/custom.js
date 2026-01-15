@@ -6,7 +6,8 @@ const {
   CognitoIdentityProviderClient,
   ListUsersCommand,
   AdminListGroupsForUserCommand,
-  AdminLinkProviderForUserCommand
+  AdminLinkProviderForUserCommand,
+  AdminUpdateUserAttributesCommand
 } = require("@aws-sdk/client-cognito-identity-provider");
 
 const client = new CognitoIdentityProviderClient({});
@@ -26,9 +27,6 @@ exports.handler = async (event) => {
     const subAttr = user.Attributes?.find(attr => attr.Name === 'sub')?.Value;
     return subAttr && subAttr !== incomingSub;
   })
-
-  console.log(existingUser);
-  console.log('users:', response?.Users);
 
   if (!existingUser) {
     console.log('exiting to continue sign up');
@@ -86,6 +84,16 @@ exports.handler = async (event) => {
         SourceUser: sourceUser,
         DestinationUser: destinationUser
       }));
+
+      await client.send(new AdminUpdateUserAttributesCommand({
+        UserPoolId: event.userPoolId,
+        Username: existingUser.Username,
+        UserAttributes: [
+          { Name: 'email', Value: event.request.userAttributes.email },
+          { Name: 'email_verified', Value: 'true' }
+        ]
+      }));
+      
     } catch (error) {
       throw new Error(error);
     }
