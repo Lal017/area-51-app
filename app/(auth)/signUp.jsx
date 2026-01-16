@@ -128,6 +128,7 @@ const SignUp = () =>
                                     return;
                                 }
                                 if (email && password && confPassword && !check) {
+                                    setErrorMessage(undefined);
                                     setStep(2);
                                 }
                                 else if (email && password && confPassword && check) {

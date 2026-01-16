@@ -272,40 +272,19 @@ const handleConfirmResetPassword = async (navigate, username, confirmationCode, 
     }
 };
 
-// used to update the users password while authenticated
+
+// --------------------------------------------------------
+//                    UPDATE PASSWORD
+// --------------------------------------------------------
+
 const handleUpdatePassword = async (navigate, oldPassword, newPassword, confNewPassword) =>
 {
-    if (newPassword !== confNewPassword)
-    {
-        Alert.alert(
-            "Error",
-            "Passwords do not match",
-            [
-                { text: 'Ok'}
-            ]
-        );
-        return;
-    }
-
+    if (newPassword !== confNewPassword) return 'Passwords do not match';
     try {
-        await updatePassword({oldPassword, newPassword});
-        Alert.alert(
-            "Password Reset",
-            "Your password has been reset",
-            [
-                { text: 'Ok'}
-            ]
-        );
+        await updatePassword({ oldPassword, newPassword });
         await handleRedirect(navigate);
     } catch (error) {
-        console.error('ERROR, could not update password', error);
-        Alert.alert(
-            "Error",
-            error.message,
-            [
-                { text: 'Ok'}
-            ]
-        );
+        return getErrorMessage(error);
     }
 };
 
@@ -525,7 +504,7 @@ const getErrorMessage = (error) =>
         case 'InvalidPasswordException':
             return 'Password must be at least 8 characters long';
         case 'InvalidParameterException':
-            return 'N/A'
+            return 'Email has not been verified, please sign in to continue with verification';
         default:
             return 'Something went wrong, please try again later';
     }

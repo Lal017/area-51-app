@@ -156,16 +156,19 @@
           "SMS"
         ],
         "passwordProtectionSettings": {
-          "passwordPolicyCharacters": [],
-          "passwordPolicyMinLength": 8
+          "passwordPolicyCharacters": [
+            "REQUIRES_LOWERCASE",
+            "REQUIRES_UPPERCASE",
+            "REQUIRES_NUMBERS"
+          ],
+          "passwordPolicyMinLength": "8"
         },
         "signupAttributes": [
           "EMAIL",
           "NAME"
         ],
         "socialProviders": [
-          "GOOGLE",
-          "AMAZON"
+          "GOOGLE"
         ],
         "usernameAttributes": [
           "EMAIL"

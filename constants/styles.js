@@ -536,6 +536,16 @@ const ProfileStyles = StyleSheet.create({
         width: '100%',
         alignItems: 'center'
     },
+    // resetPassword.jsx
+    requirementsContainer: {
+        justifyContent: 'flex-start',
+        paddingLeft: 20
+    },
+    requirementsWrapper: {
+        flexDirection: 'row',
+        columnGap: 5,
+        alignItems: 'center'
+    }
 });
 
 const AdminStyles = StyleSheet.create({
