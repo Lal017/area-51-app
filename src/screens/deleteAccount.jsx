@@ -20,36 +20,26 @@ const DeleteAccount = () =>
                 <>
                     <View style={Styles.block}>
                         <View style={Styles.infoContainer}>
-                            <Text style={[Styles.title, {textAlign: 'left', color: 'red', fontWeight: 'bold'}]}>CAUTION</Text>
+                            <Text style={[Styles.subTitle, {textAlign: 'left', color: 'red', fontWeight: 'bold'}]}>CAUTION</Text>
                             <Text style={Styles.text}>
                                 Deleting your account will remove all your data and settings.
-                                Are you sure you want to delete your account?
+                                Are you sure you want to continue?
                             </Text>
                             <Text style={[Styles.text, {fontWeight: 'bold'}]}>THIS ACTION CANNOT BE UNDONE</Text>
                         </View>
                     </View>
-                    <View style={ServiceStyles.buttonContainer}>
-                        <TouchableOpacity
-                        style={[ServiceStyles.directionButton, {opacity: 0}]}
-                        disabled={true}
-                        >
-                            <FontAwesome name='arrow-left' size={24} color='white'/>
-                            <Text style={Styles.actionText}>Back</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={[ServiceStyles.directionButton, {backgroundColor: 'red'}]}
-                            onPress={() => setStep(2)}
-                        >
-                            <Text style={Styles.actionText}>Continue</Text>
-                            <FontAwesome name='arrow-right' size={24} color='white'/>
-                        </TouchableOpacity>
-                    </View>
+                    <TouchableOpacity
+                        style={Styles.actionButton}
+                        onPress={() => setStep(2)}
+                    >
+                        <Text style={Styles.actionText}>Continue</Text>
+                    </TouchableOpacity>
                 </>
             ) : step === 2 && !loading ? (
                 <>
                     <View style={Styles.block}>
                         <View style={Styles.infoContainer}>
-                            <Text style={Styles.subTitle}>Confirm</Text>
+                            <Text style={[Styles.subTitle, {color: 'red', fontWeight: 'bold'}]}>CONFIRM DELETION</Text>
                             <Text style={Styles.text}>Enter your email to confirm account deletion</Text>
                         </View>
                         <View style={Styles.inputWrapper}>
