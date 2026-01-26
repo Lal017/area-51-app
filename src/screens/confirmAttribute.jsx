@@ -44,7 +44,7 @@ const ConfirmAttribute = () =>
                     await handleConfirmUserAttribute(navigate, 'email', code, email, setEmail);
                     setLoading(false);
                 }}
-                style={[Styles.actionButton, loading && {opacity: 0.5}]}
+                style={[Styles.actionButton, loading && {opacity: 0.5}, {backgroundColor: Colors.primary}]}
                 disabled={loading}
             >
                 <Text style={Styles.actionText}>Confirm</Text>

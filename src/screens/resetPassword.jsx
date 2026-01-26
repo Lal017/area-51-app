@@ -21,6 +21,10 @@ const ResetPassword = () =>
     const [ hasUppercase, setHasUppercase ] = useState(false);
     const [ hasLowercase, setHasLowercase ] = useState(false);
     const [ hasNumber, setHasNumber ] = useState(false);
+    const [ errorMessage, setErrorMessage ] = useState(undefined);
+    const [ missingOldPass, setMissingOldPass ] = useState(false);
+    const [ missingNewPass, setMissingNewPass ] = useState(false);
+    const [ missingConfNewPass, setMissingConfNewPass ] = useState(false);
 
     useEffect(() => {
         const checkPassword = () =>
@@ -59,7 +63,7 @@ const ResetPassword = () =>
                                 onChangeText={setOldPassword}
                                 secureTextEntry={!showOldPassword}
                                 autoCapitalize='none'
-                                style={Styles.input}
+                                style={[Styles.input, missingOldPass && {borderColor: 'red'}]}
                             />
                             <TouchableOpacity
                                 style={{padding: 10, position: 'absolute', right: 10}}
@@ -84,7 +88,7 @@ const ResetPassword = () =>
                                 onChangeText={setNewPassword}
                                 secureTextEntry={!showPassword}
                                 autoCapitalize='none'
-                                style={Styles.input}
+                                style={[Styles.input, missingOldPass && {borderColor: 'red'}]}
                             />
                             <TouchableOpacity
                                 style={{padding: 10, position: 'absolute', right: 10}}
@@ -127,7 +131,7 @@ const ResetPassword = () =>
                                 onChangeText={setConfNewPassword}
                                 secureTextEntry={!showConfirmPassword}
                                 autoCapitalize='none'
-                                style={Styles.input}
+                                style={[Styles.input, missingConfNewPass && {borderColor: 'red'}]}
                             />
                             <TouchableOpacity
                                 style={{padding: 10, position: 'absolute', right: 10}}
@@ -142,17 +146,30 @@ const ResetPassword = () =>
                         </View>
                     </View>
                 </View>
-                <TouchableOpacity
-                    onPress={async () => {
-                        if (loading) return;
-                        setLoading(true);
-                        await handleUpdatePassword(navigate, oldPassword, newPassword, confNewPassword);
-                        setLoading(false);
-                    }}
-                    style={[Styles.actionButton, loading && { opacity: 0.5 }, {backgroundColor: Colors.secondary}]}
-                    disabled={loading}>
-                    <Text style={Styles.actionText}>Change</Text>
-                </TouchableOpacity>
+                <View style={[Styles.block, {alignItems: 'center', paddingTop: 0}]}>
+                    { errorMessage ? (
+                        <View style={Styles.errorContainer}>
+                            <Text style={[Styles.text, {color: 'red'}]}>{errorMessage}</Text>
+                        </View>
+                    ) : null }
+                    <TouchableOpacity
+                        onPress={async () => {
+                            if (loading) return;
+                            setLoading(true);
+                            if (!oldPassword) setMissingOldPass(true);
+                            else setMissingOldPass(false);
+                            if (!newPassword) setMissingNewPass(true);
+                            else setMissingNewPass(false);
+                            if (!confNewPassword) setMissingConfNewPass(true);
+                            else setMissingConfNewPass(false);
+                            setErrorMessage(await handleUpdatePassword(navigate, oldPassword, newPassword, confNewPassword));
+                            setLoading(false);
+                        }}
+                        style={[Styles.actionButton, loading && { opacity: 0.5 }, {backgroundColor: Colors.primary}]}
+                        disabled={loading}>
+                        <Text style={Styles.actionText}>Reset</Text>
+                    </TouchableOpacity>
+                </View>
             </Background>
         </KeyboardAvoidingView>
     );

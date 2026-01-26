@@ -32,10 +32,7 @@ import {
 const handleSignUp = async (given_name, family_name, email, password, phoneNumber) =>
 {
     const phoneNumberCheck = phoneNumber.replace(/\D/g, '');
-    if (phoneNumberCheck.length !== 10)
-    {
-        return "The number you entered is not a valid phone number";
-    }
+    if (phoneNumberCheck.length !== 10) return 'The number you entered is not a valid phone number';
     try {
         const { nextStep } = await signUp({
             username: email,
@@ -238,15 +235,6 @@ const handleResetPasswordNextSteps = (nextStep, username) =>
             params: {username}
         });
     }
-    if (nextStep.resetPasswordStep === 'DONE') {
-        Alert.alert(
-            'Password Reset',
-            "Your password has been reset",
-            [
-                { text: 'Ok'}
-            ]
-        );
-    }
 };
 
 // used to confirm the password reset
@@ -257,11 +245,8 @@ const handleConfirmResetPassword = async (navigate, username, confirmationCode, 
     try {
         await confirmResetPassword({username, confirmationCode, newPassword});
         Alert.alert(
-            "Password Reset",
-            "Your password has succesfully been reset!",
-            [
-                { text: 'Ok'}
-            ]
+            'Password Reset',
+            'Your password has succesfully been reset!'
         );
         navigate.reset({
             index: 0,
@@ -282,6 +267,10 @@ const handleUpdatePassword = async (navigate, oldPassword, newPassword, confNewP
     if (newPassword !== confNewPassword) return 'Passwords do not match';
     try {
         await updatePassword({ oldPassword, newPassword });
+        Alert.alert(
+            'Password Updated',
+            'Your password has been updated!'
+        );
         await handleRedirect(navigate);
     } catch (error) {
         return getErrorMessage(error);
@@ -298,14 +287,7 @@ const handleDeleteAccount = async (client, userId, identityId, email, inputEmail
 {
     if (email.toLowerCase() !== inputEmail.toLowerCase())
     {
-        Alert.alert(
-            "Error",
-            "Email is incorrect",
-            [
-                { text: 'Ok'}
-            ]
-        );
-        return;
+        return 'Email is incorrect';
     }
 
     try {
@@ -325,13 +307,7 @@ const handleDeleteAccount = async (client, userId, identityId, email, inputEmail
         );
     } catch (error) {
         console.error('ERROR, could not delete user', error);
-        Alert.alert(
-            "Error",
-            error.message,
-            [
-                { text: 'Ok'}
-            ]
-        );
+        return getErrorMessage(error);
     }
 };
 
@@ -343,18 +319,12 @@ const handleDeleteAccount = async (client, userId, identityId, email, inputEmail
 // used to update a users attributes
 const handleUpdateAttributes = async (navigate, isMissingAttr, updatedEmail, updatedFirstName, updatedLastName, updatedPhone, setFirstName, setLastName, setPhoneNumber) =>
 {
+    if (!updatedFirstName) return 'First name cannot be empty';
+    if (!updatedLastName) return 'Last name cannot be empty';
+    if (!updatedEmail) return 'Email cannot be empty';
+    if (!updatedPhone) return 'Phone number cannot be empty';
     const phoneNumberCheck = updatedPhone.replace(/\D/g, '');
-    if (phoneNumberCheck.length !== 10)
-    {
-        Alert.alert(
-            "Error",
-            "Invalid phone number",
-            [
-                { text: "Ok" }
-            ]
-        );
-        return;
-    }
+    if (phoneNumberCheck.length !== 10) return 'The number you entered is not a valid phone number';
     try {
         const attributes = await updateUserAttributes({
             userAttributes: {
@@ -367,39 +337,26 @@ const handleUpdateAttributes = async (navigate, isMissingAttr, updatedEmail, upd
         setFirstName(updatedFirstName);
         setLastName(updatedLastName);
         setPhoneNumber(`+1${phoneNumberCheck}`);
-        handleUpdateAttributesNextSteps(navigate, isMissingAttr, attributes.email.nextStep.updateAttributeStep, updatedEmail);
+        await handleUpdateAttributesNextSteps(navigate, isMissingAttr, attributes.email.nextStep.updateAttributeStep, updatedEmail);
     } catch (error) {
-        Alert.alert(
-            'Error',
-            'Could not update attributes',
-            [
-                { text: 'Ok'}
-            ]
-        );
+        return getErrorMessage(error);
     };
 };
 
 // used to determine if an attribute that needs to be confirmed was updated
-const handleUpdateAttributesNextSteps = (navigate, isMissingAttr, nextStep, email) =>
+const handleUpdateAttributesNextSteps = async (navigate, isMissingAttr, nextStep, email) =>
 {
     if (nextStep === 'DONE') {
         Alert.alert(
-            "Updated",
+            "Account Attributes",
             "Account attributes have been updated",
             [
                 { text: 'Ok'}
             ]
         );
-        if (!isMissingAttr) handleRedirect(navigate);
+        if (!isMissingAttr) await handleRedirect(navigate);
     }
     else if (nextStep === 'CONFIRM_ATTRIBUTE_WITH_CODE') {
-        Alert.alert(
-            'Verification',
-            'Check your email for your verification code',
-            [
-                { text: 'Ok'}
-            ]
-        );
         router.push({
             pathname: '/confirmAttribute',
             params: { email: email }
@@ -502,7 +459,7 @@ const getErrorMessage = (error) =>
         case 'LimitExceededException':
             return 'Verification attempts exceeded, please try again later';
         case 'InvalidPasswordException':
-            return 'Password must be at least 8 characters long';
+            return 'Password does not meet the requirements, please try again';
         case 'InvalidParameterException':
             return 'Email has not been verified, please sign in to continue with verification';
         default:
