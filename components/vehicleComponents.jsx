@@ -71,15 +71,9 @@ const handleCreateVehicle = async (client, vehicle, userId, setVehicles) =>
         const newVehicle = await client.graphql({ query: listVehicles });
         await setVehicles(newVehicle.data.listVehicles.items);
 
-        Alert.alert(
-            'Vehicle Created',
-            'Vehicle has been added to your account',
-            [
-                { text: 'OK' }
-            ]
-        );
     } catch (error) {
-        console.error('ERROR, could not create vehicle:', error);
+        console.log(error.errors[0].message);
+        return 'Something went wrong, please try again later';
     }
 };
 
@@ -106,15 +100,9 @@ const handleUpdateVehicle = async (client, vehicle, vehicleId, userId, setVehicl
         const newVehicles = await client.graphql({ query: listVehicles });
         setVehicles(newVehicles.data.listVehicles.items);
 
-        Alert.alert(
-            'Vehicle Updated',
-            'Vehicle information has been updated',
-            [
-                { text: 'OK' }
-            ]
-        );
     } catch (error) {
-        console.error('ERROR, could not update vehicle:', error);
+        console.error(error.errors[0].message);
+        return 'Something went wrong, please try again later';
     }
 };
 
@@ -190,15 +178,9 @@ const handleDeleteVehicle = async (client, vehicleId, setVehicles) =>
         const newVehicles = await client.graphql({ query: listVehicles });
         setVehicles(newVehicles.data.listVehicles.items);
 
-        Alert.alert(
-            'Vehicle Deleted',
-            'Vehicle has been deleted from your account',
-            [
-                { text: 'OK' }
-            ]
-        );
     } catch (error) {
-        console.error('ERROR, could not delete vehicle:', error);
+        console.error(error.errors[0].message);
+        return 'Something went wrong, please try again later';
     }
 };
 
@@ -229,6 +211,7 @@ const handleDeleteAllVehicles = async (client, userId) =>
         console.error('ERROR, could not delete all vehicles', error);
     }
 };
+
 
 export {
     handleListVehicles,

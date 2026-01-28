@@ -8,6 +8,7 @@ import { AntDesign, FontAwesome, Ionicons, MaterialCommunityIcons } from '@expo/
 import { TextInput, View, Text, TouchableOpacity, Alert, KeyboardAvoidingView } from 'react-native';
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { RFValue } from 'react-native-responsive-fontsize';
 
 const Vehicle = () =>
 {   
@@ -24,15 +25,46 @@ const Vehicle = () =>
     const [ plate, setPlate ] = useState(vehicle?.plate ?? undefined);
     const [ vin, setVin ] = useState(vehicle?.vin ?? undefined);
     const [ loading, setLoading ] = useState(false);
+    const [ missingYear, setMissingYear ] = useState(false);
+    const [ missingMake, setMissingMake ] = useState(false);
+    const [ missingModel, setMissingModel ] = useState(false);
+    const [ missingColor, setMissingColor ] = useState(false);
+    const [ errorMessage, setErrorMessage ] = useState(undefined);
+
+    const isMissingInput = () =>
+    {
+        let isMissing = false;
+        if (!color) {
+            setMissingColor(true);
+            setErrorMessage('Missing color');
+            isMissing = true;
+        } else setMissingColor(false);
+        if (!model) {
+            setMissingModel(true);
+            setErrorMessage('Missing model');
+            isMissing = true;
+        } else setMissingModel(false);
+        if (!make) {
+            setMissingMake(true);
+            setErrorMessage('Missing make');
+            isMissing = true;
+        } else setMissingMake(false);
+        if (!year) {
+            setMissingYear(true);
+            setErrorMessage('Missing year');
+            isMissing = true;
+        } else setMissingYear(false);
+        return isMissing;
+    };
 
     return (
         <KeyboardAvoidingView behavior='height' style={{flex: 1}}>
             <Background>
                 <View style={Styles.block}>
                     <View style={Styles.infoContainer}>
-                        <Text style={Styles.subTitle}>Vehicle Information</Text>
-                        </View>
-                    <View style={Styles.inputContainer}>
+                        <Text style={Styles.text}>Vehicle Information</Text>
+                    </View>
+                    <View style={[Styles.inputContainer, {rowGap: 5}]}>
                         <View style={Styles.inputWrapper}>
                             <Ionicons name='calendar' size={20} style={Styles.icon} />
                             <TextInput
@@ -41,7 +73,7 @@ const Vehicle = () =>
                                 value={year}
                                 onChangeText={setYear}
                                 keyboardType='number-pad'
-                                style={Styles.input}
+                                style={[Styles.input, missingYear && {borderColor: 'red'}]}
                             />
                         </View>
                         <View style={Styles.inputWrapper}>
@@ -51,7 +83,7 @@ const Vehicle = () =>
                                 placeholderTextColor={Colors.text}
                                 value={make}
                                 onChangeText={setMake}
-                                style={Styles.input}
+                                style={[Styles.input, missingMake && {borderColor: 'red'}]}
                             />
                         </View>
                         <View style={Styles.inputWrapper}>
@@ -61,7 +93,7 @@ const Vehicle = () =>
                                 placeholderTextColor={Colors.text}
                                 value={model}
                                 onChangeText={setModel}
-                                style={Styles.input}
+                                style={[Styles.input, missingModel && {borderColor: 'red'}]}
                             />
                         </View>
                         <View style={Styles.inputWrapper}>
@@ -71,12 +103,14 @@ const Vehicle = () =>
                                 placeholderTextColor={Colors.text}
                                 value={color}
                                 onChangeText={setColor}
-                                style={Styles.input}
+                                style={[Styles.input, missingColor && {borderColor: 'red'}]}
                             />
                         </View>
-                        <View style={Styles.infoContainer}>
-                            <Text style={Styles.subTitle}>Optional</Text>
-                        </View>
+                    </View>
+                    <View style={Styles.infoContainer}>
+                        <Text style={Styles.text}>Optional</Text>
+                    </View>
+                    <View style={[Styles.inputContainer, {rowGap: 5}]}>
                         <View style={Styles.inputWrapper}>
                             <FontAwesome name='id-card' size={20} style={Styles.icon} />
                             <TextInput
@@ -98,23 +132,42 @@ const Vehicle = () =>
                             />
                         </View>
                     </View>
+                    <View style={[Styles.infoContainer, {flexDirection: 'row', columnGap: 5}]}>
+                        <Ionicons name='information-circle' size={18} color='white'/>
+                        <Text style={[Styles.text, {fontSize: RFValue(10)}]}>Adding your license plate or VIN number helps us identify your vehicle</Text>
+                    </View>
                 </View>
-                <View style={[Styles.block, {alignItems: 'center'}]}>
+                { errorMessage ? (
+                    <View style={Styles.errorContainer}>
+                        <Text style={[Styles.text, {color: 'red'}]}>{errorMessage}</Text>
+                    </View>
+                ) : null}
+                <View style={[Styles.block, {alignItems: 'center', rowGap: 10}]}>
                     <TouchableOpacity
                         style={[Styles.actionButton, {backgroundColor: Colors.primary}, loading && { opacity: 0.5 }]}
                         disabled={loading}
                         onPress={async () => {
                             if (loading) return;
                             setLoading(true);
+                            let getError;
+
+                            if (isMissingInput()) { setLoading(false); return; }
                             if (vehicle) {
-                                await handleUpdateVehicle(client, {year, make, model, color, plate, vin}, vehicle.id, userId, setVehicles);
+                                getError = await handleUpdateVehicle(client, {year, make, model, color, plate, vin}, vehicle.id, userId, setVehicles);
                             } else {
-                                await handleCreateVehicle(client, {year, make, model, color, plate, vin}, userId, setVehicles);
+                                getError = await handleCreateVehicle(client, {year, make, model, color, plate, vin}, userId, setVehicles);
                             }
-                            navigate.reset({
-                                index: 0,
-                                routes: [{ name: '(profile)' }]
-                            });
+                            if (!getError) {
+                                navigate.reset({
+                                    index: 1,
+                                    routes: [
+                                        { name: 'index' },
+                                        { name: 'vehicleList' }
+                                    ]
+                                });
+                            } else {
+                                setErrorMessage(getError);
+                            }
                             setLoading(false);
                         }}
                     >
@@ -133,8 +186,11 @@ const Vehicle = () =>
                                         onPress: async () => {
                                             await handleDeleteVehicle(client, vehicle.id, setVehicles);
                                             navigate.reset({
-                                                index: 0,
-                                                routes: [{ name: '(profile)' }]
+                                                index: 1,
+                                                routes: [
+                                                    { name: 'index' },
+                                                    { name: 'vehicleList' }
+                                                ]
                                             });
                                     }}
                                 ]
