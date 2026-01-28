@@ -95,11 +95,11 @@ const Styles = StyleSheet.create({
     },
     input: {
         color: Colors.text,
-        height: 55,
+        height: 45,
         paddingLeft: 50,
         width: '100%',
-        borderWidth: 1,
-        borderRadius: 5,
+        borderBottomWidth: 1,
+        borderRadius: 0,
         borderColor: Colors.text,
     },
     inputAlt: {
@@ -156,6 +156,13 @@ const Styles = StyleSheet.create({
         fontFamily: 'Roboto-Light',
         textAlign: 'left',
         color: Colors.text,
+    },
+    tabHeader: {
+        fontSize: RFValue(15),
+        fontFamily: 'Roboto-Light',
+        textAlign: 'left',
+        color: Colors.text,
+        opacity: 0.5
     },
     tabText: {
         fontSize: RFValue(15),
@@ -478,22 +485,6 @@ const ServiceStyles = StyleSheet.create({
 
 const ProfileStyles = StyleSheet.create({
     // index.jsx
-    socialContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-evenly',
-        width: '100%',
-        alignItems: 'center',
-        paddingTop: 25,
-        paddingBottom: 25
-    },
-    socialBox: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: '#1877f2',
-        width: 175,
-        padding: 25,
-        borderRadius: 25,
-    },
     name: {
         fontSize: RFValue(30),
         fontFamily: 'Roboto-Bold',
@@ -545,6 +536,14 @@ const ProfileStyles = StyleSheet.create({
         flexDirection: 'row',
         columnGap: 5,
         alignItems: 'center'
+    },
+    // contact.jsx
+    floatingBlock: {
+        width: '95%',
+        paddingTop: 20,
+        paddingBottom: 20,
+        padding: 10,
+        borderRadius: 15
     }
 });
 

@@ -2,12 +2,11 @@ import Colors from "../../../constants/colors";
 import { ProfileStyles, Styles } from "../../../constants/styles";
 import { Background, Tab } from "../../../components/components";
 import { useApp } from "../../../components/context";
-import { View, Text, TouchableOpacity, Linking } from "react-native";
+import { View, Text } from "react-native";
 import Animated, { Easing , useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from "react-native-reanimated";
 import { AntDesign, FontAwesome6, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useEffect } from "react";
 import { router } from "expo-router";
-import { LinearGradient } from "expo-linear-gradient";
 
 // Profile page
 const Profile = () =>
@@ -107,26 +106,6 @@ const Profile = () =>
                 leftIcon={<MaterialIcons name="contact-support" size={30} style={Styles.icon} />}
                 rightIcon={<AntDesign name="right" size={25} style={Styles.rightIcon} />}
             />
-            <View style={ProfileStyles.socialContainer}>
-                <TouchableOpacity
-                    style={[ProfileStyles.socialBox, {backgroundColor: '#1877f2'}]}
-                    onPress={() => Linking.openURL('https://www.facebook.com/Area51MotorsportsLv/')}
-                >
-                    <AntDesign name="facebook-square" size={30} color='white' />
-                </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={() => Linking.openURL('https://www.instagram.com/area51motorsports/')}
-                >
-                    <LinearGradient
-                        colors={['#feda75', '#fa7e1e', '#d62976', '#962fbf', '#4f5bd5']}
-                        style={ProfileStyles.socialBox}
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 1, y: 1 }}
-                    >
-                        <AntDesign name="instagram" size={30} color='white' />
-                    </LinearGradient>
-                </TouchableOpacity>
-            </View>
         </Background>
     );
 };

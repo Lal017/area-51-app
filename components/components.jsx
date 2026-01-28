@@ -171,6 +171,23 @@ const Select = ({text, selected, action, leftIcon, rightIcon}) =>
     )
 };
 
+// reusable tab component to display information
+const InfoTab = ({header, text, action, icon}) =>
+{
+    return(
+        <TouchableOpacity
+            style={Styles.tabWrapper}
+            onPress={action}
+        >
+            {icon}
+            <View>
+                <Text style={Styles.tabHeader}>{header}</Text>
+                <Text style={Styles.tabText}>{text}</Text>
+            </View>
+        </TouchableOpacity>
+    )
+};
+
 // reusable tab component for Binary Selections
 const BinarySelect = ({text, selected, action, rightIcon}) =>
 {
@@ -297,6 +314,7 @@ export {
     CalendarHeader,
     Tab,
     Select,
+    InfoTab,
     BinarySelect,
     formatNumber,
     formatDate,

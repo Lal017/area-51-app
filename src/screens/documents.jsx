@@ -2,10 +2,11 @@ import { Background, Loading } from '../../components/components';
 import { handleListInvoices, handleListEstimates, handleGetUrl } from '../../components/adminComponents';
 import { useApp } from '../../components/context';
 import { AdminStyles, Styles } from '../../constants/styles';
-import { TouchableOpacity, Text } from 'react-native';
+import { TouchableOpacity, Text, View } from 'react-native';
 import { useEffect, useState } from 'react';
 import { openURL } from 'expo-linking';
 import { useLocalSearchParams } from 'expo-router';
+import LottieView from 'lottie-react-native';
 
 const Documents = () =>
 {
@@ -46,8 +47,16 @@ const Documents = () =>
                     })}
                 </Background>
             ) : documents && documents?.length === 0 ? (
-                <Background style={{justifyContent: 'center'}}>
-                    <Text style={Styles.subTitle}>{isInvoice ? 'No Invoices' : 'No Estimates'}</Text>
+                <Background>
+                    <View style={[Styles.block, {alignItems: 'center'}]}>
+                        <LottieView
+                            source={require('../../assets/animations/no-files.json')}
+                            loop
+                            autoPlay
+                            style={{width: 300, height: 300}}
+                        />
+                        <Text style={Styles.title}>{isInvoice ? 'No Invoices' : 'No Estimates'}</Text>
+                    </View>
                 </Background>
             ) : (
                 <Loading />
