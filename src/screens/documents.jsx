@@ -51,9 +51,10 @@ const Documents = () =>
                     <View style={[Styles.block, {alignItems: 'center'}]}>
                         <LottieView
                             source={require('../../assets/animations/no-files.json')}
-                            loop
-                            autoPlay
                             style={{width: 300, height: 300}}
+                            speed={0.75}
+                            autoPlay={true}
+                            loop={false}
                         />
                         <Text style={Styles.title}>{isInvoice ? 'No Invoices' : 'No Estimates'}</Text>
                     </View>

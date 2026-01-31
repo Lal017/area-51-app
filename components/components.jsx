@@ -86,7 +86,7 @@ const AuthBackground = ({children}) =>
 };
 
 // wraps the page
-const Background = ({children, style, refreshing, onRefresh}) =>
+const Background = ({children, style, refreshing, onRefresh, scrollRef}) =>
 {
     return (
         <LinearGradient
@@ -100,6 +100,7 @@ const Background = ({children, style, refreshing, onRefresh}) =>
             <ScrollView
                 contentContainerStyle={[Styles.page, style]}
                 keyboardShouldPersistTaps='handled'
+                ref={scrollRef}
                 refreshControl={
                     onRefresh ? (
                         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -161,7 +162,7 @@ const Select = ({text, selected, action, leftIcon, rightIcon}) =>
 {
     return(
         <TouchableOpacity
-            style={[Styles.tabWrapper, selected ? {backgroundColor: Colors.secondary} : null]}
+            style={[Styles.tabWrapper, {borderBottomWidth: 1, borderColor: 'white'}, selected ? {backgroundColor: Colors.secondary} : null]}
             onPress={action}
         >
             {leftIcon}

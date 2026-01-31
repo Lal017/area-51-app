@@ -204,6 +204,14 @@ const Styles = StyleSheet.create({
         rowGap: 20,
         width: '100%',
     },
+    floatingBlock: {
+        width: '90%',
+        padding: 10,
+        paddingTop: 25,
+        paddingBottom: 25,
+        borderRadius: 15,
+        backgroundColor: Colors.backgroundAccent
+    },
     errorContainer: {
         width: '100%',
         justifyContent: 'center',
@@ -462,17 +470,17 @@ const ServiceStyles = StyleSheet.create({
     mapContainer: {
         elevation: 10,
         backgroundColor: 'transparent',
-        width: '100%',
-        height: 450
+        width: '90%',
+        height: 300,
+        borderRadius: 15,
+        overflow: 'hidden'
     },
     mapContainerAlt: {
         elevation: 10,
         backgroundColor: 'transparent',
-        borderWidth: 4,
-        borderColor: Colors.secondary,
-        width: 325,
-        height: 325,
-        borderRadius: 500,
+        width: '90%',
+        height: 250,
+        borderRadius: 15,
         overflow: 'hidden'
     },
     // towStatus.jsx
@@ -536,14 +544,6 @@ const ProfileStyles = StyleSheet.create({
         flexDirection: 'row',
         columnGap: 5,
         alignItems: 'center'
-    },
-    // contact.jsx
-    floatingBlock: {
-        width: '95%',
-        paddingTop: 20,
-        paddingBottom: 20,
-        padding: 10,
-        borderRadius: 15
     }
 });
 

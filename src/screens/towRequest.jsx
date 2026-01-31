@@ -1,15 +1,20 @@
 import Colors from "../../constants/colors";
+import ProgressBar from 'react-native-progress/Bar';
+import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
+import { Dimensions } from "react-native";
 import { ServiceStyles, Styles } from "../../constants/styles"
 import { useApp } from '../../components/context';
 import { handleSendAdminNotif, handleSendDriversNotif } from "../../components/notifComponents";
 import { Background, BinarySelect, Select } from "../../components/components";
 import { handleCreateTowRequest } from "../../components/towComponents";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Entypo, FontAwesome, FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { View, Text, TouchableOpacity, TextInput, ActivityIndicator, Alert } from "react-native";
+import { View, Text, TouchableOpacity, TextInput, ActivityIndicator, Alert, KeyboardAvoidingView } from "react-native";
 import { requestForegroundPermissionsAsync, getCurrentPositionAsync } from 'expo-location';
-import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import { router } from "expo-router";
+import { RFValue } from "react-native-responsive-fontsize";
+
+const screenWidth = Dimensions.get('window').width;
 
 const TowRequest = () =>
 {
@@ -25,6 +30,8 @@ const TowRequest = () =>
     const [ marker, setMarker ] = useState();
     const [ step, setStep ] = useState(1);
     const [ loading, setLoading ] = useState(false);
+
+    const scrollRef = useRef(null);
 
     useEffect(() => {
         const getLocation = async () => {
@@ -44,36 +51,73 @@ const TowRequest = () =>
         getLocation();
     }, [])
 
+    useEffect(() => {
+        scrollRef.current?.scrollTo({
+            y: 0,
+            animated: false
+        });
+    }, [step]);
+
     return (
-        <Background>
-            <View style={ServiceStyles.progressBar}>
-                <Ionicons name="information-circle" size={35} color={step > 1 ? Colors.secondary : Colors.backDropAccent} />
-                <View style={[ServiceStyles.progressBarLine, {backgroundColor: step > 1 ? Colors.secondary : Colors.backDropAccent}]} />
-                <Ionicons name="car-sport" size={30} color={step > 2 ? Colors.secondary : Colors.backDropAccent}/>
-                <View style={[ServiceStyles.progressBarLine, {backgroundColor: step > 2 ? Colors.secondary : Colors.backDropAccent}]} />
-                <FontAwesome5 name="map-marker-alt" size={30} color={step > 3 ? Colors.secondary : Colors.backDropAccent} />
-                <View style={[ServiceStyles.progressBarLine, {backgroundColor: step > 3 ? Colors.secondary : Colors.backDropAccent}]} />
-                <Entypo name="clipboard" size={30} color={step > 4 ? Colors.secondary : Colors.backDropAccent}/>
-            </View>
-            { step === 1 ? (
-                <>
-                <View style={Styles.block}>
-                    <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                        <Text style={Styles.subTitle}>Pricing</Text>
-                        <Text style={Styles.text}>
-                            All tow requests start at a base price of <Text style={{fontWeight: 'bold'}}>$100</Text>. Extra fees may apply depending on the situation. You will recieve a phone call from one of our drivers if extra fees are going to be applied.
-                        </Text>
-                    </View>
-                    <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                        <Text style={Styles.subTitle}>Where will you be towed?</Text>
-                        <Text style={Styles.text}>3120 W Sirius Ave STE 103,{'\n'}Las Vegas, NV 89102</Text>
-                    </View>
-                    <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                        <Text style={Styles.subTitle}>NOTE</Text>
-                        <Text style={Styles.text}>Once a driver has accepted your request, you will <Text style={{color: 'red', fontWeight: 'bold'}}>NOT</Text> be able to cancel</Text>
-                    </View>
+        <KeyboardAvoidingView
+            behavior='padding'
+            style={{flex: 1}}
+        >
+            <Background scrollRef={scrollRef}>
+                <View style={ServiceStyles.progressBar}>
+                    <Ionicons name="information-circle" size={35} color={Colors.secondary} />
+                    <ProgressBar
+                        width={screenWidth * 0.09}
+                        unfilledColor='white'
+                        borderWidth={0}
+                        progress={step === 1 ? 0 : 1}
+                        color={Colors.secondary}
+                    />
+                    <Ionicons name="car-sport" size={30} color={step >= 2 ? Colors.secondary : Colors.backDropAccent}/>
+                    <ProgressBar
+                        width={screenWidth * 0.09}
+                        unfilledColor='white'
+                        borderWidth={0}
+                        progress={step <= 2 ? 0 : 1}
+                        color={Colors.secondary}
+                    />
+                    <FontAwesome5 name="map-marker-alt" size={30} color={step >= 3 ? Colors.secondary : Colors.backDropAccent} />
+                    <ProgressBar
+                        width={screenWidth * 0.09}
+                        unfilledColor='white'
+                        borderWidth={0}
+                        progress={step <= 3 ? 0 : 1}
+                        color={Colors.secondary}
+                    />
+                    <FontAwesome5 name='pencil-alt' size={30} color={step >= 4 ? Colors.secondary: Colors.backDropAccent}/>
+                    <ProgressBar
+                        width={screenWidth * 0.09}
+                        unfilledColor='white'
+                        borderWidth={0}
+                        progress={step <= 4 ? 0 : 1}
+                        color={Colors.secondary}
+                    />
+                    <Entypo name="clipboard" size={30} color={step >= 5 ? Colors.secondary : Colors.backDropAccent}/>
                 </View>
-                <View style={{flex: 1, justifyContent: 'flex-end', alignItems: 'center', paddingBottom: 25, width: '100%'}}>
+                { step === 1 ? (
+                    <>
+                    <View style={[Styles.block, {alignItems: 'center'}]}>
+                        <View style={[Styles.floatingBlock, {rowGap: 15}]}>
+                            <View style={[Styles.infoContainer]}>
+                                <Text style={Styles.headerTitle}>Pricing</Text>
+                                <Text style={Styles.text}>
+                                    All tow requests start at a base price of <Text style={{fontWeight: 'bold'}}>$100</Text>. Extra fees may apply depending on the situation. You will recieve a phone call from one of our drivers if extra fees are going to be applied.
+                                </Text>
+                                <Text style={Styles.text}>Your vehicle will be towed to 4420 Arville St Unit #9, Las Vegas, NV 89102</Text>
+                            </View>
+                            <View style={[Styles.infoContainer, {flexDirection: 'row', columnGap: 5, justifyContent: 'flex-start'}]}>
+                                <Ionicons name='information-circle' size={18} color='white'/>
+                                <Text style={[Styles.text, {fontSize: RFValue(10)}]}>
+                                    Once a driver has accepted your request, you will <Text style={{color: 'red', fontWeight: 'bold'}}>NOT</Text> be able to cancel
+                                </Text>
+                            </View>
+                        </View>
+                    </View>
                     <View style={ServiceStyles.buttonContainer}>
                         <TouchableOpacity
                         style={[ServiceStyles.directionButton, {opacity: 0}]}
@@ -90,215 +134,225 @@ const TowRequest = () =>
                             <FontAwesome name='arrow-right' size={24} color='white' />
                         </TouchableOpacity>
                     </View>
-                </View>
-                </>
-            ) : step === 2 ? (
-                <>
-                    <View style={{flex: 1, width: '100%'}}>
-                        <View style={Styles.block}>
-                            <View style={Styles.infoContainer}>
-                                <Text style={Styles.subTitle}>Vehicle Selection</Text>
-                                <Text style={Styles.text}>Select the vehicle to be towed</Text>
-                            </View>
-                        </View>
-                        <View style={ServiceStyles.selectionContainer}>
-                            {vehicles?.map((vehicle, index) => (
-                                <Select
-                                    key={index}
-                                    text={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
-                                    selected={vehicle === selectedVehicle ? true : false}
-                                    action={() => setSelectedVehicle(vehicle)}
-                                    leftIcon={<Ionicons name="car-sport" size={30} style={Styles.icon} color={selectedVehicle === vehicle ? Colors.backDrop : null}/>}
-                                    rightIcon={<FontAwesome name={selectedVehicle === vehicle ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedVehicle === vehicle ? Colors.backDrop : null}/>}
-                                />
-                            ))}
-                        </View>
-                    </View>
-                    <View style={{flex: 1, justifyContent: 'flex-end', alignItems: 'center', paddingBottom: 25, width: '100%'}}>
-                        <View style={ServiceStyles.buttonContainer}>
-                            <TouchableOpacity
-                                style={ServiceStyles.directionButton}
-                                onPress={() => setStep(1)}
-                            >
-                                <FontAwesome name='arrow-left' size={24} color='white' />
-                                <Text style={Styles.actionText}>Back</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={ServiceStyles.directionButton}
-                                onPress={() => { if (selectedVehicle) setStep(3) }}    
-                            >
-                                <Text style={Styles.actionText}>Continue</Text>
-                                <FontAwesome name='arrow-right' size={24} color='white' />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </>
-            ) : step === 3 ? (
-                <>
-                    { location ? (
-                        <>
+                    </>
+                ) : step === 2 ? (
+                    <>
+                        <View style={{flex: 1, width: '100%'}}>
                             <View style={Styles.block}>
-                                <View style={Styles.infoContainer}>
-                                    <Text style={Styles.subTitle}>Location</Text>
-                                    <Text style={Styles.text}>Drag and drop the pin to the pickup location</Text>
+                                <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                                    <Text style={Styles.headerTitle}>Vehicle Selection</Text>
+                                    <Text style={Styles.tabHeader}>Select the vehicle to be towed</Text>
                                 </View>
                             </View>
-                            <View style={ServiceStyles.mapContainer}>
-                                <MapView
-                                    provider={PROVIDER_GOOGLE}
-                                    style={{width: '100%', height: '100%'}}
-                                    showsUserLocation={true}
-                                    zoomControlEnabled={true}
-                                    userInterfaceStyle='dark'
-                                    region={{
-                                        latitude: location?.latitude,
-                                        longitude: location?.longitude,
-                                        latitudeDelta: 0.01,
-                                        longitudeDelta: 0.01
-                                    }}
-                                >
-                                    <Marker
-                                        title="Pickup Location"
-                                        description="This is where the tow truck will be sent"
-                                        coordinate={marker}
-                                        draggable={true}
-                                        onDragEnd={(e) => setMarker(e.nativeEvent.coordinate)}
+                            <View style={ServiceStyles.selectionContainer}>
+                                {vehicles?.map((vehicle, index) => (
+                                    <Select
+                                        key={index}
+                                        text={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
+                                        selected={vehicle === selectedVehicle ? true : false}
+                                        action={() => {vehicle === selectedVehicle ? setSelectedVehicle(undefined) : setSelectedVehicle(vehicle)}}
+                                        rightIcon={<Ionicons name="car-sport" size={30} style={Styles.rightIcon} color={selectedVehicle === vehicle ? Colors.backDrop : null}/>}
+                                        leftIcon={<FontAwesome name={selectedVehicle === vehicle ? "circle" : "circle-o"} size={25} style={Styles.icon} color={selectedVehicle === vehicle ? Colors.backDrop : null}/>}
                                     />
-                                </MapView>
+                                ))}
                             </View>
-                            <View style={{flex: 1, justifyContent: 'flex-end', alignItems: 'center', paddingBottom: 25, width: '100%'}}>
+                            <View style={Styles.block}>
                                 <View style={ServiceStyles.buttonContainer}>
                                     <TouchableOpacity
                                         style={ServiceStyles.directionButton}
-                                        onPress={() => setStep(2)}
+                                        onPress={() => setStep(1)}
                                     >
                                         <FontAwesome name='arrow-left' size={24} color='white' />
                                         <Text style={Styles.actionText}>Back</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         style={ServiceStyles.directionButton}
-                                        onPress={() => { if (selectedVehicle) setStep(4) }}    
+                                        onPress={() => { if (selectedVehicle) setStep(3) }}
                                     >
                                         <Text style={Styles.actionText}>Continue</Text>
                                         <FontAwesome name='arrow-right' size={24} color='white' />
                                     </TouchableOpacity>
                                 </View>
                             </View>
-                        </>
-                    ) : (
-                        <>
-                            <ActivityIndicator size="large" color="#0000ff" />
-                            <Text style={Styles.text}>Loading your location...</Text>
-                        </>
-                    )}
-                </>
-            ) : step === 4 ? (
+                        </View>
+                    </>
+                ) : step === 3 ? (
+                    <>
+                        { location ? (
+                            <>
+                                <View style={Styles.block}>
+                                    <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                                        <Text style={Styles.headerTitle}>Verify your Location</Text>
+                                        <Text style={Styles.tabHeader}>drag and drop the pin to the pickup location</Text>
+                                    </View>
+                                </View>
+                                <View style={ServiceStyles.mapContainer}>
+                                    <MapView
+                                        provider={PROVIDER_GOOGLE}
+                                        style={{width: '100%', height: '100%'}}
+                                        showsUserLocation={true}
+                                        zoomControlEnabled={true}
+                                        userInterfaceStyle='dark'
+                                        region={{
+                                            latitude: location?.latitude,
+                                            longitude: location?.longitude,
+                                            latitudeDelta: 0.01,
+                                            longitudeDelta: 0.01
+                                        }}
+                                    >
+                                        <Marker
+                                            title="Pickup Location"
+                                            description="This is where the tow truck will be sent"
+                                            coordinate={marker}
+                                            draggable={true}
+                                            onDragEnd={(e) => setMarker(e.nativeEvent.coordinate)}
+                                        />
+                                    </MapView>
+                                </View>
+                                <View style={Styles.block}>
+                                    <View style={ServiceStyles.buttonContainer}>
+                                        <TouchableOpacity
+                                            style={ServiceStyles.directionButton}
+                                            onPress={() => setStep(2)}
+                                        >
+                                            <FontAwesome name='arrow-left' size={24} color='white' />
+                                            <Text style={Styles.actionText}>Back</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                            style={ServiceStyles.directionButton}
+                                            onPress={() => { if (selectedVehicle) setStep(4) }}
+                                        >
+                                            <Text style={Styles.actionText}>Continue</Text>
+                                            <FontAwesome name='arrow-right' size={24} color='white' />
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                            </>
+                        ) : (
+                            <View style={[Styles.block, {alignItems: 'center'}]}>
+                                <ActivityIndicator size="large" color="#0000ff" />
+                                <Text style={Styles.text}>Loading your location...</Text>
+                            </View>
+                        )}
+                    </>
+                ) : step === 4 ? (
+                    <View style={[Styles.block, {alignItems: 'center'}]}>
+                        <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                            <Text style={Styles.headerTitle}>Towing Information</Text>
+                            <Text style={Styles.tabHeader}>Please answer the following questions</Text>
+                        </View>
+                        <View style={[Styles.floatingBlock, {rowGap: 15}]}>
+                            <View style={Styles.infoContainer}>
+                                <Text style={Styles.text}>Does the vehicle start?</Text>
+                                <View style={Styles.binaryTabContainer}>
+                                    <BinarySelect
+                                        text='Yes'
+                                        selected={canRun !== undefined ? canRun : null}
+                                        action={() => { canRun ? setCanRun(undefined) : setCanRun(true)}}
+                                        rightIcon={<Entypo name="thumbs-up" size={30} color='white'/>}
+                                    />
+                                    <BinarySelect
+                                        text='No'
+                                        selected={canRun !== undefined ? !canRun : null }
+                                        action={() => { canRun === false ? setCanRun(undefined) : setCanRun(false)}}
+                                        rightIcon={<Entypo name="thumbs-down" size={30} color='white'/>}
+                                    />
+                                </View>
+                            </View>
+                            <View style={Styles.infoContainer}>
+                                <Text style={Styles.text}>Does the vehicle roll?</Text>
+                                <View style={Styles.binaryTabContainer}>
+                                    <BinarySelect
+                                        text='Yes'
+                                        selected={canRoll !== undefined ? canRoll : null}
+                                        action={() => { canRoll ? setCanRoll(undefined) : setCanRoll(true)}}
+                                        rightIcon={<Entypo name="thumbs-up" size={30} color='white'/>}
+                                    />
+                                    <BinarySelect
+                                        text='No'
+                                        selected={canRoll !== undefined ? !canRoll : null }
+                                        action={() => { canRoll === false ? setCanRoll(undefined) : setCanRoll(false)}}
+                                        rightIcon={<Entypo name="thumbs-down" size={30} color='white'/>}
+                                    />
+                                </View>
+                            </View>
+                            <View style={Styles.infoContainer}>
+                                <Text style={Styles.text}>Are the vehicle keys included?</Text>
+                                <View style={Styles.binaryTabContainer}>
+                                    <BinarySelect
+                                        text='Yes'
+                                        selected={keyIncluded !== undefined ? keyIncluded : null}
+                                        action={() => { keyIncluded ? setKeyIncluded(undefined) : setKeyIncluded(true)}}
+                                        rightIcon={<Entypo name="thumbs-up" size={30} color='white'/>}
+                                    />
+                                    <BinarySelect
+                                        text='No'
+                                        selected={keyIncluded !== undefined ? !keyIncluded : null }
+                                        action={() => { keyIncluded === false ? setKeyIncluded(undefined) : setKeyIncluded(false)}}
+                                        rightIcon={<Entypo name="thumbs-down" size={30} color='white'/>}
+                                    />
+                                </View>
+                            </View>
+                            <View style={Styles.infoContainer}>
+                                <Text style={Styles.text}>Is there anything obstructing the vehicle?</Text>
+                                <View style={Styles.binaryTabContainer}>
+                                    <BinarySelect
+                                        text='Yes'
+                                        selected={isObstructed !== undefined ? isObstructed : null}
+                                        action={() => { isObstructed ? setIsObstructed(undefined) : setIsObstructed(true)}}
+                                        rightIcon={<Entypo name="thumbs-up" size={30} color='white'/>}
+                                    />
+                                    <BinarySelect
+                                        text='No'
+                                        selected={isObstructed !== undefined ? !isObstructed : null }
+                                        action={() => { isObstructed === false ? setIsObstructed(undefined) : setIsObstructed(false)}}
+                                        rightIcon={<Entypo name="thumbs-down" size={30} color='white'/>}
+                                    />
+                                </View>
+                            </View>
+                        </View>
+                        <View style={[Styles.floatingBlock, {rowGap: 10}]}>
+                            <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                                <Text style={Styles.headerTitle}>Description <Text style={Styles.text}>(optional)</Text></Text>
+                                <Text style={Styles.tabHeader}>Please, describe why the vehicle needs to be towed</Text>
+                            </View>
+                            <View style={Styles.inputWrapper}>
+                                <MaterialIcons name="notes" size={30} style={Styles.iconAlt} />
+                                <TextInput
+                                    placeholder="e.g. Flat tire, dead battery, etc."
+                                    placeholderTextColor={Colors.subText}
+                                    style={Styles.inputAlt}
+                                    multiline={true}
+                                    value={notes}
+                                    onChangeText={setNotes}
+                                />
+                            </View>
+                        </View>
+                        <View style={ServiceStyles.buttonContainer}>
+                            <TouchableOpacity
+                                style={ServiceStyles.directionButton}
+                                onPress={() => setStep(3)}
+                            >
+                                <FontAwesome name='arrow-left' size={24} color='white' />
+                                <Text style={Styles.actionText}>Back</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={ServiceStyles.directionButton}
+                                onPress={() => { if (canRun !== undefined && canRoll !== undefined && keyIncluded !== undefined && isObstructed !== undefined) setStep(5) }}
+                            >
+                                <Text style={Styles.actionText}>Continue</Text>
+                                <FontAwesome name='arrow-right' size={24} color='white' />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                ) : step === 5 ? (
                 <>
                     <View style={Styles.block}>
                         <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                            <Text style={Styles.subTitle}>Description (optional)</Text>
-                            <Text style={Styles.text}>Please, describe why the vehicle needs to be towed</Text>
-                        </View>
-                        <View style={Styles.inputWrapper}>
-                            <MaterialIcons name="notes" size={30} style={Styles.iconAlt} />
-                            <TextInput
-                                placeholder="e.g. Flat tire, dead battery, etc."
-                                placeholderTextColor={Colors.text}
-                                style={Styles.inputAlt}
-                                multiline={true}
-                                value={notes}
-                                onChangeText={setNotes}
-                            />
-                        </View>
-                        <View style={Styles.infoContainer}>
-                            <Text style={Styles.text}>Does the vehicle start?</Text>
-                            <View style={Styles.binaryTabContainer}>
-                                <BinarySelect
-                                    text='Yes'
-                                    selected={canRun !== undefined ? canRun : null}
-                                    action={() => setCanRun(true)}
-                                    rightIcon={<Entypo name="thumbs-up" size={30} color='white'/>}
-                                />
-                                <BinarySelect
-                                    text='No'
-                                    selected={canRun !== undefined ? !canRun : null }
-                                    action={() => setCanRun(false)}
-                                    rightIcon={<Entypo name="thumbs-down" size={30} color='white'/>}
-                                />
-                            </View>
-                        </View>
-                        <View style={Styles.infoContainer}>
-                            <Text style={Styles.text}>Does the vehicle roll?</Text>
-                            <View style={Styles.binaryTabContainer}>
-                                <BinarySelect
-                                    text='Yes'
-                                    selected={canRoll !== undefined ? canRoll : null}
-                                    action={() => setCanRoll(true)}
-                                    rightIcon={<Entypo name="thumbs-up" size={30} color='white'/>}
-                                />
-                                <BinarySelect
-                                    text='No'
-                                    selected={canRoll !== undefined ? !canRoll : null }
-                                    action={() => setCanRoll(false)}
-                                    rightIcon={<Entypo name="thumbs-down" size={30} color='white'/>}
-                                />
-                            </View>
-                        </View>
-                        <View style={Styles.infoContainer}>
-                            <Text style={Styles.text}>Are the vehicle keys included?</Text>
-                            <View style={Styles.binaryTabContainer}>
-                                <BinarySelect
-                                    text='Yes'
-                                    selected={keyIncluded !== undefined ? keyIncluded : null}
-                                    action={() => setKeyIncluded(true)}
-                                    rightIcon={<Entypo name="thumbs-up" size={30} color='white'/>}
-                                />
-                                <BinarySelect
-                                    text='No'
-                                    selected={keyIncluded !== undefined ? !keyIncluded : null }
-                                    action={() => setKeyIncluded(false)}
-                                    rightIcon={<Entypo name="thumbs-down" size={30} color='white'/>}
-                                />
-                            </View>
-                        </View>
-                        <View style={Styles.infoContainer}>
-                            <Text style={Styles.text}>Is there anything obstructing the vehicle?</Text>
-                            <View style={Styles.binaryTabContainer}>
-                                <BinarySelect
-                                    text='Yes'
-                                    selected={isObstructed !== undefined ? isObstructed : null}
-                                    action={() => setIsObstructed(true)}
-                                    rightIcon={<Entypo name="thumbs-up" size={30} color='white'/>}
-                                />
-                                <BinarySelect
-                                    text='No'
-                                    selected={isObstructed !== undefined ? !isObstructed : null }
-                                    action={() => setIsObstructed(false)}
-                                    rightIcon={<Entypo name="thumbs-down" size={30} color='white'/>}
-                                />
-                            </View>
+                            <Text style={Styles.headerTitle}>Towing Information</Text>
+                            <Text style={Styles.tabHeader}>Review the information and confirm it is correct</Text>
                         </View>
                     </View>
-                    <View style={ServiceStyles.buttonContainer}>
-                        <TouchableOpacity
-                            style={ServiceStyles.directionButton}
-                            onPress={() => setStep(3)}
-                        >
-                            <FontAwesome name='arrow-left' size={24} color='white' />
-                            <Text style={Styles.actionText}>Back</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={ServiceStyles.directionButton}
-                            onPress={() => { if (canRun !== undefined && canRoll !== undefined && keyIncluded !== undefined && isObstructed !== undefined) setStep(5) }}
-                        >
-                            <Text style={Styles.actionText}>Continue</Text>
-                            <FontAwesome name='arrow-right' size={24} color='white' />
-                        </TouchableOpacity>
-                    </View>
-                </>
-            ) : step === 5 ? (
-                <>
-                <View style={[Styles.block, {alignItems: 'center'}]}>
                     <View style={ServiceStyles.mapContainerAlt}>
                         { marker ? (
                             <MapView
@@ -310,6 +364,8 @@ const TowRequest = () =>
                                     latitudeDelta: 0.01,
                                     longitudeDelta: 0.01
                                 }}
+                                toolbarEnabled={false}
+                                showsUserLocation={false}
                                 liteMode={true}
                                 userInterfaceStyle='dark'
                             >
@@ -323,70 +379,78 @@ const TowRequest = () =>
                             <ActivityIndicator size='large' color='#0000ff' />
                         ) }
                     </View>
-                </View>
-                <View style={[Styles.block]}>
-                    <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                        <Text style={Styles.subTitle}>Vehicle</Text>
-                        <Text style={Styles.text}>{selectedVehicle.year} {selectedVehicle.make} {selectedVehicle.model}</Text>
-                    </View>
-                    <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                        <Text style={[Styles.subTitle]}>Tow Details</Text>
-                        <Text style={Styles.text}> - Car runs?                               {canRun ? 'Yes' : 'No' }</Text>
-                        <Text style={Styles.text}> - Car rolls?                               {canRoll ? 'Yes' : 'No' }</Text>
-                        <Text style={Styles.text}> - Keys included?                     {keyIncluded ? 'Yes' : 'No' }</Text>
-                        <Text style={Styles.text}> - Vehicle is obstructed?         {isObstructed ? 'Yes' : 'No' }</Text>
-                    </View>
-                    { notes ? (
-                        <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                            <Text style={Styles.subTitle}>Notes</Text>
-                            <Text style={Styles.text}>{notes}</Text>
+                    <View style={[Styles.block, {alignItems: 'center'}]}>
+                        <View style={[Styles.floatingBlock, {rowGap: 10}]}>
+                            <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                                <Text style={Styles.headerTitle}>{selectedVehicle.year} {selectedVehicle.make} {selectedVehicle.model}</Text>
+                            </View>
+                            <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                                <View style={{width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <Text style={Styles.text}> - Car runs?</Text><Text style={Styles.text}>{canRun ? 'Yes' : 'No' }</Text>
+                                </View>
+                                <View style={{width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <Text style={Styles.text}> - Car rolls?</Text><Text style={Styles.text}>{canRoll ? 'Yes' : 'No' }</Text>
+                                </View>
+                                <View style={{width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <Text style={Styles.text}> - Keys included?</Text><Text style={Styles.text}>{keyIncluded ? 'Yes' : 'No' }</Text>
+                                </View>
+                                <View style={{width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <Text style={Styles.text}> - Vehicle is obstructed?</Text><Text style={Styles.text}>{isObstructed ? 'Yes' : 'No' }</Text>
+                                </View>
+                            </View>
+                            { notes ? (
+                                <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                                    <Text style={Styles.headerTitle}>Customer Note</Text>
+                                    <Text style={Styles.text}>{notes}</Text>
+                                </View>
+                            ) : null}
                         </View>
-                    ) : null}
-                    <View style={ServiceStyles.buttonContainer}>
-                        <TouchableOpacity
-                            style={ServiceStyles.directionButton}
-                            onPress={() => setStep(4)}
-                        >
-                            <FontAwesome name='arrow-left' size={24} color='white' />
-                            <Text style={Styles.actionText}>Back</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={[ServiceStyles.directionButton, loading && { opacity: 0.5 }, {backgroundColor: Colors.primary}]}
-                            disabled={loading}
-                            onPress={async () => {
-                                if (loading) return;
-                                if (towRequest) {
-                                    Alert.alert(
-                                        'Tow Request',
-                                        'You already have an active tow request',
-                                        [
-                                            {
-                                                text: 'OK',
-                                                onPress: () => router.replace('towStatus')
-                                            }
-                                        ]
-                                    )
-                                    return;
-                                }
-                                setLoading(true);
-                                const data = {
-                                    notes: notes,
-                                    vehicleId: selectedVehicle.id,
-                                    userId: userId
-                                };
-                                await handleSendAdminNotif('Towing Request', 'A customer is requesting a tow', data);
-                                await handleSendDriversNotif('Towing Request', 'A customer is requesting a tow', data);
-                                await handleCreateTowRequest(client, userId, selectedVehicle.id, marker, { notes, canRun, canRoll, keyIncluded, isObstructed }, setTowRequest);
-                                setLoading(false);
-                            }}
-                        >
-                            <Text style={Styles.actionText}>Submit</Text>
-                        </TouchableOpacity>
+                        <View style={ServiceStyles.buttonContainer}>
+                            <TouchableOpacity
+                                style={ServiceStyles.directionButton}
+                                onPress={() => setStep(4)}
+                            >
+                                <FontAwesome name='arrow-left' size={24} color='white' />
+                                <Text style={Styles.actionText}>Back</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[ServiceStyles.directionButton, loading && { opacity: 0.5 }, {backgroundColor: Colors.primary}]}
+                                disabled={loading}
+                                onPress={async () => {
+                                    if (loading) return;
+                                    if (towRequest) {
+                                        Alert.alert(
+                                            'Tow Request',
+                                            'You already have an active tow request',
+                                            [
+                                                {
+                                                    text: 'OK',
+                                                    onPress: () => router.replace('towStatus')
+                                                }
+                                            ]
+                                        )
+                                        return;
+                                    }
+                                    setLoading(true);
+                                    const data = {
+                                        notes: notes,
+                                        vehicleId: selectedVehicle.id,
+                                        userId: userId
+                                    };
+                                    await handleSendAdminNotif('Towing Request', 'A customer is requesting a tow', data);
+                                    await handleSendDriversNotif('Towing Request', 'A customer is requesting a tow', data);
+                                    await handleCreateTowRequest(client, userId, selectedVehicle.id, marker, { notes, canRun, canRoll, keyIncluded, isObstructed }, setTowRequest);
+                                    setLoading(false);
+                                }}
+                            >
+                                <Text style={Styles.actionText}>Submit</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
-                </View>
-                </>
-            ) : null }
-        </Background>
+                    </>
+                ) : null }
+            </Background>
+        </KeyboardAvoidingView>
     )
 };
 

@@ -1,8 +1,7 @@
 import { Linking, Text, View } from 'react-native';
-import { ProfileStyles, Styles } from '../../../constants/styles';
+import { Styles } from '../../../constants/styles';
 import { Background, InfoTab } from '../../../components/components';
 import { Entypo } from '@expo/vector-icons';
-import Colors from '../../../constants/colors';
 import { LinearGradient } from 'expo-linear-gradient';
 import { RFValue } from 'react-native-responsive-fontsize';
 
@@ -14,7 +13,7 @@ const Contact = () =>
                 <View style={Styles.infoContainer}>
                     <Text style={Styles.tabHeader}>You can get into contact with us using any of the links below!</Text>
                 </View>
-                <View style={[ProfileStyles.floatingBlock, {backgroundColor: Colors.backgroundAccent}]}>
+                <View style={Styles.floatingBlock}>
                     <View style={Styles.infoContainer}>
                         <Text style={[Styles.text, {fontSize: RFValue(17)}]}>Customer Support</Text>
                     </View>
@@ -37,7 +36,7 @@ const Contact = () =>
                         action={() => Linking.openURL('https://www.google.com/maps/search/?api=1&query=Area+51+Motorsports+Las+Vegas+NV')}
                     />
                 </View>
-                <View style={[ProfileStyles.floatingBlock, {backgroundColor: Colors.backgroundAccent}]}>
+                <View style={Styles.floatingBlock}>
                     <View style={Styles.infoContainer}>
                         <Text style={[Styles.text, {fontSize: RFValue(17)}]}>Social Media</Text>
                     </View>

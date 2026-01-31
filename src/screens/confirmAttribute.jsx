@@ -29,7 +29,7 @@ const ConfirmAttribute = () =>
                     <MaterialIcons name='numbers' size={20} style={Styles.icon} />
                     <TextInput
                         placeholder="code"
-                        placeholderTextColor={Colors.text}
+                        placeholderTextColor={Colors.subText}
                         value={code}
                         onChangeText={setCode}
                         keyboardType='number-pad'

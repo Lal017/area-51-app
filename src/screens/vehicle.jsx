@@ -69,7 +69,7 @@ const Vehicle = () =>
                             <Ionicons name='calendar' size={20} style={Styles.icon} />
                             <TextInput
                                 placeholder='Year'
-                                placeholderTextColor={Colors.text}
+                                placeholderTextColor={Colors.subText}
                                 value={year}
                                 onChangeText={setYear}
                                 keyboardType='number-pad'
@@ -80,7 +80,7 @@ const Vehicle = () =>
                             <MaterialCommunityIcons name='car-convertible' size={20} style={Styles.icon} />
                             <TextInput
                                 placeholder='Make'
-                                placeholderTextColor={Colors.text}
+                                placeholderTextColor={Colors.subText}
                                 value={make}
                                 onChangeText={setMake}
                                 style={[Styles.input, missingMake && {borderColor: 'red'}]}
@@ -90,7 +90,7 @@ const Vehicle = () =>
                             <AntDesign name='tags' size={20} style={Styles.icon} />
                             <TextInput
                                 placeholder='Model'
-                                placeholderTextColor={Colors.text}
+                                placeholderTextColor={Colors.subText}
                                 value={model}
                                 onChangeText={setModel}
                                 style={[Styles.input, missingModel && {borderColor: 'red'}]}
@@ -100,7 +100,7 @@ const Vehicle = () =>
                             <Ionicons name='color-palette' size={20} style={Styles.icon} />
                             <TextInput
                                 placeholder='Color'
-                                placeholderTextColor={Colors.text}
+                                placeholderTextColor={Colors.subText}
                                 value={color}
                                 onChangeText={setColor}
                                 style={[Styles.input, missingColor && {borderColor: 'red'}]}
@@ -115,7 +115,7 @@ const Vehicle = () =>
                             <FontAwesome name='id-card' size={20} style={Styles.icon} />
                             <TextInput
                                 placeholder='License Plate #'
-                                placeholderTextColor={Colors.text}
+                                placeholderTextColor={Colors.subText}
                                 value={plate}
                                 onChangeText={setPlate}
                                 style={Styles.input}
@@ -125,7 +125,7 @@ const Vehicle = () =>
                             <FontAwesome name='barcode' size={20} style={Styles.icon} />
                             <TextInput
                                 placeholder='VIN #'
-                                placeholderTextColor={Colors.text}
+                                placeholderTextColor={Colors.subText}
                                 value={vin}
                                 onChangeText={setVin}
                                 style={Styles.input}

@@ -46,7 +46,7 @@ const DeleteAccount = () =>
                             <Ionicons name='mail' size={20} style={Styles.icon} />
                             <TextInput
                                 placeholder='email'
-                                placeholderTextColor={Colors.text}
+                                placeholderTextColor={Colors.subText}
                                 value={inputEmail}
                                 onChangeText={setInputEmail}
                                 autoCapitalize='none'

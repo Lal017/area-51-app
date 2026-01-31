@@ -7,6 +7,7 @@ import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import { useEffect } from 'react';
 import { router } from 'expo-router';
 import { useNavigation } from '@react-navigation/native';
+import LottieView from 'lottie-react-native';
 
 const MyAppointments = () => {
     const { client, userId, appointments, setAppointments } = useApp();
@@ -97,8 +98,17 @@ const MyAppointments = () => {
                     ))}
                 </Background>
             ) : (
-                <Background style={{justifyContent: 'center'}}>
-                    <Text style={Styles.subTitle}>No Appointments</Text>
+                <Background>
+                    <View style={[Styles.block, {alignItems: 'center'}]}>
+                        <LottieView
+                            source={require('../../../assets/animations/calendarError.json')}
+                            autoPlay={true}
+                            loop={false}
+                            style={{width: 200, height: 200}}
+                            speed={0.5}
+                        />
+                        <Text style={Styles.title}>No Appointments</Text>
+                    </View>
                 </Background>
             )}
         </>

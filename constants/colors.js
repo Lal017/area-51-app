@@ -9,6 +9,7 @@ const Colors = {
     backDropAccent: 'white',
     text: 'white',
     textAlt: 'black',
+    subText: 'rgba(255,255,255,0.5)',
     button: '#4c4c63'
 };
 

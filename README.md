@@ -2,7 +2,8 @@ ToDo:
     - handle notification when a truck driver accepts a request and an admin marks it as completed (using two phones for real time viewing)
     - header styling on different device
     - change alerts to more UI friendly messages inside of app
-->  - handle styling for (profile) : Vehicle.jsx
+    - handle styling for (service)
+ -> - Add react-native-progress package bar to towRequest.jsx
     - RFValue package might be deprecated. check
 
 PotentialChanges:

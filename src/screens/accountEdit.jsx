@@ -33,7 +33,7 @@ const AccountEdit = () =>
                             <Ionicons name="person" size={20} style={Styles.icon} />
                             <TextInput
                                 placeholder="first name"
-                                placeholderTextColor={Colors.text}
+                                placeholderTextColor={Colors.subText}
                                 value={editFirstName}
                                 onChangeText={setEditFirstName}
                                 style={[Styles.input, !editFirstName && {borderColor: 'red', borderWidth: 2}]}
@@ -43,7 +43,7 @@ const AccountEdit = () =>
                             <Ionicons name="person" size={20} style={Styles.icon} />
                             <TextInput
                                 placeholder="last name"
-                                placeholderTextColor={Colors.text}
+                                placeholderTextColor={Colors.subText}
                                 value={editLastName}
                                 onChangeText={setEditLastName}
                                 style={[Styles.input, !editLastName && {borderColor: 'red', borderWidth: 2}]}
@@ -56,7 +56,7 @@ const AccountEdit = () =>
                             <Ionicons name="mail" size={20} style={Styles.icon} />
                             <TextInput
                                 placeholder="email"
-                                placeholderTextColor={Colors.text}
+                                placeholderTextColor={Colors.subText}
                                 value={editEmail}
                                 onChangeText={setEditEmail}
                                 autoCapitalize='none'
@@ -70,7 +70,7 @@ const AccountEdit = () =>
                             <Ionicons name="call" size={20} style={Styles.icon} />
                             <TextInput
                                 placeholder="phone number"
-                                placeholderTextColor={Colors.text}
+                                placeholderTextColor={Colors.subText}
                                 value={editPhone}
                                 onChangeText={setEditPhone}
                                 keyboardType="phone-pad"

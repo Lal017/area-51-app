@@ -58,7 +58,7 @@ const ResetPassword = () =>
                             <Ionicons name='lock-open' size={20} style={Styles.icon} />
                             <TextInput
                                 placeholder='Current Password'
-                                placeholderTextColor={Colors.text}
+                                placeholderTextColor={Colors.subText}
                                 value={oldPassword}
                                 onChangeText={setOldPassword}
                                 secureTextEntry={!showOldPassword}
@@ -83,7 +83,7 @@ const ResetPassword = () =>
                             <MaterialIcons name='lock-reset' size={20} style={Styles.icon} />
                             <TextInput
                                 placeholder='New Password'
-                                placeholderTextColor={Colors.text}
+                                placeholderTextColor={Colors.subText}
                                 value={newPassword}
                                 onChangeText={setNewPassword}
                                 secureTextEntry={!showPassword}
@@ -126,7 +126,7 @@ const ResetPassword = () =>
                             <MaterialCommunityIcons name='lock-check' size={20} style={Styles.icon} />
                             <TextInput
                                 placeholder='Confirm New Password'
-                                placeholderTextColor={Colors.text}
+                                placeholderTextColor={Colors.subText}
                                 value={confNewPassword}
                                 onChangeText={setConfNewPassword}
                                 secureTextEntry={!showConfirmPassword}
