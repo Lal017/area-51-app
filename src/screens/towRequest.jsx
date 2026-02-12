@@ -102,20 +102,18 @@ const TowRequest = () =>
                 { step === 1 ? (
                     <>
                     <View style={[Styles.block, {alignItems: 'center'}]}>
-                        <View style={[Styles.floatingBlock, {rowGap: 15}]}>
-                            <View style={[Styles.infoContainer]}>
-                                <Text style={Styles.headerTitle}>Pricing</Text>
-                                <Text style={Styles.text}>
-                                    All tow requests start at a base price of <Text style={{fontWeight: 'bold'}}>$100</Text>. Extra fees may apply depending on the situation. You will recieve a phone call from one of our drivers if extra fees are going to be applied.
-                                </Text>
-                                <Text style={Styles.text}>Your vehicle will be towed to 4420 Arville St Unit #9, Las Vegas, NV 89102</Text>
-                            </View>
-                            <View style={[Styles.infoContainer, {flexDirection: 'row', columnGap: 5, justifyContent: 'flex-start'}]}>
-                                <Ionicons name='information-circle' size={18} color='white'/>
-                                <Text style={[Styles.text, {fontSize: RFValue(10)}]}>
-                                    Once a driver has accepted your request, you will <Text style={{color: 'red', fontWeight: 'bold'}}>NOT</Text> be able to cancel
-                                </Text>
-                            </View>
+                        <View style={[Styles.infoContainer]}>
+                            <Text style={Styles.headerTitle}>Pricing</Text>
+                            <Text style={Styles.text}>
+                                All tow requests start at a base price of <Text style={{fontWeight: 'bold'}}>$100</Text>. Extra fees may apply depending on the situation. You will recieve a phone call from one of our drivers if extra fees are going to be applied.
+                            </Text>
+                            <Text style={Styles.text}>Your vehicle will be towed to 4420 Arville St Unit #9, Las Vegas, NV 89102</Text>
+                        </View>
+                        <View style={[Styles.infoContainer, {flexDirection: 'row', columnGap: 5, justifyContent: 'flex-start'}]}>
+                            <Ionicons name='information-circle' size={18} color='white'/>
+                            <Text style={[Styles.text, {fontSize: RFValue(10)}]}>
+                                Once a driver has accepted your request, you will <Text style={{color: 'red', fontWeight: 'bold'}}>NOT</Text> be able to cancel
+                            </Text>
                         </View>
                     </View>
                     <View style={ServiceStyles.buttonContainer}>

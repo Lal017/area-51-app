@@ -205,7 +205,7 @@ const Styles = StyleSheet.create({
         width: '100%',
     },
     floatingBlock: {
-        width: '90%',
+        width: '95%',
         padding: 10,
         paddingTop: 25,
         paddingBottom: 25,
@@ -448,15 +448,26 @@ const ServiceStyles = StyleSheet.create({
         height: 125
     },
     // schedule.jsx
-    timeContainer: {
-        columnGap: 10,
+    timeSelectContainer: {
+        width: '90%',
+        backgroundColor: Colors.contrast,
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'row',
+        borderRadius: 15,
         padding: 10
     },
+    timeContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-evenly',
+        rowGap: 15,
+    },
     timeBubble: {
-        backgroundColor: Colors.backgroundAccent,
+        backgroundColor: 'rgba(0,0,0,0.5)',
         borderRadius: 5,
         padding: 15,
-        width: 150
+        width: '45%'
     },
     // myAppointments.jsx
     fieldContainer: {

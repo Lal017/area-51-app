@@ -1,17 +1,23 @@
 import Colors from '../../constants/colors';
 import moment from 'moment';
+import ProgressBar from 'react-native-progress/Bar';
+import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Dimensions, KeyboardAvoidingView } from 'react-native';
 import { handleGetAppointments, handleSetTimes, handleCreateAppointment, handleFinalCheck, handleUpdateAppointment } from '../../components/appointmentComponents';
 import { useApp } from '../../components/context';
 import { handleSendAdminNotif } from '../../components/notifComponents';
 import { Select, CalendarHeader, formatDate, formatTime, Background, Loading } from '../../components/components';
 import { ServiceStyles, Styles } from "../../constants/styles";
-import { MaterialIcons, Ionicons, FontAwesome, AntDesign, FontAwesome5, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
-import { useEffect, useState} from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, ScrollView } from "react-native";
+import { MaterialIcons, Ionicons, FontAwesome, AntDesign, FontAwesome5, Entypo, MaterialCommunityIcons, SimpleLineIcons } from '@expo/vector-icons';
+import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
+import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { useNavigation } from '@react-navigation/native';
 import { useLocalSearchParams } from 'expo-router';
 import { RFValue } from 'react-native-responsive-fontsize';
+
+const screenWidth = Dimensions.get('window').width;
 
 const Schedule = () =>
 {
@@ -31,6 +37,7 @@ const Schedule = () =>
   const [loading, setLoading] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(undefined);
 
   // get available appointments
   useEffect(() => {
@@ -75,6 +82,7 @@ const Schedule = () =>
   // called when a user clicks on a new day on the calendar
   const handleDayPress = async (day) =>
   {
+    setErrorMessage(undefined);
     setSelectedDay(day.dateString);
     setSelectedTime(undefined);
     const getDay = await handleSetTimes(scheduledAppointments, day.dateString);
@@ -109,80 +117,104 @@ const Schedule = () =>
     setMarkedDates(getDaysInMonth(date.month - 1, date.year, DISABLED_DAYS));
   };
 
+  const bottomSheetRef = useRef(null);
+  const handleSheetChanges = useCallback((index) => {
+    console.log('handleSheetChanges', index);
+  }, []);
+
+  const snapPoints = useMemo(() => ['25%', '60%', '80%'], []);
+  const handleClosePress = () => bottomSheetRef.current?.close();
+  const handleOpenPress = () => bottomSheetRef.current?.snapToIndex(2);
+
   return (
-    <>
+    <GestureHandlerRootView>
     { isReady ? (
-      <Background refreshing={refreshing} onRefresh={onRefresh}>
-        <View style={ServiceStyles.progressBar}>
-          <AntDesign name='calendar' size={35} color={step > 1 ? Colors.secondary : Colors.backDropAccent} />
-          <View style={[ServiceStyles.progressBarLine, {backgroundColor: step > 1 ? Colors.secondary : Colors.backDropAccent}]} />
-          <Ionicons name="car-sport" size={30} color={step > 2 ? Colors.secondary : Colors.backDropAccent}/>
-          <View style={[ServiceStyles.progressBarLine, {backgroundColor: step > 2 ? Colors.secondary : Colors.backDropAccent}]} />
-          <FontAwesome5 name="wrench" size={30} color={step > 3 ? Colors.secondary : Colors.backDropAccent}/>
-          <View style={[ServiceStyles.progressBarLine, {backgroundColor: step > 3 ? Colors.secondary : Colors.backDropAccent}]} />
-          <Entypo name="clipboard" size={30} color={step > 4 ? Colors.secondary : Colors.backDropAccent}/>
-        </View>
-        { step === 1 ? (
-          <>
-            <View style={Styles.infoContainer}>
-              <Text style={Styles.subTitle}>Date Selection</Text>
-              <Text style={Styles.text}>Select a day and time to get started</Text>
-            </View>
-            <View style={Styles.block}>
-              <Calendar
-                onMonthChange={handleMonthChange}
-                style={{
-                  backgroundColor: 'transparent',
+      <KeyboardAvoidingView behavior='padding' style={{flex: 1}}>
+        <Background refreshing={refreshing} onRefresh={onRefresh}>
+          <View style={ServiceStyles.progressBar}>
+            <AntDesign name='calendar' size={35} color={step >= 1 ? Colors.secondary : Colors.backDropAccent} />
+            <ProgressBar
+              width={screenWidth * 0.15}
+              unfilledColor='white'
+              borderWidth={0}
+              color={Colors.secondary}
+              progress={step === 1 ? 0 : 1}
+            />
+            <Ionicons name="car-sport" size={30} color={step >= 2 ? Colors.secondary : Colors.backDropAccent}/>
+            <ProgressBar
+              width={screenWidth * 0.15}
+              unfilledColor='white'
+              borderWidth={0}
+              color={Colors.secondary}
+              progress={step <= 2 ? 0 : 1}
+            />
+            <FontAwesome5 name="wrench" size={30} color={step >= 3 ? Colors.secondary : Colors.backDropAccent}/>
+            <ProgressBar
+              width={screenWidth * 0.15}
+              unfilledColor='white'
+              borderWidth={0}
+              color={Colors.secondary}
+              progress={step <= 3 ? 0 : 1}
+            />
+            <Entypo name="clipboard" size={30} color={step >= 4 ? Colors.secondary : Colors.backDropAccent}/>
+          </View>
+          { step === 1 ? (
+            <>
+              <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                <Text style={Styles.headerTitle}>Date Selection</Text>
+                <Text style={Styles.tabHeader}>Select a day and time to get started</Text>
+              </View>
+              <View style={Styles.block}>
+                <Calendar
+                  onMonthChange={handleMonthChange}
+                  style={{
+                    backgroundColor: 'transparent',
+                  }}
+                  theme={{
+                    todayTextColor: Colors.secondary,
+                    textDayFontSize: RFValue(15),
+                    calendarBackground: 'transparent',
+                    dayTextColor: Colors.secondary,
+                    textDisabledColor: 'grey'
+                  }}
+                  minDate={new Date().toDateString()}
+                  onDayPress={day => handleDayPress(day)}
+                  enableSwipeMonths={true}
+                  markedDates={{
+                    ...markedDates, // from getDaysInMonth, disabling weekends
+                    ...(selectedDay && {
+                      [selectedDay]: {
+                        selected: true,
+                        selectedColor: Colors.tertiary,
+                        // Preserve disabled state if it's also a disabled date
+                        ...(markedDates[selectedDay] || {})
+                      }
+                    })
+                  }}
+                  renderArrow={direction => <Entypo name={direction === 'left' ? 'chevron-with-circle-left' : 'chevron-with-circle-right'} size={24} color={Colors.backDropAccent}/>}
+                  hideExtraDays={true}
+                  disableAllTouchEventsForDisabledDays={true}
+                  renderHeader={date => <CalendarHeader date={date} />}
+                />
+              </View>
+              <View style={[Styles.block, {alignItems: 'center'}]}>
+              <TouchableOpacity
+                style={ServiceStyles.timeSelectContainer}
+                onPress={() => {
+                  setErrorMessage(undefined);
+                  if (selectedDay) handleOpenPress();
+                  else setErrorMessage('Please select a day first');
                 }}
-                theme={{
-                  todayTextColor: Colors.secondary,
-                  textDayFontSize: RFValue(15),
-                  calendarBackground: 'transparent',
-                  dayTextColor: Colors.secondary,
-                  textDisabledColor: 'grey'
-                }}
-                minDate={new Date().toDateString()}
-                onDayPress={day => handleDayPress(day)}
-                enableSwipeMonths={true}
-                markedDates={{
-                  ...markedDates, // from getDaysInMonth, disabling weekends
-                  ...(selectedDay && {
-                    [selectedDay]: {
-                      selected: true,
-                      selectedColor: Colors.tertiary,
-                      // Preserve disabled state if it's also a disabled date
-                      ...(markedDates[selectedDay] || {})
-                    }
-                  })
-                }}
-                renderArrow={direction => <AntDesign name={direction === 'left' ? 'arrowleft' : 'arrowright'} size={24} color={Colors.backDropAccent}/>}
-                hideExtraDays={true}
-                disableAllTouchEventsForDisabledDays={true}
-                renderHeader={date => <CalendarHeader date={date} />}
-              />
-            </View>
-            <ScrollView
-              contentContainerStyle={ServiceStyles.timeContainer}
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}
-            >
-              {availableAppointments?.map((time, index) => (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => setSelectedTime(time)}
-                  style={[
-                    ServiceStyles.timeBubble,
-                    selectedTime === time && {
-                      backgroundColor: Colors.secondary
-                    }
-                  ]}
-                >
-                  <Text style={[Styles.text, { textAlign: 'center' }]}
-                  >{formatTime(time)}</Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-            <View style={{flex: 1, justifyContent: 'flex-end', alignItems: 'center', paddingBottom: 25, width: '100%'}}>
+              >
+                <Text style={[Styles.tabText, {color: Colors.textAlt, fontSize: RFValue(20)}]}>{selectedTime ? formatTime(selectedTime) : 'Select a time'}</Text>
+                <MaterialCommunityIcons name='clock' style={[Styles.rightIcon, {color: Colors.backDrop}]} size={30}/>
+              </TouchableOpacity>
+              </View>
+              { errorMessage ? (
+                <View style={Styles.errorContainer}>
+                  <Text style={[Styles.text, {color: 'red'}]}>{errorMessage}</Text>
+                </View>
+              ) : null}
               <View style={ServiceStyles.buttonContainer}>
                 <TouchableOpacity
                   style={[ServiceStyles.directionButton, {opacity: 0}]}
@@ -196,35 +228,71 @@ const Schedule = () =>
                   onPress={() => {
                     if (selectedDay && selectedTime) {
                       setStep(2);
-                    }
+                      setErrorMessage(undefined);
+                    } else if (!selectedDay) setErrorMessage('Select a date and time to continue');
+                    else setErrorMessage('Select a time to continue');
                   }}
                 >
-                  <Text style={Styles.actionText}>Continue</Text>
-                  <FontAwesome name='arrow-right' size={24} color='white' />
+                  <Text style={Styles.tabText}>Continue</Text>
+                  <SimpleLineIcons name='arrow-right' size={20} color='white' />
                 </TouchableOpacity>
               </View>
-            </View>
-          </>
-        ) : step === 2 ? (
-          <>
-            <View style={Styles.block}>
-              <View style={Styles.infoContainer}>
-                <Text style={Styles.subTitle}>Select a Vehicle</Text>
+              <BottomSheet
+                ref={bottomSheetRef}
+                onChange={handleSheetChanges}
+                snapPoints={snapPoints}
+                index={-1}
+                backgroundStyle={{ backgroundColor: Colors.contrast}}
+              >
+                <BottomSheetView>
+                  <View style={Styles.block}>
+                    <View style={ServiceStyles.timeContainer}>
+                      {availableAppointments?.map((time, index) => (
+                        <TouchableOpacity
+                          key={index}
+                          onPress={() => setSelectedTime(time)}
+                          style={[
+                            ServiceStyles.timeBubble,
+                            selectedTime === time && {
+                              backgroundColor: Colors.secondary
+                            }
+                          ]}
+                        >
+                          <Text style={[Styles.text, { textAlign: 'center' }]}
+                          >{formatTime(time)}</Text>
+                        </TouchableOpacity>
+                      ))}
+                      <TouchableOpacity
+                        style={[Styles.actionButton, {backgroundColor: Colors.button}]}
+                        onPress={handleClosePress}
+                      >
+                        <Text style={Styles.actionText}>Confirm</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </BottomSheetView>
+              </BottomSheet>
+            </>
+          ) : step === 2 ? (
+            <>
+              <View style={Styles.block}>
+                <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                  <Text style={Styles.headerTitle}>Vehicle Selection</Text>
+                  <Text style={Styles.tabHeader}>Select the vehicle for the appointment</Text>
+                </View>
+                <View style={ServiceStyles.selectionContainer}>
+                  {vehicles?.map((vehicle, index) => (
+                    <Select
+                      key={index}
+                      text={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
+                      selected={vehicle?.id === selectedVehicle?.id ? true : false}
+                      action={() => {vehicle?.id === selectedVehicle?.id ? setSelectedVehicle(undefined) : setSelectedVehicle(vehicle)}}
+                      rightIcon={<Ionicons name="car-sport" size={30} style={Styles.rightIcon} color={Colors.backDrop}/>}
+                      leftIcon={<FontAwesome name={selectedVehicle?.id === vehicle?.id ? "circle" : "circle-o"} size={25} style={Styles.icon} color={selectedVehicle === vehicle ? Colors.backDrop : null}/>}
+                    />
+                  ))}
+                </View>
               </View>
-              <View style={ServiceStyles.selectionContainer}>
-                {vehicles?.map((vehicle, index) => (
-                  <Select
-                    key={index}
-                    text={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
-                    selected={vehicle?.id === selectedVehicle?.id ? true : false}
-                    action={() => setSelectedVehicle(vehicle)}
-                    leftIcon={<Ionicons name="car-sport" size={30} style={Styles.icon} color={Colors.backDrop}/>}
-                    rightIcon={<FontAwesome name={selectedVehicle?.id === vehicle?.id ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedVehicle === vehicle ? Colors.backDrop : null}/>}
-                  />
-                ))}
-              </View>
-            </View>
-            <View style={{flex: 1, justifyContent: 'flex-end', alignItems: 'center', paddingBottom: 25, width: '100%'}}>
               <View style={ServiceStyles.buttonContainer}>
                 <TouchableOpacity
                   style={ServiceStyles.directionButton}
@@ -245,53 +313,71 @@ const Schedule = () =>
                   <FontAwesome name='arrow-right' size={24} color='white' />
                 </TouchableOpacity>
               </View>
-            </View>
-          </>
-        ) : step === 3 ? (
-          <>
-            <View style={Styles.block}>
-              <View style={Styles.infoContainer}>
-                <Text style={Styles.subTitle}>Select a service</Text>
+            </>
+          ) : step === 3 ? (
+            <>
+              <View style={Styles.block}>
+                <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                  <Text style={Styles.headerTitle}>Service Selection</Text>
+                  <Text style={Styles.tabHeader}>Select the service needed for the appointment</Text>
+                </View>
+                <View style={ServiceStyles.selectionContainer}>
+                  <Select
+                    text="Oil Change"
+                    selected={selectedService === 'Oil Change' ? true : false}
+                    action={() => {selectedService === 'Oil Change' ? setSelectedService(undefined) : setSelectedService('Oil Change')}}
+                    rightIcon={<FontAwesome5 name="oil-can" size={30} style={Styles.rightIcon} color={Colors.backDrop} />}
+                    leftIcon={<FontAwesome name={selectedService === 'Oil Change' ? "circle" : "circle-o"} size={25} style={Styles.icon} color={selectedService === 'Oil Change' ? Colors.backDrop : null}/>}
+                  />
+                  <Select
+                    text="Diagnosis"
+                    selected={selectedService === 'Diagnosis' ? true : false}
+                    action={() => {selectedService === 'Diagnosis' ? setSelectedService(undefined) : setSelectedService('Diagnosis')}}
+                    rightIcon={<FontAwesome name="stethoscope" size={30} style={Styles.rightIcon} color={Colors.backDrop}/>}
+                    leftIcon={<FontAwesome name={selectedService === 'Diagnosis' ? "circle" : "circle-o"} size={25} style={Styles.icon} color={selectedService === 'Diagnosis' ? Colors.backDrop : null}/>}
+                  />
+                  <Select
+                    text="Tuning"
+                    selected={selectedService === 'Tuning' ? true : false}
+                    action={() => {selectedService === 'Tuning' ? setSelectedService(undefined) : setSelectedService('Tuning')}}
+                    rightIcon={<Entypo name="area-graph" size={30} style={Styles.rightIcon} color={Colors.backDrop}/>}
+                    leftIcon={<FontAwesome name={selectedService === 'Tuning' ? "circle" : "circle-o"} size={25} style={Styles.icon} color={selectedService === 'Tuning' ? Colors.backDrop : null}/>}
+                  />
+                  <Select
+                    text="A/C"
+                    selected={selectedService === 'A/C' ? true : false}
+                    action={() => {selectedService === 'A/C' ? setSelectedService(undefined) : setSelectedService('A/C')}}
+                    rightIcon={<MaterialIcons name="air" size={30} style={Styles.rightIcon} color={Colors.backDrop}/>}
+                    leftIcon={<FontAwesome name={selectedService === 'A/C' ? "circle" : "circle-o"} size={25} style={Styles.icon} color={selectedService === 'A/C' ? Colors.backDrop : null}/>}
+                  />
+                  <Select
+                    text="Other"
+                    selected={selectedService === 'Other' ? true : false}
+                    action={() => {selectedService === 'Other' ? setSelectedService(undefined) : setSelectedService('Other')}}
+                    rightIcon={<MaterialCommunityIcons name="dots-horizontal-circle" size={30} style={Styles.rightIcon} color={Colors.backDrop} />}
+                    leftIcon={<FontAwesome name={selectedService === 'Other' ? "circle" : "circle-o"} size={25} style={Styles.icon} color={selectedService === 'Other' ? Colors.backDrop : null}/>}
+                  />
+                </View>
               </View>
-              <View style={ServiceStyles.selectionContainer}>
-                <Select
-                  text="Oil Change"
-                  selected={selectedService === 'Oil Change' ? true : false}
-                  action={() => setSelectedService('Oil Change')}
-                  leftIcon={<FontAwesome5 name="oil-can" size={30} style={Styles.icon} color={Colors.backDrop} />}
-                  rightIcon={<FontAwesome name={selectedService === 'Oil Change' ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedService === 'Oil Change' ? Colors.backDrop : null}/>}
-                />
-                <Select
-                  text="Diagnosis"
-                  selected={selectedService === 'Diagnosis' ? true : false}
-                  action={() => setSelectedService('Diagnosis')}
-                  leftIcon={<FontAwesome name="stethoscope" size={30} style={Styles.icon} color={Colors.backDrop}/>}
-                  rightIcon={<FontAwesome name={selectedService === 'Diagnosis' ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedService === 'Diagnosis' ? Colors.backDrop : null}/>}
-                />
-                <Select
-                  text="Tuning"
-                  selected={selectedService === 'Tuning' ? true : false}
-                  action={() => setSelectedService('Tuning')}
-                  leftIcon={<Entypo name="area-graph" size={30} style={Styles.icon} color={Colors.backDrop}/>}
-                  rightIcon={<FontAwesome name={selectedService === 'Tuning' ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedService === 'Tuning' ? Colors.backDrop : null}/>}
-                />
-                <Select
-                  text="A/C"
-                  selected={selectedService === 'A/C' ? true : false}
-                  action={() => setSelectedService('A/C')}
-                  leftIcon={<MaterialIcons name="air" size={30} style={Styles.icon} color={Colors.backDrop}/>}
-                  rightIcon={<FontAwesome name={selectedService === 'A/C' ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedService === 'A/C' ? Colors.backDrop : null}/>}
-                />
-                <Select
-                  text="Other"
-                  selected={selectedService === 'Other' ? true : false}
-                  action={() => setSelectedService('Other')}
-                  leftIcon={<MaterialCommunityIcons name="dots-horizontal-circle" size={30} style={Styles.icon} color={Colors.backDrop} />}
-                  rightIcon={<FontAwesome name={selectedService === 'Other' ? "circle" : "circle-o"} size={25} style={Styles.rightIcon} color={selectedService === 'Other' ? Colors.backDrop : null}/>}
-                />
+              <View style={[Styles.block, {alignItems: 'center'}]}>
+                <View style={[Styles.floatingBlock, {rowGap: 25}]}>
+                    <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                        <Text style={Styles.headerTitle}>Description <Text style={Styles.text}>(optional)</Text></Text>
+                        <Text style={Styles.tabHeader}>Please, describe any problems with the vehicle</Text>
+                    </View>
+                    <View style={Styles.inputWrapper}>
+                        <MaterialIcons name="notes" size={30} style={Styles.iconAlt} />
+                        <TextInput
+                            placeholder="e.g. Flat tire, dead battery, etc."
+                            placeholderTextColor={Colors.subText}
+                            style={Styles.inputAlt}
+                            multiline={true}
+                            value={notes}
+                            onChangeText={setNotes}
+                        />
+                    </View>
+                </View>
               </View>
-            </View>
-            <View style={{flex: 1, justifyContent: 'flex-end', alignItems: 'center', paddingBottom: 25, width: '100%'}}>
               <View style={ServiceStyles.buttonContainer}>
                 <TouchableOpacity
                   style={ServiceStyles.directionButton}
@@ -310,78 +396,50 @@ const Schedule = () =>
                   <FontAwesome name='arrow-right' size={24} color='white' />
                 </TouchableOpacity>
               </View>
-            </View>
-          </>
-        ) : step === 4 ? (
-          <>
-            <View style={{width: '100%', flex: 1, justifyContent: 'center'}}>
-              <View style={Styles.block}>
-                <View style={Styles.infoContainer}>
-                  <Text style={Styles.subTitle}>Description (optional)</Text>
-                  <Text style={Styles.text}>Please, describe any problems with the vehicle worth mentioning</Text>
-                </View>
-                <View style={Styles.inputWrapper}>
-                  <MaterialIcons name='notes' size={30} style={Styles.iconAlt} />
-                  <TextInput
-                    placeholder='description'
-                    placeholderTextColor={Colors.text}
-                    value={notes}
-                    onChangeText={setNotes}
-                    style={Styles.inputAlt}
-                  />
-                </View>
-              </View>
-            </View>
-            <View style={{flex: 1, justifyContent: 'flex-end', alignItems: 'center', paddingBottom: 25, width: '100%'}}>
-              <View style={ServiceStyles.buttonContainer}>
-                <TouchableOpacity
-                  style={ServiceStyles.directionButton}
-                  onPress={() => setStep(3)}
-                >
-                  <FontAwesome name='arrow-left' size={24} color='white' />
-                  <Text style={Styles.actionText}>Back</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => setStep(5)}
-                  style={ServiceStyles.directionButton}
-                >
-                  <Text style={Styles.actionText}>Continue</Text>
-                  <FontAwesome name='arrow-right' size={24} color='white' />
-                </TouchableOpacity>
-              </View>
-            </View>
-          </>
-        ) : step === 5 ? (
-          <>
-          <View style={[Styles.block, {rowGap: 10}]}>
-            <View style={[Styles.infoContainer, {rowGap: 0}]}>
-              <Text style={Styles.subTitle}>Date</Text>
-              <Text style={Styles.text}>{formatDate(selectedDay)}</Text>
-            </View>
-            <View style={[Styles.infoContainer, {rowGap: 0}]}>
-              <Text style={Styles.subTitle}>Time</Text>
-              <Text style={Styles.text}>{formatTime(selectedTime)}</Text>
-            </View>
-            <View style={[Styles.infoContainer, {rowGap: 0}]}>
-              <Text style={Styles.subTitle}>Vehicle</Text>
-              <Text style={Styles.text}>{`${selectedVehicle.year} ${selectedVehicle.make} ${selectedVehicle.model} (${selectedVehicle.color})`}</Text>
-            </View>
-            <View style={[Styles.infoContainer, {rowGap: 0}]}>
-              <Text style={Styles.subTitle}>Service</Text>
-              <Text style={Styles.text}>{selectedService}</Text>
-            </View>
-            { notes ? (
+            </>
+          ) : step === 4 ? (
+            <>
+            <View style={[Styles.block, {rowGap: 10}]}>
               <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                <Text style={Styles.subTitle}>Notes</Text>
-                <Text style={Styles.text}>{notes}</Text>
+                <Text style={Styles.headerTitle}>Appointment Information</Text>
+                <Text style={Styles.tabHeader}>Review the information and confirm it is correct</Text>
               </View>
-            ) : null }
-          </View>
-          <View style={{flex: 1, justifyContent: 'flex-end', alignItems: 'center', paddingBottom: 25, width: '100%'}}>
+            </View>
+            <View style={[Styles.floatingBlock, {alignSelf: 'center', rowGap: 10}]}>
+              <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                  <Text style={Styles.headerTitle}>{formatDate(selectedDay)}</Text>
+              </View>
+              <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                  <View style={{width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
+                      <Text style={Styles.tabHeader}>Time</Text>
+                      <Text style={Styles.text}>{formatTime(selectedTime)}</Text>
+                  </View>
+                  <View style={{width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
+                      <Text style={Styles.tabHeader}>Vehicle</Text>
+                      <Text style={Styles.text}>{selectedVehicle.year} {selectedVehicle.make} {selectedVehicle.model}</Text>
+                  </View>
+                  { selectedVehicle?.plate ? (
+                    <View style={{width: '100%', flexDirection: 'row', justifyContent: 'space-between'}}>
+                      <Text style={Styles.tabHeader}>Plate</Text>
+                      <Text style={Styles.text}>{selectedVehicle.plate}</Text>
+                    </View>
+                  ) : null }
+                  <View style={{width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
+                      <Text style={Styles.tabHeader}>Service</Text>
+                      <Text style={Styles.text}>{selectedService}</Text>
+                  </View>
+              </View>
+              { notes ? (
+                <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                  <Text style={Styles.tabHeader}>Notes</Text>
+                  <Text style={Styles.text}>{notes}</Text>
+                </View>
+              ) : null }
+            </View>
             <View style={ServiceStyles.buttonContainer}>
               <TouchableOpacity
                 style={ServiceStyles.directionButton}
-                onPress={() => setStep(4)}
+                onPress={() => setStep(3)}
               >
                 <FontAwesome name='arrow-left' size={24} color='white'/>
                 <Text style={Styles.actionText}>Back</Text>
@@ -426,14 +484,14 @@ const Schedule = () =>
                 <Text style={Styles.actionText}>{appointment ? 'Update' : 'Schedule'}</Text>
               </TouchableOpacity>
             </View>
-          </View>
-          </>
-        ) : null }
-      </Background>
+            </>
+          ) : null }
+        </Background>
+      </KeyboardAvoidingView>
     ) : (
       <Loading/>
     )}
-    </>
+    </GestureHandlerRootView>
   )
 };
 
