@@ -4,7 +4,7 @@ import { Background } from '../../components/components';
 import { handleCreateVehicle, handleDeleteVehicle, handleUpdateVehicle } from '../../components/vehicleComponents';
 import { useApp } from '../../components/context';
 import { useLocalSearchParams } from 'expo-router';
-import { AntDesign, FontAwesome, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { AntDesign, FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { TextInput, View, Text, TouchableOpacity, Alert, KeyboardAvoidingView } from 'react-native';
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
@@ -25,90 +25,103 @@ const Vehicle = () =>
     const [ plate, setPlate ] = useState(vehicle?.plate ?? undefined);
     const [ vin, setVin ] = useState(vehicle?.vin ?? undefined);
     const [ loading, setLoading ] = useState(false);
-    const [ missingYear, setMissingYear ] = useState(false);
-    const [ missingMake, setMissingMake ] = useState(false);
-    const [ missingModel, setMissingModel ] = useState(false);
-    const [ missingColor, setMissingColor ] = useState(false);
+    const [ errorCheck, setErrorCheck ] = useState(false);
     const [ errorMessage, setErrorMessage ] = useState(undefined);
-
-    const isMissingInput = () =>
-    {
-        let isMissing = false;
-        if (!color) {
-            setMissingColor(true);
-            setErrorMessage('Missing color');
-            isMissing = true;
-        } else setMissingColor(false);
-        if (!model) {
-            setMissingModel(true);
-            setErrorMessage('Missing model');
-            isMissing = true;
-        } else setMissingModel(false);
-        if (!make) {
-            setMissingMake(true);
-            setErrorMessage('Missing make');
-            isMissing = true;
-        } else setMissingMake(false);
-        if (!year) {
-            setMissingYear(true);
-            setErrorMessage('Missing year');
-            isMissing = true;
-        } else setMissingYear(false);
-        return isMissing;
-    };
 
     return (
         <KeyboardAvoidingView behavior='height' style={{flex: 1}}>
             <Background>
                 <View style={Styles.block}>
-                    <View style={Styles.infoContainer}>
-                        <Text style={Styles.text}>Vehicle Information</Text>
+                    <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                        <Text style={Styles.headerTitle}>Vehicle Information</Text>
+                        <Text style={Styles.tabHeader}>{vehicle ? 'Edit' : 'Add'} a vehicle</Text>
+                        { vehicle && (
+                            <TouchableOpacity
+                                style={[Styles.rightIcon, {padding: 5, backgroundColor: Colors.redButton, borderRadius: 5}]}
+                                onPress={() => Alert.alert(
+                                    'Delete Vehicle',
+                                    'Are you sure you want to delete this vehicle?',
+                                    [
+                                        { text: 'No' },
+                                        {
+                                            text: 'Yes',
+                                            onPress: async () => {
+                                                await handleDeleteVehicle(client, vehicle.id, setVehicles);
+                                                navigate.reset({
+                                                    index: 1,
+                                                    routes: [
+                                                        { name: 'index' },
+                                                        { name: 'vehicleList' }
+                                                    ]
+                                                });
+                                        }}
+                                    ]
+                                )}
+                            >
+                                <MaterialIcons name='delete-forever' size={30} color='white'/>
+                            </TouchableOpacity>
+                        )}
                     </View>
                     <View style={[Styles.inputContainer, {rowGap: 5}]}>
-                        <View style={Styles.inputWrapper}>
-                            <Ionicons name='calendar' size={20} style={Styles.icon} />
-                            <TextInput
-                                placeholder='Year'
-                                placeholderTextColor={Colors.subText}
-                                value={year}
-                                onChangeText={setYear}
-                                keyboardType='number-pad'
-                                style={[Styles.input, missingYear && {borderColor: 'red'}]}
-                            />
+                        <View>
+                            <View style={Styles.inputWrapper}>
+                                <Ionicons name='calendar' size={20} style={Styles.icon} />
+                                <TextInput
+                                    placeholder='Year'
+                                    placeholderTextColor={Colors.subText}
+                                    value={year}
+                                    onChangeText={setYear}
+                                    keyboardType='number-pad'
+                                    style={[Styles.input, errorCheck && !year && {borderColor: 'red', borderBottomWidth: 2}]}
+                                />
+                            </View>
+                            { errorCheck && !year && (<Text style={[Styles.text, {color: 'red', paddingLeft: 15, fontSize: RFValue(13)}]}>Missing Year</Text>)}
                         </View>
-                        <View style={Styles.inputWrapper}>
-                            <MaterialCommunityIcons name='car-convertible' size={20} style={Styles.icon} />
-                            <TextInput
-                                placeholder='Make'
-                                placeholderTextColor={Colors.subText}
-                                value={make}
-                                onChangeText={setMake}
-                                style={[Styles.input, missingMake && {borderColor: 'red'}]}
-                            />
+                        <View>
+                            <View style={Styles.inputWrapper}>
+                                <MaterialCommunityIcons name='car-convertible' size={20} style={Styles.icon} />
+                                <TextInput
+                                    placeholder='Make'
+                                    placeholderTextColor={Colors.subText}
+                                    value={make}
+                                    onChangeText={setMake}
+                                    style={[Styles.input, errorCheck && !make && {borderColor: 'red', borderBottomWidth: 2}]}
+                                />
+                            </View>
+                            { errorCheck && !make && (<Text style={[Styles.text, {color: 'red', paddingLeft: 15, fontSize: RFValue(13)}]}>Missing Make</Text>)}
                         </View>
-                        <View style={Styles.inputWrapper}>
-                            <AntDesign name='tags' size={20} style={Styles.icon} />
-                            <TextInput
-                                placeholder='Model'
-                                placeholderTextColor={Colors.subText}
-                                value={model}
-                                onChangeText={setModel}
-                                style={[Styles.input, missingModel && {borderColor: 'red'}]}
-                            />
+                        <View>
+                            <View style={Styles.inputWrapper}>
+                                <AntDesign name='tags' size={20} style={Styles.icon} />
+                                <TextInput
+                                    placeholder='Model'
+                                    placeholderTextColor={Colors.subText}
+                                    value={model}
+                                    onChangeText={setModel}
+                                    style={[Styles.input, errorCheck && !model && {borderColor: 'red', borderBottomWidth: 2}]}
+                                />
+                            </View>
+                            { errorCheck && !model && (<Text style={[Styles.text, {color: 'red', paddingLeft: 15, fontSize: RFValue(13)}]}>Missing Model</Text>)}
                         </View>
-                        <View style={Styles.inputWrapper}>
-                            <Ionicons name='color-palette' size={20} style={Styles.icon} />
-                            <TextInput
-                                placeholder='Color'
-                                placeholderTextColor={Colors.subText}
-                                value={color}
-                                onChangeText={setColor}
-                                style={[Styles.input, missingColor && {borderColor: 'red'}]}
-                            />
+                        <View>
+                            <View style={Styles.inputWrapper}>
+                                <Ionicons name='color-palette' size={20} style={Styles.icon} />
+                                <TextInput
+                                    placeholder='Color'
+                                    placeholderTextColor={Colors.subText}
+                                    value={color}
+                                    onChangeText={setColor}
+                                    style={[Styles.input, errorCheck && !color && {borderColor: 'red', borderBottomWidth: 2}]}
+                                />
+                            </View>
+                            { errorCheck && !color && (<Text style={[Styles.text, {color: 'red', paddingLeft: 15, fontSize: RFValue(13)}]}>Missing Color</Text>)}
                         </View>
                     </View>
                     <View style={Styles.infoContainer}>
-                        <Text style={Styles.text}>Optional</Text>
+                        <View style={[Styles.infoContainer, {flexDirection: 'row', columnGap: 5}]}>
+                            <Ionicons name='information-circle' size={18} color='white'/>
+                            <Text style={[Styles.text, {fontSize: RFValue(10)}]}>Optional: Adding your license plate or VIN number helps us identify your vehicle</Text>
+                        </View>
                     </View>
                     <View style={[Styles.inputContainer, {rowGap: 5}]}>
                         <View style={Styles.inputWrapper}>
@@ -132,26 +145,24 @@ const Vehicle = () =>
                             />
                         </View>
                     </View>
-                    <View style={[Styles.infoContainer, {flexDirection: 'row', columnGap: 5}]}>
-                        <Ionicons name='information-circle' size={18} color='white'/>
-                        <Text style={[Styles.text, {fontSize: RFValue(10)}]}>Adding your license plate or VIN number helps us identify your vehicle</Text>
-                    </View>
                 </View>
                 { errorMessage ? (
                     <View style={Styles.errorContainer}>
-                        <Text style={[Styles.text, {color: 'red'}]}>{errorMessage}</Text>
+                        <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
+                        <Text style={Styles.errorText}>{errorMessage}</Text>
                     </View>
                 ) : null}
                 <View style={[Styles.block, {alignItems: 'center', rowGap: 10}]}>
                     <TouchableOpacity
-                        style={[Styles.actionButton, {backgroundColor: Colors.primary}, loading && { opacity: 0.5 }]}
+                        style={[Styles.actionButton, vehicle ? {backgroundColor: Colors.secondary} : {backgroundColor: Colors.primary}, loading && { opacity: 0.5 }]}
                         disabled={loading}
                         onPress={async () => {
                             if (loading) return;
                             setLoading(true);
                             let getError;
 
-                            if (isMissingInput()) { setLoading(false); return; }
+                            setErrorCheck(true);
+                            if (!year || !make || !model || !color) { setLoading(false); return; }
                             if (vehicle) {
                                 getError = await handleUpdateVehicle(client, {year, make, model, color, plate, vin}, vehicle.id, userId, setVehicles);
                             } else {
@@ -173,32 +184,6 @@ const Vehicle = () =>
                     >
                         <Text style={Styles.actionText}>{vehicle ? 'Update' : 'Create'}</Text>
                     </TouchableOpacity>
-                    { vehicle ? (
-                        <TouchableOpacity
-                            style={[Styles.actionButton, {backgroundColor: 'red'}]}
-                            onPress={() => Alert.alert(
-                                'Confirm',
-                                'Are you sure you want to delete this vehicle?',
-                                [
-                                    { text: 'No' },
-                                    {
-                                        text: 'Yes',
-                                        onPress: async () => {
-                                            await handleDeleteVehicle(client, vehicle.id, setVehicles);
-                                            navigate.reset({
-                                                index: 1,
-                                                routes: [
-                                                    { name: 'index' },
-                                                    { name: 'vehicleList' }
-                                                ]
-                                            });
-                                    }}
-                                ]
-                            )}
-                        >
-                            <Text style={Styles.actionText}>Delete</Text>
-                        </TouchableOpacity>
-                    ) : null }
                 </View>
             </Background>
         </KeyboardAvoidingView>

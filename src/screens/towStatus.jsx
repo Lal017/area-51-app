@@ -25,6 +25,7 @@ const TowStatus = () =>
     const [ estimatedTimeLeft, setEstimatedTimeLeft ] = useState();
     const [ locationClient, setLocationClient ] = useState();
 
+    // returns the drivers location
     const getDriverPosition = async (driverId) =>
     {
         const command = new GetDevicePositionCommand({
@@ -36,6 +37,7 @@ const TowStatus = () =>
         return response;
     };
 
+    // calculates the remaining time left until the driver arrives
     const getTimeLeft = (acceptedAt, waitTime) =>
     {
         const timeAccepted = new Date(acceptedAt);
@@ -72,6 +74,7 @@ const TowStatus = () =>
         if (towRequest === undefined) { router.replace('(tabs)'); }
     }, [towRequest]);
 
+    // initializes the page
     useEffect(() => {
         const initializeRequest = async () =>
         {
@@ -99,7 +102,10 @@ const TowStatus = () =>
 
     } ,[]);
 
+    // gets the location of the driver once the tow request is accepted
     useEffect(() => {
+        if (!locationClient || !towRequest?.driverId) return;
+
         const interval = setInterval(async () => {
             try {
                 if (!locationClient) { console.log('none'); return; }
@@ -119,55 +125,68 @@ const TowStatus = () =>
         return () => {
             clearInterval(interval);
         };
-    }, [locationClient]);
+    }, [locationClient, towRequest?.driverId]);
 
     return (
         <Background style={{paddingBottom: 0, paddingTop: 0}}>
             { towRequest?.status === 'REQUESTED' ? (
                 <>
-                <View style={Styles.infoContainer}>
+                <View style={[Styles.infoContainer, {rowGap: 0}]}>
                     <View style={ServiceStyles.titleWrapper}>
-                    <Text style={Styles.subTitle}>Tow Request</Text>
-                    <LottieView
-                        source={require('../../assets/animations/gear.json')}
-                        loop
-                        autoPlay
-                        style={{width: 50, height: 50}}
-                    />
+                        <Text style={Styles.headerTitle}>Tow Request</Text>
+                        <LottieView
+                            source={require('../../assets/animations/gear.json')}
+                            loop
+                            autoPlay
+                            style={{width: 50, height: 50}}
+                        />
                     </View>
-                    <Text style={Styles.text}>Your request has been made and is being processed. We'll notify you when a driver is on route!</Text>
+                    <Text style={Styles.tabHeader}>Your request has been sent! We'll notify you when a driver is on route!</Text>
                 </View>
-                <View style={Styles.block}>
-                    <TouchableOpacity
-                        style={[Styles.actionButton, {backgroundColor: 'red', alignSelf: 'center'}]}
-                        onPress={() => Alert.alert(
-                            'Cancel',
-                            'Are you sure you want to cancel your tow request?',
-                            [
-                                { text: 'No' },
-                                {
-                                    text: 'Yes',
-                                    onPress: async () => {
-                                        await handleSendAdminNotif('Tow Request Cancelled', 'Customer has cancelled the tow request');
-                                        await handleUpdateTowRequestStatus(client, towRequest.id, userId, 'CANCELLED', setTowRequest);
-                                        Alert.alert(
-                                            'Cancelled',
-                                            'Your tow request has been cancelled',
-                                            [{ text: 'OK' }]
-                                        );
-                                        setTowRequest(undefined);
-                                        navigate.reset({
-                                            index: 0,
-                                            routes: [{ name: '(tabs)' }]
-                                        })
-                                    }
+                <View style={[Styles.block, {alignItems: 'center'}]}>
+                    <View style={{
+                        height: 150,
+                        overflow: 'hidden',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    }}>
+                        <LottieView
+                            source={require('../../assets/animations/paperAirplane.json')}
+                            loop
+                            autoPlay
+                            style={{width: 250, height: 250}}
+                        />
+                    </View>
+                </View>
+                <TouchableOpacity
+                    style={[Styles.actionButton, {backgroundColor: 'rgba(0,0,0,0.25)', elevation: 0, alignSelf: 'center', borderWidth: 1, borderColor: 'red'}]}
+                    onPress={() => Alert.alert(
+                        'Cancellation',
+                        'Are you sure you want to cancel your tow request?',
+                        [
+                            { text: 'No' },
+                            {
+                                text: 'Yes',
+                                onPress: async () => {
+                                    await handleSendAdminNotif('Tow Request Cancelled', 'Customer has cancelled the tow request');
+                                    await handleUpdateTowRequestStatus(client, towRequest.id, userId, 'CANCELLED', setTowRequest);
+                                    Alert.alert(
+                                        'Cancelled',
+                                        'Your tow request has been cancelled',
+                                        [{ text: 'OK' }]
+                                    );
+                                    setTowRequest(undefined);
+                                    navigate.reset({
+                                        index: 0,
+                                        routes: [{ name: '(tabs)' }]
+                                    })
                                 }
-                            ]
-                        )}
-                    >
-                        <Text style={Styles.actionText}>Cancel</Text>
-                    </TouchableOpacity>
-                </View>
+                            }
+                        ]
+                    )}
+                >
+                    <Text style={[Styles.actionText, {color: 'red'}]}>Cancel Request</Text>
+                </TouchableOpacity>
                 </>
             ) : towRequest?.status === 'IN_PROGRESS' ? (
                 <>
@@ -227,7 +246,7 @@ const TowStatus = () =>
                     </View>
                     <TouchableOpacity
                         style={TowStyles.iconContainer}
-                        onPress={() => openCallDriver(request?.user?.phone)}
+                        onPress={() => openCallDriver(towRequest?.user?.phone)}
                     >
                         <Entypo
                             name='phone'

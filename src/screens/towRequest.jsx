@@ -1,6 +1,6 @@
 import Colors from "../../constants/colors";
-import ProgressBar from 'react-native-progress/Bar';
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
+import { Bar } from 'react-native-progress';
 import { Dimensions } from "react-native";
 import { ServiceStyles, Styles } from "../../constants/styles"
 import { useApp } from '../../components/context';
@@ -30,6 +30,8 @@ const TowRequest = () =>
     const [ marker, setMarker ] = useState();
     const [ step, setStep ] = useState(1);
     const [ loading, setLoading ] = useState(false);
+    const [ errorMessage, setErrorMessage ] = useState(undefined);
+    const [ missingAnswer, setMissingAnswer ] = useState(false);
 
     const scrollRef = useRef(null);
 
@@ -66,7 +68,7 @@ const TowRequest = () =>
             <Background scrollRef={scrollRef}>
                 <View style={ServiceStyles.progressBar}>
                     <Ionicons name="information-circle" size={35} color={Colors.secondary} />
-                    <ProgressBar
+                    <Bar
                         width={screenWidth * 0.09}
                         unfilledColor='white'
                         borderWidth={0}
@@ -74,7 +76,7 @@ const TowRequest = () =>
                         color={Colors.secondary}
                     />
                     <Ionicons name="car-sport" size={30} color={step >= 2 ? Colors.secondary : Colors.backDropAccent}/>
-                    <ProgressBar
+                    <Bar
                         width={screenWidth * 0.09}
                         unfilledColor='white'
                         borderWidth={0}
@@ -82,7 +84,7 @@ const TowRequest = () =>
                         color={Colors.secondary}
                     />
                     <FontAwesome5 name="map-marker-alt" size={30} color={step >= 3 ? Colors.secondary : Colors.backDropAccent} />
-                    <ProgressBar
+                    <Bar
                         width={screenWidth * 0.09}
                         unfilledColor='white'
                         borderWidth={0}
@@ -90,7 +92,7 @@ const TowRequest = () =>
                         color={Colors.secondary}
                     />
                     <FontAwesome5 name='pencil-alt' size={30} color={step >= 4 ? Colors.secondary: Colors.backDropAccent}/>
-                    <ProgressBar
+                    <Bar
                         width={screenWidth * 0.09}
                         unfilledColor='white'
                         borderWidth={0}
@@ -154,23 +156,39 @@ const TowRequest = () =>
                                     />
                                 ))}
                             </View>
-                            <View style={Styles.block}>
-                                <View style={ServiceStyles.buttonContainer}>
-                                    <TouchableOpacity
-                                        style={ServiceStyles.directionButton}
-                                        onPress={() => setStep(1)}
-                                    >
-                                        <FontAwesome name='arrow-left' size={24} color='white' />
-                                        <Text style={Styles.actionText}>Back</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        style={ServiceStyles.directionButton}
-                                        onPress={() => { if (selectedVehicle) setStep(3) }}
-                                    >
-                                        <Text style={Styles.actionText}>Continue</Text>
-                                        <FontAwesome name='arrow-right' size={24} color='white' />
-                                    </TouchableOpacity>
+                            { errorMessage && (
+                                <View style={Styles.block}>
+                                    <View style={Styles.errorContainer}>
+                                        <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
+                                        <Text style={Styles.errorText}>{errorMessage}</Text>
+                                    </View>
                                 </View>
+                            )}
+                            <View style={ServiceStyles.buttonContainer}>
+                                <TouchableOpacity
+                                    style={ServiceStyles.directionButton}
+                                    onPress={() => {
+                                        setStep(1);
+                                        setErrorMessage(undefined);
+                                    }}
+                                >
+                                    <FontAwesome name='arrow-left' size={24} color='white' />
+                                    <Text style={Styles.actionText}>Back</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={ServiceStyles.directionButton}
+                                    onPress={() => {
+                                        if (selectedVehicle) {
+                                            setStep(3);
+                                            setErrorMessage(undefined);
+                                        } else {
+                                            setErrorMessage('Select a vehicle to continue');
+                                        }
+                                    }}
+                                >
+                                    <Text style={Styles.actionText}>Continue</Text>
+                                    <FontAwesome name='arrow-right' size={24} color='white' />
+                                </TouchableOpacity>
                             </View>
                         </View>
                     </>
@@ -239,7 +257,7 @@ const TowRequest = () =>
                             <Text style={Styles.headerTitle}>Towing Information</Text>
                             <Text style={Styles.tabHeader}>Please answer the following questions</Text>
                         </View>
-                        <View style={[Styles.floatingBlock, {rowGap: 15}]}>
+                        <View style={[Styles.floatingBlock, missingAnswer && {borderColor: 'red', borderWidth: 1}, {rowGap: 15}]}>
                             <View style={Styles.infoContainer}>
                                 <Text style={Styles.text}>Does the vehicle start?</Text>
                                 <View style={Styles.binaryTabContainer}>
@@ -309,6 +327,12 @@ const TowRequest = () =>
                                 </View>
                             </View>
                         </View>
+                        { errorMessage && (
+                            <View style={Styles.errorContainer}>
+                                <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
+                                <Text style={Styles.errorText}>{errorMessage}</Text>
+                            </View>
+                        )}
                         <View style={[Styles.floatingBlock, {rowGap: 10}]}>
                             <View style={[Styles.infoContainer, {rowGap: 0}]}>
                                 <Text style={Styles.headerTitle}>Description <Text style={Styles.text}>(optional)</Text></Text>
@@ -329,14 +353,28 @@ const TowRequest = () =>
                         <View style={ServiceStyles.buttonContainer}>
                             <TouchableOpacity
                                 style={ServiceStyles.directionButton}
-                                onPress={() => setStep(3)}
+                                onPress={() => {
+                                    setStep(3);
+                                    setErrorMessage(undefined);
+                                    setMissingAnswer(false);
+                                }}
                             >
                                 <FontAwesome name='arrow-left' size={24} color='white' />
                                 <Text style={Styles.actionText}>Back</Text>
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={ServiceStyles.directionButton}
-                                onPress={() => { if (canRun !== undefined && canRoll !== undefined && keyIncluded !== undefined && isObstructed !== undefined) setStep(5) }}
+                                onPress={() => {
+                                    if (canRun !== undefined && canRoll !== undefined && keyIncluded !== undefined && isObstructed !== undefined)
+                                    {
+                                        setStep(5);
+                                        setMissingAnswer(false);
+                                        setErrorMessage(undefined);
+                                    } else {
+                                        setMissingAnswer(true);
+                                        setErrorMessage('Answer all questions to proceed');
+                                    }
+                                }}
                             >
                                 <Text style={Styles.actionText}>Continue</Text>
                                 <FontAwesome name='arrow-right' size={24} color='white' />
@@ -430,14 +468,18 @@ const TowRequest = () =>
                                         return;
                                     }
                                     setLoading(true);
-                                    const data = {
-                                        notes: notes,
-                                        vehicleId: selectedVehicle.id,
-                                        userId: userId
-                                    };
-                                    await handleSendAdminNotif('Towing Request', 'A customer is requesting a tow', data);
-                                    await handleSendDriversNotif('Towing Request', 'A customer is requesting a tow', data);
-                                    await handleCreateTowRequest(client, userId, selectedVehicle.id, marker, { notes, canRun, canRoll, keyIncluded, isObstructed }, setTowRequest);
+                                    try {
+                                        const data = {
+                                            notes: notes,
+                                            vehicleId: selectedVehicle.id,
+                                            userId: userId
+                                        };
+                                        await handleSendAdminNotif('Towing Request', 'A customer is requesting a tow', data);
+                                        await handleSendDriversNotif('Towing Request', 'A customer is requesting a tow', data);
+                                        await handleCreateTowRequest(client, userId, selectedVehicle, marker, { notes, canRun, canRoll, keyIncluded, isObstructed }, setTowRequest);
+                                    } catch (error) {
+                                        console.error(error);
+                                    }
                                     setLoading(false);
                                 }}
                             >

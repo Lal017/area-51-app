@@ -257,6 +257,12 @@ export const onCreateAppointment = /* GraphQL */ `
         owner
         __typename
       }
+      vehicleYear
+      vehicleMake
+      vehicleModel
+      vehicleColor
+      vehiclePlate
+      vehicleVin
       createdAt
       updatedAt
       owner
@@ -307,6 +313,12 @@ export const onUpdateAppointment = /* GraphQL */ `
         owner
         __typename
       }
+      vehicleYear
+      vehicleMake
+      vehicleModel
+      vehicleColor
+      vehiclePlate
+      vehicleVin
       createdAt
       updatedAt
       owner
@@ -357,6 +369,12 @@ export const onDeleteAppointment = /* GraphQL */ `
         owner
         __typename
       }
+      vehicleYear
+      vehicleMake
+      vehicleModel
+      vehicleColor
+      vehiclePlate
+      vehicleVin
       createdAt
       updatedAt
       owner
@@ -403,6 +421,12 @@ export const onCreateTowRequest = /* GraphQL */ `
         owner
         __typename
       }
+      vehicleYear
+      vehicleMake
+      vehicleModel
+      vehicleColor
+      vehiclePlate
+      vehicleVin
       status
       latitude
       longitude
@@ -462,6 +486,12 @@ export const onUpdateTowRequest = /* GraphQL */ `
         owner
         __typename
       }
+      vehicleYear
+      vehicleMake
+      vehicleModel
+      vehicleColor
+      vehiclePlate
+      vehicleVin
       status
       latitude
       longitude
@@ -521,6 +551,12 @@ export const onDeleteTowRequest = /* GraphQL */ `
         owner
         __typename
       }
+      vehicleYear
+      vehicleMake
+      vehicleModel
+      vehicleColor
+      vehiclePlate
+      vehicleVin
       status
       latitude
       longitude

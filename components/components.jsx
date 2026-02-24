@@ -118,7 +118,7 @@ const BackgroundAlt = ({children, style}) =>
 {
     return (
         <LinearGradient
-            style={[{flex: 1, paddingBottom: 50}, style]}
+            style={[{flex: 1}, style]}
             colors={[Colors.background, Colors.backgroundFade, Colors.background]}
             locations={[0.1, 0.5, 0.9]}
             start={{x: 1, y: 0.9}}
@@ -143,15 +143,18 @@ const CalendarHeader = ({date}) =>
 };
 
 // reusable tab component for tabs
-const Tab = ({text, action, leftIcon, rightIcon}) =>
+const Tab = ({header, text, action, leftIcon, rightIcon, style}) =>
 {
     return(
         <TouchableOpacity
-            style={Styles.tabWrapper}
+            style={[Styles.tabWrapper, style]}
             onPress={action}
         >
             {leftIcon}
-            <Text style={Styles.tabText}>{text}</Text>
+            <View style={!header ? {flexDirection: 'row'} : {flexDirection: 'column'}}>
+                <Text style={Styles.tabHeader}>{header}</Text>
+                <Text style={Styles.tabText}>{text}</Text>
+            </View>
             {rightIcon}
         </TouchableOpacity>
     )
@@ -168,23 +171,6 @@ const Select = ({text, selected, action, leftIcon, rightIcon}) =>
             {leftIcon}
             <Text style={[Styles.tabText, selected ? {color: Colors.text} : null]}>{text}</Text>
             {rightIcon}         
-        </TouchableOpacity>
-    )
-};
-
-// reusable tab component to display information
-const InfoTab = ({header, text, action, icon}) =>
-{
-    return(
-        <TouchableOpacity
-            style={Styles.tabWrapper}
-            onPress={action}
-        >
-            {icon}
-            <View>
-                <Text style={Styles.tabHeader}>{header}</Text>
-                <Text style={Styles.tabText}>{text}</Text>
-            </View>
         </TouchableOpacity>
     )
 };
@@ -315,7 +301,6 @@ export {
     CalendarHeader,
     Tab,
     Select,
-    InfoTab,
     BinarySelect,
     formatNumber,
     formatDate,

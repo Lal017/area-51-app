@@ -1,13 +1,16 @@
-import { Background, formatDate, formatTime } from '../../../components/components';
+import Colors from '../../../constants/colors';
+import { Background, BackgroundAlt, formatDate, formatTime, Tab } from '../../../components/components';
 import { handleDeleteAppointment, handleGetMyAppointments } from '../../../components/appointmentComponents';
 import { useApp } from '../../../components/context';
 import { handleSendAdminNotif } from '../../../components/notifComponents';
-import { Styles, ServiceStyles } from '../../../constants/styles';
-import { View, Text, TouchableOpacity, Alert } from 'react-native';
+import { Styles } from '../../../constants/styles';
+import { View, Text, TouchableOpacity, Alert, FlatList } from 'react-native';
 import { useEffect } from 'react';
 import { router } from 'expo-router';
 import { useNavigation } from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
+import { Entypo, Feather, FontAwesome, FontAwesome5, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import Animated, { useAnimatedStyle, withSpring, useSharedValue } from 'react-native-reanimated';
 
 const MyAppointments = () => {
     const { client, userId, appointments, setAppointments } = useApp();
@@ -23,50 +26,56 @@ const MyAppointments = () => {
         getAppointments();
     }, []);
     
-    return (
-        <>
-            { appointments && appointments.length > 0 ? (
-                <Background>
-                    {appointments?.map((appointment, index) => (
-                        <View key={index} style={ServiceStyles.fieldContainer}>
-                            <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                                <Text style={Styles.subTitle}>Date</Text>
-                                <Text style={Styles.text}>{formatDate(appointment?.date)}</Text>
-                            </View>
-                            <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                                <Text style={Styles.subTitle}>Time</Text>
-                                <Text style={Styles.text}>{formatTime(appointment?.time)}</Text>
-                            </View>
-                            <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                                <Text style={Styles.subTitle}>Vehicle</Text>
-                                <Text style={Styles.text}>{`${appointment?.vehicle?.year} ${appointment?.vehicle?.make} ${appointment?.vehicle?.model}`}</Text>
-                            </View>
-                            <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                                <Text style={Styles.subTitle}>Service</Text>
-                                <Text style={Styles.text}>{appointment?.service}</Text>
-                            </View>
-                            { appointment?.notes ? (
-                                <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                                    <Text style={Styles.subTitle}>Description</Text>
-                                    <Text style={Styles.text}>{appointment?.notes}</Text>
-                                </View>
-                            ) : null }
+    const iconCheck = (service, isRight) =>
+    {
+        switch (service) {
+            case 'Oil Change':
+                return <FontAwesome5 name="oil-can" size={30} style={isRight ? Styles.rightIcon : Styles.icon} color={Colors.backDrop}/>;
+            case 'Diagnosis':
+                return <FontAwesome name="stethoscope" size={30} style={isRight ? Styles.rightIcon : Styles.icon} color={Colors.backDrop}/>;
+            case 'Tuning':
+                return <Entypo name="area-graph" size={30} style={isRight ? Styles.rightIcon : Styles.icon} color={Colors.backDrop}/>;
+            case 'A/C':
+                return <MaterialIcons name="air" size={30} style={isRight ? Styles.rightIcon : Styles.icon} color={Colors.backDrop}/>;
+            default:
+                return <MaterialCommunityIcons name="dots-horizontal-circle" size={30} style={isRight ? Styles.rightIcon : Styles.icon} color={Colors.backDrop}/>;
+        }
+    };
+
+    const AppointmentItem = ({ item }) =>
+    {
+        const expandedHeight = useSharedValue(0);
+        const toggleExpand = () => expandedHeight.value = expandedHeight.value === 0 ? 500 : 0;
+
+        const animatedStyle = useAnimatedStyle(() => ({
+            maxHeight: withSpring(expandedHeight.value),
+            overflow: 'hidden'
+        }));
+    
+        return (
+            <>
+                <Tab
+                    header={formatDate(item?.date)}
+                    text={formatTime(item?.time)}
+                    leftIcon={iconCheck(item?.service, false)}
+                    rightIcon={
+                        <View style={[Styles.rightIcon, {flexDirection: 'row', columnGap: 10}]}>
                             <TouchableOpacity
-                                style={Styles.actionButton}
+                                style={{backgroundColor: Colors.button, padding: 10, borderRadius: 10}}
                                 onPress={() => {
                                     router.push({
-                                        params: { appointmentParam: JSON.stringify(appointment) },
+                                        params: { appointmentParam: JSON.stringify(item) },
                                         pathname: '/(tabs)/(service)/editAppointment'
                                     });
                                 }}
                             >
-                                <Text style={Styles.actionText}>Edit</Text>
+                                <Entypo name='edit' size={25} color={Colors.backDropAccent}/>
                             </TouchableOpacity>
                             <TouchableOpacity
-                                style={[Styles.actionButton, {alignSelf: 'center', backgroundColor: 'red'}]}
+                                style={{backgroundColor: Colors.redButton, padding: 10, borderRadius: 10}}
                                 onPress={() => {
                                     Alert.alert(
-                                        'Confirm',
+                                        'Cancel Appointment',
                                         'Are you sure you would like to cancel your appointment?',
                                         [
                                             { text: 'No' },
@@ -74,11 +83,11 @@ const MyAppointments = () => {
                                                 text: 'Yes',
                                                 onPress: async () => {
                                                     try {
-                                                        await handleDeleteAppointment(client, appointment?.id, userId, setAppointments);
+                                                        await handleDeleteAppointment(client, item?.id, userId, setAppointments);
                                                         await handleSendAdminNotif('Appointment Cancelled', 'A customer has cancelled their appointment');
                                                         navigate.reset({
                                                             index: 0,
-                                                            routes: [{ name: '(service)' }]
+                                                            routes: [{ name: '(home)' }]
                                                         });
                                                     } catch (error) {
                                                         console.log(error);
@@ -89,14 +98,49 @@ const MyAppointments = () => {
                                     )
                                 }}
                             >
-                                <Text style={Styles.actionText}>Cancel</Text>
+                                <Feather name='x' size={25} color={Colors.backDropAccent}/>
                             </TouchableOpacity>
-                            <View style={[Styles.block, {alignItems: 'center'}]}>
-                                {index < appointments.length - 1 && <View style={Styles.hr} />}
-                            </View>
                         </View>
-                    ))}
-                </Background>
+                    }
+                    action={toggleExpand}
+                />
+                <Animated.View style={animatedStyle}>
+                    <>
+                        <Tab
+                            header='Service'
+                            text={item?.service}
+                            rightIcon={iconCheck(item?.service, true)}
+                            style={{height: 'none', paddingBottom: 5}}
+                        />
+                        <Tab
+                            header={`Vehicle${item?.vehicle?.plate ? ` (${item.vehicle.plate})` : ``}`}
+                            text={`${item.vehicle ? `${item.vehicle.year} ${item.vehicle.make} ${item.vehicle.model}` : `${item.vehicleYear} ${item.vehicleMake} ${item.vehicleModel}`}`}
+                            rightIcon={<Ionicons name="car-sport" size={30} style={Styles.rightIcon} color={Colors.backDrop}/>}
+                            style={{height: 'none', paddingBottom: 5}}
+                        />
+                        { item?.notes && (
+                            <Tab
+                                header='Appointment Note'
+                                text={item?.notes}
+                                style={{height: 'none', paddingBottom: 5}}
+                            />
+                        )}
+                    </>
+                </Animated.View>
+            </>
+        )
+    };
+
+    return (
+        <>
+            { appointments && appointments.length > 0 ? (
+                <BackgroundAlt>
+                    <FlatList
+                        data={appointments}
+                        keyExtractor={item => item.id}
+                        renderItem={({ item }) => <AppointmentItem item={item}/>}
+                    />
+                </BackgroundAlt>
             ) : (
                 <Background>
                     <View style={[Styles.block, {alignItems: 'center'}]}>

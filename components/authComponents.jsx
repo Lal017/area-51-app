@@ -298,13 +298,7 @@ const handleDeleteAccount = async (client, userId, identityId, email, inputEmail
         await handleDeleteUser(client, userId);
         await deleteUser();
         await clearLocalStorage();
-        Alert.alert(
-            "Deleted",
-            "User has been deleted",
-            [
-                { text: 'Ok'}
-            ]
-        );
+
     } catch (error) {
         console.error('ERROR, could not delete user', error);
         return getErrorMessage(error);

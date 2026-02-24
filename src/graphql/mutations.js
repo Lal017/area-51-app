@@ -182,6 +182,12 @@ export const createAppointment = /* GraphQL */ `
       notes
       userId
       vehicleId
+      vehicleYear
+      vehicleMake
+      vehicleModel
+      vehicleColor
+      vehiclePlate
+      vehicleVin
       createdAt
       updatedAt
       owner
@@ -202,6 +208,12 @@ export const updateAppointment = /* GraphQL */ `
       notes
       userId
       vehicleId
+      vehicleYear
+      vehicleMake
+      vehicleModel
+      vehicleColor
+      vehiclePlate
+      vehicleVin
       createdAt
       updatedAt
       owner
@@ -222,6 +234,12 @@ export const deleteAppointment = /* GraphQL */ `
       notes
       userId
       vehicleId
+      vehicleYear
+      vehicleMake
+      vehicleModel
+      vehicleColor
+      vehiclePlate
+      vehicleVin
       createdAt
       updatedAt
       owner
@@ -238,6 +256,12 @@ export const createTowRequest = /* GraphQL */ `
       id
       userId
       vehicleId
+      vehicleYear
+      vehicleMake
+      vehicleModel
+      vehicleColor
+      vehiclePlate
+      vehicleVin
       status
       latitude
       longitude
@@ -267,6 +291,12 @@ export const updateTowRequest = /* GraphQL */ `
       id
       userId
       vehicleId
+      vehicleYear
+      vehicleMake
+      vehicleModel
+      vehicleColor
+      vehiclePlate
+      vehicleVin
       status
       latitude
       longitude
@@ -296,6 +326,12 @@ export const deleteTowRequest = /* GraphQL */ `
       id
       userId
       vehicleId
+      vehicleYear
+      vehicleMake
+      vehicleModel
+      vehicleColor
+      vehiclePlate
+      vehicleVin
       status
       latitude
       longitude

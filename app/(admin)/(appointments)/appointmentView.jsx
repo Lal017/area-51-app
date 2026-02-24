@@ -63,7 +63,7 @@ const AppointmentView = () =>
                 <View style={[Styles.infoContainer, {rowGap: 0}]}>
                     <View style={AdminStyles.labelContainer}>
                         <Text style={Styles.subTitle}>Pickup Status</Text>
-                        <Text style={[Styles.text, appointment?.vehicle.readyForPickup ? {color: 'green'} : {color: 'red'}]}>{ appointment?.vehicle.readyForPickup ? 'Ready for pickup' : 'Not ready for pickup'}</Text>
+                        <Text style={[Styles.text, appointment?.vehicle?.readyForPickup ? {color: 'green'} : {color: 'red'}]}>{ appointment?.vehicle?.readyForPickup ? 'Ready for pickup' : 'Not ready for pickup'}</Text>
                     </View>
                 </View>
             </View>
@@ -87,8 +87,8 @@ const AppointmentView = () =>
                                     {
                                         text: 'Yes',
                                         onPress: async () => {
-                                            let title = !appointment?.vehicle.readyForPickup ? 'Vehicle Pickup' : 'Vehicle Picked Up';
-                                            let body = !appointment?.vehicle.readyForPickup ? `Your ${appointment?.vehicle.year} ${appointment?.vehicle.make} ${appointment?.vehicle.model} is ready for pickup!` : `Your ${appointment?.vehicle.year} ${appointment?.vehicle.make} ${appointment?.vehicle.model} has been picked up!`;
+                                            let title = !appointment?.vehicle?.readyForPickup ? 'Vehicle Pickup' : 'Vehicle Picked Up';
+                                            let body = !appointment?.vehicle?.readyForPickup ? `Your ${appointment?.vehicle.year} ${appointment?.vehicle.make} ${appointment?.vehicle.model} is ready for pickup!` : `Your ${appointment?.vehicle.year} ${appointment?.vehicle.make} ${appointment?.vehicle.model} has been picked up!`;
                                             const data = {
                                                 type: "VEHICLE_PICKUP"
                                             };
@@ -104,7 +104,7 @@ const AppointmentView = () =>
                             )
                         }}
                     >
-                        <Text style={Styles.actionText}>{appointment?.vehicle.readyForPickup ? 'Completed' : 'Set Ready for pickup'}</Text>
+                        <Text style={Styles.actionText}>{appointment?.vehicle?.readyForPickup ? 'Completed' : 'Set Ready for pickup'}</Text>
                     </TouchableOpacity>
                 </View>
             </View>

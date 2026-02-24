@@ -45,6 +45,13 @@ const Styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-evenly',
     },
+    consoleBubbleAlt: {
+        width: '48%',
+        height: '33%',
+        borderRadius: 10,
+        alignItems: 'center',
+        justifyContent: 'space-evenly'
+    },
     // Tab Select
     tabWrapper: {
         width: '100%',
@@ -170,6 +177,12 @@ const Styles = StyleSheet.create({
         textAlign: 'left',
         color: Colors.text
     },
+    errorText: {
+        fontSize: RFValue(15),
+        fontFamily: 'SpaceMono-Regular',
+        textAlign: 'left',
+        color: 'red'
+    },
     // icons
     icon: {
         position: 'absolute',
@@ -213,12 +226,11 @@ const Styles = StyleSheet.create({
         backgroundColor: Colors.backgroundAccent
     },
     errorContainer: {
-        width: '100%',
+        width: '90%',
         justifyContent: 'center',
-        alignItems: 'center',
-        textAlign: 'center',
-        paddingLeft: 20,
-        paddingRight: 20
+        alignItems: 'flex-start',
+        alignSelf: 'center',
+        paddingLeft: 50
     }
 });
 

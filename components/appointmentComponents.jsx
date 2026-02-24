@@ -94,7 +94,7 @@ const handleFinalCheck = async (date, time) =>
 };
 
 // used to create an appointment
-const handleCreateAppointment = async (client, date, time, service, notes, userId, vehicleId, setAppointment) =>
+const handleCreateAppointment = async (client, date, time, service, notes, userId, vehicle, setAppointment) =>
 {
     try {
         await client.graphql({
@@ -106,25 +106,27 @@ const handleCreateAppointment = async (client, date, time, service, notes, userI
                     service: service,
                     notes: notes,
                     userId: userId,
-                    vehicleId: vehicleId,
+                    vehicleId: vehicle.id,
+                    vehicleYear: vehicle.year,
+                    vehicleMake: vehicle.make,
+                    vehicleModel: vehicle.model,
+                    vehicleColor: vehicle.color,
+                    vehiclePlate: vehicle.plate,
+                    vehicleVin: vehicle.vin
                 }
             }
         });
         
         const getAppointments = await handleGetMyAppointments(client, userId);
         setAppointment(getAppointments);
-        Alert.alert(
-            'Appointment created',
-            'Your appointment has been scheduled!',
-            [{ text: 'OK' }]
-        );
+
     } catch (error) {
         console.error('ERROR, could not create appointment', error);
     }
 };
 
 // used to update appointment details
-const handleUpdateAppointment = async (client, appointmentId, date, time, service, notes, userId, vehicleId, setAppointments) =>
+const handleUpdateAppointment = async (client, appointmentId, date, time, service, notes, userId, vehicle, setAppointments) =>
 {
     try {
         await client.graphql({
@@ -137,7 +139,13 @@ const handleUpdateAppointment = async (client, appointmentId, date, time, servic
                     service: service,
                     notes: notes,
                     userId: userId,
-                    vehicleId: vehicleId
+                    vehicleId: vehicle.id,
+                    vehicleYear: vehicle.year,
+                    vehicleMake: vehicle.make,
+                    vehicleModel: vehicle.model,
+                    vehicleColor: vehicle.color,
+                    vehiclePlate: vehicle.plate,
+                    vehicleVin: vehicle.vin
                 }
             }
         });
@@ -145,11 +153,6 @@ const handleUpdateAppointment = async (client, appointmentId, date, time, servic
         const getAppointments = await handleGetMyAppointments(client, userId);
         setAppointments(getAppointments);
         
-        Alert.alert(
-            'Appointment updated',
-            'Your appointment has been updated!',
-            [{ text: 'OK' }]
-        )
     } catch (error) {
         console.error('ERROR, could not update appointment:', error);
     }
@@ -171,11 +174,6 @@ const handleDeleteAppointment = async (client, appointmentId, userId, setAppoint
         const getAppointments = await handleGetMyAppointments(client, userId);
         setAppointments(getAppointments);
 
-        Alert.alert(
-            'Appointment cancelled',
-            'Your appointment has been cancelled',
-            [{ text: 'OK' }]
-        );
     } catch (error) {
         console.error('ERROR, could not delete appointment:', error);
     }

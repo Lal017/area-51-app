@@ -372,7 +372,7 @@ const getInitialCompassHeading = async () =>
 // -------------------------------------
 
 // used to create a tow request
-const handleCreateTowRequest = async (client, userId, vehicleId, location, requestInfo, setTowRequest) =>
+const handleCreateTowRequest = async (client, userId, vehicle, location, requestInfo, setTowRequest) =>
 {
     try {
         const result = await client.graphql({
@@ -380,7 +380,7 @@ const handleCreateTowRequest = async (client, userId, vehicleId, location, reque
             variables: {
                 input: {
                     userId: userId,
-                    vehicleId: vehicleId,
+                    vehicleId: vehicle.id,
                     status: "REQUESTED",
                     latitude: location.latitude,
                     longitude: location.longitude,
@@ -388,7 +388,13 @@ const handleCreateTowRequest = async (client, userId, vehicleId, location, reque
                     canRun: requestInfo.canRun,
                     canRoll: requestInfo.canRoll,
                     keyIncluded: requestInfo.keyIncluded,
-                    isObstructed: requestInfo.isObstructed
+                    isObstructed: requestInfo.isObstructed,
+                    vehicleYear: vehicle.year,
+                    vehicleMake: vehicle.make,
+                    vehicleModel: vehicle.model,
+                    vehicleColor: vehicle.color,
+                    vehiclePlate: vehicle.plate,
+                    vehicleVin: vehicle.vin
                 }
             }
         });
@@ -402,7 +408,7 @@ const handleCreateTowRequest = async (client, userId, vehicleId, location, reque
             [{ text: 'OK' }]
         );
     } catch (error) {
-        console.error('ERROR, could not create tow request: ', error);
+        console.error('ERROR, could not create tow request: ');
     }
 };
 

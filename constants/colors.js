@@ -11,6 +11,7 @@ const Colors = {
     textAlt: 'black',
     subText: 'rgba(255,255,255,0.5)',
     button: '#4c4c63',
+    redButton: '#b80000',
     contrast: '#ced4da'
 };
 

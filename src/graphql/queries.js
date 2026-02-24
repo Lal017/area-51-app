@@ -212,6 +212,12 @@ export const getAppointment = /* GraphQL */ `
         owner
         __typename
       }
+      vehicleYear
+      vehicleMake
+      vehicleModel
+      vehicleColor
+      vehiclePlate
+      vehicleVin
       createdAt
       updatedAt
       owner
@@ -249,6 +255,12 @@ export const listAppointments = /* GraphQL */ `
           vin
           readyForPickup
         }
+        vehicleYear
+        vehicleMake
+        vehicleModel
+        vehicleColor
+        vehiclePlate
+        vehicleVin
         createdAt
         updatedAt
         owner
@@ -286,7 +298,14 @@ export const appointmentsByUserId = /* GraphQL */ `
           year
           make
           model
+          color
         }
+        vehicleYear
+        vehicleMake
+        vehicleModel
+        vehicleColor
+        vehiclePlate
+        vehicleVin
         createdAt
         updatedAt
         owner
@@ -333,6 +352,12 @@ export const getTowRequest = /* GraphQL */ `
         owner
         __typename
       }
+      vehicleYear
+      vehicleMake
+      vehicleModel
+      vehicleColor
+      vehiclePlate
+      vehicleVin
       status
       latitude
       longitude
@@ -373,6 +398,7 @@ export const listTowRequests = /* GraphQL */ `
         }
         vehicleId
         vehicle {
+          id
           year
           make
           model
@@ -380,6 +406,12 @@ export const listTowRequests = /* GraphQL */ `
           plate
           vin
         }
+        vehicleYear
+        vehicleMake
+        vehicleModel
+        vehicleColor
+        vehiclePlate
+        vehicleVin
         status
         latitude
         longitude
@@ -422,6 +454,12 @@ export const towRequestsByUserId = /* GraphQL */ `
         id
         userId
         vehicleId
+        vehicleYear
+        vehicleMake
+        vehicleModel
+        vehicleColor
+        vehiclePlate
+        vehicleVin
         status
         latitude
         longitude

@@ -29,7 +29,15 @@ const Schedule = () =>
   const [selectedDay, setSelectedDay] = useState(appointment?.date ?? undefined);
   const [selectedTime, setSelectedTime] = useState(appointment?.time ?? undefined);
   const [selectedService, setSelectedService] = useState(appointment?.service ?? undefined);
-  const [selectedVehicle, setSelectedVehicle] = useState(appointment?.vehicle ?? undefined);
+  const [selectedVehicle, setSelectedVehicle] = useState(appointment?.vehicle ?? (appointment?.vehicleYear ? {
+    year: appointment.vehicleYear,
+    make: appointment.vehicleMake,
+    model: appointment.vehicleModel,
+    color: appointment.vehicleColor,
+    plate: appointment.vehiclePlate,
+    vin: appointment.vehicleVin
+    } : null)
+  );
   const [scheduledAppointments, setScheduledAppointments] = useState();
   const [availableAppointments, setAvailableAppointments] = useState();
   const [notes, setNotes] = useState(appointment?.notes ?? undefined);
@@ -118,9 +126,6 @@ const Schedule = () =>
   };
 
   const bottomSheetRef = useRef(null);
-  const handleSheetChanges = useCallback((index) => {
-    console.log('handleSheetChanges', index);
-  }, []);
 
   const snapPoints = useMemo(() => ['25%', '60%', '80%'], []);
   const handleClosePress = () => bottomSheetRef.current?.close();
@@ -212,7 +217,8 @@ const Schedule = () =>
               </View>
               { errorMessage ? (
                 <View style={Styles.errorContainer}>
-                  <Text style={[Styles.text, {color: 'red'}]}>{errorMessage}</Text>
+                  <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
+                  <Text style={Styles.errorText}>{errorMessage}</Text>
                 </View>
               ) : null}
               <View style={ServiceStyles.buttonContainer}>
@@ -239,7 +245,6 @@ const Schedule = () =>
               </View>
               <BottomSheet
                 ref={bottomSheetRef}
-                onChange={handleSheetChanges}
                 snapPoints={snapPoints}
                 index={-1}
                 backgroundStyle={{ backgroundColor: Colors.contrast}}
@@ -293,10 +298,19 @@ const Schedule = () =>
                   ))}
                 </View>
               </View>
+              { errorMessage && (
+                <View style={Styles.errorContainer}>
+                  <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
+                  <Text style={Styles.errorText}>{errorMessage}</Text>
+                </View>
+              )}
               <View style={ServiceStyles.buttonContainer}>
                 <TouchableOpacity
                   style={ServiceStyles.directionButton}
-                  onPress={() => setStep(1)}
+                  onPress={() => {
+                    setStep(1);
+                    setErrorMessage(undefined);
+                  }}
                 >
                   <FontAwesome name='arrow-left' size={24} color='white' />
                   <Text style={Styles.actionText}>Back</Text>
@@ -306,6 +320,9 @@ const Schedule = () =>
                   onPress={() => {
                     if (selectedVehicle) {
                       setStep(3);
+                      setErrorMessage(undefined);
+                    } else {
+                      setErrorMessage('Select a vehicle to continue');
                     }
                   }}
                 >
@@ -359,6 +376,12 @@ const Schedule = () =>
                   />
                 </View>
               </View>
+              { errorMessage && (
+                <View style={Styles.errorContainer}>
+                  <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
+                  <Text style={Styles.errorText}>{errorMessage}</Text>
+                </View>
+              )}
               <View style={[Styles.block, {alignItems: 'center'}]}>
                 <View style={[Styles.floatingBlock, {rowGap: 25}]}>
                     <View style={[Styles.infoContainer, {rowGap: 0}]}>
@@ -381,7 +404,10 @@ const Schedule = () =>
               <View style={ServiceStyles.buttonContainer}>
                 <TouchableOpacity
                   style={ServiceStyles.directionButton}
-                  onPress={() => setStep(2)}
+                  onPress={() => {
+                    setStep(2);
+                    setErrorMessage(undefined);
+                  }}
                 >
                   <FontAwesome name='arrow-left' size={24} color='white' />
                   <Text style={Styles.actionText}>Back</Text>
@@ -389,7 +415,12 @@ const Schedule = () =>
                 <TouchableOpacity
                   style={ServiceStyles.directionButton}
                   onPress={() => {
-                    if (selectedService) setStep(4);
+                    if (selectedService) {
+                      setStep(4);
+                      setErrorMessage(undefined);
+                    } else {
+                      setErrorMessage('Select a service to continue');
+                    }
                   }}
                 >
                   <Text style={Styles.actionText}>Continue</Text>
@@ -452,10 +483,10 @@ const Schedule = () =>
                   if (!isTaken) {
                     if (appointment) {
                       await handleSendAdminNotif('Appointment Edited', 'A customer has edited their appointment');
-                      await handleUpdateAppointment(client, appointment.id, selectedDay, selectedTime, selectedService, notes, userId, selectedVehicle.id, setAppointments);
+                      await handleUpdateAppointment(client, appointment.id, selectedDay, selectedTime, selectedService, notes, userId, selectedVehicle, setAppointments);
                     } else {
                       await handleSendAdminNotif('Appointment Scheduled', 'A customer has scheduled an appointment');
-                      await handleCreateAppointment(client, selectedDay, selectedTime, selectedService, notes, userId, selectedVehicle.id, setAppointments);
+                      await handleCreateAppointment(client, selectedDay, selectedTime, selectedService, notes, userId, selectedVehicle, setAppointments);
                     }
                       navigate.reset({
                       index: 0,

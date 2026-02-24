@@ -1,11 +1,12 @@
 import Colors from '../../constants/colors';
 import { Background } from '../../components/components';
 import { handleDeleteAccount } from '../../components/authComponents';
-import { ServiceStyles, Styles } from '../../constants/styles';
+import { Styles } from '../../constants/styles';
 import { useApp } from '../../components/context';
 import { View, Text, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
 import { useState } from 'react';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
+import { RFValue } from 'react-native-responsive-fontsize';
 
 const DeleteAccount = () =>
 {
@@ -13,6 +14,8 @@ const DeleteAccount = () =>
     const [ inputEmail, setInputEmail ] = useState();
     const [ step, setStep ] = useState(1);
     const [ loading, setLoading ] = useState(false);
+    const [ errorMessage, setErrorMessage ] = useState(undefined);
+    const [ missingEmail, setMissingEmail ] = useState(false);
 
     return (
         <Background>
@@ -42,30 +45,41 @@ const DeleteAccount = () =>
                             <Text style={[Styles.subTitle, {color: 'red', fontWeight: 'bold'}]}>CONFIRM DELETION</Text>
                             <Text style={Styles.text}>Enter your email to confirm account deletion</Text>
                         </View>
-                        <View style={Styles.inputWrapper}>
-                            <Ionicons name='mail' size={20} style={Styles.icon} />
-                            <TextInput
-                                placeholder='email'
-                                placeholderTextColor={Colors.subText}
-                                value={inputEmail}
-                                onChangeText={setInputEmail}
-                                autoCapitalize='none'
-                                style={Styles.input}
-                            />
+                        <View>
+                            <View style={Styles.inputWrapper}>
+                                <Ionicons name='mail' size={20} style={Styles.icon} />
+                                <TextInput
+                                    placeholder='email'
+                                    placeholderTextColor={Colors.subText}
+                                    value={inputEmail}
+                                    onChangeText={setInputEmail}
+                                    autoCapitalize='none'
+                                    style={[Styles.input, missingEmail && !inputEmail && {borderColor: 'red', borderBottomWidth: 2}]}
+                                />
+                            </View>
+                            {missingEmail && !inputEmail && (<Text style={[Styles.text, {color: 'red', paddingLeft: 30, fontSize: RFValue(13)}]}>Missing Email</Text>)}
                         </View>
                     </View>
-                    <TouchableOpacity
-                        onPress={async () => {
-                            if (loading || !inputEmail) return;
-                            setLoading(true);
-                            await handleDeleteAccount(client, userId, identityId, email, inputEmail);
-                            setLoading(false);
-                        }}
-                        style={[Styles.actionButton, loading && { opacity: 0.5 }, {backgroundColor: 'red'}]}
-                        disabled={loading}
-                    >
-                        <Text style={Styles.actionText}>Delete</Text>
-                    </TouchableOpacity>
+                    { errorMessage && (
+                        <View style={Styles.errorContainer}>
+                            <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
+                            <Text style={Styles.errorText}>{errorMessage}</Text>
+                        </View>
+                    )}
+                    <View style={[Styles.block, {alignItems: 'center'}]}>
+                        <TouchableOpacity
+                            onPress={async () => {
+                                if (loading || !inputEmail) { setMissingEmail(true); return;}
+                                setLoading(true);
+                                setErrorMessage(await handleDeleteAccount(client, userId, identityId, email, inputEmail));
+                                setLoading(false);
+                            }}
+                            style={[Styles.actionButton, loading && { opacity: 0.5 }, {backgroundColor: Colors.redButton}]}
+                            disabled={loading}
+                        >
+                            <Text style={Styles.actionText}>Delete</Text>
+                        </TouchableOpacity>
+                    </View>
                 </>
             ) : loading ? (
                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>

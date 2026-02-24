@@ -59,6 +59,12 @@ type Appointment
   user: User @belongsTo(fields: ["userId"])
   vehicleId: ID!
   vehicle: Vehicle @hasOne(fields: ["vehicleId"])
+  vehicleYear: Int!
+  vehicleMake: String!
+  vehicleModel: String!
+  vehicleColor: String!
+  vehiclePlate: String
+  vehicleVin: String
 }
 
 enum TowRequestStatus {
@@ -82,6 +88,12 @@ type TowRequest
   user: User @belongsTo(fields: ["userId"])
   vehicleId: ID!
   vehicle: Vehicle @hasOne(fields: ["vehicleId"])
+  vehicleYear: Int!
+  vehicleMake: String!
+  vehicleModel: String!
+  vehicleColor: String!
+  vehiclePlate: String
+  vehicleVin: String
   status: TowRequestStatus!
   latitude: Float!
   longitude: Float!
