@@ -1,4 +1,5 @@
 import Colors from '../constants/colors';
+import React from 'react';
 import { useApp } from './context';
 import { Styles, HomeStyles } from '../constants/styles';
 import { View, Text, TouchableOpacity, ScrollView, Animated, ActivityIndicator, RefreshControl, Alert, Pressable } from 'react-native';
@@ -292,6 +293,20 @@ const AppointmentReminder = ({appointments}) =>
     );
 };
 
+// resuable list component without virtualization
+const SimpleList = ({data = [], renderItem}) =>
+{
+    return(
+        <>
+            {data.map((item, index) => (
+                <React.Fragment key={index}>
+                    {renderItem({ item })}
+                </React.Fragment>
+            ))}
+        </>
+    )
+};
+
 export {
     Loading,
     CustHeader,
@@ -306,5 +321,6 @@ export {
     formatDate,
     formatTime,
     getRemainingETA,
-    AppointmentReminder
+    AppointmentReminder,
+    SimpleList
 };

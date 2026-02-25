@@ -5,7 +5,7 @@ import { AuthBackground } from '../../components/components';
 import { View, Text, TextInput, TouchableOpacity, Image, Alert} from 'react-native';
 import { useState, useEffect } from 'react';
 import { useLocalSearchParams } from 'expo-router';
-import { MaterialIcons } from '@expo/vector-icons';
+import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
 const SignUpConfirm = () =>
@@ -16,7 +16,6 @@ const SignUpConfirm = () =>
     const [cooldown, setCooldown] = useState(30);
     const [errorMessage, setErrorMessage] = useState(undefined);
     const [resendMessage, setResendMessage] = useState(undefined);
-    const [missingConfirmationCode, setMissingConfirmationCode] = useState(false);
 
     const navigate = useNavigation();
 
@@ -39,28 +38,30 @@ const SignUpConfirm = () =>
             </View>
             <View style={[Styles.block, {alignItems: 'center'}]}>
                 <View style={Styles.infoContainer}>
-                    <Text style={Styles.title}>Confirm Sign Up</Text>
-                    <Text style={Styles.text}>Check your email for your verification code!</Text>
+                    <Text style={Styles.headerTitle}>Confirm Sign Up</Text>
+                    <Text style={Styles.tabHeader}>Check your email for your verification code!</Text>
                 </View>
                 <View style={Styles.inputWrapper}>
                     <MaterialIcons name='numbers' size={20} style={Styles.icon} />
                     <TextInput
                         placeholder='Verification Code'
-                        placeholderTextColor={Colors.text}
+                        placeholderTextColor={Colors.subText}
                         value={confirmationCode}
                         onChangeText={setCode}
                         autoCapitalize='none'
                         keyboardType='number-pad'
-                        style={[Styles.input, missingConfirmationCode && {borderColor: 'red'}]}
+                        style={[Styles.input, !confirmationCode && errorMessage && {borderColor: 'red'}]}
                     />
                 </View>
                 { errorMessage ? (
                     <View style={Styles.errorContainer}>
+                        <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
                         <Text style={[Styles.text, {color: 'red'}]}>{errorMessage}</Text>
                     </View>
                 ) : null}
                 { resendMessage ? (
                     <View style={Styles.errorContainer}>
+                        <FontAwesome name='check-circle' size={20} style={[Styles.icon, {color: Colors.primary}]}/>
                         <Text style={[Styles.text, {color: Colors.primary}]}>{resendMessage}</Text>
                     </View>
                 ) : null}
@@ -69,8 +70,6 @@ const SignUpConfirm = () =>
                         if (loading) return;
                         setLoading(true);
 
-                        if (!confirmationCode) setMissingConfirmationCode(true);
-                        else setMissingConfirmationCode(false);
                         setResendMessage(undefined);
 
                         setErrorMessage(await handleSignUpConfirm(navigate, username, confirmationCode, password));
@@ -82,15 +81,18 @@ const SignUpConfirm = () =>
                     <Text style={Styles.actionText}>Confirm</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    onPress={() => {
+                    onPress={async () => {
                         if (cooldown > 0) {
                             setErrorMessage(`Please wait ${cooldown} seconds before requesting a new code`);
                             setResendMessage(undefined);
                             return;
                         }
-                        setErrorMessage(handleResendSignUpCode(username));
 
-                        if (!errorMessage) {
+                        const err = await handleResendSignUpCode(username);
+                        setErrorMessage(err);
+
+                        if (err) {
+                            setErrorMessage(undefined);
                             setResendMessage('Code has been Resent!');
                             setCooldown(30);
                         } else {

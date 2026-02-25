@@ -208,11 +208,9 @@ const Styles = StyleSheet.create({
         width: '100%',
         justifyContent: 'center',
         paddingRight: 20,
-        paddingLeft: 20,
-        rowGap: 10,
+        paddingLeft: 20
     },
     block: {
-        paddingTop: 20,
         paddingBottom: 20,
         rowGap: 20,
         width: '100%',
@@ -220,6 +218,7 @@ const Styles = StyleSheet.create({
     floatingBlock: {
         width: '95%',
         padding: 10,
+        rowGap: 20,
         paddingTop: 25,
         paddingBottom: 25,
         borderRadius: 15,
@@ -603,12 +602,6 @@ const AdminStyles = StyleSheet.create({
         alignItems: 'center',
         width: '100%'
     },
-    pdfContainer: {
-        flex: 1,
-        width: '100%',
-        height: '100%',
-        backgroundColor: 'black'
-    },
     pdf: {
         flex: 1,
     },
@@ -635,13 +628,6 @@ const AdminStyles = StyleSheet.create({
     inputContainer: {
         width: '100%',
         backgroundColor: 'white',
-    },
-    // invoiceList.jsx
-    invoiceItem: {
-        width: '100%',
-        padding: 25,
-        textAlign: 'center',
-        backgroundColor: Colors.backgroundAccent,
     },
     // (appointment)/index.jsx
     agendaList: {

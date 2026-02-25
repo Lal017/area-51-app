@@ -1,12 +1,13 @@
-import { Background, Loading } from '../../components/components';
+import { Background, Loading, Tab } from '../../components/components';
 import { handleListInvoices, handleListEstimates, handleGetUrl } from '../../components/adminComponents';
 import { useApp } from '../../components/context';
-import { AdminStyles, Styles } from '../../constants/styles';
-import { TouchableOpacity, Text, View } from 'react-native';
+import { Styles } from '../../constants/styles';
+import { Text, View } from 'react-native';
 import { useEffect, useState } from 'react';
 import { openURL } from 'expo-linking';
 import { useLocalSearchParams } from 'expo-router';
 import LottieView from 'lottie-react-native';
+import { AntDesign, FontAwesome6 } from '@expo/vector-icons';
 
 const Documents = () =>
 {
@@ -29,20 +30,20 @@ const Documents = () =>
         <>
             { documents && documents?.length > 0 ? (
                 <Background>
-                    {documents?.map((estimate, index) => {
-                        const parts = estimate.path.split('/');
+                    {documents?.map((file, index) => {
+                        const parts = file.path.split('/');
                         const fileName = parts[parts.length - 1];
                         return (
-                            <TouchableOpacity
+                            <Tab
                                 key={index}
-                                onPress={async () => {
-                                    const path = await handleGetUrl(estimate.path);
+                                text={`${fileName}`}
+                                leftIcon={<FontAwesome6 name='file-invoice-dollar' size={30} style={Styles.icon}/>}
+                                rightIcon={<AntDesign name='right' size={30} style={Styles.rightIcon}/>}
+                                action={async () => {
+                                    const path = await handleGetUrl(file.path);
                                     await openURL(path);
                                 }}
-                                style={AdminStyles.invoiceItem}
-                            >
-                                <Text style={Styles.subTitle}>{fileName}</Text>
-                            </TouchableOpacity>
+                            />
                         );
                     })}
                 </Background>

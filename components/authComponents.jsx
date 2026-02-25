@@ -89,7 +89,7 @@ const handleResendSignUpCode = async (username) =>
     try {
         await resendSignUpCode({ username });
     } catch (error) {
-        throw error;
+        return getErrorMessage(error);
     }
 };
 
@@ -434,6 +434,8 @@ const getErrorMessage = (error) =>
     switch(error?.name) {
         case 'UserNotFoundException':
             return 'A user with that email does not exist';
+        case 'UserLambdaValidationException':
+            return 'A user with that email already exists';
         case 'NotAuthorizedException':
             return 'The password you entered is incorrect, please try again';
         case 'CodeMismatchException':
@@ -451,7 +453,7 @@ const getErrorMessage = (error) =>
         case 'EmptyConfirmResetPasswordConfirmationCode':
             return 'Verification code cannot be empty';
         case 'LimitExceededException':
-            return 'Verification attempts exceeded, please try again later';
+            return 'Attempts exceeded, please try again later';
         case 'InvalidPasswordException':
             return 'Password does not meet the requirements, please try again';
         case 'InvalidParameterException':

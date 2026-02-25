@@ -63,20 +63,18 @@ const TowRequestList = () =>
                     onChangeText={setSearch}
                 />
             </View>
-            <View style={[Styles.block, {paddingLeft: 20}]}>
-                <View style={AdminStyles.picker}>
-                    <Picker
-                        selectedValue={statusFilter}
-                        onValueChange={(itemvalue) => setStatusFilter(itemvalue)}
-                        style={{color: 'black'}}
-                    >
-                        <Picker.Item label="All" value='ALL' />
-                        <Picker.Item label="Requested" value="REQUESTED" />
-                        <Picker.Item label="In Progress" value="IN_PROGRESS" />
-                        <Picker.Item label="Cancelled" value="CANCELLED" />
-                        <Picker.Item label="Completed" value="COMPLETED" />
-                    </Picker>
-                </View>
+            <View style={[AdminStyles.picker, {marginLeft: 20}]}>
+                <Picker
+                    selectedValue={statusFilter}
+                    onValueChange={(itemvalue) => setStatusFilter(itemvalue)}
+                    style={{color: 'black'}}
+                >
+                    <Picker.Item label="All" value='ALL' />
+                    <Picker.Item label="Requested" value="REQUESTED" />
+                    <Picker.Item label="In Progress" value="IN_PROGRESS" />
+                    <Picker.Item label="Cancelled" value="CANCELLED" />
+                    <Picker.Item label="Completed" value="COMPLETED" />
+                </Picker>
             </View>
             <View style={[Styles.block, {rowGap: 0}]}>
                 {requests && requests

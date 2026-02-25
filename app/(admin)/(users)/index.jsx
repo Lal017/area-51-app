@@ -1,13 +1,13 @@
 import Colors from "../../../constants/colors";
-import { Styles, ProfileStyles } from '../../../constants/styles';
+import { AdminStyles, Styles } from '../../../constants/styles';
 import { handleListUsers } from "../../../components/userComponents";
 import { useApp } from '../../../components/context';
 import { Background, Tab } from "../../../components/components";
-import { View, TextInput, Text } from "react-native";
+import { View, TextInput } from "react-native";
 import { useEffect, useState } from "react";
 import { router } from "expo-router";
 import { AntDesign, Entypo, Ionicons } from "@expo/vector-icons";
-import Animated, { Easing , useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from "react-native-reanimated";
+import { Picker } from "@react-native-picker/picker";
 
 const UserList = () =>
 {
@@ -16,29 +16,7 @@ const UserList = () =>
     const [ users, setUsers ] = useState();
     const [ search, setSearch ] = useState();
     const [ refreshing, setRefreshing ] = useState();
-
-    const bounce = useSharedValue(0);
-
-    useEffect(() => {
-        bounce.value = withRepeat(
-            withSequence(
-            withTiming(-10, {
-                duration: 500,
-                easing: Easing.out(Easing.ease)
-            }),
-            withTiming(0, {
-                duration: 500,
-                easing: Easing.in(Easing.ease)
-            })
-            ),
-            -1,     // infinite
-            true,   // reverse
-        );
-    }, []);
-
-    const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: bounce.value }]
-    }));
+    const [ statusFilter, setStatusFilter ] = useState('ALL');
 
     const onRefresh = async () =>
     {
@@ -71,31 +49,38 @@ const UserList = () =>
                         onChangeText={setSearch}
                     />
                 </View>
+                <View style={[AdminStyles.picker, {marginLeft: 20}]}>
+                    <Picker
+                        selectedValue={statusFilter}
+                        onValueChange={(itemvalue) => setStatusFilter(itemvalue)}
+                        style={{color: 'black'}}
+                    >
+                        <Picker.Item label='All' value='All'/>
+                        <Picker.Item label='Customers' value='Customers'/>
+                        <Picker.Item label='TowDrivers' value='TowDrivers'/>
+                    </Picker>
+                </View>
             </View>
             {users && users
                 .filter(user => {
-                    if (!search) return true;
                     const query = search?.toLowerCase();
                     const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
-                    return fullName.includes(query);
+                    const matchesSearch = !search || fullName.includes(query);
+                    const matchesStatus = statusFilter === 'All' || user.access === statusFilter;
+                    return matchesSearch && matchesStatus;
                 })
                 .map((user, index) => (
-                <View style={ProfileStyles.tabContainer} key={index}>
-                    { user?.driverId === "1" ? (
-                        <Animated.View style={[ProfileStyles.activityContainer, animatedStyle, {backgroundColor: Colors.tertiary}]}>
-                            <Text style={[Styles.subTitle, {fontSize: 20, textAlign: 'center'}]}>!</Text>
-                        </Animated.View>
-                    ) : null }
-                    <Tab
-                        text={`${user.firstName} ${user.lastName}`}
-                        action={() => router.push({
-                            params: { userParam: JSON.stringify(user) },
-                            pathname: '/(admin)/userView'
-                        })}
-                        leftIcon={<Ionicons name='person' size={30} style={Styles.icon} />}
-                        rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon} />}
-                    />
-                </View>
+                <Tab
+                    key={index}
+                    text={`${user.firstName} ${user.lastName}`}
+                    header={`${user.access.slice(0, -1)}`}
+                    action={() => router.push({
+                        params: { userParam: JSON.stringify(user) },
+                        pathname: '/(admin)/userView'
+                    })}
+                    leftIcon={<Ionicons name='person' size={30} style={Styles.icon} />}
+                    rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon} />}
+                />
             ))}
         </Background>
     );

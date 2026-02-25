@@ -45,9 +45,16 @@ const DocumentUpload = () =>
     };
 
     return (
-        <BackgroundAlt style={{rowGap: 20, justifyContent: 'center'}}>
+        <BackgroundAlt style={{rowGap: 20}}>
+            <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                <Text style={Styles.headerTitle}>PDF Upload</Text>
+                <Text style={Styles.tabHeader}>Upload must be a (.pdf) file extension</Text>
+            </View>
             { document ? (
-                <View style={AdminStyles.pdfContainer}>
+                <View style={{
+                    overflow: 'hidden',
+                    height: '65%'
+                }}>
                     <Pdf
                         source={{uri: document, cache: true}}
                         onError={(error) => console.log('PDF Error: ', error)}

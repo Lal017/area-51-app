@@ -5,7 +5,7 @@ import { AuthBackground } from '../../components/components';
 import { handleSignIn } from '../../components/authComponents';
 import { Text, TextInput, View, TouchableOpacity, Image } from 'react-native';
 import { useState } from 'react';
-import { Ionicons } from '@expo/vector-icons';
+import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import { Link } from 'expo-router';
 import { useNavigation } from '@react-navigation/native';
 
@@ -35,7 +35,7 @@ const SignIn = () =>
                         <Ionicons name='mail' size={20} style={Styles.icon} />
                         <TextInput
                             placeholder='email'
-                            placeholderTextColor={Colors.text}
+                            placeholderTextColor={Colors.subText}
                             value={email}
                             onChangeText={setEmail}
                             keyboardType='email-address'
@@ -47,7 +47,7 @@ const SignIn = () =>
                         <Ionicons name='lock-closed' size={20} style={Styles.icon} />
                         <TextInput
                             placeholder='password'
-                            placeholderTextColor={Colors.text}
+                            placeholderTextColor={Colors.subText}
                             value={password}
                             onChangeText={setPassword}
                             autoCapitalize='none'
@@ -68,6 +68,7 @@ const SignIn = () =>
                 </View>
                 { errorMessage ? (
                     <View style={Styles.errorContainer}>
+                        <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
                         <Text style={[Styles.text, {color: 'red'}]}>{errorMessage}</Text>
                     </View>
                 ) : null }
@@ -88,7 +89,9 @@ const SignIn = () =>
                     <Text style={Styles.actionText}>Login</Text>
                 </TouchableOpacity>
             </View>
-            <View style={Styles.hr}/>
+            <View style={[Styles.block, {alignItems: 'center'}]}>
+                <View style={Styles.hr}/>
+            </View>
             <View style={Styles.block}>
                 <View style={AuthStyles.providerContainer}>
                     <GoogleSignInButton text='Sign in with Google' navigate={navigate}/>

@@ -6,6 +6,7 @@ ToDo:
     - test UI for appointment and tow request from admin and tow driver point of view if the user deletes the vehicle with an active request.
     - add icon for error message in Auth screens
     - RFValue package might be deprecated. check
+    - test signupconfirm resendcode message UI
 
 PotentialChanges:
     - Add notification tab in header for home page (only do this if you add a datamodel for notifications)

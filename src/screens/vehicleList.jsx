@@ -2,40 +2,17 @@ import Colors from '../../constants/colors';
 import { BackgroundAlt, Tab } from '../../components/components';
 import { handleDeleteVehicle } from '../../components/vehicleComponents';
 import { useApp } from '../../components/context';
-import { ProfileStyles, Styles } from '../../constants/styles';
+import { Styles } from '../../constants/styles';
 import { Ionicons, AntDesign, MaterialCommunityIcons, Entypo, Feather, FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Alert } from 'react-native';
-import Animated, { Easing , useAnimatedStyle, useSharedValue, withRepeat, withSequence, withSpring, withTiming } from "react-native-reanimated";
+import { View, FlatList, TouchableOpacity, Alert } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
 import { useNavigation } from '@react-navigation/native';
 
 const VehicleList = () =>
 {
     const { client, vehicles, setVehicles } = useApp();
     const navigate = useNavigation();
-    const bounce = useSharedValue(0);
-
-    useEffect(() => {
-        bounce.value = withRepeat(
-            withSequence(
-            withTiming(-10, {
-                duration: 500,
-                easing: Easing.out(Easing.ease)
-            }),
-            withTiming(0, {
-                duration: 500,
-                easing: Easing.in(Easing.ease)
-            })
-            ),
-            -1,     // infinite
-            true,   // reverse
-        );
-    }, [vehicles]);
-
-    const animatedStyle = useAnimatedStyle(() => ({
-        transform: [{ translateY: bounce.value }]
-    }));
 
     const VehicleItem = ({item}) =>
     {
@@ -49,11 +26,6 @@ const VehicleList = () =>
 
         return (
             <>
-                { item.readyForPickup ? (
-                    <Animated.View style={[ProfileStyles.activityContainer, animatedStyle, {backgroundColor: Colors.tertiary}]}>
-                        <Text style={[Styles.subTitle, {fontSize: 20, textAlign: 'center'}]}>!</Text>
-                    </Animated.View>
-                ) : null }
                 <Tab
                     header={`${item.year}`}
                     text={`${item.make} ${item.model}`}

@@ -2,7 +2,7 @@ import Colors from "../../constants/colors";
 import { Styles, AuthStyles } from "../../constants/styles";
 import { handleResetPassword } from "../../components/authComponents";
 import { AuthBackground } from "../../components/components";
-import { Ionicons } from '@expo/vector-icons';
+import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
 import { Link } from "expo-router";
@@ -23,14 +23,14 @@ const ResetPassword = () =>
             </View>
             <View style={[Styles.block, {alignItems: 'center'}]}>
                 <View style={Styles.infoContainer}>
-                    <Text style={Styles.title}>Reset Password</Text>
-                    <Text style={Styles.text}>Enter your email to search for your account</Text>
+                    <Text style={Styles.headerTitle}>Reset Password</Text>
+                    <Text style={Styles.tabHeader}>Enter your email to search for your account</Text>
                 </View>
                 <View style={Styles.inputWrapper}>
                     <Ionicons name='mail' size={20} style={Styles.icon} />
                     <TextInput
                         placeholder="email"
-                        placeholderTextColor={Colors.text}
+                        placeholderTextColor={Colors.subText}
                         value={email}
                         onChangeText={setEmail}
                         keyboardType="email-address"
@@ -40,6 +40,7 @@ const ResetPassword = () =>
                 </View>
                 { errorMessage ? (
                     <View style={Styles.errorContainer}>
+                        <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
                         <Text style={[Styles.text, {color: 'red'}]}>{errorMessage}</Text>
                     </View>
                 ) : null}

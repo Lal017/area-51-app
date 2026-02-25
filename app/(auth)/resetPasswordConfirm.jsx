@@ -3,7 +3,7 @@ import { Styles, AuthStyles } from "../../constants/styles";
 import { useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { handleConfirmResetPassword } from "../../components/authComponents";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import Colors from "../../constants/colors";
 import { AuthBackground } from "../../components/components";
 import { useNavigation } from "@react-navigation/native";
@@ -34,15 +34,15 @@ const ResetPasswordConfirm = () =>
                 </View>
                 <View style={[Styles.block, {alignItems: 'center'}]}>
                     <View style={Styles.infoContainer}>
-                        <Text style={Styles.title}>Reset Password</Text>
-                        <Text style={Styles.text}>Check your email for your verification code!</Text>
+                        <Text style={Styles.headerTitle}>Reset Password</Text>
+                        <Text style={Styles.tabHeader}>Check your email for your verification code!</Text>
                     </View>
                     <View style={Styles.inputContainer}>
                         <View style={Styles.inputWrapper}>
                             <MaterialIcons name='numbers' size={20} style={Styles.icon} />
                             <TextInput
                                 placeholder="Verification Code"
-                                placeholderTextColor={Colors.text}
+                                placeholderTextColor={Colors.subText}
                                 value={confirmationCode}
                                 onChangeText={setConfirmationCode}
                                 keyboardType='number-pad'
@@ -54,7 +54,7 @@ const ResetPasswordConfirm = () =>
                             <Ionicons name='key' size={20} style={Styles.icon} />
                             <TextInput
                                 placeholder="New Password"
-                                placeholderTextColor={Colors.text}
+                                placeholderTextColor={Colors.subText}
                                 value={newPassword}
                                 onChangeText={setNewPassword}
                                 secureTextEntry={!showPassword}
@@ -76,7 +76,7 @@ const ResetPasswordConfirm = () =>
                             <Ionicons name="lock-open" size={20} style={Styles.icon} />
                             <TextInput
                                 placeholder="Confirm New Password"
-                                placeholderTextColor={Colors.text}
+                                placeholderTextColor={Colors.subText}
                                 value={confNewPassword}
                                 onChangeText={setConfNewPassword}
                                 secureTextEntry={!showConfirmPassword}
@@ -97,6 +97,7 @@ const ResetPasswordConfirm = () =>
                     </View>
                     { errorMessage ? (
                         <View style={Styles.errorContainer}>
+                            <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
                             <Text style={[Styles.text, {color: 'red'}]}>{errorMessage}</Text>
                         </View>
                     ) : null}

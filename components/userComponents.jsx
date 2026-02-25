@@ -121,7 +121,10 @@ const handleListUsers = async (client) =>
             query: listUsers,
             variables: {
                 filter: {
-                    access: { eq: 'Customers' }
+                    or : [
+                        { access: { eq: 'Customers' }},
+                        { access: { eq: 'TowDrivers' }},
+                    ]
                 }
             }
         });

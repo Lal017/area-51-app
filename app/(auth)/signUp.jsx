@@ -6,7 +6,7 @@ import { AuthStyles, Styles } from "../../constants/styles";
 import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Image, Alert } from "react-native";
 import { useState } from "react";
 import { Link } from "expo-router";
-import { Entypo, Ionicons } from "@expo/vector-icons";
+import { Entypo, FontAwesome, Ionicons } from "@expo/vector-icons";
 
 const SignUp = () =>
 {
@@ -48,7 +48,7 @@ const SignUp = () =>
                             <Ionicons name='at' size={20} style={Styles.icon} />
                             <TextInput
                                 placeholder="email"
-                                placeholderTextColor={Colors.text}
+                                placeholderTextColor={Colors.subText}
                                 value={email}
                                 onChangeText={setEmail}
                                 keyboardType="email-address"
@@ -60,7 +60,7 @@ const SignUp = () =>
                             <Ionicons name='key' size={20} style={Styles.icon} />
                             <TextInput
                                 placeholder="password"
-                                placeholderTextColor={Colors.text}
+                                placeholderTextColor={Colors.subText}
                                 value={password}
                                 onChangeText={setPassword}
                                 autoCapitalize="none"
@@ -82,7 +82,7 @@ const SignUp = () =>
                             <Ionicons name="lock-open" size={20} style={Styles.icon} />
                             <TextInput
                                 placeholder="confirm password"
-                                placeholderTextColor={Colors.text}
+                                placeholderTextColor={Colors.subText}
                                 value={confPassword}
                                 onChangeText={setConfPassword}
                                 autoCapitalize="none"
@@ -111,6 +111,7 @@ const SignUp = () =>
                         </View>
                         { errorMessage && step === 1 ? (
                             <View style={Styles.errorContainer}>
+                                <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
                                 <Text style={[Styles.text, {color: 'red'}]}>{errorMessage}</Text>
                             </View>
                         ) : null}
@@ -160,7 +161,7 @@ const SignUp = () =>
                             <Ionicons name='person' size={20} style={Styles.icon} />
                             <TextInput
                                 placeholder="first name"
-                                placeholderTextColor={Colors.text}
+                                placeholderTextColor={Colors.subText}
                                 value={firstName}
                                 onChangeText={setFirstName}
                                 style={[Styles.input, missingFirstName && {borderColor: 'red'}]}
@@ -170,7 +171,7 @@ const SignUp = () =>
                             <Ionicons name='person' size={20} style={Styles.icon} />
                             <TextInput
                                 placeholder="last name"
-                                placeholderTextColor={Colors.text}
+                                placeholderTextColor={Colors.subText}
                                 value={lastName}
                                 onChangeText={setLastName}
                                 style={[Styles.input, missingLastName && {borderColor: 'red'}]}
@@ -180,7 +181,7 @@ const SignUp = () =>
                             <Ionicons name='call' size={20} style={Styles.icon} />
                             <TextInput
                                 placeholder="phone number"
-                                placeholderTextColor={Colors.text}
+                                placeholderTextColor={Colors.subText}
                                 value={phoneNumber}
                                 onChangeText={setPhoneNumber}
                                 autoCapitalize="none"
@@ -190,6 +191,7 @@ const SignUp = () =>
                         </View>
                         { errorMessage && step === 2 ? (
                             <View style={Styles.errorContainer}>
+                                <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
                                 <Text style={[Styles.text, {color: 'red'}]}>{errorMessage}</Text>
                             </View>
                         ) : null}
@@ -220,7 +222,9 @@ const SignUp = () =>
                         </TouchableOpacity>
                     </View>
                 ) : null}
-                <View style={Styles.hr} />
+                <View style={[Styles.block, {alignItems: 'center'}]}>
+                    <View style={Styles.hr} />
+                </View>
                 <View style={Styles.block}>
                     <View style={[AuthStyles.providerContainer, step === 1 ? {display: 'flex'} : {display: 'none'}]}>
                         <GoogleSignInButton text='Sign Up with Google'/>
