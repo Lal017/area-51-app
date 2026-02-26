@@ -10,6 +10,7 @@ import { useEffect, useRef, useState } from 'react';
 import { MaterialIcons } from '@expo/vector-icons';
 import { signOut } from '@aws-amplify/auth';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { openURL } from 'expo-linking';
 
 // loading page
 const Loading = () => {
@@ -307,6 +308,20 @@ const SimpleList = ({data = [], renderItem}) =>
     )
 };
 
+// used to call the customer
+const callCustomer = (phone) =>
+{
+    const url = `tel:${phone}`;
+    openURL(url);
+};
+
+// used to text the customer
+const textCustomer = (phone) =>
+{
+    const url = `sms:${phone}`;
+    openURL(url);
+};
+
 export {
     Loading,
     CustHeader,
@@ -322,5 +337,7 @@ export {
     formatTime,
     getRemainingETA,
     AppointmentReminder,
-    SimpleList
+    SimpleList,
+    callCustomer,
+    textCustomer
 };

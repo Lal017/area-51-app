@@ -1,6 +1,6 @@
 import Colors from '../../../constants/colors';
 import { Styles } from '../../../constants/styles';
-import { Background, formatDate, formatNumber, Tab, SimpleList } from '../../../components/components';
+import { Background, formatDate, formatNumber, Tab, SimpleList, callCustomer, textCustomer } from '../../../components/components';
 import { sendPushNotification } from '../../../components/notifComponents';
 import { View, Text, Alert, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -90,6 +90,20 @@ const UserView = () =>
                             leftIcon={<FontAwesome name='group' size={30} style={Styles.icon}/>}
                             style={{height: 'none'}}
                         />
+                        <View style={[Styles.rightIcon, {flexDirection: 'row', columnGap: 10}]}>
+                            <TouchableOpacity
+                                style={{justifyContent: 'center', alignItems: 'center', padding: 5}}
+                                onPress={() => callCustomer(customer?.phone)}
+                            >
+                                <Entypo name='phone' size={30} color='white'/>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={{justifyContent: 'center', alignItems: 'center', padding: 5}}
+                                onPress={() => textCustomer(customer?.phone)}    
+                            >
+                                <Entypo name='message' size={30} color='white'/>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                     { customer?.driverId === '1' ? (
                         <View style={[Styles.floatingBlock, {backgroundColor: Colors.tertiary}]}>

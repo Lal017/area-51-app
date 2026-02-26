@@ -58,6 +58,7 @@ const VehicleList = () =>
                 .map((vehicle, index) => (
                 <Tab
                     key={index}
+                    header={`${vehicle.user.firstName} ${vehicle.user.lastName}`}
                     text={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
                     action={() => router.push({
                         pathname: '(admin)/vehicleView',

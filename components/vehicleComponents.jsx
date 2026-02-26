@@ -33,12 +33,6 @@ const handleUpdateVehiclePickupStatus = async (client, vehicleId, status) =>
                 }
             }
         });
-
-        Alert.alert(
-            'Vehicle Status',
-            'Customer has been notified about vehicle pickup',
-            [{ text: 'OK' }]
-        );
     } catch (error) {
         console.error('ERROR, could not update vehicle status:', error);
     }

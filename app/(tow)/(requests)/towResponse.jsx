@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { handleAcceptTowRequest, handleFinalTowCheck, getInitialCompassHeading } from "../../../components/towComponents";
 import { useApp } from "../../../components/context";
 import { sendPushNotification } from '../../../components/notifComponents'
-import { Background, formatNumber } from "../../../components/components";
+import { Background, formatNumber, callCustomer } from "../../../components/components";
 import { TowStyles, ServiceStyles, Styles } from "../../../constants/styles";
 import { handleGetAddress } from "../../../components/adminComponents";
 import { useLocalSearchParams, router } from "expo-router";
@@ -11,7 +11,6 @@ import { TouchableOpacity, View, Text, KeyboardAvoidingView, Alert } from 'react
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import { useEffect, useState } from "react";
 import { AntDesign, Entypo } from "@expo/vector-icons";
-import { openURL } from "expo-linking";
 import { useNavigation } from "@react-navigation/native";
 import { Accuracy, getCurrentPositionAsync } from "expo-location";
 import { post } from "aws-amplify/api";
@@ -46,12 +45,6 @@ const TowResponse = () =>
         
         setWaitTime(routeData.Routes[0].Summary.Duration);
     }
-
-    const openCallCustomer = (phone) =>
-    {
-        const url = `tel:${phone}`;
-        openURL(url);
-    };
 
     useEffect(() => {
         const initializeRequest = async () =>
@@ -149,7 +142,7 @@ const TowResponse = () =>
                     <View style={TowStyles.dualButtonContainer}>
                         <TouchableOpacity
                             style={[TowStyles.button, {backgroundColor: Colors.secondary, columnGap: 10}]}
-                            onPress={() => openCallCustomer(request?.user?.phone)}
+                            onPress={() => callCustomer(request?.user?.phone)}
                         >
                             <Entypo name="phone" size={25} color='white'/>
                             <Text style={Styles.actionText}>Call customer</Text>

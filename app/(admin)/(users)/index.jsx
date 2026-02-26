@@ -16,7 +16,7 @@ const UserList = () =>
     const [ users, setUsers ] = useState();
     const [ search, setSearch ] = useState();
     const [ refreshing, setRefreshing ] = useState();
-    const [ statusFilter, setStatusFilter ] = useState('ALL');
+    const [ statusFilter, setStatusFilter ] = useState('All');
 
     const onRefresh = async () =>
     {
