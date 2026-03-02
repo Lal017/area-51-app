@@ -1,9 +1,10 @@
 import Colors from '../../../constants/colors';
+import moment from 'moment';
 import { handleGetAllAppointments } from '../../../components/appointmentComponents';
-import { BackgroundAlt, Loading, Tab, formatTime } from '../../../components/components';
+import { BackgroundAlt, CalendarHeader, Loading, Tab, formatTime } from '../../../components/components';
 import { Styles } from '../../../constants/styles';
 import { View } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, Entypo } from '@expo/vector-icons';
 import { AgendaList, CalendarProvider, Calendar } from 'react-native-calendars';
 import { useState, useEffect, useMemo } from 'react';
 import { RFValue } from 'react-native-responsive-fontsize';
@@ -24,7 +25,7 @@ const AppointmentIndex = () =>
             .sort((a, b) => a.time.localeCompare(b.time)); // 'HH:mm:ss' strings sort correctly
     }, [appointments, selected]);
 
-    const markedDates = useMemo(() => {
+    const markedDots = useMemo(() => {
         const marks = {};
 
         appointments?.forEach((appointment, index) => {
@@ -59,6 +60,32 @@ const AppointmentIndex = () =>
         handleGetAppointments();
     }, []);
 
+    const DISABLED_DAYS = ['Saturday', 'Sunday'];
+    // used to disable certain days of the month
+    const getDaysInMonth = (month, year, days) => {
+        const start = moment().month(month).year(year).startOf('month');
+        const end = moment().month(month).year(year).endOf('month');
+        const dates = {}
+        const disabled = { disabled: true, disableTouchEvents: true };
+
+        let day = start.clone();
+        while(day.isSameOrBefore(end)) {
+            if (days.includes(day.format('dddd'))) {
+                dates[day.format('YYYY-MM-DD')] = disabled;
+            }
+            day.add(1, 'day');
+        }
+
+        return dates;
+    };
+
+    const today = moment();
+    const [markedDates, setMarkedDates] = useState(
+        getDaysInMonth(today.month(), today.year(), DISABLED_DAYS)
+    );
+
+    const handleMonthChange = (date) => setMarkedDates(getDaysInMonth(date.month - 1, date.year, DISABLED_DAYS));
+
     return (
         <>
         { ready ? (
@@ -68,12 +95,13 @@ const AppointmentIndex = () =>
                         date={selected ?? new Date().toISOString().split('T')[0]}
                     >
                         <Calendar
-                            minDate={new Date().toISOString().split('T')[0]}
+                            minDate={new Date().toDateString()}
+                            onMonthChange={handleMonthChange}
                             theme={{
                                 calendarBackground: 'transparent',
                                 todayTextColor: Colors.secondary,
                                 textDayFontSize: RFValue(15),
-                                dayTextColor: Colors.backDropAccent,
+                                dayTextColor: Colors.secondary,
                                 textDisabledColor: Colors.backgroundAccent
                             }}
                             onDayPress={(day) => {
@@ -82,11 +110,14 @@ const AppointmentIndex = () =>
                             markingType='multi-dot'
                             markedDates={{
                                 ...markedDates,
+                                ...markedDots,
                                 [selected]: {
                                     selected: true,
                                     selectedColor: Colors.tertiary,
                                 }
                             }}
+                            renderHeader={date => <CalendarHeader date={date}/>}
+                            renderArrow={direction => <Entypo name={direction === 'left' ? 'chevron-with-circle-left' : 'chevron-with-circle-right'} size={24} color={Colors.backDropAccent}/>}
                         />
                         <AgendaList
                             theme={{

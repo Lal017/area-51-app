@@ -10,7 +10,7 @@ import { handleSendAdminNotif } from '../../components/notifComponents';
 import { Select, CalendarHeader, formatDate, formatTime, Background, Loading } from '../../components/components';
 import { ServiceStyles, Styles } from "../../constants/styles";
 import { MaterialIcons, Ionicons, FontAwesome, AntDesign, FontAwesome5, Entypo, MaterialCommunityIcons, SimpleLineIcons } from '@expo/vector-icons';
-import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { useNavigation } from '@react-navigation/native';
@@ -97,12 +97,12 @@ const Schedule = () =>
     setAvailableAppointments(getDay);
   };
 
-  const DISABLED_DAYS = ['Saturday', 'Sunday']
+  const DISABLED_DAYS = ['Saturday', 'Sunday'];
 
   // used to disable certain days of the month
   const getDaysInMonth = (month, year, days) => {
-    let pivot = moment().month(month).year(year).startOf('month')
-    const end = moment().month(month).year(year).endOf('month')
+    let pivot = moment().month(month).year(year).startOf('month');
+    const end = moment().month(month).year(year).endOf('month');
 
     let dates = {}
     const disabled = { disabled: true }
@@ -113,7 +113,7 @@ const Schedule = () =>
       pivot.add(7, 'days')
     }
 
-    return dates
+    return dates;
   }
 
   const today = moment();
@@ -121,9 +121,7 @@ const Schedule = () =>
     getDaysInMonth(today.month(), today.year(), DISABLED_DAYS)
   );
 
-  const handleMonthChange = (date) => {
-    setMarkedDates(getDaysInMonth(date.month - 1, date.year, DISABLED_DAYS));
-  };
+  const handleMonthChange = (date) => setMarkedDates(getDaysInMonth(date.month - 1, date.year, DISABLED_DAYS));
 
   const bottomSheetRef = useRef(null);
 
