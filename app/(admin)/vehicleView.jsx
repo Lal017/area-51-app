@@ -50,28 +50,28 @@ const VehicleView = () =>
                         text={`${vehicle.make} ${vehicle.model}`}
                         leftIcon={<Ionicons name='car-sport' size={30} style={Styles.icon}/>}
                     />
+                    <Tab
+                        header='Vehicle Color'
+                        text={`${vehicle.color}`}
+                        leftIcon={<FontAwesome name='paint-brush' size={25} style={Styles.icon}/> }
+                        style={{height: 'none', padding: 5}}
+                    />
+                    { vehicle?.plate && (
                         <Tab
-                            header='Vehicle Color'
-                            text={`${vehicle.color}`}
-                            leftIcon={<FontAwesome name='paint-brush' size={25} style={Styles.icon}/> }
+                            header='License Plate #'
+                            text={`${vehicle.plate}`}
+                            leftIcon={<FontAwesome name='id-card' size={25} style={Styles.icon}/>}
                             style={{height: 'none', padding: 5}}
                         />
-                        { vehicle?.plate && (
-                            <Tab
-                                header='License Plate #'
-                                text={`${vehicle.plate}`}
-                                leftIcon={<FontAwesome name='id-card' size={25} style={Styles.icon}/>}
-                                style={{height: 'none', padding: 5}}
-                            />
-                        )}
-                        { vehicle?.vin && (
-                            <Tab
-                                header='VIN'
-                                text={`${vehicle.vin}`}
-                                leftIcon={<FontAwesome name='barcode' size={25} style={Styles.icon}/> }
-                                style={{height: 'none', padding: 5}}
-                            />
-                        )}
+                    )}
+                    { vehicle?.vin && (
+                        <Tab
+                            header='VIN'
+                            text={`${vehicle.vin}`}
+                            leftIcon={<FontAwesome name='barcode' size={25} style={Styles.icon}/> }
+                            style={{height: 'none', padding: 5}}
+                        />
+                    )}
                 </View>
             </View>
             <View style={[Styles.block, {paddingTop: 20}]}>

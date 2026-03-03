@@ -1,12 +1,10 @@
 import Colors from '../../../constants/colors';
-import { Styles, TowStyles, AdminStyles } from '../../../constants/styles';
-import { handleUpdateVehiclePickupStatus } from '../../../components/vehicleComponents';
-import { formatNumber, formatDate, formatTime, Background } from '../../../components/components';
-import { sendPushNotification } from '../../../components/notifComponents';
-import { router, useLocalSearchParams } from 'expo-router';
+import { Styles } from '../../../constants/styles';
+import { formatNumber, formatDate, formatTime, Background, Tab, callCustomer, textCustomer } from '../../../components/components';
+import { useLocalSearchParams } from 'expo-router';
 import { openURL } from 'expo-linking';
-import { Entypo } from '@expo/vector-icons';
-import { View, Text, TouchableOpacity, Alert } from 'react-native';
+import { AntDesign, Entypo, MaterialCommunityIcons, FontAwesome5, FontAwesome, MaterialIcons, Ionicons } from '@expo/vector-icons';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { useState } from 'react';
 import { useApp } from '../../../components/context';
 import { useNavigation } from '@react-navigation/native';
@@ -15,97 +13,101 @@ const AppointmentView = () =>
 {
     const { appointmentParam } = useLocalSearchParams();
     const appointment = JSON.parse(appointmentParam);
-    const { client } = useApp();
-    const navigate = useNavigation();
 
-    const [ loading, setLoading ] = useState(false);
-
-    const openCallCustomer = (phone) =>
+    const iconCheck = (service) =>
     {
-        const url = `tel:${phone}`;
-        openURL(url);
+        switch (service) {
+            case 'Oil Change':
+                return <FontAwesome5 name="oil-can" size={30} style={Styles.icon} color={Colors.backDrop}/>;
+            case 'Diagnosis':
+                return <FontAwesome name="stethoscope" size={30} style={Styles.icon} color={Colors.backDrop}/>;
+            case 'Tuning':
+                return <Entypo name="area-graph" size={30} style={Styles.icon} color={Colors.backDrop}/>;
+            case 'A/C':
+                return <MaterialIcons name="air" size={30} style={Styles.icon} color={Colors.backDrop}/>;
+            default:
+                return <MaterialCommunityIcons name="dots-horizontal-circle" size={30} style={Styles.icon} color={Colors.backDrop}/>;
+        }
     };
 
     return (
         <Background>
             <View style={Styles.block}>
-                <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                    <Text style={Styles.subTitle}>Customer</Text>
-                    <Text style={Styles.text}>{appointment?.user?.firstName} {appointment?.user?.lastName} | {formatNumber(appointment?.user?.phone)} | {appointment?.user?.email}</Text>
+                <View style={Styles.infoContainer}>
+                    <Text style={Styles.headerTitle}>{appointment?.user?.firstName} {appointment?.user?.lastName}</Text>
+                    <Text style={Styles.tabHeader}>{appointment?.user?.email}</Text>
+                    <Text style={Styles.tabHeader}>{formatNumber(appointment?.user?.phone)}</Text>
                 </View>
-                <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                    <Text style={Styles.subTitle}>Appointment Details</Text>
-                    <Text style={Styles.text}>{formatDate(appointment?.date)}   |   {formatTime(appointment?.time)}</Text>
-                    <Text style={Styles.text}>{appointment?.service}</Text>
-                </View>
-                <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                    <Text style={Styles.subTitle}>Vehicle</Text>
-                    <Text style={Styles.text}>{appointment?.vehicle?.year} {appointment?.vehicle?.make} {appointment?.vehicle?.model} ({appointment?.vehicle?.color})</Text>
-                    { appointment?.vehicle?.plate ? (    
-                        <View style={AdminStyles.labelContainer}>
-                            <Text style={Styles.text}>Plate:</Text>
-                            <Text style={Styles.text}>{appointment?.vehicle?.plate}</Text>
-                        </View>
-                    ) : null }
-                    { appointment?.vehicle?.vin ? (
-                        <View style={AdminStyles.labelContainer}>
-                            <Text style={Styles.text}>VIN:</Text>
-                            <Text style={Styles.text}>{appointment?.vehicle?.vin}</Text>
-                        </View>
-                    ) : null }
-                </View>
-                { appointment?.notes ? (
-                    <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                        <Text style={Styles.subTitle}>Notes</Text>
-                        <Text style={Styles.text}>{appointment?.notes}</Text>
-                    </View>
-                ) : null }
-                <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                    <View style={AdminStyles.labelContainer}>
-                        <Text style={Styles.subTitle}>Pickup Status</Text>
-                        <Text style={[Styles.text, appointment?.vehicle?.readyForPickup ? {color: 'green'} : {color: 'red'}]}>{ appointment?.vehicle?.readyForPickup ? 'Ready for pickup' : 'Not ready for pickup'}</Text>
-                    </View>
+                <View style={[Styles.rightIcon, {flexDirection: 'row', columnGap: 10}]}>
+                    <TouchableOpacity
+                        style={{padding: 5, justifyContent: 'center', alignItems: 'center'}}
+                        onPress={() => callCustomer(appointment?.user?.phone)}
+                    >
+                        <Entypo name='phone' size={30} color='white'/>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={{padding: 5, justifyContent: 'center', alignItems: 'center'}}
+                        onPress={() => textCustomer(appointment?.user?.phone)}
+                    >
+                        <Entypo name='message' size={30} color='white'/>
+                    </TouchableOpacity>
                 </View>
             </View>
             <View style={Styles.block}>
-                <View style={TowStyles.dualButtonContainer}>
-                    <TouchableOpacity
-                        style={[TowStyles.button, {backgroundColor: Colors.button, columnGap: 5}]}
-                        onPress={() => openCallCustomer(appointment?.user?.phone)}
-                    >
-                        <Entypo name="phone" size={25} color='white'/>
-                        <Text style={Styles.actionText}>Call Customer</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={[TowStyles.button, {backgroundColor: Colors.button}, loading && {opacity: 0.5}]}
-                        onPress={() => {
-                            Alert.alert(
-                                'Confirmation',
-                                'Mark the vehicle as ready for pickup?',
-                                [
-                                    { text: 'No' },
-                                    {
-                                        text: 'Yes',
-                                        onPress: async () => {
-                                            let title = !appointment?.vehicle?.readyForPickup ? 'Vehicle Pickup' : 'Vehicle Picked Up';
-                                            let body = !appointment?.vehicle?.readyForPickup ? `Your ${appointment?.vehicle.year} ${appointment?.vehicle.make} ${appointment?.vehicle.model} is ready for pickup!` : `Your ${appointment?.vehicle.year} ${appointment?.vehicle.make} ${appointment?.vehicle.model} has been picked up!`;
-                                            const data = {
-                                                type: "VEHICLE_PICKUP"
-                                            };
-                                            await handleUpdateVehiclePickupStatus(client, appointment?.vehicle?.id, !appointment?.vehicle?.readyForPickup);
-                                            await sendPushNotification(appointment?.user.pushToken, title, body, data);
-                                            navigate.reset({
-                                                index: 0,
-                                                routes: [{ name: '(admin)' }]
-                                            });
-                                        }
-                                    }
-                                ]
-                            )
-                        }}
-                    >
-                        <Text style={Styles.actionText}>{appointment?.vehicle?.readyForPickup ? 'Completed' : 'Set Ready for pickup'}</Text>
-                    </TouchableOpacity>
+                <View style={Styles.infoContainer}>
+                    <Tab
+                        header='Date'
+                        text={`${formatDate(appointment?.date)}`}
+                        leftIcon={<AntDesign name='calendar' size={30} style={Styles.icon}/>}
+                    />
+                    <Tab
+                        header='Time'
+                        text={`${formatTime(appointment?.time)}`}
+                        leftIcon={<MaterialCommunityIcons name='clock' size={30} style={Styles.icon}/>}
+                    />
+                    <Tab
+                        header='Service'
+                        text={`${appointment?.service}`}
+                        leftIcon={iconCheck(appointment?.service)}
+                    />
+                </View>
+                { appointment?.notes ? (
+                    <View style={Styles.infoContainer}>
+                        <Text style={Styles.headerTitle}>Customer Notes</Text>
+                        <Text style={Styles.text}>{appointment?.notes}</Text>
+                    </View>
+                ) : null }
+            </View>
+            <View style={[Styles.floatingBlock, {marginBottom: 10}]}>
+                <View style={Styles.infoContainer}>
+                    <Text style={Styles.headerTitle}>Vehicle</Text>
+                    <Tab
+                        header={`${appointment?.vehicle?.year}`}
+                        text={`${appointment?.vehicle?.make} ${appointment?.vehicle?.model}`}
+                        leftIcon={<Ionicons name='car-sport' size={30} style={Styles.icon}/>}
+                    />
+                    <Tab
+                        header='Vehicle Color'
+                        text={`${appointment?.vehicle?.color}`}
+                        leftIcon={<FontAwesome name='paint-brush' size={30} style={Styles.icon}/>}
+                        style={{height: 'none', padding: 5}}
+                    />
+                    { appointment?.vehicle?.plate && (
+                        <Tab
+                            header='License Plate #'
+                            text={`${appointment?.vehicle?.plate}`}
+                            leftIcon={<FontAwesome name='id-card' size={30} style={Styles.icon}/>}
+                            style={{height: 'none', padding: 5}}
+                        />
+                    )}
+                    { appointment?.vehicle?.vin && (
+                        <Tab
+                            header='VIN'
+                            text={`${appointment?.vehicle?.vin}`}
+                            leftIcon={<FontAwesome name='barcode' size={30} style={Styles.icon}/>}
+                            style={{height: 'none', padding: 5}}
+                        />
+                    )}
                 </View>
             </View>
         </Background>

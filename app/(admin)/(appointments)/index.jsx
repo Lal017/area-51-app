@@ -37,7 +37,7 @@ const AppointmentIndex = () =>
             // Add a uniquely-keyed dot for each appointment
             marks[date].dots.push({
                 key: `dot-${index}`, // unique key per dot
-                color: Colors.secondary
+                color: Colors.tertiary
             });
         });
 
@@ -131,7 +131,8 @@ const AppointmentIndex = () =>
                             ]}
                             renderItem={({ item }) => (
                                 <Tab
-                                    text={`${item?.user?.firstName} ${item?.user?.lastName}${'\n'}${formatTime(item?.time)} | ${item?.service}`}
+                                    header={`${item?.user?.firstName} ${item?.user?.lastName}`}
+                                    text={`${formatTime(item?.time)} | ${item?.service}`}
                                     action={() => {
                                         router.push({
                                             params: { appointmentParam: JSON.stringify(item)},

@@ -7,6 +7,7 @@ ToDo:
     - RFValue package might be deprecated. check
     - Add call customer or email customer button to user view and vehicle view sections
     - check to see if pages need refresh added to them
+    - use tabs to display info on request a tow and schedule appointment
 
 PotentialChanges:
     - Add notification tab in header for home page (only do this if you add a datamodel for notifications)
