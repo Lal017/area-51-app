@@ -402,11 +402,6 @@ const handleCreateTowRequest = async (client, userId, vehicle, location, request
         await setTowRequest(result.data.createTowRequest);
 
         router.replace('towStatus');
-        Alert.alert(
-            'Tow Request',
-            'Your tow request has been sent!',
-            [{ text: 'OK' }]
-        );
     } catch (error) {
         console.error('ERROR, could not create tow request: ');
     }

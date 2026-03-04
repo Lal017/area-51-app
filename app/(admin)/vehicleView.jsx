@@ -45,34 +45,35 @@ const VehicleView = () =>
             <View style={Styles.floatingBlock}>
                 <View style={Styles.infoContainer}>
                     <Text style={Styles.headerTitle}>Vehicle</Text>
-                    <Tab
-                        header={`${vehicle.year}`}
-                        text={`${vehicle.make} ${vehicle.model}`}
-                        leftIcon={<Ionicons name='car-sport' size={30} style={Styles.icon}/>}
-                    />
-                    <Tab
-                        header='Vehicle Color'
-                        text={`${vehicle.color}`}
-                        leftIcon={<FontAwesome name='paint-brush' size={25} style={Styles.icon}/> }
-                        style={{height: 'none', padding: 5}}
-                    />
-                    { vehicle?.plate && (
-                        <Tab
-                            header='License Plate #'
-                            text={`${vehicle.plate}`}
-                            leftIcon={<FontAwesome name='id-card' size={25} style={Styles.icon}/>}
-                            style={{height: 'none', padding: 5}}
-                        />
-                    )}
-                    { vehicle?.vin && (
-                        <Tab
-                            header='VIN'
-                            text={`${vehicle.vin}`}
-                            leftIcon={<FontAwesome name='barcode' size={25} style={Styles.icon}/> }
-                            style={{height: 'none', padding: 5}}
-                        />
-                    )}
                 </View>
+                <Tab
+                    header={`${vehicle.year}`}
+                    text={`${vehicle.make} ${vehicle.model}`}
+                    leftIcon={<Ionicons name='car-sport' size={30} style={Styles.icon}/>}
+                    style={{height: 'none'}}
+                />
+                <Tab
+                    header='Vehicle Color'
+                    text={`${vehicle.color}`}
+                    leftIcon={<FontAwesome name='paint-brush' size={25} style={Styles.icon}/> }
+                    style={{height: 'none'}}
+                />
+                { vehicle?.plate && (
+                    <Tab
+                        header='License Plate #'
+                        text={`${vehicle.plate}`}
+                        leftIcon={<FontAwesome name='id-card' size={25} style={Styles.icon}/>}
+                        style={{height: 'none'}}
+                    />
+                )}
+                { vehicle?.vin && (
+                    <Tab
+                        header='VIN'
+                        text={`${vehicle.vin}`}
+                        leftIcon={<FontAwesome name='barcode' size={25} style={Styles.icon}/> }
+                        style={{height: 'none'}}
+                    />
+                )}
             </View>
             <View style={[Styles.block, {paddingTop: 20}]}>
                 <View style={{

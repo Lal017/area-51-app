@@ -251,7 +251,7 @@ const handleGetAddress = async (latitude, longitude) =>
 
         if (addressArray.length > 0) {
             const address = addressArray[0];
-            return `${address.name}, ${address.street}, ${address.city}, ${address.region}, ${address.postalCode}`;
+            return `${address.name} ${address.street}, ${address.city}, ${address.region} ${address.postalCode}`;
         }
     } catch (error) {
         console.error('ERROR, could not get address:', error);

@@ -51,30 +51,48 @@ const TowRequestList = () =>
         handleGetTowRequests();
     }, []);
 
+    const getStatus = (status) =>
+    {
+        switch (status) {
+            case 'COMPLETED':
+                return <Text style={Styles.tabText}>Completed</Text>;
+            case 'IN_PROGRESS':
+                return <Text style={[Styles.tabText, {color: Colors.primary}]}>In Progress</Text>;
+            case 'CANCELLED':
+                return <Text style={[Styles.tabText, {color: Colors.redButton}]}>Cancelled</Text>;
+            case 'REQUESTED':
+                return <Text style={[Styles.tabText, {color: Colors.secondary}]}>Requested</Text>;
+            default:
+                return <Text>N/A</Text>
+        }
+    };
+
     return (
         <Background refreshing={refresing} onRefresh={onRefresh}>
-            <View style={Styles.inputWrapper}>
-                <Entypo name='magnifying-glass' size={20} color='black' style={Styles.icon} />
-                <TextInput
-                    placeholder="Search User"
-                    placeholderTextColor={Colors.text}
-                    style={Styles.input}
-                    value={search}
-                    onChangeText={setSearch}
-                />
-            </View>
-            <View style={[AdminStyles.picker, {marginLeft: 20}]}>
-                <Picker
-                    selectedValue={statusFilter}
-                    onValueChange={(itemvalue) => setStatusFilter(itemvalue)}
-                    style={{color: 'black'}}
-                >
-                    <Picker.Item label="All" value='ALL' />
-                    <Picker.Item label="Requested" value="REQUESTED" />
-                    <Picker.Item label="In Progress" value="IN_PROGRESS" />
-                    <Picker.Item label="Cancelled" value="CANCELLED" />
-                    <Picker.Item label="Completed" value="COMPLETED" />
-                </Picker>
+            <View style={Styles.block}>
+                <View style={Styles.inputWrapper}>
+                    <Entypo name='magnifying-glass' size={20} color='black' style={Styles.icon} />
+                    <TextInput
+                        placeholder="Search User"
+                        placeholderTextColor={Colors.text}
+                        style={Styles.input}
+                        value={search}
+                        onChangeText={setSearch}
+                    />
+                </View>
+                <View style={[AdminStyles.picker, {marginLeft: 20}]}>
+                    <Picker
+                        selectedValue={statusFilter}
+                        onValueChange={(itemvalue) => setStatusFilter(itemvalue)}
+                        style={{color: 'black'}}
+                    >
+                        <Picker.Item label="All" value='ALL' />
+                        <Picker.Item label="Requested" value="REQUESTED" />
+                        <Picker.Item label="In Progress" value="IN_PROGRESS" />
+                        <Picker.Item label="Cancelled" value="CANCELLED" />
+                        <Picker.Item label="Completed" value="COMPLETED" />
+                    </Picker>
+                </View>
             </View>
             <View style={[Styles.block, {rowGap: 0}]}>
                 {requests && requests
@@ -89,13 +107,14 @@ const TowRequestList = () =>
                     .map((request, index) => (
                         <View key={index}>
                             <Tab
-                                action={() => router.push({
-                                    pathname: 'towResponse',
-                                    params: { customerParam: JSON.stringify(request)}
-                                })}
-                                text={<Text style={[Styles.subTitle, {paddingLeft: 75}, request.status === 'REQUESTED' ? {color: Colors.primary} : request.status === 'IN_PROGRESS' ? {color: Colors.secondary} : request.status === 'CANCELLED' ? {color: 'red'} : request.status === 'COMPLETED' ? {color: '#b3b3b3'} : null ]}><Text style={Styles.tabText}>{request.user.firstName}</Text>{'\n'}{request.status === 'IN_PROGRESS' ? 'IN PROGRESS' : request.status}</Text>}
+                                header={`${request?.user?.firstName} ${request?.user?.lastName}`}
+                                text={getStatus(request?.status)}
                                 leftIcon={<MaterialCommunityIcons name='tow-truck' size={35} style={Styles.icon} />}
                                 rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon} />}
+                                action={() => router.push({
+                                    pathname: 'towResponse',
+                                    params: { requestParam: JSON.stringify(request)}
+                                })}
                             />
                         </View>
                 ))}

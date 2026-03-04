@@ -2,12 +2,8 @@ import Colors from '../../../constants/colors';
 import { Styles } from '../../../constants/styles';
 import { formatNumber, formatDate, formatTime, Background, Tab, callCustomer, textCustomer } from '../../../components/components';
 import { useLocalSearchParams } from 'expo-router';
-import { openURL } from 'expo-linking';
 import { AntDesign, Entypo, MaterialCommunityIcons, FontAwesome5, FontAwesome, MaterialIcons, Ionicons } from '@expo/vector-icons';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { useState } from 'react';
-import { useApp } from '../../../components/context';
-import { useNavigation } from '@react-navigation/native';
 
 const AppointmentView = () =>
 {
@@ -71,44 +67,45 @@ const AppointmentView = () =>
                         leftIcon={iconCheck(appointment?.service)}
                     />
                 </View>
-                { appointment?.notes ? (
+                { appointment?.notes && (
                     <View style={Styles.infoContainer}>
                         <Text style={Styles.headerTitle}>Customer Notes</Text>
-                        <Text style={Styles.text}>{appointment?.notes}</Text>
+                        <Text style={Styles.text}>{appointment.notes}</Text>
                     </View>
-                ) : null }
+                )}
             </View>
             <View style={[Styles.floatingBlock, {marginBottom: 10}]}>
                 <View style={Styles.infoContainer}>
                     <Text style={Styles.headerTitle}>Vehicle</Text>
-                    <Tab
-                        header={`${appointment?.vehicle?.year}`}
-                        text={`${appointment?.vehicle?.make} ${appointment?.vehicle?.model}`}
-                        leftIcon={<Ionicons name='car-sport' size={30} style={Styles.icon}/>}
-                    />
-                    <Tab
-                        header='Vehicle Color'
-                        text={`${appointment?.vehicle?.color}`}
-                        leftIcon={<FontAwesome name='paint-brush' size={30} style={Styles.icon}/>}
-                        style={{height: 'none', padding: 5}}
-                    />
-                    { appointment?.vehicle?.plate && (
-                        <Tab
-                            header='License Plate #'
-                            text={`${appointment?.vehicle?.plate}`}
-                            leftIcon={<FontAwesome name='id-card' size={30} style={Styles.icon}/>}
-                            style={{height: 'none', padding: 5}}
-                        />
-                    )}
-                    { appointment?.vehicle?.vin && (
-                        <Tab
-                            header='VIN'
-                            text={`${appointment?.vehicle?.vin}`}
-                            leftIcon={<FontAwesome name='barcode' size={30} style={Styles.icon}/>}
-                            style={{height: 'none', padding: 5}}
-                        />
-                    )}
                 </View>
+                <Tab
+                    header={`${appointment?.vehicle?.year}`}
+                    text={`${appointment?.vehicle?.make} ${appointment?.vehicle?.model}`}
+                    leftIcon={<Ionicons name='car-sport' size={30} style={Styles.icon}/>}
+                    style={{height: 'none'}}
+                />
+                <Tab
+                    header='Vehicle Color'
+                    text={`${appointment?.vehicle?.color}`}
+                    leftIcon={<FontAwesome name='paint-brush' size={30} style={Styles.icon}/>}
+                    style={{height: 'none'}}
+                />
+                { appointment?.vehicle?.plate && (
+                    <Tab
+                        header='License Plate #'
+                        text={`${appointment?.vehicle?.plate}`}
+                        leftIcon={<FontAwesome name='id-card' size={30} style={Styles.icon}/>}
+                        style={{height: 'none'}}
+                    />
+                )}
+                { appointment?.vehicle?.vin && (
+                    <Tab
+                        header='VIN'
+                        text={`${appointment?.vehicle?.vin}`}
+                        leftIcon={<FontAwesome name='barcode' size={30} style={Styles.icon}/>}
+                        style={{height: 'none'}}
+                    />
+                )}
             </View>
         </Background>
     );
