@@ -135,6 +135,23 @@ const handleListUsers = async (client) =>
     }
 };
 
+// used to list all customers in database
+const handleListCustomers = async (client) =>
+{
+    try {
+        const users = await client.graphql({
+            query: listUsers,
+            variables: {
+                filter: { access: { eq: 'Customers' }}
+            }
+        });
+
+        return users.data.listUsers.items;
+    } catch (error) {
+        console.error('ERROR, could not get users:', error);
+    }
+};
+
 
 // -------------------------------------------
 //                  CUSTOMERS
@@ -165,5 +182,6 @@ export {
     handleDeleteUser,
     handleDeleteStorage,
     handleListUsers,
+    handleListCustomers,
     handleRequestDriverAccount
 }

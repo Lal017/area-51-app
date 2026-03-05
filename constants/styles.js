@@ -629,6 +629,23 @@ const AdminStyles = StyleSheet.create({
         width: '100%',
         backgroundColor: 'white',
     },
+    removeButton: {
+        position: 'absolute',
+        right: 10,
+        top: 10,
+        borderRadius: 5,
+        backgroundColor: Colors.redButton,
+        padding: 2
+    },
+    arrow: {
+        position: 'absolute',
+        top: '50%',
+        marginTop: -50,
+        bottom: '50%',
+        height: 100,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
     // (appointment)/index.jsx
     agendaList: {
         width: '100%',

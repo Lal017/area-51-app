@@ -3,11 +3,11 @@ import Carousel from 'react-native-reanimated-carousel';
 import Colors from '../../constants/colors';
 import { useApp } from '../../components/context';
 import { AdminStyles, Styles } from '../../constants/styles';
-import { Background, Loading } from '../../components/components';
+import { Background, Loading, Tab } from '../../components/components';
 import { sendMassPushNotification } from '../../components/notifComponents';
 import { handleUploadHomeImage, handleGetURLs, handleRemoveHomeImage } from '../../components/adminComponents';
 import { TouchableOpacity, Text, Image, View, Dimensions, Alert, TextInput, KeyboardAvoidingView } from 'react-native';
-import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { AntDesign, Entypo, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
 
 const screenWidth = Dimensions.get("window").width;
@@ -19,7 +19,7 @@ const HomeSettings = () =>
     const [ image, setImage ] = useState();
     const [ fileType, setFileType ] = useState();
     const [ urls, setUrls ] = useState();
-    const [ loading, setLoading ] = useState(false);
+    const [ loading, setLoading ] = useState(true);
     const [ currentIndex, setCurrentIndex ] = useState();
     const [ title, setTitle ] = useState();
     const [ body, setBody ] = useState();
@@ -43,10 +43,25 @@ const HomeSettings = () =>
     };
 
     useEffect(() => {
+        const uploadImage = async () =>
+        {
+            setLoading(true);
+            await handleUploadHomeImage(image, fileType);
+            setImage(undefined);
+            setLoading(false);
+        };
+
+        if (image) {
+            uploadImage();
+        }
+    }, [image]);
+
+    useEffect(() => {
         const initUrls = async () =>
         {
             const getUrls = await handleGetURLs();
             setUrls(getUrls);
+            setLoading(false);
         }
 
         initUrls();
@@ -62,8 +77,8 @@ const HomeSettings = () =>
                 <Background>
                     <View style={Styles.block}>
                         <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                            <Text style={Styles.subTitle}>Current Images</Text>
-                            <Text style={Styles.text}>Preview of images currently on the home screen</Text>
+                            <Text style={Styles.headerTitle}>Images</Text>
+                            <Text style={Styles.tabHeader}>Preview of images currently on the home screen</Text>
                         </View>
                         { urls ? (
                             <>
@@ -74,7 +89,7 @@ const HomeSettings = () =>
                                         width={screenWidth * 0.9}
                                         height={225}
                                         autoPlay
-                                        autoPlayInterval={5000}
+                                        autoPlayInterval={10000}
                                         onProgressChange={(_, absoluteProgress) => {
                                             const roundedIndex = Math.round(absoluteProgress);
                                             if (roundedIndex !== indexRef.current) {
@@ -83,82 +98,72 @@ const HomeSettings = () =>
                                             }
                                         }}
                                         renderItem={({item}) => (
-                                            <Image
-                                                source={{uri: item.url}}
-                                                style={{width: '100%', height: '100%'}}
-                                            />
+                                            <>
+                                                <Image
+                                                    source={{uri: item.url}}
+                                                    style={{width: '100%', height: '100%'}}
+                                                />
+                                                <TouchableOpacity
+                                                    style={AdminStyles.removeButton}
+                                                    onPress={() => {
+                                                        Alert.alert(
+                                                            'Remove Image',
+                                                            'Are you sure you want to remove this image',
+                                                            [
+                                                                { text: 'No'},
+                                                                {
+                                                                    text: 'Yes',
+                                                                    onPress: async () => {
+                                                                        if (loading) return;
+                                                                        setLoading(true);
+                                                                        const imageUrl = urls?.[currentIndex]?.url;
+                                                                        if (!imageUrl) return;
+                                                                        await handleRemoveHomeImage(imageUrl);
+                                                                        setLoading(false);
+                                                                    }
+                                                                }
+                                                            ]
+                                                        );
+                                                    }}
+                                                >
+                                                    <Entypo name='cross' size={35} color='white'/>
+                                                </TouchableOpacity>
+                                            </>
                                         )}
                                     />
+                                    <TouchableOpacity
+                                        style={[AdminStyles.arrow, {right: 10}]}
+                                        onPress={() => carouselRef.current?.next()}
+                                    >
+                                        <AntDesign name='right' size={35} color='white'/>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={[AdminStyles.arrow, {left: 10}]}
+                                        onPress={() => carouselRef.current?.prev()}
+                                    >
+                                        <AntDesign name='left' size={35} color='white'/>
+                                    </TouchableOpacity>
                                 </View>
-                                <TouchableOpacity
-                                    style={[Styles.actionButton, {alignSelf: 'center', backgroundColor: 'red'}]}
-                                    onPress={() => {
-                                        Alert.alert(
-                                            'Remove Image',
-                                            'Are you sure you want to remove this image',
-                                            [
-                                                { text: 'No'},
-                                                {
-                                                    text: 'Yes',
-                                                    onPress: async () => {
-                                                        if (loading) return;
-                                                        setLoading(true);
-                                                        const imageUrl = urls?.[currentIndex]?.url;
-                                                        if (!imageUrl) return;
-                                                        await handleRemoveHomeImage(imageUrl);
-                                                        setLoading(false);
-                                                    }
-                                                }
-                                            ]
-                                        )
-                                    }}
-                                >
-                                    <Text style={Styles.actionText}>Remove</Text>
-                                </TouchableOpacity>
                             </>
                         ) : null}
                     </View>
                     <View style={Styles.block}>
-                        <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                            <Text style={Styles.subTitle}>Image Upload</Text>
-                            <Text style={Styles.text}>Upload an image to appear on the home screen for customers</Text>
+                        <View style={Styles.infoContainer}>
+                            <Text style={Styles.headerTitle}>Image Upload</Text>
+                            <Text style={Styles.tabHeader}>Upload an image to appear on the home screen for customers</Text>
                         </View>
-                        <View style={AdminStyles.imgPickContainer}>
-                            {image ? (
-                                <Image source={{ uri: image }} style={AdminStyles.imgPick}/>
-                            ) : (
-                                <TouchableOpacity
-                                    style={AdminStyles.noImg}
-                                    onPress={pickImage}
-                                    disabled={loading}
-                                >
-                                    <MaterialCommunityIcons name='image-plus' size={50} />
-                                </TouchableOpacity>
-                            )}
-                        </View>
-                        <TouchableOpacity
-                            style={[Styles.actionButton, image && {backgroundColor: Colors.secondary}, loading && {opacity: 0.5}, {alignSelf: 'center'}]}
-                            disabled={loading}
-                            onPress={async () => {
-                                if (loading) return;
-                                setLoading(true);
-                                if (image) {
-                                    await handleUploadHomeImage(image, fileType);
-                                } else {
-                                    await pickImage();
-                                }
-                                setLoading(false);
-                            }}
-                        >
-                            <Text style={Styles.actionText}>
-                                { image ? 'Upload Image' : 'Pick Image'}
-                            </Text>
-                        </TouchableOpacity>
+                        { !image && (
+                            <Tab
+                                text='Upload Image'
+                                leftIcon={<AntDesign name='upload' size={30} style={Styles.icon}/>}
+                                action={pickImage}
+                            />
+                        )}
                     </View>
-                    <View style={Styles.block}>
-                        <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                            <Text style={Styles.subTitle}>Send Notification</Text>
-                            <Text style={Styles.text}>Send a push notification to all users</Text>
+                    <View style={[Styles.floatingBlock, {marginBottom: 10}]}>
+                        <View style={Styles.infoContainer}>
+                            <Text style={Styles.headerTitle}>Send Notification</Text>
+                            <Text style={Styles.tabHeader}>Send a push notification to all users</Text>
                         </View>
                         <View style={Styles.inputContainer}>
                             <View style={Styles.inputWrapper}>

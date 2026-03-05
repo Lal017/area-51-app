@@ -8,7 +8,8 @@ ToDo:
     - Add call customer or email customer button to user view and vehicle view sections
     - check to see if pages need refresh added to them
     - use tabs to display info on request a tow and schedule appointment
-
+    - add try/catch to functions and buttons
+    
 PotentialChanges:
     - Add notification tab in header for home page (only do this if you add a datamodel for notifications)
     - Add dataModel to save data for notifications instead of sending data directly through a notification

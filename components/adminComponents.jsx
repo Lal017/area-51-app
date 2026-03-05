@@ -104,13 +104,6 @@ const handleUploadHomeImage = async (file, fileType) =>
             data: fileData
         }).result;
 
-        Alert.alert(
-            'Upload Complete',
-            'Your image has been uploaded to the home page',
-            [
-                { text: 'OK' }
-            ]
-        );
         router.replace('(admin)/homeSettings');
     } catch (error) {
         console.error('ERROR, could not upload home image:', error);
@@ -126,12 +119,6 @@ const handleRemoveHomeImage = async (url) =>
         await remove({
             path: path
         });
-
-        Alert.alert(
-            'Image Removed',
-            'The image has been removed from the home page',
-            [{ text: 'OK' }]
-        );
         router.replace('(admin)/homeSettings');
     } catch (error) {
         console.error('ERROR, could not remove home image:', error);
