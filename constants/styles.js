@@ -200,7 +200,7 @@ const Styles = StyleSheet.create({
     // container
     page: {
         paddingTop: 10,
-        paddingBottom: 20,
+        paddingBottom: 10,
         flexGrow: 1,
         alignItems: 'center',
     },
@@ -216,7 +216,7 @@ const Styles = StyleSheet.create({
         width: '100%',
     },
     floatingBlock: {
-        width: '95%',
+        width: '90%',
         padding: 10,
         rowGap: 20,
         paddingTop: 25,
@@ -422,10 +422,6 @@ const ServiceStyles = StyleSheet.create({
         flex: 1,
         height: 5,
         backgroundColor: Colors.backDropAccent
-    },
-    selectionContainer: {
-        width: '100%',
-        rowGap: 0,
     },
     buttonContainer: {
         width: '100%',

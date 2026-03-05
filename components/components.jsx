@@ -167,7 +167,7 @@ const Select = ({text, selected, action, leftIcon, rightIcon}) =>
 {
     return(
         <TouchableOpacity
-            style={[Styles.tabWrapper, {borderBottomWidth: 1, borderColor: 'white'}, selected ? {backgroundColor: Colors.secondary} : null]}
+            style={[Styles.tabWrapper, {borderBottomWidth: 1, borderTopWidth: 1, borderColor: 'white'}, selected ? {backgroundColor: Colors.secondary} : null]}
             onPress={action}
         >
             {leftIcon}

@@ -5,10 +5,10 @@ import { Dimensions } from "react-native";
 import { ServiceStyles, Styles } from "../../constants/styles"
 import { useApp } from '../../components/context';
 import { handleSendAdminNotif, handleSendDriversNotif } from "../../components/notifComponents";
-import { Background, BinarySelect, Select } from "../../components/components";
+import { Background, BinarySelect, Select, SimpleList, Tab } from "../../components/components";
 import { handleCreateTowRequest } from "../../components/towComponents";
 import { useEffect, useRef, useState } from "react";
-import { Entypo, FontAwesome, FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Entypo, FontAwesome, FontAwesome5, Ionicons, MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { View, Text, TouchableOpacity, TextInput, ActivityIndicator, Alert, KeyboardAvoidingView } from "react-native";
 import { requestForegroundPermissionsAsync, getCurrentPositionAsync } from 'expo-location';
 import { router } from "expo-router";
@@ -137,59 +137,60 @@ const TowRequest = () =>
                     </>
                 ) : step === 2 ? (
                     <>
-                        <View style={{flex: 1, width: '100%'}}>
-                            <View style={Styles.block}>
-                                <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                                    <Text style={Styles.headerTitle}>Vehicle Selection</Text>
-                                    <Text style={Styles.tabHeader}>Select the vehicle to be towed</Text>
-                                </View>
+                        <View style={Styles.block}>
+                            <View style={Styles.infoContainer}>
+                                <Text style={Styles.headerTitle}>Vehicle Selection</Text>
+                                <Text style={Styles.tabHeader}>Select the vehicle to be towed</Text>
                             </View>
-                            <View style={ServiceStyles.selectionContainer}>
-                                {vehicles?.map((vehicle, index) => (
+                        </View>
+                        <View style={[Styles.block, {rowGap: 0}]}>
+                            <SimpleList
+                                data={vehicles}
+                                keyExtractor={item => item.id}
+                                renderItem={({item}) =>
                                     <Select
-                                        key={index}
-                                        text={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
-                                        selected={vehicle === selectedVehicle ? true : false}
-                                        action={() => {vehicle === selectedVehicle ? setSelectedVehicle(undefined) : setSelectedVehicle(vehicle)}}
-                                        rightIcon={<Ionicons name="car-sport" size={30} style={Styles.rightIcon} color={selectedVehicle === vehicle ? Colors.backDrop : null}/>}
-                                        leftIcon={<FontAwesome name={selectedVehicle === vehicle ? "circle" : "circle-o"} size={25} style={Styles.icon} color={selectedVehicle === vehicle ? Colors.backDrop : null}/>}
+                                        text={`${item.year} ${item.make} ${item.model}`}
+                                        selected={item.id === selectedVehicle?.id ? true : false}
+                                        action={() => {item.id === selectedVehicle?.id ? setSelectedVehicle(undefined) : setSelectedVehicle(item)}}
+                                        rightIcon={<Ionicons name="car-sport" size={30} style={Styles.rightIcon} color={selectedVehicle?.id === item.id && Colors.backDrop}/>}
+                                        leftIcon={<FontAwesome name={selectedVehicle?.id === item.id ? "circle" : "circle-o"} size={25} style={Styles.icon} color={selectedVehicle?.id === item.id && Colors.backDrop}/>}
                                     />
-                                ))}
-                            </View>
-                            { errorMessage && (
-                                <View style={Styles.block}>
-                                    <View style={Styles.errorContainer}>
-                                        <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
-                                        <Text style={Styles.errorText}>{errorMessage}</Text>
-                                    </View>
+                                }
+                            />
+                        </View>
+                        { errorMessage && (
+                            <View style={Styles.block}>
+                                <View style={Styles.errorContainer}>
+                                    <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
+                                    <Text style={Styles.errorText}>{errorMessage}</Text>
                                 </View>
-                            )}
-                            <View style={ServiceStyles.buttonContainer}>
-                                <TouchableOpacity
-                                    style={ServiceStyles.directionButton}
-                                    onPress={() => {
-                                        setStep(1);
-                                        setErrorMessage(undefined);
-                                    }}
-                                >
-                                    <FontAwesome name='arrow-left' size={24} color='white' />
-                                    <Text style={Styles.actionText}>Back</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    style={ServiceStyles.directionButton}
-                                    onPress={() => {
-                                        if (selectedVehicle) {
-                                            setStep(3);
-                                            setErrorMessage(undefined);
-                                        } else {
-                                            setErrorMessage('Select a vehicle to continue');
-                                        }
-                                    }}
-                                >
-                                    <Text style={Styles.actionText}>Continue</Text>
-                                    <FontAwesome name='arrow-right' size={24} color='white' />
-                                </TouchableOpacity>
                             </View>
+                        )}
+                        <View style={ServiceStyles.buttonContainer}>
+                            <TouchableOpacity
+                                style={ServiceStyles.directionButton}
+                                onPress={() => {
+                                    setStep(1);
+                                    setErrorMessage(undefined);
+                                }}
+                            >
+                                <FontAwesome name='arrow-left' size={24} color='white' />
+                                <Text style={Styles.actionText}>Back</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={ServiceStyles.directionButton}
+                                onPress={() => {
+                                    if (selectedVehicle) {
+                                        setStep(3);
+                                        setErrorMessage(undefined);
+                                    } else {
+                                        setErrorMessage('Select a vehicle to continue');
+                                    }
+                                }}
+                            >
+                                <Text style={Styles.actionText}>Continue</Text>
+                                <FontAwesome name='arrow-right' size={24} color='white' />
+                            </TouchableOpacity>
                         </View>
                     </>
                 ) : step === 3 ? (
@@ -197,7 +198,7 @@ const TowRequest = () =>
                         { location ? (
                             <>
                                 <View style={Styles.block}>
-                                    <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                                    <View style={Styles.infoContainer}>
                                         <Text style={Styles.headerTitle}>Verify your Location</Text>
                                         <Text style={Styles.tabHeader}>drag and drop the pin to the pickup location</Text>
                                     </View>
@@ -252,12 +253,14 @@ const TowRequest = () =>
                         )}
                     </>
                 ) : step === 4 ? (
-                    <View style={[Styles.block, {alignItems: 'center'}]}>
-                        <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                            <Text style={Styles.headerTitle}>Towing Information</Text>
-                            <Text style={Styles.tabHeader}>Please answer the following questions</Text>
+                    <>
+                        <View style={[Styles.block, {alignItems: 'center'}]}>
+                            <View style={Styles.infoContainer}>
+                                <Text style={Styles.headerTitle}>Towing Information</Text>
+                                <Text style={Styles.tabHeader}>Please answer the following questions</Text>
+                            </View>
                         </View>
-                        <View style={[Styles.floatingBlock, missingAnswer && {borderColor: 'red', borderWidth: 1}, {rowGap: 15}]}>
+                        <View style={[Styles.floatingBlock, missingAnswer && {borderColor: 'red', borderWidth: 1}, {rowGap: 15, marginBottom: 20}]}>
                             <View style={Styles.infoContainer}>
                                 <Text style={Styles.text}>Does the vehicle start?</Text>
                                 <View style={Styles.binaryTabContainer}>
@@ -328,13 +331,15 @@ const TowRequest = () =>
                             </View>
                         </View>
                         { errorMessage && (
-                            <View style={Styles.errorContainer}>
-                                <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
-                                <Text style={Styles.errorText}>{errorMessage}</Text>
+                            <View style={Styles.block}>
+                                <View style={Styles.errorContainer}>
+                                    <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
+                                    <Text style={Styles.errorText}>{errorMessage}</Text>
+                                </View>
                             </View>
                         )}
                         <View style={[Styles.floatingBlock, {rowGap: 10}]}>
-                            <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                            <View style={Styles.infoContainer}>
                                 <Text style={Styles.headerTitle}>Description <Text style={Styles.text}>(optional)</Text></Text>
                                 <Text style={Styles.tabHeader}>Please, describe why the vehicle needs to be towed</Text>
                             </View>
@@ -380,67 +385,109 @@ const TowRequest = () =>
                                 <FontAwesome name='arrow-right' size={24} color='white' />
                             </TouchableOpacity>
                         </View>
-                    </View>
+                    </>
                 ) : step === 5 ? (
                 <>
                     <View style={Styles.block}>
-                        <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                        <View style={Styles.infoContainer}>
                             <Text style={Styles.headerTitle}>Towing Information</Text>
                             <Text style={Styles.tabHeader}>Review the information and confirm it is correct</Text>
                         </View>
                     </View>
-                    <View style={ServiceStyles.mapContainerAlt}>
-                        { marker ? (
-                            <MapView
-                                provider={PROVIDER_GOOGLE}
-                                style={{width: '100%', height: '100%'}}
-                                region={{
-                                    latitude: marker?.latitude,
-                                    longitude: marker?.longitude,
-                                    latitudeDelta: 0.01,
-                                    longitudeDelta: 0.01
-                                }}
-                                toolbarEnabled={false}
-                                showsUserLocation={false}
-                                liteMode={true}
-                                userInterfaceStyle='dark'
-                            >
-                                <Marker
-                                    title="Pickup Location"
-                                    description="This is where the tow truck will be sent"
-                                    coordinate={marker}
-                                />
-                            </MapView>
-                        ) : (
-                            <ActivityIndicator size='large' color='#0000ff' />
-                        ) }
-                    </View>
                     <View style={[Styles.block, {alignItems: 'center'}]}>
-                        <View style={[Styles.floatingBlock, {rowGap: 10}]}>
-                            <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                                <Text style={Styles.headerTitle}>{selectedVehicle.year} {selectedVehicle.make} {selectedVehicle.model}</Text>
-                            </View>
-                            <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                                <View style={{width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <Text style={Styles.text}> - Car runs?</Text><Text style={Styles.text}>{canRun ? 'Yes' : 'No' }</Text>
-                                </View>
-                                <View style={{width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <Text style={Styles.text}> - Car rolls?</Text><Text style={Styles.text}>{canRoll ? 'Yes' : 'No' }</Text>
-                                </View>
-                                <View style={{width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <Text style={Styles.text}> - Keys included?</Text><Text style={Styles.text}>{keyIncluded ? 'Yes' : 'No' }</Text>
-                                </View>
-                                <View style={{width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <Text style={Styles.text}> - Vehicle is obstructed?</Text><Text style={Styles.text}>{isObstructed ? 'Yes' : 'No' }</Text>
-                                </View>
-                            </View>
-                            { notes ? (
-                                <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                                    <Text style={Styles.headerTitle}>Customer Note</Text>
-                                    <Text style={Styles.text}>{notes}</Text>
-                                </View>
-                            ) : null}
+                        <View style={ServiceStyles.mapContainerAlt}>
+                            { marker ? (
+                                <MapView
+                                    provider={PROVIDER_GOOGLE}
+                                    style={{width: '100%', height: '100%'}}
+                                    region={{
+                                        latitude: marker?.latitude,
+                                        longitude: marker?.longitude,
+                                        latitudeDelta: 0.01,
+                                        longitudeDelta: 0.01
+                                    }}
+                                    toolbarEnabled={false}
+                                    showsUserLocation={false}
+                                    liteMode={true}
+                                    userInterfaceStyle='dark'
+                                >
+                                    <Marker
+                                        title="Pickup Location"
+                                        description="This is where the tow truck will be sent"
+                                        coordinate={marker}
+                                    />
+                                </MapView>
+                            ) : (
+                                <ActivityIndicator size='large' color='#0000ff' />
+                            ) }
                         </View>
+                    </View>
+                    <View style={Styles.floatingBlock}>
+                        <View style={Styles.infoContainer}>
+                            <Text style={Styles.headerTitle}>Vehicle</Text>
+                        </View>
+                        <Tab
+                            header={`${selectedVehicle.year}`}
+                            text={`${selectedVehicle.make} ${selectedVehicle.model}`}
+                            leftIcon={<Ionicons name='car-sport' size={30} style={Styles.icon}/>}
+                            style={{height: 'none'}}
+                        />
+                        <Tab
+                            header='Vehicle Color'
+                            text={`${selectedVehicle.color}`}
+                            leftIcon={<FontAwesome name='paint-brush' size={30} style={Styles.icon}/>}
+                            style={{height: 'none'}}
+                        />
+                        { selectedVehicle.plate && (
+                            <Tab
+                                header='License Plate #'
+                                text={`${selectedVehicle.plate}`}
+                                leftIcon={<FontAwesome name='id-card' size={30} style={Styles.icon}/>}
+                                style={{height: 'none'}}
+                            />
+                        )}
+                        { selectedVehicle.vin && (
+                            <Tab
+                                header='VIN'
+                                text={`${selectedVehicle.vin}`}
+                                leftIcon={<FontAwesome name='barcode' size={30} style={Styles.icon}/>}
+                                style={{height: 'none'}}
+                            />
+                        )}
+                    </View>
+                    <View style={[Styles.block, {paddingTop: 20}]}>
+                        <View style={Styles.infoContainer}>
+                            <Tab
+                                header='Does the car run?'
+                                text={canRun ? 'Yes' : 'No'}
+                                leftIcon={<MaterialCommunityIcons name='engine' size={30} style={Styles.icon}/>}
+                                style={{height: 'none', padding: 5}}
+                            />
+                            <Tab
+                                header='Does the car roll?'
+                                text={canRoll ? 'Yes' : 'No'}
+                                leftIcon={<MaterialCommunityIcons name='tire' size={30} style={Styles.icon}/>}
+                                style={{height: 'none', padding: 5}}
+                            />
+                            <Tab
+                                header='Are the keys included?'
+                                text={keyIncluded ? 'Yes' : 'No'}
+                                leftIcon={<Entypo name='key' size={30} style={Styles.icon}/>}
+                                style={{height: 'none', padding: 5}}
+                            />
+                            <Tab
+                                header='Is the vehicle obstructed?'
+                                text={isObstructed ? 'Yes' : 'No'}
+                                leftIcon={<Entypo name='warning' size={30} style={Styles.icon}/>}
+                                style={{height: 'none', padding: 5}}
+                            />
+                        </View>
+                        { notes ? (
+                            <View style={Styles.infoContainer}>
+                                <Text style={Styles.headerTitle}>Customer Note</Text>
+                                <Text style={Styles.text}>{notes}</Text>
+                            </View>
+                        ) : null}
                         <View style={ServiceStyles.buttonContainer}>
                             <TouchableOpacity
                                 style={ServiceStyles.directionButton}
