@@ -9,6 +9,8 @@ ToDo:
     - check to see if pages need refresh added to them
     - use tabs to display info on request a tow and schedule appointment
     - add try/catch to functions and buttons
+    - check to see all error message are red and not Colors.redButton
+    - test UI in admin for if a customer makes a request or appointment and then deletes vehicle
     
 PotentialChanges:
     - Add notification tab in header for home page (only do this if you add a datamodel for notifications)

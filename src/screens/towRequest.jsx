@@ -146,14 +146,14 @@ const TowRequest = () =>
                         <View style={[Styles.block, {rowGap: 0}]}>
                             <SimpleList
                                 data={vehicles}
-                                keyExtractor={item => item.id}
                                 renderItem={({item}) =>
                                     <Select
-                                        text={`${item.year} ${item.make} ${item.model}`}
+                                        header={`${item.year}`}
+                                        text={`${item.make} ${item.model}`}
                                         selected={item.id === selectedVehicle?.id ? true : false}
                                         action={() => {item.id === selectedVehicle?.id ? setSelectedVehicle(undefined) : setSelectedVehicle(item)}}
-                                        rightIcon={<Ionicons name="car-sport" size={30} style={Styles.rightIcon} color={selectedVehicle?.id === item.id && Colors.backDrop}/>}
-                                        leftIcon={<FontAwesome name={selectedVehicle?.id === item.id ? "circle" : "circle-o"} size={25} style={Styles.icon} color={selectedVehicle?.id === item.id && Colors.backDrop}/>}
+                                        rightIcon={<Ionicons name="car-sport" size={30} style={Styles.rightIcon} color={Colors.backDropAccent}/>}
+                                        leftIcon={<FontAwesome name={selectedVehicle?.id === item.id ? "circle" : "circle-o"} size={25} style={Styles.icon} color={Colors.backDropAccent}/>}
                                     />
                                 }
                             />

@@ -168,8 +168,7 @@ const Styles = StyleSheet.create({
         fontSize: RFValue(15),
         fontFamily: 'Roboto-Light',
         textAlign: 'left',
-        color: Colors.text,
-        opacity: 0.5
+        color: Colors.subText
     },
     tabText: {
         fontSize: RFValue(15),

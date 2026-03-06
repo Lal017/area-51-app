@@ -1,7 +1,9 @@
+import Colors from '../constants/colors';
+import { Styles } from '../constants/styles';
 import { appointmentsByUserId, listAppointments } from '../src/graphql/queries';
 import { createAppointment, deleteAppointment, updateAppointment } from '../src/graphql/mutations';
 import { post } from 'aws-amplify/api';
-import { Alert } from 'react-native';
+import { FontAwesome5, FontAwesome, Entypo, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 
 // -------------------------------------
 //              ADMINS
@@ -207,6 +209,23 @@ const handleDeleteAllAppointments = async (client, userId) =>
     }
 };
 
+// used to return the correct icon for a selected service
+const iconCheck = (service) =>
+{
+    switch (service) {
+        case 'Oil Change':
+            return <FontAwesome5 name="oil-can" size={30} style={Styles.icon} color={Colors.backDrop}/>;
+        case 'Diagnosis':
+            return <FontAwesome name="stethoscope" size={30} style={Styles.icon} color={Colors.backDrop}/>;
+        case 'Tuning':
+            return <Entypo name="area-graph" size={30} style={Styles.icon} color={Colors.backDrop}/>;
+        case 'A/C':
+            return <MaterialIcons name="air" size={30} style={Styles.icon} color={Colors.backDrop}/>;
+        default:
+            return <MaterialCommunityIcons name="dots-horizontal-circle" size={30} style={Styles.icon} color={Colors.backDrop}/>;
+    }
+};
+
 export {
     handleGetAllAppointments,
     handleGetAppointments,
@@ -216,5 +235,6 @@ export {
     handleFinalCheck,
     handleDeleteAppointment,
     handleDeleteAllAppointments,
-    handleGetMyAppointments
+    handleGetMyAppointments,
+    iconCheck
 }

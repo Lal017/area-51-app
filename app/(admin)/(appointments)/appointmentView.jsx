@@ -1,30 +1,14 @@
-import Colors from '../../../constants/colors';
 import { Styles } from '../../../constants/styles';
+import { iconCheck } from '../../../components/appointmentComponents';
 import { formatNumber, formatDate, formatTime, Background, Tab, callCustomer, textCustomer } from '../../../components/components';
 import { useLocalSearchParams } from 'expo-router';
-import { AntDesign, Entypo, MaterialCommunityIcons, FontAwesome5, FontAwesome, MaterialIcons, Ionicons } from '@expo/vector-icons';
+import { AntDesign, Entypo, MaterialCommunityIcons, FontAwesome, Ionicons } from '@expo/vector-icons';
 import { View, Text, TouchableOpacity } from 'react-native';
 
 const AppointmentView = () =>
 {
     const { appointmentParam } = useLocalSearchParams();
     const appointment = JSON.parse(appointmentParam);
-
-    const iconCheck = (service) =>
-    {
-        switch (service) {
-            case 'Oil Change':
-                return <FontAwesome5 name="oil-can" size={30} style={Styles.icon} color={Colors.backDrop}/>;
-            case 'Diagnosis':
-                return <FontAwesome name="stethoscope" size={30} style={Styles.icon} color={Colors.backDrop}/>;
-            case 'Tuning':
-                return <Entypo name="area-graph" size={30} style={Styles.icon} color={Colors.backDrop}/>;
-            case 'A/C':
-                return <MaterialIcons name="air" size={30} style={Styles.icon} color={Colors.backDrop}/>;
-            default:
-                return <MaterialCommunityIcons name="dots-horizontal-circle" size={30} style={Styles.icon} color={Colors.backDrop}/>;
-        }
-    };
 
     return (
         <Background>
@@ -69,7 +53,7 @@ const AppointmentView = () =>
                 </View>
                 { appointment?.notes && (
                     <View style={Styles.infoContainer}>
-                        <Text style={Styles.headerTitle}>Customer Notes</Text>
+                        <Text style={Styles.headerTitle}>Customer Note</Text>
                         <Text style={Styles.text}>{appointment.notes}</Text>
                     </View>
                 )}

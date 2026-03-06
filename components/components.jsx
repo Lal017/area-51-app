@@ -163,15 +163,18 @@ const Tab = ({header, text, action, leftIcon, rightIcon, style}) =>
 };
 
 // reusable tab component for Selections
-const Select = ({text, selected, action, leftIcon, rightIcon}) =>
+const Select = ({header, text, selected, action, leftIcon, rightIcon}) =>
 {
     return(
         <TouchableOpacity
-            style={[Styles.tabWrapper, {borderBottomWidth: 1, borderTopWidth: 1, borderColor: 'white'}, selected ? {backgroundColor: Colors.secondary} : null]}
+            style={[Styles.tabWrapper, {borderBottomWidth: 1, borderTopWidth: 1, borderColor: Colors.backgroundAccent}, selected && {backgroundColor: Colors.secondary}]}
             onPress={action}
         >
             {leftIcon}
-            <Text style={[Styles.tabText, selected ? {color: Colors.text} : null]}>{text}</Text>
+            <View style={!header ? {flexDirection: 'row'} : {flexDirection: 'column'}}>
+                <Text style={[Styles.tabHeader, selected && {color: Colors.text}]}>{header}</Text>
+                <Text style={Styles.tabText}>{text}</Text>
+            </View>
             {rightIcon}         
         </TouchableOpacity>
     )
