@@ -11,6 +11,7 @@ ToDo:
     - add try/catch to functions and buttons
     - check to see all error message are red and not Colors.redButton
     - test UI in admin for if a customer makes a request or appointment and then deletes vehicle
+    - Change request tow prompts to switches
     
 PotentialChanges:
     - Add notification tab in header for home page (only do this if you add a datamodel for notifications)

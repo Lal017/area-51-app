@@ -10,6 +10,8 @@ import { Styles } from "../../../constants/styles";
 import { useNavigation } from "@react-navigation/native";
 import { View, Text, TouchableOpacity, Alert } from "react-native";
 import { useState } from "react";
+import { Ionicons } from "@expo/vector-icons";
+import { RFValue } from "react-native-responsive-fontsize";
 
 const DriverAccountRequest = () =>
 {
@@ -21,20 +23,22 @@ const DriverAccountRequest = () =>
     return (
         <Background>
             <View style={Styles.block}>
-                <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                    <Text style={Styles.subTitle}>Information</Text>
-                    <Text style={Styles.text}>Are you a tow truck driver? Use this page to request a driver account. Once the request has been made, we will grant you access or deny you within 24 hours.</Text>
+                <View style={Styles.infoContainer}>
+                    <Text style={Styles.headerTitle}>Request</Text>
+                    <Text style={Styles.tabHeader}>Are you a tow truck driver? Use this page to request a driver account.</Text>
                 </View>
-                <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                    <Text style={[Styles.subTitle, {color: 'red'}]}>ALERT</Text>
-                    <Text style={Styles.text}>Requesting a driver account will delete all of your appointments, tow requests, vehicles, and files. Are you sure you want to continue?</Text>
-                </View>
+                    <View style={Styles.infoContainer}>
+                        <View style={[Styles.infoContainer, {flexDirection: 'row', columnGap: 5}]}>
+                            <Ionicons name='information-circle' size={18} color='white'/>
+                            <Text style={[Styles.text, {fontSize: RFValue(10)}]}>Requesting a driver account will <Text style={{color: 'red', fontWeight: 'bold'}}>DELETE</Text> all your vehicles, requests, and documents. Are you sure you want to continue?</Text>
+                        </View>
+                    </View>
             </View>
             <TouchableOpacity
-                style={[Styles.actionButton, loading && {opacity: 0.5}, {backgroundColor: Colors.secondary}]}
+                style={[Styles.actionButton, loading && {opacity: 0.5}, {backgroundColor: Colors.primary}]}
                 onPress={() => Alert.alert(
                     'Confirmation',
-                    'Are you sure you want to convert your account to a tow driver account?',
+                    'Are you sure you want to request to convert your customer account to a driver account?',
                     [
                         { text: 'No' },
                         {

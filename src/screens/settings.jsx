@@ -14,10 +14,10 @@ const Settings = () =>
     return(
         <Background>
             <View style={Styles.block}>
-                <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                <View style={Styles.infoContainer}>
                     <Text style={ProfileStyles.name}>{firstName} {lastName}</Text>
-                    <Text style={Styles.text}>{email}</Text>
-                    <Text style={Styles.text}>{readableNumber}</Text>
+                    <Text style={Styles.tabHeader}>{email}</Text>
+                    <Text style={Styles.tabHeader}>{readableNumber}</Text>
                 </View>
             </View>
             <Tab
@@ -32,12 +32,6 @@ const Settings = () =>
                 leftIcon={<MaterialIcons name='lock-reset' size={30} style={Styles.icon} />}
                 rightIcon={<AntDesign name="right" size={25} style={Styles.rightIcon} />}
             />
-            <Tab
-                text="Delete Account"
-                action={() => router.push('deleteAccount')}
-                leftIcon={<AntDesign name='deleteuser' size={30} style={Styles.icon} />}
-                rightIcon={<AntDesign name="right" size={25} style={Styles.rightIcon} />}
-            />
             { access === "Customers" ? (
                 <Tab
                     text="Tow Driver Account"
@@ -46,6 +40,12 @@ const Settings = () =>
                     rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon}/>}
                 />
             ) : null}
+            <Tab
+                text="Delete Account"
+                action={() => router.push('deleteAccount')}
+                leftIcon={<AntDesign name='deleteuser' size={30} style={Styles.icon} />}
+                rightIcon={<AntDesign name="right" size={25} style={Styles.rightIcon} />}
+            />
         </Background>
     );
 };

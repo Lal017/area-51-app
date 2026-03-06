@@ -131,7 +131,7 @@ const TowStatus = () =>
         <Background style={{paddingBottom: 0, paddingTop: 0}}>
             { towRequest?.status === 'REQUESTED' ? (
                 <>
-                <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                <View style={Styles.infoContainer}>
                     <View style={ServiceStyles.titleWrapper}>
                         <Text style={Styles.headerTitle}>Tow Request</Text>
                         <LottieView

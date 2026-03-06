@@ -22,28 +22,24 @@ const DeleteAccount = () =>
             { step === 1 && !loading ? (
                 <>
                     <View style={Styles.block}>
-                        <View style={Styles.infoContainer}>
-                            <Text style={[Styles.subTitle, {textAlign: 'left', color: 'red', fontWeight: 'bold'}]}>CAUTION</Text>
-                            <Text style={Styles.text}>
-                                Deleting your account will remove all your data and settings.
-                                Are you sure you want to continue?
-                            </Text>
-                            <Text style={[Styles.text, {fontWeight: 'bold'}]}>THIS ACTION CANNOT BE UNDONE</Text>
+                        <View style={[Styles.infoContainer, {rowGap: 10}]}>
+                            <Text style={Styles.headerTitle}>Note</Text>
+                            <Text style={Styles.tabHeader}>Deleting your account will <Text style={Styles.text}>PERMANENTLY</Text> remove all your data and settings. This action <Text style={Styles.text}>CANNOT</Text> be undone. Are you sure you wish to continue?</Text>
                         </View>
                     </View>
                     <TouchableOpacity
-                        style={Styles.actionButton}
+                        style={[Styles.actionButton, {backgroundColor: 'rgba(0,0,0,0.25)', elevation: 0, alignSelf: 'center', borderWidth: 1, borderColor: 'red'}]}
                         onPress={() => setStep(2)}
                     >
-                        <Text style={Styles.actionText}>Continue</Text>
+                        <Text style={[Styles.actionText, {color: 'red'}]}>Continue</Text>
                     </TouchableOpacity>
                 </>
             ) : step === 2 && !loading ? (
                 <>
                     <View style={Styles.block}>
                         <View style={Styles.infoContainer}>
-                            <Text style={[Styles.subTitle, {color: 'red', fontWeight: 'bold'}]}>CONFIRM DELETION</Text>
-                            <Text style={Styles.text}>Enter your email to confirm account deletion</Text>
+                            <Text style={Styles.headerTitle}>Confirmation</Text>
+                            <Text style={Styles.tabHeader}>Enter your email to confirm account deletion</Text>
                         </View>
                         <View>
                             <View style={Styles.inputWrapper}>
@@ -61,9 +57,11 @@ const DeleteAccount = () =>
                         </View>
                     </View>
                     { errorMessage && (
-                        <View style={Styles.errorContainer}>
-                            <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
-                            <Text style={Styles.errorText}>{errorMessage}</Text>
+                        <View style={Styles.block}>
+                            <View style={Styles.errorContainer}>
+                                <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
+                                <Text style={Styles.errorText}>{errorMessage}</Text>
+                            </View>
                         </View>
                     )}
                     <View style={[Styles.block, {alignItems: 'center'}]}>
