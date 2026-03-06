@@ -242,7 +242,7 @@ const Index = () =>
             >
               <AntDesign name="closecircle" size={20} color={Colors.backDropAccent}/>
             </TouchableOpacity>
-            <View style={[Styles.infoContainer, {rowGap: 0}]}>
+            <View style={Styles.infoContainer}>
               <Text style={HomeStyles.appointmentTitle}>{customNotification?.title}</Text>
               <Text style={HomeStyles.appointmentText}>{customNotification?.body}</Text>
             </View>

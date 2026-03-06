@@ -32,7 +32,7 @@ const Vehicle = () =>
         <KeyboardAvoidingView behavior='height' style={{flex: 1}}>
             <Background>
                 <View style={Styles.block}>
-                    <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                    <View style={Styles.infoContainer}>
                         <Text style={Styles.headerTitle}>Vehicle Information</Text>
                         <Text style={Styles.tabHeader}>{vehicle ? 'Edit' : 'Add'} a vehicle</Text>
                         { vehicle && (

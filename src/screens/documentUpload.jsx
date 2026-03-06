@@ -46,7 +46,7 @@ const DocumentUpload = () =>
 
     return (
         <BackgroundAlt style={{rowGap: 20}}>
-            <View style={[Styles.infoContainer, {rowGap: 0}]}>
+            <View style={Styles.infoContainer}>
                 <Text style={Styles.headerTitle}>PDF Upload</Text>
                 <Text style={Styles.tabHeader}>Upload must be a (.pdf) file extension</Text>
             </View>

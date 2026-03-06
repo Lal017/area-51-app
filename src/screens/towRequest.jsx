@@ -22,16 +22,16 @@ const TowRequest = () =>
 
     const [ selectedVehicle, setSelectedVehicle ] = useState();
     const [ notes, setNotes ] = useState();
-    const [ canRun, setCanRun ] = useState();
-    const [ canRoll, setCanRoll ] = useState();
-    const [ keyIncluded, setKeyIncluded ] = useState();
-    const [ isObstructed, setIsObstructed ] = useState();
+    const [ canRun, setCanRun ] = useState(undefined);
+    const [ canRoll, setCanRoll ] = useState(undefined);
+    const [ keyIncluded, setKeyIncluded ] = useState(undefined);
+    const [ isObstructed, setIsObstructed ] = useState(undefined);
     const [ location, setLocation ] = useState();
     const [ marker, setMarker ] = useState();
     const [ step, setStep ] = useState(1);
     const [ loading, setLoading ] = useState(false);
     const [ errorMessage, setErrorMessage ] = useState(undefined);
-    const [ missingAnswer, setMissingAnswer ] = useState(false);
+    const [ answerCheck, setAnswerCheck ] = useState(false);
 
     const scrollRef = useRef(null);
 
@@ -260,74 +260,42 @@ const TowRequest = () =>
                                 <Text style={Styles.tabHeader}>Please answer the following questions</Text>
                             </View>
                         </View>
-                        <View style={[Styles.floatingBlock, missingAnswer && {borderColor: 'red', borderWidth: 1}, {rowGap: 15, marginBottom: 20}]}>
-                            <View style={Styles.infoContainer}>
-                                <Text style={Styles.text}>Does the vehicle start?</Text>
-                                <View style={Styles.binaryTabContainer}>
-                                    <BinarySelect
-                                        text='Yes'
-                                        selected={canRun !== undefined ? canRun : null}
-                                        action={() => { canRun ? setCanRun(undefined) : setCanRun(true)}}
-                                        rightIcon={<Entypo name="thumbs-up" size={30} color='white'/>}
-                                    />
-                                    <BinarySelect
-                                        text='No'
-                                        selected={canRun !== undefined ? !canRun : null }
-                                        action={() => { canRun === false ? setCanRun(undefined) : setCanRun(false)}}
-                                        rightIcon={<Entypo name="thumbs-down" size={30} color='white'/>}
-                                    />
-                                </View>
+                        <View style={Styles.block}>
+                            <View style={[Styles.infoContainer, {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}]}>
+                                <Text style={[Styles.text, answerCheck && canRun === undefined && {color: 'red'}]}>Does the vehicle start?</Text>
+                                <BinarySelect
+                                    trueText='Yes'
+                                    falseText='No'
+                                    value={canRun}
+                                    onChange={setCanRun}
+                                />
                             </View>
-                            <View style={Styles.infoContainer}>
-                                <Text style={Styles.text}>Does the vehicle roll?</Text>
-                                <View style={Styles.binaryTabContainer}>
-                                    <BinarySelect
-                                        text='Yes'
-                                        selected={canRoll !== undefined ? canRoll : null}
-                                        action={() => { canRoll ? setCanRoll(undefined) : setCanRoll(true)}}
-                                        rightIcon={<Entypo name="thumbs-up" size={30} color='white'/>}
-                                    />
-                                    <BinarySelect
-                                        text='No'
-                                        selected={canRoll !== undefined ? !canRoll : null }
-                                        action={() => { canRoll === false ? setCanRoll(undefined) : setCanRoll(false)}}
-                                        rightIcon={<Entypo name="thumbs-down" size={30} color='white'/>}
-                                    />
-                                </View>
+                            <View style={[Styles.infoContainer, {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}]}>
+                                <Text style={[Styles.text, answerCheck && canRoll === undefined && {color: 'red'}]}>Does the vehicle roll?</Text>
+                                <BinarySelect
+                                    trueText='Yes'
+                                    falseText='No'
+                                    value={canRoll}
+                                    onChange={setCanRoll}
+                                />
                             </View>
-                            <View style={Styles.infoContainer}>
-                                <Text style={Styles.text}>Are the vehicle keys included?</Text>
-                                <View style={Styles.binaryTabContainer}>
-                                    <BinarySelect
-                                        text='Yes'
-                                        selected={keyIncluded !== undefined ? keyIncluded : null}
-                                        action={() => { keyIncluded ? setKeyIncluded(undefined) : setKeyIncluded(true)}}
-                                        rightIcon={<Entypo name="thumbs-up" size={30} color='white'/>}
-                                    />
-                                    <BinarySelect
-                                        text='No'
-                                        selected={keyIncluded !== undefined ? !keyIncluded : null }
-                                        action={() => { keyIncluded === false ? setKeyIncluded(undefined) : setKeyIncluded(false)}}
-                                        rightIcon={<Entypo name="thumbs-down" size={30} color='white'/>}
-                                    />
-                                </View>
+                            <View style={[Styles.infoContainer, {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}]}>
+                                <Text style={[Styles.text, answerCheck && keyIncluded === undefined && {color: 'red'}]}>Are the keys included?</Text>
+                                <BinarySelect
+                                    trueText='Yes'
+                                    falseText='No'
+                                    value={keyIncluded}
+                                    onChange={setKeyIncluded}
+                                />
                             </View>
-                            <View style={Styles.infoContainer}>
-                                <Text style={Styles.text}>Is there anything obstructing the vehicle?</Text>
-                                <View style={Styles.binaryTabContainer}>
-                                    <BinarySelect
-                                        text='Yes'
-                                        selected={isObstructed !== undefined ? isObstructed : null}
-                                        action={() => { isObstructed ? setIsObstructed(undefined) : setIsObstructed(true)}}
-                                        rightIcon={<Entypo name="thumbs-up" size={30} color='white'/>}
-                                    />
-                                    <BinarySelect
-                                        text='No'
-                                        selected={isObstructed !== undefined ? !isObstructed : null }
-                                        action={() => { isObstructed === false ? setIsObstructed(undefined) : setIsObstructed(false)}}
-                                        rightIcon={<Entypo name="thumbs-down" size={30} color='white'/>}
-                                    />
-                                </View>
+                            <View style={[Styles.infoContainer, {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}]}>
+                                <Text style={[Styles.text, answerCheck && isObstructed === undefined && {color: 'red'}]}>Is the vehicle obstructed?</Text>
+                                <BinarySelect
+                                    trueText='Yes'
+                                    falseText='No'
+                                    value={isObstructed}
+                                    onChange={setIsObstructed}
+                                />
                             </View>
                         </View>
                         { errorMessage && (
@@ -361,7 +329,7 @@ const TowRequest = () =>
                                 onPress={() => {
                                     setStep(3);
                                     setErrorMessage(undefined);
-                                    setMissingAnswer(false);
+                                    setAnswerCheck(false);
                                 }}
                             >
                                 <FontAwesome name='arrow-left' size={24} color='white' />
@@ -373,10 +341,10 @@ const TowRequest = () =>
                                     if (canRun !== undefined && canRoll !== undefined && keyIncluded !== undefined && isObstructed !== undefined)
                                     {
                                         setStep(5);
-                                        setMissingAnswer(false);
+                                        setAnswerCheck(false);
                                         setErrorMessage(undefined);
                                     } else {
-                                        setMissingAnswer(true);
+                                        setAnswerCheck(true);
                                         setErrorMessage('Answer all questions to proceed');
                                     }
                                 }}
@@ -458,13 +426,13 @@ const TowRequest = () =>
                     <View style={[Styles.block, {paddingTop: 20}]}>
                         <View style={Styles.infoContainer}>
                             <Tab
-                                header='Does the car run?'
+                                header='Does the vehicle start?'
                                 text={canRun ? 'Yes' : 'No'}
                                 leftIcon={<MaterialCommunityIcons name='engine' size={30} style={Styles.icon}/>}
                                 style={{height: 'none', padding: 5}}
                             />
                             <Tab
-                                header='Does the car roll?'
+                                header='Does the vehicle roll?'
                                 text={canRoll ? 'Yes' : 'No'}
                                 leftIcon={<MaterialCommunityIcons name='tire' size={30} style={Styles.icon}/>}
                                 style={{height: 'none', padding: 5}}

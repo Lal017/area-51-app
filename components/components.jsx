@@ -181,17 +181,24 @@ const Select = ({header, text, selected, action, leftIcon, rightIcon}) =>
 };
 
 // reusable tab component for Binary Selections
-const BinarySelect = ({text, selected, action, rightIcon}) =>
+const BinarySelect = ({trueText, falseText, value, onChange}) =>
 {
     return(
-        <TouchableOpacity
-            style={[Styles.binaryTabWrapper, selected ? {backgroundColor: Colors.secondary} : null]}
-            onPress={action}
-        >
-            <Text style={[Styles.tabText, selected ? {color: Colors.text} : null, {textAlign: 'center'}]}>{text}</Text>
-            {rightIcon}     
-        </TouchableOpacity>
-    )
+        <View style={Styles.binaryTabContainer}>
+            <TouchableOpacity
+                style={[Styles.binaryTabWrapper, value && {padding: 15, backgroundColor: Colors.secondary}]}
+                onPress={() => onChange(true)}
+            >
+                <Text style={[Styles.tabText, {textAlign: 'center'}]}>{trueText}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={[Styles.binaryTabWrapper, value === false && {padding: 15, backgroundColor: Colors.redButton}]}
+                onPress={() => onChange(false)}
+            >
+                <Text style={[Styles.tabText, {textAlign: 'center'}]}>{falseText}</Text>
+            </TouchableOpacity>
+        </View>
+    );
 };
 
 // format phone number for readability

@@ -26,11 +26,11 @@ const VehiclePickup = () =>
     return(
         <Background>
             <View style={Styles.block}>
-                <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                <View style={Styles.infoContainer}>
                     <Text style={Styles.subTitle}>Location</Text>
                     <Text style={Styles.text}>3120 W Sirius Ave. #103 Las Vegas, NV 89102</Text>
                 </View>
-                <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                <View style={Styles.infoContainer}>
                     <Text style={Styles.subTitle}>Hours of operation</Text>
                     <Text style={Styles.text}>Mon - Fri | 9am - 5:30pm</Text>
                 </View>

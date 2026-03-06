@@ -366,7 +366,7 @@ const TabsContent = () =>
                         />
                     </View>
                 ) : null }
-                <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                <View style={Styles.infoContainer}>
                     <Text style={[Styles.title, {textAlign: 'center'}]}>{ refreshPrompt ? `Refresh` : `Tow Driver Account`}</Text>
                     <Text style={[Styles.text, {textAlign: 'center'}]}>{ refreshPrompt ? `Please refresh the screen` : `We're reviewing your request. We'll notify you once you've been granted access.`}</Text>
                 </View>

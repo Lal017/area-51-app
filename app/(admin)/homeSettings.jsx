@@ -76,7 +76,7 @@ const HomeSettings = () =>
             >
                 <Background>
                     <View style={Styles.block}>
-                        <View style={[Styles.infoContainer, {rowGap: 0}]}>
+                        <View style={Styles.infoContainer}>
                             <Text style={Styles.headerTitle}>Images</Text>
                             <Text style={Styles.tabHeader}>Preview of images currently on the home screen</Text>
                         </View>

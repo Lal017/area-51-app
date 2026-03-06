@@ -62,24 +62,18 @@ const Styles = StyleSheet.create({
         height: 75,
     },
     binaryTabWrapper: {
-        width: '40%',
-        borderRadius: 10,
         paddingLeft: 25,
         paddingRight: 25,
+        padding: 10,
         alignItems: 'center',
-        justifyContent: 'space-around',
-        flexDirection: 'row',
-        position: 'relative',
-        height: 50,
-        backgroundColor: Colors.backgroundAccent
+        justifyContent: 'center',
+        backgroundColor: Colors.button
     },
     binaryTabContainer: {
-        width: '100%',
-        height: 50,
         flexDirection: 'row',
-        columnGap: 50,
         justifyContent: 'center',
         alignItems: 'center',
+        height: 50
     },
     rightIcon: {
         position: 'absolute',
