@@ -36,6 +36,9 @@ export const expo = {
     "expo-router",
     "expo-font",
     "@maplibre/maplibre-react-native",
+    "@react-native-community/datetimepicker",
+    "expo-build-properties",
+    'expo-web-browser',
     "expo-image-picker",
     [
       "expo-splash-screen",
