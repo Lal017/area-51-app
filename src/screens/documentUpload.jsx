@@ -8,13 +8,11 @@ import { View, Dimensions, Text, TouchableOpacity } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { FontAwesome6 } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
 
 const DocumentUpload = () =>
 {
     const { isInvoice, userParam } = useLocalSearchParams();
     const customer = JSON.parse(userParam);
-    const navigate = useNavigation();
 
     const [ document, setDocument ] = useState();
     const [ name, setName ] = useState();
@@ -87,10 +85,7 @@ const DocumentUpload = () =>
                             await handleUploadEstimate(customer.identityId, document, name);
                         }
                         await sendPushNotification(customer.pushToken, `New ${DOCUMENT_TYPE}`, `A new ${DOCUMENT_TYPE} has been uploaded to your account`, data);
-                        navigate.reset({
-                            index: 0,
-                            routes: [{ name: '(admin)' }]
-                        });
+                        router.replace('(admin)');
                     } else {
                         await pickDocument();
                     }

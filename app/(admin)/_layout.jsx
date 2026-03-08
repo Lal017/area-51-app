@@ -12,7 +12,6 @@ import { Linking, View, Text, TouchableOpacity } from 'react-native';
 import { generateClient } from "aws-amplify/api";
 import { getPermissionsAsync, addNotificationReceivedListener, addNotificationResponseReceivedListener, removeNotificationSubscription } from "expo-notifications";
 import { fetchAuthSession, fetchUserAttributes } from "aws-amplify/auth";
-import { useNavigation } from '@react-navigation/native';
 
 const AdminContent = () =>
 {
@@ -44,7 +43,6 @@ const AdminContent = () =>
     const [ ready, setReady ] = useState(false);
     const [ refreshing, setRefreshing ] = useState(false);
     const [ permissionScreen, setPermissionScreen ] = useState(false);
-    const navigate = useNavigation();
 
     // notification listeners
     const notificationListener = useRef();
@@ -56,10 +54,7 @@ const AdminContent = () =>
         const permission = await getPermissionsAsync();
         if (permission.granted) {
             setPermissionScreen(false);
-            navigate.reset({
-                index: 0,
-                routes: [{ name: '(admin)' }]
-            });
+            router.replace('(admin)');
         }
         setRefreshing(false);
     };

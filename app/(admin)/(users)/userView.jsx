@@ -7,7 +7,6 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { AntDesign, Entypo, FontAwesome, FontAwesome6, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { handleAssignTowDriverId, handleMakeUserTowDriver } from '../../../components/adminComponents';
-import { useNavigation } from '@react-navigation/native';
 import { useApp } from '../../../components/context';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 
@@ -16,7 +15,6 @@ const UserView = () =>
     const { client } = useApp();
     const { userParam } = useLocalSearchParams();
     const customer = JSON.parse(userParam);
-    const navigate = useNavigation();
 
     const [ title, setTitle ] = useState();
     const [ body, setBody ] = useState();
@@ -134,10 +132,7 @@ const UserView = () =>
                                                             type: "DRIVER_ACCOUNT"
                                                         };
                                                         await sendPushNotification(customer.pushToken, 'Driver Account Request', 'Your account is ready!', data);
-                                                        navigate.reset({
-                                                            index: 0,
-                                                            routes: [{ name: '(admin)'}]
-                                                        });
+                                                        router.replace('(admin)');
                                                     } catch (error) {
                                                         console.error('ERROR, could not convert user to a tow truck driver:', error);
                                                     }

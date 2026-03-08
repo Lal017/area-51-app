@@ -6,13 +6,11 @@ import { useApp } from "../../components/context";
 import { useState } from "react";
 import { View, Text, TextInput, KeyboardAvoidingView, TouchableOpacity } from "react-native";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
 import { RFValue } from "react-native-responsive-fontsize";
 
 const AccountEdit = () =>
 {
     const { firstName, lastName, email, phoneNumber, setFirstName, setLastName, setPhoneNumber, isMissingAttr, setIsMissingAttr } = useApp();
-    const navigate = useNavigation();
     
     const [ editFirstName, setEditFirstName ] = useState(firstName);
     const [ editLastName, setEditLastName ] = useState(lastName);
@@ -104,7 +102,6 @@ const AccountEdit = () =>
                             if (loading) return;
                             setLoading(true);
                             const errMsg = await handleUpdateAttributes(
-                                navigate,
                                 isMissingAttr,
                                 editEmail,
                                 editFirstName,

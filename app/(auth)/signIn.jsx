@@ -7,11 +7,9 @@ import { Text, TextInput, View, TouchableOpacity, Image } from 'react-native';
 import { useState } from 'react';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import { Link } from 'expo-router';
-import { useNavigation } from '@react-navigation/native';
 
 const SignIn = () =>
 {
-    const navigate = useNavigation();
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [loading, setLoading] = useState(false);
@@ -94,7 +92,7 @@ const SignIn = () =>
             </View>
             <View style={Styles.block}>
                 <View style={AuthStyles.providerContainer}>
-                    <GoogleSignInButton text='Sign in with Google' navigate={navigate}/>
+                    <GoogleSignInButton text='Sign in with Google'/>
                 </View>
                 <View style={[Styles.infoContainer, {alignItems: 'center', rowGap: 20}]}>
                     <Link href="/(auth)/signUp" style={Styles.text}>Need an account? <Text style={{textDecorationLine: 'underline'}}>Sign Up</Text></Link>

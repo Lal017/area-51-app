@@ -59,7 +59,7 @@ const handleSignUp = async (given_name, family_name, email, password, phoneNumbe
 };
 
 // used to confirm signing up with confirmation code
-const handleSignUpConfirm = async (navigate, username, confirmationCode, password) =>
+const handleSignUpConfirm = async (username, confirmationCode, password) =>
 {
     try {
         const { nextStep } = await confirmSignUp({
@@ -68,15 +68,12 @@ const handleSignUpConfirm = async (navigate, username, confirmationCode, passwor
         });
 
         if (nextStep.signUpStep === 'COMPLETE_AUTO_SIGN_IN') {
-            await handleAutoSignIn(navigate, username);
+            await handleAutoSignIn(username);
         } else if (nextStep.signUpStep === 'DONE') {
             await handleSignIn(username, password);
         } else {
             console.error('ERROR, could not auto sign in');
-            navigate.reset({
-                index: 0,
-                routes: [{ name: '(auth)' }]
-            });
+            router.replace('(auth)');
         }
     } catch (error) {
         return getErrorMessage(error);
@@ -126,22 +123,19 @@ const signInConfirm = async (username, nextStep, password) =>
 };
 
 // auto sign in after confirming sign up
-const handleAutoSignIn = async (navigate, username) =>
+const handleAutoSignIn = async (username) =>
 {
     try {
         const signInOutput = await autoSignIn();
         await signInConfirm(username, signInOutput.nextStep)
     } catch (error) {
         console.error('ERROR, could not auto sign in', error);
-        navigate.reset({
-            index: 0,
-            routes: [{ name: '(auth)' }]
-        });
+        router.replace('(auth)');
     }
 };
 
 // used to sign in with an external provider Google
-const handleSignInWithRedirect = async (providerName, navigate) =>
+const handleSignInWithRedirect = async (providerName) =>
 {
     try {
         await signInWithRedirect({ provider: providerName });
@@ -154,19 +148,16 @@ const handleSignInWithRedirect = async (providerName, navigate) =>
                 { text: 'Ok'}
             ]
         );
-        navigate.reset({
-            index: 0,
-            routes: [{ name: '(auth)'}]
-        });
+        router.replace('(auth)');
     }
 };
 
 // Google sign in button component
-const GoogleSignInButton = ({text, navigate}) =>
+const GoogleSignInButton = ({text}) =>
 {
     return(
         <TouchableOpacity
-            onPress={() => handleSignInWithRedirect('Google', navigate)}
+            onPress={() => handleSignInWithRedirect('Google')}
             style={AuthStyles.providerSignIn}
         >
             <Image
@@ -238,7 +229,7 @@ const handleResetPasswordNextSteps = (nextStep, username) =>
 };
 
 // used to confirm the password reset
-const handleConfirmResetPassword = async (navigate, username, confirmationCode, newPassword, confNewPassword) =>
+const handleConfirmResetPassword = async (username, confirmationCode, newPassword, confNewPassword) =>
 {
     if (newPassword !== confNewPassword) return "Passwords do not match";
 
@@ -248,10 +239,7 @@ const handleConfirmResetPassword = async (navigate, username, confirmationCode, 
             'Password Reset',
             'Your password has succesfully been reset!'
         );
-        navigate.reset({
-            index: 0,
-            routes: [{ name: '(auth)'}]
-        });
+        router.replace('(auth)');
     } catch (error) {
         return getErrorMessage(error);
     }
@@ -262,7 +250,7 @@ const handleConfirmResetPassword = async (navigate, username, confirmationCode, 
 //                    UPDATE PASSWORD
 // --------------------------------------------------------
 
-const handleUpdatePassword = async (navigate, oldPassword, newPassword, confNewPassword) =>
+const handleUpdatePassword = async (oldPassword, newPassword, confNewPassword) =>
 {
     if (newPassword !== confNewPassword) return 'Passwords do not match';
     try {
@@ -271,7 +259,7 @@ const handleUpdatePassword = async (navigate, oldPassword, newPassword, confNewP
             'Password Updated',
             'Your password has been updated!'
         );
-        await handleRedirect(navigate);
+        await handleRedirect();
     } catch (error) {
         return getErrorMessage(error);
     }
@@ -311,7 +299,7 @@ const handleDeleteAccount = async (client, userId, identityId, email, inputEmail
 // ------------------------------------------------------
 
 // used to update a users attributes
-const handleUpdateAttributes = async (navigate, isMissingAttr, updatedEmail, updatedFirstName, updatedLastName, updatedPhone, setFirstName, setLastName, setPhoneNumber) =>
+const handleUpdateAttributes = async (isMissingAttr, updatedEmail, updatedFirstName, updatedLastName, updatedPhone, setFirstName, setLastName, setPhoneNumber) =>
 {
     if (!updatedFirstName) return 'First name cannot be empty';
     if (!updatedLastName) return 'Last name cannot be empty';
@@ -331,14 +319,14 @@ const handleUpdateAttributes = async (navigate, isMissingAttr, updatedEmail, upd
         setFirstName(updatedFirstName);
         setLastName(updatedLastName);
         setPhoneNumber(`+1${phoneNumberCheck}`);
-        await handleUpdateAttributesNextSteps(navigate, isMissingAttr, attributes.email.nextStep.updateAttributeStep, updatedEmail);
+        await handleUpdateAttributesNextSteps(isMissingAttr, attributes.email.nextStep.updateAttributeStep, updatedEmail);
     } catch (error) {
         return getErrorMessage(error);
     };
 };
 
 // used to determine if an attribute that needs to be confirmed was updated
-const handleUpdateAttributesNextSteps = async (navigate, isMissingAttr, nextStep, email) =>
+const handleUpdateAttributesNextSteps = async (isMissingAttr, nextStep, email) =>
 {
     if (nextStep === 'DONE') {
         Alert.alert(
@@ -348,7 +336,7 @@ const handleUpdateAttributesNextSteps = async (navigate, isMissingAttr, nextStep
                 { text: 'Ok'}
             ]
         );
-        if (!isMissingAttr) await handleRedirect(navigate);
+        if (!isMissingAttr) await handleRedirect();
     }
     else if (nextStep === 'CONFIRM_ATTRIBUTE_WITH_CODE') {
         router.push({
@@ -359,12 +347,12 @@ const handleUpdateAttributesNextSteps = async (navigate, isMissingAttr, nextStep
 };
 
 // used to confirm email if it was updated
-const handleConfirmUserAttribute = async (navigate, userAttributeKey, confirmationCode, email, setEmail) =>
+const handleConfirmUserAttribute = async (userAttributeKey, confirmationCode, email, setEmail) =>
 {
     try {
         await confirmUserAttribute({ userAttributeKey, confirmationCode });
         setEmail(email);
-        await handleRedirect(navigate);
+        await handleRedirect();
         Alert.alert(
             "Confirmed",
             "Email has been confirmed!",
@@ -390,26 +378,16 @@ const handleConfirmUserAttribute = async (navigate, userAttributeKey, confirmati
 // ----------------------------------------------------
 
 // used to redirect user based on what group they belong too
-const handleRedirect = async (navigate) =>
+const handleRedirect = async () =>
 {
     try {
         const { tokens } = await fetchAuthSession();
-        if (tokens?.accessToken.payload["cognito:groups"]?.includes("Admins")) {
-            navigate.reset({
-                index: 0,
-                routes: [{ name: '(admin)' }]
-            });
-        } else if (tokens?.accessToken.payload["cognito:groups"]?.includes("TowDrivers")) {
-            navigate.reset({
-                index: 0,
-                routes: [{ name: '(tow)' }]
-            });
-        } else {
-            navigate.reset({
-                index: 0,
-                routes: [{ name: '(profile)' }]
-            });
-        }
+        if (tokens?.accessToken.payload["cognito:groups"]?.includes("Admins"))
+            router.replace('(admin)');
+        else if (tokens?.accessToken.payload["cognito:groups"]?.includes("TowDrivers"))
+            router.replace('(tow)');
+        else
+            router.replace('(profile)');
     } catch (error) {
         console.error('ERROR, could not redirect:', error);
     }

@@ -13,8 +13,7 @@ import { MaterialIcons, Ionicons, FontAwesome, AntDesign, FontAwesome5, Entypo, 
 import { useEffect, useRef, useState, useMemo } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import { Calendar } from "react-native-calendars";
-import { useNavigation } from '@react-navigation/native';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, router } from 'expo-router';
 import { RFValue } from 'react-native-responsive-fontsize';
 
 const screenWidth = Dimensions.get('window').width;
@@ -22,7 +21,7 @@ const screenWidth = Dimensions.get('window').width;
 const Schedule = () =>
 {
   const { client, vehicles, userId, setAppointments } = useApp();
-  const navigate = useNavigation();
+
   const { appointmentParam } = useLocalSearchParams();
   const appointment = appointmentParam ? JSON.parse(appointmentParam) : null;
 
@@ -516,10 +515,7 @@ const Schedule = () =>
                       await handleSendAdminNotif('Appointment Scheduled', 'A customer has scheduled an appointment');
                       await handleCreateAppointment(client, selectedDay, selectedTime, selectedService, notes, userId, selectedVehicle, setAppointments);
                     }
-                      navigate.reset({
-                      index: 0,
-                      routes: [{ name: '(tabs)'}]
-                    });
+                      router.replace('(tabs)');
                   } else {
                     Alert.alert(
                       'Time slot invalid',

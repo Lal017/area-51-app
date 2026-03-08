@@ -9,7 +9,6 @@ import { handleUpdateTowRequestStatus, handleGetTowRequest, createLocationClient
 import { View, Text, TouchableOpacity, Alert} from 'react-native';
 import { GetDevicePositionCommand } from '@aws-sdk/client-location';
 import { useEffect, useState } from "react";
-import { useNavigation } from '@react-navigation/native';
 import { openURL } from 'expo-linking';
 import { router } from 'expo-router';
 import { MaterialCommunityIcons, AntDesign, Entypo } from '@expo/vector-icons';
@@ -17,7 +16,6 @@ import { MaterialCommunityIcons, AntDesign, Entypo } from '@expo/vector-icons';
 const TowStatus = () =>
 {
     const { client, userId, towRequest, setTowRequest } = useApp();
-    const navigate = useNavigation();
     
     const [ driverLocation, setDriverLocation ] = useState();
     const [ estimatedArrivalTime, setEstimatedArrivalTime ] = useState();
@@ -176,10 +174,7 @@ const TowStatus = () =>
                                         [{ text: 'OK' }]
                                     );
                                     setTowRequest(undefined);
-                                    navigate.reset({
-                                        index: 0,
-                                        routes: [{ name: '(tabs)' }]
-                                    })
+                                    router.replace('(tabs)');
                                 }
                             }
                         ]

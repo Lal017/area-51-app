@@ -11,7 +11,6 @@ import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
 import { useEffect } from 'react';
-import { useNavigation } from '@react-navigation/native';
 import { Hub } from 'aws-amplify/utils';
 
 // Notification handler for recieved notifications
@@ -36,8 +35,6 @@ const RootLayout = () =>
     'Roboto-Light': require('../assets/fonts/Roboto-Light.ttf'),
   });
 
-  const navigate = useNavigation();
-
   // listener for auth event (sign in, sign out). handles redirects
   useEffect(() => {
     const listener = Hub.listen('auth', async (data) => {
@@ -51,38 +48,17 @@ const RootLayout = () =>
           const isAdmin = user?.accessToken?.payload["cognito:groups"]?.includes('Admins');
           const isDriver = user?.accessToken?.payload["cognito:groups"]?.includes('TowDrivers');
           if (router.canDismiss()) { router.dismissAll(); }
-          if (isAdmin) {
-            navigate.reset({
-              index: 0,
-              routes: [{ name: '(admin)' }]
-            });
-          }
-          else if (isDriver) {
-            navigate.reset({
-              index: 0,
-              routes: [{ name: '(tow)' }]
-            });
-          }
-          else {
-            navigate.reset({
-              index: 0,
-              routes: [{ name: '(tabs)' }]
-            });
-          }
+          if (isAdmin) router.replace('(admin)');
+          else if (isDriver) router.replace('(tow)');
+          else router.replace('(tabs)');
           break;
         case 'signedOut':
           // Redirect to login screen after sign out
-          navigate.reset({
-            index: 0,
-            routes: [{ name: '(auth)' }]
-          });
+          router.replace('(auth)');
           break;
         case 'signedIn_failure':
           // Handle failed sign in
-          navigate.reset({
-            index: 0,
-            routes: [{ name: '(auth)' }]
-          });
+          router.replace('(auth)');
           break;
       }
     });

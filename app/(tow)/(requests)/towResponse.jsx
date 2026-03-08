@@ -11,7 +11,6 @@ import { TouchableOpacity, View, Text, KeyboardAvoidingView, Alert } from 'react
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import { useEffect, useState } from "react";
 import { AntDesign, Entypo } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
 import { Accuracy, getCurrentPositionAsync } from "expo-location";
 import { post } from "aws-amplify/api";
 
@@ -21,7 +20,6 @@ const TowResponse = () =>
     const request = JSON.parse(towParam);
 
     const { client, driverId, firstName, phoneNumber } = useApp();
-    const navigate = useNavigation();
 
     const [ address, setAddress ] = useState();
     const [ waitTime, setWaitTime ] = useState();
@@ -165,10 +163,7 @@ const TowResponse = () =>
                                                         'The request has already been accepted by another driver',
                                                         [{ text: 'OK' }]
                                                     );
-                                                    navigate.reset({
-                                                        index: 0,
-                                                        routes: [{ name: '(tow)' }]
-                                                    });
+                                                    router.replace('(tow)');
                                                     return;
                                                 }
                                                 await AsyncStorage.setItem('requestId', request?.id);

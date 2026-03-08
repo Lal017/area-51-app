@@ -7,7 +7,7 @@ import { handleDeleteStorage, handleRequestDriverAccount } from "../../../compon
 import { handleDeleteAllVehicles } from "../../../components/vehicleComponents";
 import { handleSendAdminNotif } from "../../../components/notifComponents";
 import { Styles } from "../../../constants/styles";
-import { useNavigation } from "@react-navigation/native";
+import { router } from "expo-router";
 import { View, Text, TouchableOpacity, Alert } from "react-native";
 import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -16,7 +16,6 @@ import { RFValue } from "react-native-responsive-fontsize";
 const DriverAccountRequest = () =>
 {
     const { client, userId, identityId } = useApp();
-    const navigate = useNavigation();
 
     const [ loading, setLoading ] = useState(false);
 
@@ -54,10 +53,7 @@ const DriverAccountRequest = () =>
                                     await handleRequestDriverAccount(client, userId);
                                     await handleSendAdminNotif('Tow Driver Account Request', 'A user is requesting to become a tow driver');
                                     setLoading(false);
-                                    navigate.reset({
-                                        index: 0,
-                                        routes: [{ name: '(tabs)'}]
-                                    });
+                                    router.replace('(tabs)');
                                 } catch (error) {
                                     Alert.alert('ERROR', 'Could not request a driver account');
                                 } 

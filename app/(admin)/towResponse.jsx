@@ -7,10 +7,9 @@ import { useApp } from '../../components/context';
 import { Background, formatNumber, callCustomer, textCustomer, Tab } from '../../components/components';
 import { Styles, ServiceStyles } from '../../constants/styles';
 import { View, Text, TouchableOpacity, Alert, KeyboardAvoidingView } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, router } from 'expo-router';
 import { AntDesign, FontAwesome, Entypo, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
 import { openURL } from 'expo-linking';
 
 const TowResponse = () =>
@@ -18,7 +17,6 @@ const TowResponse = () =>
     const { client } = useApp();
     const { requestParam } = useLocalSearchParams();
     const request = JSON.parse(requestParam);
-    const navigate = useNavigation();
 
     const [ address, setAddress ] = useState();
 
@@ -181,10 +179,7 @@ const TowResponse = () =>
                                                     type: 'TOW_RESPONSE'
                                                 };
                                                 await sendPushNotification(request?.user?.pushToken, 'Tow Request', 'Your tow request has been completed!', data);
-                                                navigate.reset({
-                                                    index: 0,
-                                                    routes: [{ name: '(admin)' }]
-                                                });
+                                                router.replace('(admin)');
                                             }
                                         }
                                     ]

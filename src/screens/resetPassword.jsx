@@ -5,12 +5,10 @@ import { handleUpdatePassword } from '../../components/authComponents';
 import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import { useEffect, useState } from 'react';
 import { Feather, FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
 import { RFValue } from 'react-native-responsive-fontsize';
 
 const ResetPassword = () =>
 {
-    const navigate = useNavigation();
     const [ oldPassword, setOldPassword ] = useState(undefined);
     const [ newPassword, setNewPassword ] = useState('');
     const [ confNewPassword, setConfNewPassword ] = useState(undefined);
@@ -167,7 +165,7 @@ const ResetPassword = () =>
                             setLoading(true);
                             setErrorCheck(true);
                             if (!oldPassword || !newPassword || !confNewPassword) { setLoading(false); return; }
-                            setErrorMessage(await handleUpdatePassword(navigate, oldPassword, newPassword, confNewPassword));
+                            setErrorMessage(await handleUpdatePassword(oldPassword, newPassword, confNewPassword));
                             setLoading(false);
                         }}
                         style={[Styles.actionButton, loading && { opacity: 0.5 }, {backgroundColor: Colors.primary}]}

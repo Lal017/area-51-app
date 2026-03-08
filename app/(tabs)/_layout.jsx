@@ -17,9 +17,8 @@ import { router, Tabs} from "expo-router";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useEffect, useRef, useState } from 'react';
 import { generateClient } from "aws-amplify/api";
-import { addNotificationReceivedListener, addNotificationResponseReceivedListener, removeNotificationSubscription, getLastNotificationResponseAsync, getPermissionsAsync } from "expo-notifications";
+import { addNotificationReceivedListener, addNotificationResponseReceivedListener, useLastNotificationResponse, getPermissionsAsync } from "expo-notifications";
 import { fetchUserAttributes, fetchAuthSession, signOut } from "aws-amplify/auth";
-import { useNavigation } from "@react-navigation/native";
 
 const TabsContent = () =>
 {
@@ -60,7 +59,6 @@ const TabsContent = () =>
         setDriverId
     } = useApp();
 
-    const navigate = useNavigation();
     // load components when finished fetching data
     const [ ready, setReady ] = useState(false);
     // if user is requesting to be a tow driver
@@ -70,6 +68,8 @@ const TabsContent = () =>
     const [ refreshing, setRefreshing ] = useState(false);
     const [ permissionScreen, setPermissionScreen ] = useState(false);
 
+    const lastNotificationResponse = useLastNotificationResponse();
+
     // notification listeners
     const notificationListener = useRef();
     const responseListener = useRef();
@@ -77,10 +77,7 @@ const TabsContent = () =>
     const onRefresh = async () =>
     {
         setRefreshing(true);
-        navigate.reset({
-            index: 0,
-            routes: [{ name: '(tow)'}]
-        });
+        router.replace('(tow)');
         setRefreshing(false);
     };
 
@@ -90,10 +87,7 @@ const TabsContent = () =>
         const permission = await getPermissionsAsync();
         if (permission.granted) {
             setPermissionScreen(false);
-            navigate.reset({
-                index: 0,
-                routes: [{ name: '(tabs)' }]
-            });
+            router.replace('(tabs)');
         }
         setRefreshing(false);
     };
@@ -122,23 +116,6 @@ const TabsContent = () =>
             const getAccess = access_arr.includes('Admins') ? 'Admins' : access_arr.includes('TowDrivers') ? 'TowDrivers' : 'Customers';
             setAccess(getAccess);
             setUserId(userInfo.accessToken.payload.sub);
-
-            // triggered when a user opens the app by tapping on a notification
-            const lastNotificationResponse = await getLastNotificationResponseAsync();
-            if (lastNotificationResponse) {
-                const type = lastNotificationResponse.notification.request.content.data.type;
-                if (type === "NEW_INVOICE") {
-                    setNewInvoice(true);
-                    router.push('(profile)');
-                } else if (type === "NEW_ESTIMATE") {
-                    setNewEstimate(true);
-                    router.push('(profile)');
-                } else if (type === "VEHICLE_PICKUP") {
-                    router.push('(profile)');
-                } else if (type === "CUSTOM_NOTIFICATION") {
-                    setCustomNotification(lastNotificationResponse.notification.request.content);
-                }
-            }
             
             // get local storage data
             const savedInvoice = await AsyncStorage.getItem('invoice');
@@ -151,6 +128,24 @@ const TabsContent = () =>
 
         initializeApp();
     }, []);
+
+    useEffect(() => {
+        if (lastNotificationResponse) {
+            // triggered when a user opens the app by tapping on a notification
+            const type = lastNotificationResponse.notification.request.content.data.type;
+            if (type === "NEW_INVOICE") {
+                setNewInvoice(true);
+                router.push('(profile)');
+            } else if (type === "NEW_ESTIMATE") {
+                setNewEstimate(true);
+                router.push('(profile)');
+            } else if (type === "VEHICLE_PICKUP") {
+                router.push('(profile)');
+            } else if (type === "CUSTOM_NOTIFICATION") {
+                setCustomNotification(lastNotificationResponse.notification.request.content);
+            }
+        }
+    }, [lastNotificationResponse]);
 
     // called once client and userId have been set
     useEffect(() => {
@@ -328,8 +323,8 @@ const TabsContent = () =>
         });
 
         return () => {
-            notificationListener.current && removeNotificationSubscription(notificationListener.current);
-            responseListener.current && removeNotificationSubscription(responseListener.current);
+            notificationListener.current && notificationListener.current.remove();
+            responseListener.current && responseListener.current.remove();
         };
     }, [client, userId]);
 

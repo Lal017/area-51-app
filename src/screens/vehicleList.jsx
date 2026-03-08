@@ -7,12 +7,10 @@ import { Ionicons, AntDesign, MaterialCommunityIcons, Entypo, Feather, FontAweso
 import { router } from 'expo-router';
 import { View, FlatList, TouchableOpacity, Alert } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
-import { useNavigation } from '@react-navigation/native';
 
 const VehicleList = () =>
 {
     const { client, vehicles, setVehicles } = useApp();
-    const navigate = useNavigation();
 
     const VehicleItem = ({item}) =>
     {
@@ -60,14 +58,10 @@ const VehicleList = () =>
                                                 text: 'Yes',
                                                 onPress: async () => {
                                                     await handleDeleteVehicle(client, item.id, setVehicles);
-                                                    navigate.reset({
-                                                        index: 1,
-                                                        routes: [
-                                                            { name: 'index' },
-                                                            { name: 'vehicleList' }
-                                                        ]
-                                                    });
-                                            }}
+                                                    router.replace('(profile)');
+                                                    router.push('vehicleList');
+                                                }
+                                            }
                                         ]
                                     );
                                 }}

@@ -3,17 +3,15 @@ import { Styles } from '../../constants/styles';
 import { Background } from '../../components/components';
 import { handleCreateVehicle, handleDeleteVehicle, handleUpdateVehicle } from '../../components/vehicleComponents';
 import { useApp } from '../../components/context';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, router } from 'expo-router';
 import { AntDesign, FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { TextInput, View, Text, TouchableOpacity, Alert, KeyboardAvoidingView } from 'react-native';
 import { useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
 import { RFValue } from 'react-native-responsive-fontsize';
 
 const Vehicle = () =>
 {   
     const { client, userId, setVehicles } = useApp();
-    const navigate = useNavigation();
 
     const { vehicleParam } = useLocalSearchParams();
     const vehicle = vehicleParam ? JSON.parse(vehicleParam) : null;
@@ -47,14 +45,10 @@ const Vehicle = () =>
                                             text: 'Yes',
                                             onPress: async () => {
                                                 await handleDeleteVehicle(client, vehicle.id, setVehicles);
-                                                navigate.reset({
-                                                    index: 1,
-                                                    routes: [
-                                                        { name: 'index' },
-                                                        { name: 'vehicleList' }
-                                                    ]
-                                                });
-                                        }}
+                                                router.replace('(profile)');
+                                                router.push('vehicleList');
+                                            }
+                                        }
                                     ]
                                 )}
                             >
@@ -169,13 +163,8 @@ const Vehicle = () =>
                                 getError = await handleCreateVehicle(client, {year, make, model, color, plate, vin}, userId, setVehicles);
                             }
                             if (!getError) {
-                                navigate.reset({
-                                    index: 1,
-                                    routes: [
-                                        { name: 'index' },
-                                        { name: 'vehicleList' }
-                                    ]
-                                });
+                                router.replace('(profile)');
+                                router.push('vehicleList');
                             } else {
                                 setErrorMessage(getError);
                             }

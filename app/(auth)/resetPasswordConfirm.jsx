@@ -6,12 +6,10 @@ import { handleConfirmResetPassword } from "../../components/authComponents";
 import { FontAwesome, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import Colors from "../../constants/colors";
 import { AuthBackground } from "../../components/components";
-import { useNavigation } from "@react-navigation/native";
 
 const ResetPasswordConfirm = () =>
 {
     const { username } = useLocalSearchParams();
-    const navigate = useNavigation();
     const [confirmationCode, setConfirmationCode] = useState();
     const [newPassword, setNewPassword] = useState();
     const [confNewPassword, setConfNewPassword] = useState();
@@ -106,7 +104,7 @@ const ResetPasswordConfirm = () =>
                             if (loading) return;
                             setLoading(true);
                             
-                            setErrorMessage(await handleConfirmResetPassword(navigate, username, confirmationCode, newPassword, confNewPassword));
+                            setErrorMessage(await handleConfirmResetPassword(username, confirmationCode, newPassword, confNewPassword));
                             if (!confirmationCode) setMissingConfCode(true);
                             else setMissingConfCode(false);
                             if (!newPassword) setMissingNewPassword(true);

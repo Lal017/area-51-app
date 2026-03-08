@@ -6,7 +6,6 @@ import { View, Text, TextInput, TouchableOpacity, Image, Alert} from 'react-nati
 import { useState, useEffect } from 'react';
 import { useLocalSearchParams } from 'expo-router';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
 
 const SignUpConfirm = () =>
 {
@@ -16,8 +15,6 @@ const SignUpConfirm = () =>
     const [cooldown, setCooldown] = useState(30);
     const [errorMessage, setErrorMessage] = useState(undefined);
     const [resendMessage, setResendMessage] = useState(undefined);
-
-    const navigate = useNavigation();
 
     useEffect(() => {
         if (cooldown === 0) return;
@@ -72,7 +69,7 @@ const SignUpConfirm = () =>
 
                         setResendMessage(undefined);
 
-                        setErrorMessage(await handleSignUpConfirm(navigate, username, confirmationCode, password));
+                        setErrorMessage(await handleSignUpConfirm(username, confirmationCode, password));
                         setLoading(false);
                     }}
                     style={[Styles.actionButton, loading && { opacity: 0.5 }]}

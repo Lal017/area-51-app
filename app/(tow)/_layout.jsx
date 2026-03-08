@@ -91,10 +91,7 @@ const TowDriverContent = () =>
         const permission = await getPermissionsAsync();
         if (permission.granted) {
             setPermissionScreen(false);
-            navigate.reset({
-                index: 0,
-                routes: [{ name: '(tow)' }]
-            });
+            router.replace('(tow)');
         }
         setRefreshing(false);
     }

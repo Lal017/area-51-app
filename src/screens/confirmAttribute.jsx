@@ -7,13 +7,11 @@ import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { useState } from 'react';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useLocalSearchParams } from 'expo-router';
-import { useNavigation } from '@react-navigation/native';
 
 const ConfirmAttribute = () =>
 {
     const { email } = useLocalSearchParams();
     const { setEmail } = useApp();
-    const navigate = useNavigation();
 
     const [ code, setCode ] = useState();
     const [ loading, setLoading ] = useState(false);
@@ -41,7 +39,7 @@ const ConfirmAttribute = () =>
                 onPress={async () => {
                     if (loading) return;
                     setLoading(true);
-                    await handleConfirmUserAttribute(navigate, 'email', code, email, setEmail);
+                    await handleConfirmUserAttribute('email', code, email, setEmail);
                     setLoading(false);
                 }}
                 style={[Styles.actionButton, loading && {opacity: 0.5}, {backgroundColor: Colors.primary}]}

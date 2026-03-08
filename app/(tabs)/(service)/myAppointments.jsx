@@ -7,14 +7,12 @@ import { Styles } from '../../../constants/styles';
 import { View, Text, TouchableOpacity, Alert, FlatList } from 'react-native';
 import { useEffect } from 'react';
 import { router } from 'expo-router';
-import { useNavigation } from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
 import { Entypo, Feather, FontAwesome, FontAwesome5, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import Animated, { useAnimatedStyle, withSpring, useSharedValue } from 'react-native-reanimated';
 
 const MyAppointments = () => {
     const { client, userId, appointments, setAppointments } = useApp();
-    const navigate = useNavigation();
 
     useEffect(() => {
         const getAppointments = async () =>
@@ -85,10 +83,7 @@ const MyAppointments = () => {
                                                     try {
                                                         await handleDeleteAppointment(client, item?.id, userId, setAppointments);
                                                         await handleSendAdminNotif('Appointment Cancelled', 'A customer has cancelled their appointment');
-                                                        navigate.reset({
-                                                            index: 0,
-                                                            routes: [{ name: '(home)' }]
-                                                        });
+                                                        router.replace('(home)');
                                                     } catch (error) {
                                                         console.log(error);
                                                     }

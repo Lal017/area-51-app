@@ -7,12 +7,13 @@ ToDo:
     - RFValue package might be deprecated. check
     - Add call customer or email customer button to user view and vehicle view sections
     - check to see if pages need refresh added to them
-    - use tabs to display info on request a tow and schedule appointment
     - add try/catch to functions and buttons
     - check to see all error message are red and not Colors.redButton
     - test UI in admin for if a customer makes a request or appointment and then deletes vehicle
-    - Change request tow prompts to switches
-    
+    - changing bouncing icon animation to a moving border animation
+    - Schedule a vehicle pickup
+    - need to test pretty much everything since update to SDK 55. DO THIS LAST
+
 PotentialChanges:
     - Add notification tab in header for home page (only do this if you add a datamodel for notifications)
     - Add dataModel to save data for notifications instead of sending data directly through a notification
