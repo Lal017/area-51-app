@@ -10,7 +10,7 @@ import { Stack, router } from "expo-router";
 import { useEffect, useRef, useState } from 'react';
 import { Linking, View, Text, TouchableOpacity } from 'react-native';
 import { generateClient } from "aws-amplify/api";
-import { getPermissionsAsync, addNotificationReceivedListener, addNotificationResponseReceivedListener, removeNotificationSubscription } from "expo-notifications";
+import { getPermissionsAsync, addNotificationReceivedListener, addNotificationResponseReceivedListener } from "expo-notifications";
 import { fetchAuthSession, fetchUserAttributes } from "aws-amplify/auth";
 
 const AdminContent = () =>
@@ -195,8 +195,8 @@ const AdminContent = () =>
         });
 
         return () => {
-            notificationListener.current && removeNotificationSubscription(notificationListener.current);
-            responseListener.current && removeNotificationSubscription(responseListener.current);
+            notificationListener.current && notificationListener.current.remove();
+            responseListener.current && responseListener.current.remove();
         };
     }, []);
 

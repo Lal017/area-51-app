@@ -43,7 +43,7 @@ const Settings = () =>
             <Tab
                 text="Delete Account"
                 action={() => router.push('deleteAccount')}
-                leftIcon={<AntDesign name='deleteuser' size={30} style={Styles.icon} />}
+                leftIcon={<AntDesign name='delete' size={30} style={Styles.icon} />}
                 rightIcon={<AntDesign name="right" size={25} style={Styles.rightIcon} />}
             />
         </Background>

@@ -8,7 +8,7 @@ import { registerForPushNotifications } from "../../components/notifComponents";
 import { handleGetCurrentUser } from "../../components/authComponents";
 import { Styles } from '../../constants/styles';
 import { handleGetUser, handleCreateUser, handleUpdateUser } from "../../components/userComponents";
-import { getPermissionsAsync, addNotificationReceivedListener, addNotificationResponseReceivedListener, removeNotificationSubscription } from "expo-notifications";
+import { getPermissionsAsync, addNotificationReceivedListener, addNotificationResponseReceivedListener } from "expo-notifications";
 import { Stack, router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { View, Text, TouchableOpacity, Linking } from 'react-native';
@@ -243,8 +243,8 @@ const TowDriverContent = () =>
         });
 
         return () => {
-            notificationListener.current && removeNotificationSubscription(notificationListener.current);
-            responseListener.current && removeNotificationSubscription(responseListener.current);
+            notificationListener.current && notificationListener.current.remove();
+            responseListener.current && responseListener.current.remove();
         };
     }, []);
     
