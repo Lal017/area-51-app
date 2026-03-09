@@ -6,6 +6,7 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { useEffect, useState } from 'react';
 import { router } from 'expo-router';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
+import Colors from '../../constants/colors';
 
 const VehiclePickup = () =>
 {
@@ -48,32 +49,32 @@ const VehiclePickup = () =>
                                 <Tab
                                     header='Vehicle Color'
                                     text={`${item.color}`}
-                                    leftIcon={<FontAwesome name='paint-brush' size={25} style={Styles.icon}/>}
-                                    style={{marginLeft: 50}}
+                                    leftIcon={<FontAwesome name='paint-brush' size={20} style={Styles.icon}/>}
+                                    style={{height: 'none', padding: 5}}
                                 />
                                 { item.plate && (
                                     <Tab
                                         header='License Plate #'
                                         text={`${item.plate}`}
-                                        leftIcon={<FontAwesome name='id-card' size={25} style={Styles.icon}/>}
-                                        style={{marginLeft: 50}}
+                                        leftIcon={<FontAwesome name='id-card' size={20} style={Styles.icon}/>}
+                                        style={{height: 'none', padding: 5}}
                                     />
                                 )}
                                 { item.vin && (
                                     <Tab
                                         header='VIN'
                                         text={`${item.vin}`}
-                                        leftIcon={<FontAwesome name='barcode' size={25} style={Styles.icon}/>}
-                                        style={{marginLeft: 50}}
+                                        leftIcon={<FontAwesome name='barcode' size={20} style={Styles.icon}/>}
+                                        style={{height: 'none', padding: 5}}
                                     />
                                 )}
                             </View>
                             <TouchableOpacity
-                                style={[Styles.actionButton, {alignSelf: 'center'}]}
+                                style={[Styles.actionButton, {alignSelf: 'center', backgroundColor: Colors.secondary}]}
                                 onPress={async () => {
                                     if (loading) return;
                                     setLoading(true);
-                                    await handleUpdateVehiclePickup(client, vehicle.id);
+                                    await handleUpdateVehiclePickup(client, item.id);
                                     router.replace('(tabs)');
                                     setLoading(false);
                                 }}

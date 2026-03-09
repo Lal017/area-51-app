@@ -10,9 +10,10 @@ import { useApp } from "../../../components/context";
 import { requestForegroundPermissionsAsync } from "expo-location";
 import { Text, TouchableOpacity, Linking, View, Alert, Image, Dimensions, ActivityIndicator } from "react-native";
 import { AntDesign, Entypo, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import Animated, { Easing , useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from "react-native-reanimated";
+import Animated, { Easing , useAnimatedStyle, useSharedValue, withRepeat, withTiming } from "react-native-reanimated";
 import { useEffect, useState, useRef } from "react";
 import { router } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -39,7 +40,7 @@ const Index = () =>
   const [ refreshing, setRefreshing ] = useState(false);
 
   const ref = useRef();
-  const bounce = useSharedValue(0);
+  const shimmer = useSharedValue(-10);
 
   const onRefresh = async () =>
   {
@@ -71,24 +72,15 @@ const Index = () =>
   };
 
   useEffect(() => {
-    bounce.value = withRepeat(
-      withSequence(
-        withTiming(-10, {
-          duration: 500,
-          easing: Easing.out(Easing.ease)
-        }),
-        withTiming(0, {
-          duration: 500,
-          easing: Easing.in(Easing.ease)
-        })
-      ),
-      -1,     // infinite
-      true,   // reverse
+    shimmer.value = withRepeat(
+      withTiming(1, { duration: 2500, easing: Easing.inOut(Easing.ease) }),
+      -1,
+      false
     );
-  }, [towRequest]);
+  }, [vehiclePickup]);
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: bounce.value }]
+  const shimmerStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: shimmer.value * 100 }]
   }));
 
   useEffect(() => {
@@ -106,7 +98,7 @@ const Index = () =>
       <View style={Styles.block}>
         <View style={HomeStyles.shortcutContainer}>
           <TouchableOpacity
-            style={HomeStyles.shortcutButton}
+            style={[HomeStyles.shortcutButton, {overflow: 'hidden'}]}
             onPress={async () => {
               if (vehicles?.length === 0) {
                 Alert.alert(
@@ -143,11 +135,28 @@ const Index = () =>
               }
             }}
           >
-            { towRequest?.status === 'IN_PROGRESS' ? (
-              <Animated.View style={[HomeStyles.activityContainer, animatedStyle, {backgroundColor: Colors.primary}]}/>
-            ) : towRequest?.status === 'REQUESTED' ? (
-              <View style={[HomeStyles.activityContainer, {backgroundColor: Colors.secondary}]}/>
-            ) : null }
+            { towRequest && (
+              <Animated.View
+                style={[shimmerStyle, {
+                  position: 'absolute',
+                  top: 0, bottom: 0,
+                  width: '100%'
+                }]}
+              >
+                <LinearGradient
+                  colors={['transparent', towRequest.status === 'REQUESTED' ? Colors.secondary : towRequest.status === 'IN_PROGRESS' ? Colors.primary : null, 'transparent']}
+                  style={{flex: 1}}
+                  start={{ x: 0, y: 0}}
+                  end={{ x: 1, y: 0}}
+                />
+              </Animated.View>
+            )}
+            <LinearGradient
+              colors={['rgba(255,255,255,0.25)', 'transparent']}
+              style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, height:'60%', borderRadius: 5}}
+              start={{ x: 0, y: 0}}
+              end={{ x: 0, y: 1}}
+            />
             <MaterialCommunityIcons name="tow-truck" size={30} color="white" />
           </TouchableOpacity>
           <TouchableOpacity
@@ -170,10 +179,16 @@ const Index = () =>
               }
             }}
           >
+            <LinearGradient
+              colors={['rgba(255,255,255,0.25)', 'transparent']}
+              style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, height:'60%', borderRadius: 5}}
+              start={{ x: 0, y: 0}}
+              end={{ x: 0, y: 1}}
+            />
             <Entypo name='calendar' size={30} color="white" />
           </TouchableOpacity>
           <TouchableOpacity
-            style={HomeStyles.shortcutButton}
+            style={[HomeStyles.shortcutButton, {overflow: 'hidden'}]}
             onPress={() => {
               if (vehiclePickup === true) {
                 router.push('vehiclePickup');
@@ -182,18 +197,38 @@ const Index = () =>
               }
             }}
           >
-            { vehiclePickup ? (
-              <Animated.View style={[HomeStyles.activityContainer, animatedStyle, {backgroundColor: Colors.tertiary}]}>
-                <Text style={[Styles.subTitle, {fontSize: 20, textAlign: 'center'}]}>!</Text>
+            <LinearGradient
+              colors={['rgba(255,255,255,0.25)', 'transparent']}
+              style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, height:'60%'}}
+              start={{ x: 0, y: 0}}
+              end={{ x: 0, y: 1}}
+            />
+            { vehiclePickup && (
+              <Animated.View
+                style={[shimmerStyle, {
+                  position: 'absolute',
+                  top: 0, bottom: 0,
+                  width: '100%'
+                }]}
+              >
+                <LinearGradient
+                  colors={['transparent', Colors.tertiary, 'transparent']}
+                  style={{flex: 1}}
+                  start={{ x: 0, y: 0}}
+                  end={{ x: 1, y: 0}}
+                />
               </Animated.View>
-            ) : null}
+            )}
             <Ionicons name='car-sport' size={30} color="white" />
           </TouchableOpacity>
         </View>
       </View>
       <View style={HomeStyles.welcomeContainer}>
+      { vehiclePickup ? (
+        <Text style={Styles.text}>Your vehicle is ready for pickup!</Text>
+      ) : (
         <Text style={Styles.text}>Welcome {firstName}!</Text>
-        { vehiclePickup ? <Text style={Styles.text}>Your vehicle is ready for pickup!</Text> : null}
+      )}
       </View>
       <View style={HomeStyles.panel}>
         <TouchableOpacity

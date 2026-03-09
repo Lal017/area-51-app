@@ -12,6 +12,7 @@ ToDo:
     - test UI in admin for if a customer makes a request or appointment and then deletes vehicle
     - changing bouncing icon animation to a moving border animation
     - Schedule a vehicle pickup
+    - check vehicle has been picked up refresh bug
     - need to test pretty much everything since update to SDK 55. DO THIS LAST
 
 PotentialChanges:
