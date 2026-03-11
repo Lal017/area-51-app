@@ -28,15 +28,17 @@ const MyAppointments = () => {
     {
         switch (service) {
             case 'Oil Change':
-                return <FontAwesome5 name="oil-can" size={30} style={isRight ? Styles.rightIcon : Styles.icon} color={Colors.backDrop}/>;
+                return <FontAwesome5 name="oil-can" size={30} style={isRight ? Styles.rightIcon : Styles.icon}/>;
             case 'Diagnosis':
-                return <FontAwesome name="stethoscope" size={30} style={isRight ? Styles.rightIcon : Styles.icon} color={Colors.backDrop}/>;
+                return <FontAwesome name="stethoscope" size={30} style={isRight ? Styles.rightIcon : Styles.icon}/>;
             case 'Tuning':
-                return <Entypo name="area-graph" size={30} style={isRight ? Styles.rightIcon : Styles.icon} color={Colors.backDrop}/>;
+                return <Entypo name="area-graph" size={30} style={isRight ? Styles.rightIcon : Styles.icon}/>;
             case 'A/C':
-                return <MaterialIcons name="air" size={30} style={isRight ? Styles.rightIcon : Styles.icon} color={Colors.backDrop}/>;
+                return <MaterialIcons name="air" size={30} style={isRight ? Styles.rightIcon : Styles.icon}/>;
+            case 'Vehicle Pickup':
+                return <MaterialCommunityIcons name='car-clock' size={30} style={isRight ? Styles.rightIcon : Styles.icon}/>;
             default:
-                return <MaterialCommunityIcons name="dots-horizontal-circle" size={30} style={isRight ? Styles.rightIcon : Styles.icon} color={Colors.backDrop}/>;
+                return <MaterialCommunityIcons name="dots-horizontal-circle" size={30} style={isRight ? Styles.rightIcon : Styles.icon}/>;
         }
     };
 
