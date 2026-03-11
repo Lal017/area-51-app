@@ -418,21 +418,17 @@ const ServiceStyles = StyleSheet.create({
     },
     buttonContainer: {
         width: '100%',
-        height: 100,
-        alignItems: 'center',
-        justifyContent: 'center',
-        columnGap: 50,
+        height: 75,
+        alignItems: 'center', justifyContent: 'space-evenly',
         flexDirection: 'row'
     },
     directionButton: {
         backgroundColor: Colors.button,
         borderRadius: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
-        columnGap: 15,
+        alignItems: 'center', justifyContent: 'center',
         flexDirection: 'row',
-        width: 150,
-        height: 65,
+        height: '100%', width: '45%',
+        columnGap: 15,
         elevation: 10,
     },
     // index.jsx
@@ -449,24 +445,23 @@ const ServiceStyles = StyleSheet.create({
     },
     // schedule.jsx
     timeSelectContainer: {
-        width: '90%',
-        backgroundColor: Colors.contrast,
+        width: '45%',
         alignItems: 'center',
-        justifyContent: 'center',
         flexDirection: 'row',
-        borderRadius: 15,
-        padding: 10
+        borderRadius: 5,
+        overflow: 'hidden',
+        padding: 15
     },
     timeContainer: {
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'space-evenly',
-        rowGap: 15,
+        gap: 5,
     },
     timeBubble: {
         backgroundColor: 'rgba(0,0,0,0.5)',
         borderRadius: 5,
-        padding: 15,
+        padding: 10,
         width: '45%'
     },
     // myAppointments.jsx

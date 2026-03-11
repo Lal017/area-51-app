@@ -16,7 +16,8 @@ import { Hub } from 'aws-amplify/utils';
 // Notification handler for recieved notifications
 setNotificationHandler({
   handleNotification: async () => ({
-    shouldShowAlert: true,
+    shouldShowBanner: true,
+    shouldShowList: true,
     shouldPlaySound: true,
     shouldSetBadge: true,
     vibrationPattern: [0, 200, 200, 200],

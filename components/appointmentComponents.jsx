@@ -96,7 +96,7 @@ const handleFinalCheck = async (date, time) =>
 };
 
 // used to create an appointment
-const handleCreateAppointment = async (client, date, time, service, notes, userId, vehicle, setAppointment) =>
+const handleCreateAppointment = async ({client, date, time, service, notes, userId, vehicle, setAppointments}) =>
 {
     try {
         await client.graphql({
@@ -120,7 +120,7 @@ const handleCreateAppointment = async (client, date, time, service, notes, userI
         });
         
         const getAppointments = await handleGetMyAppointments(client, userId);
-        setAppointment(getAppointments);
+        setAppointments(getAppointments);
 
     } catch (error) {
         console.error('ERROR, could not create appointment', error);

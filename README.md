@@ -13,6 +13,7 @@ ToDo:
     - changing bouncing icon animation to a moving border animation
     - Schedule a vehicle pickup
     - check vehicle has been picked up refresh bug
+    - fix icons that are different 
     - need to test pretty much everything since update to SDK 55. DO THIS LAST
 
 PotentialChanges:

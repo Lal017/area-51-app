@@ -9,11 +9,12 @@ import { useApp } from '../../components/context';
 import { handleSendAdminNotif } from '../../components/notifComponents';
 import { Select, CalendarHeader, formatDate, formatTime, Background, Loading, SimpleList, Tab } from '../../components/components';
 import { ServiceStyles, Styles } from "../../constants/styles";
-import { MaterialIcons, Ionicons, FontAwesome, AntDesign, FontAwesome5, Entypo, MaterialCommunityIcons, SimpleLineIcons } from '@expo/vector-icons';
+import { MaterialIcons, Ionicons, FontAwesome, FontAwesome6, AntDesign, FontAwesome5, Entypo, MaterialCommunityIcons, SimpleLineIcons } from '@expo/vector-icons';
 import { useEffect, useRef, useState, useMemo } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { useLocalSearchParams, router } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
 import { RFValue } from 'react-native-responsive-fontsize';
 
 const screenWidth = Dimensions.get('window').width;
@@ -199,17 +200,23 @@ const Schedule = () =>
                   renderHeader={date => <CalendarHeader date={date} />}
                 />
               </View>
-              <View style={[Styles.block, {alignItems: 'center'}]}>
+              <View style={Styles.block}>
                 <TouchableOpacity
-                  style={ServiceStyles.timeSelectContainer}
+                  style={[ServiceStyles.timeSelectContainer, {width: '90%', justifyContent: 'center', alignSelf: 'center'}]}
                   onPress={() => {
                     setErrorMessage(undefined);
                     if (selectedDay) handleOpenPress();
                     else setErrorMessage('Please select a day first');
                   }}
                 >
-                  <Text style={[Styles.tabText, {color: Colors.textAlt, fontSize: RFValue(20)}]}>{selectedTime ? formatTime(selectedTime) : 'Select a time'}</Text>
-                  <MaterialCommunityIcons name='clock' style={[Styles.rightIcon, {color: Colors.backDrop}]} size={30}/>
+                  <LinearGradient
+                    colors={[Colors.button, Colors.backgroundAccent]}
+                    style={{position: 'absolute', top: 0, bottom: 0, right: 0, left: 0}}
+                    start={{ x: 0, y: 0}}
+                    end={{ x: 1, y: 1}}
+                  />
+                  <FontAwesome6 name='caret-down' size={25} style={[Styles.rightIcon, {color: Colors.contrast}]}/>
+                  <Text style={Styles.tabText}>{selectedTime ? formatTime(selectedTime) : 'Select a time'}</Text>
                 </TouchableOpacity>
               </View>
               { errorMessage ? (
@@ -236,7 +243,7 @@ const Schedule = () =>
                     else setErrorMessage('Select a time to continue');
                   }}
                 >
-                  <Text style={Styles.tabText}>Continue</Text>
+                  <Text style={Styles.actionText}>Continue</Text>
                   <SimpleLineIcons name='arrow-right' size={20} color='white' />
                 </TouchableOpacity>
               </View>
@@ -401,31 +408,33 @@ const Schedule = () =>
                       />
                   </View>
               </View>
-              <View style={ServiceStyles.buttonContainer}>
-                <TouchableOpacity
-                  style={ServiceStyles.directionButton}
-                  onPress={() => {
-                    setStep(2);
-                    setErrorMessage(undefined);
-                  }}
-                >
-                  <FontAwesome name='arrow-left' size={24} color='white' />
-                  <Text style={Styles.actionText}>Back</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={ServiceStyles.directionButton}
-                  onPress={() => {
-                    if (selectedService) {
-                      setStep(4);
+              <View style={[Styles.block, {paddingTop: 20}]}>
+                <View style={ServiceStyles.buttonContainer}>
+                  <TouchableOpacity
+                    style={ServiceStyles.directionButton}
+                    onPress={() => {
+                      setStep(2);
                       setErrorMessage(undefined);
-                    } else {
-                      setErrorMessage('Select a service to continue');
-                    }
-                  }}
-                >
-                  <Text style={Styles.actionText}>Continue</Text>
-                  <FontAwesome name='arrow-right' size={24} color='white' />
-                </TouchableOpacity>
+                    }}
+                  >
+                    <FontAwesome name='arrow-left' size={24} color='white' />
+                    <Text style={Styles.actionText}>Back</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={ServiceStyles.directionButton}
+                    onPress={() => {
+                      if (selectedService) {
+                        setStep(4);
+                        setErrorMessage(undefined);
+                      } else {
+                        setErrorMessage('Select a service to continue');
+                      }
+                    }}
+                  >
+                    <Text style={Styles.actionText}>Continue</Text>
+                    <FontAwesome name='arrow-right' size={24} color='white' />
+                  </TouchableOpacity>
+                </View>
               </View>
             </>
           ) : step === 4 ? (
@@ -461,7 +470,7 @@ const Schedule = () =>
                 </View>
               ) : null }
             </View>
-            <View style={[Styles.floatingBlock, {marginBottom: 10}]}>
+            <View style={Styles.floatingBlock}>
               <View style={Styles.infoContainer}>
                 <Text style={Styles.headerTitle}>Vehicle</Text>
               </View>
@@ -494,50 +503,52 @@ const Schedule = () =>
                   />
               )}
             </View>
-            <View style={ServiceStyles.buttonContainer}>
-              <TouchableOpacity
-                style={ServiceStyles.directionButton}
-                onPress={() => setStep(3)}
-              >
-                <FontAwesome name='arrow-left' size={24} color='white'/>
-                <Text style={Styles.actionText}>Back</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={async () => {
-                  if (loading) return;
-                  setLoading(true);
-                  const isTaken = await handleFinalCheck(selectedDay, selectedTime);
-                  if (!isTaken) {
-                    if (appointment) {
-                      await handleSendAdminNotif('Appointment Edited', 'A customer has edited their appointment');
-                      await handleUpdateAppointment(client, appointment.id, selectedDay, selectedTime, selectedService, notes, userId, selectedVehicle, setAppointments);
+            <View style={[Styles.block, {paddingTop: 20}]}>
+              <View style={ServiceStyles.buttonContainer}>
+                <TouchableOpacity
+                  style={ServiceStyles.directionButton}
+                  onPress={() => setStep(3)}
+                >
+                  <FontAwesome name='arrow-left' size={24} color='white'/>
+                  <Text style={Styles.actionText}>Back</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={async () => {
+                    if (loading) return;
+                    setLoading(true);
+                    const isTaken = await handleFinalCheck(selectedDay, selectedTime);
+                    if (!isTaken) {
+                      if (appointment) {
+                        await handleSendAdminNotif('Appointment Edited', 'A customer has edited their appointment');
+                        await handleUpdateAppointment(client, appointment.id, selectedDay, selectedTime, selectedService, notes, userId, selectedVehicle, setAppointments);
+                      } else {
+                        await handleSendAdminNotif('Appointment Scheduled', 'A customer has scheduled an appointment');
+                        await handleCreateAppointment({client, date: selectedDay, time: selectedTime, service: selectedService, notes, userId, vehicle: selectedVehicle, setAppointments});
+                      }
+                        router.replace('(tabs)');
                     } else {
-                      await handleSendAdminNotif('Appointment Scheduled', 'A customer has scheduled an appointment');
-                      await handleCreateAppointment(client, selectedDay, selectedTime, selectedService, notes, userId, selectedVehicle, setAppointments);
+                      Alert.alert(
+                        'Time slot invalid',
+                        `A customer was just scheduled for ${formatDate(selectedDay)} at ${formatTime(selectedTime)}. Please choose a different time slot`,
+                        [{
+                          text: 'OK',
+                          onPress: async () => {
+                            // refresh appointments
+                            const getAppointments = await handleGetAppointments(client, userId);
+                            setScheduledAppointments(getAppointments);
+                            setStep(1)
+                          }
+                        }]
+                      )
                     }
-                      router.replace('(tabs)');
-                  } else {
-                    Alert.alert(
-                      'Time slot invalid',
-                      `A customer was just scheduled for ${formatDate(selectedDay)} at ${formatTime(selectedTime)}. Please choose a different time slot`,
-                      [{
-                        text: 'OK',
-                        onPress: async () => {
-                          // refresh appointments
-                          const getAppointments = await handleGetAppointments(client, userId);
-                          setScheduledAppointments(getAppointments);
-                          setStep(1)
-                        }
-                      }]
-                    )
-                  }
-                  setLoading(false);
-                }}
-                style={[ServiceStyles.directionButton, loading && { opacity: 0.5 }, {backgroundColor: Colors.primary}]}
-                disabled={loading}
-              >
-                <Text style={Styles.actionText}>{appointment ? 'Update' : 'Schedule'}</Text>
-              </TouchableOpacity>
+                    setLoading(false);
+                  }}
+                  style={[ServiceStyles.directionButton, loading && { opacity: 0.5 }, {backgroundColor: Colors.primary}]}
+                  disabled={loading}
+                >
+                  <Text style={Styles.actionText}>{appointment ? 'Update' : 'Schedule'}</Text>
+                </TouchableOpacity>
+              </View>
             </View>
             </>
           ) : null }

@@ -226,7 +226,7 @@ const TowRequest = () =>
                                         />
                                     </MapView>
                                 </View>
-                                <View style={Styles.block}>
+                                <View style={[Styles.block, {paddingTop: 20}]}>
                                     <View style={ServiceStyles.buttonContainer}>
                                         <TouchableOpacity
                                             style={ServiceStyles.directionButton}
@@ -323,35 +323,37 @@ const TowRequest = () =>
                                 />
                             </View>
                         </View>
-                        <View style={ServiceStyles.buttonContainer}>
-                            <TouchableOpacity
-                                style={ServiceStyles.directionButton}
-                                onPress={() => {
-                                    setStep(3);
-                                    setErrorMessage(undefined);
-                                    setAnswerCheck(false);
-                                }}
-                            >
-                                <FontAwesome name='arrow-left' size={24} color='white' />
-                                <Text style={Styles.actionText}>Back</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={ServiceStyles.directionButton}
-                                onPress={() => {
-                                    if (canRun !== undefined && canRoll !== undefined && keyIncluded !== undefined && isObstructed !== undefined)
-                                    {
-                                        setStep(5);
-                                        setAnswerCheck(false);
+                        <View style={[Styles.block, {paddingTop: 20}]}>
+                            <View style={ServiceStyles.buttonContainer}>
+                                <TouchableOpacity
+                                    style={ServiceStyles.directionButton}
+                                    onPress={() => {
+                                        setStep(3);
                                         setErrorMessage(undefined);
-                                    } else {
-                                        setAnswerCheck(true);
-                                        setErrorMessage('Answer all questions to proceed');
-                                    }
-                                }}
-                            >
-                                <Text style={Styles.actionText}>Continue</Text>
-                                <FontAwesome name='arrow-right' size={24} color='white' />
-                            </TouchableOpacity>
+                                        setAnswerCheck(false);
+                                    }}
+                                >
+                                    <FontAwesome name='arrow-left' size={24} color='white' />
+                                    <Text style={Styles.actionText}>Back</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={ServiceStyles.directionButton}
+                                    onPress={() => {
+                                        if (canRun !== undefined && canRoll !== undefined && keyIncluded !== undefined && isObstructed !== undefined)
+                                        {
+                                            setStep(5);
+                                            setAnswerCheck(false);
+                                            setErrorMessage(undefined);
+                                        } else {
+                                            setAnswerCheck(true);
+                                            setErrorMessage('Answer all questions to proceed');
+                                        }
+                                    }}
+                                >
+                                    <Text style={Styles.actionText}>Continue</Text>
+                                    <FontAwesome name='arrow-right' size={24} color='white' />
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </>
                 ) : step === 5 ? (
