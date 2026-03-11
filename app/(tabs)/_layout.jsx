@@ -160,10 +160,19 @@ const TabsContent = () =>
                 const getAppointments = await handleGetMyAppointments(client, userId);
                 setAppointments(getAppointments);
 
+                // get vehicleIds that have an appointment scheduled for pickup
+                const scheduledVehiclePickups = getAppointments
+                    ?.filter(appt => appt.service === 'Vehicle Pickup')
+                    .map(appt => appt.vehicle?.id);
+
                 // set vehicles
                 const getVehicles = await handleGetVehicles(client, userId);
                 setVehicles(getVehicles);
-                const filterVehicles = getVehicles?.some(item => item.readyForPickup === true);
+
+                // filter out vehicles that already have a scheduled pickup appointment
+                const filterVehicles = getVehicles
+                    ?.some(item => item.readyForPickup === true && !scheduledVehiclePickups.includes(item.id));
+                    
                 setVehiclePickup(filterVehicles);
 
                 // set driverId
