@@ -8,7 +8,7 @@ import { handleSendAdminNotif, handleSendDriversNotif } from "../../components/n
 import { Background, BinarySelect, Select, SimpleList, Tab } from "../../components/components";
 import { handleCreateTowRequest } from "../../components/towComponents";
 import { useEffect, useRef, useState } from "react";
-import { Entypo, FontAwesome, FontAwesome5, Ionicons, MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Entypo, FontAwesome, FontAwesome5, Ionicons, MaterialIcons, MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
 import { View, Text, TouchableOpacity, TextInput, ActivityIndicator, Alert, KeyboardAvoidingView } from "react-native";
 import { requestForegroundPermissionsAsync, getCurrentPositionAsync } from 'expo-location';
 import { router } from "expo-router";
@@ -123,7 +123,7 @@ const TowRequest = () =>
                         style={[ServiceStyles.directionButton, {opacity: 0}]}
                         disabled={true}
                         >
-                        <FontAwesome name='arrow-left' size={24} color='white' />
+                        <AntDesign name='left' size={25} color='white' />
                         <Text style={Styles.actionText}>Back</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
@@ -131,7 +131,7 @@ const TowRequest = () =>
                             onPress={() => setStep(2)}
                         >
                             <Text style={Styles.actionText}>Continue</Text>
-                            <FontAwesome name='arrow-right' size={24} color='white' />
+                            <AntDesign name='right' size={25} color='white' />
                         </TouchableOpacity>
                     </View>
                     </>
@@ -174,7 +174,7 @@ const TowRequest = () =>
                                     setErrorMessage(undefined);
                                 }}
                             >
-                                <FontAwesome name='arrow-left' size={24} color='white' />
+                                <AntDesign name='left' size={25} color='white' />
                                 <Text style={Styles.actionText}>Back</Text>
                             </TouchableOpacity>
                             <TouchableOpacity
@@ -189,7 +189,7 @@ const TowRequest = () =>
                                 }}
                             >
                                 <Text style={Styles.actionText}>Continue</Text>
-                                <FontAwesome name='arrow-right' size={24} color='white' />
+                                <AntDesign name='right' size={25} color='white' />
                             </TouchableOpacity>
                         </View>
                     </>
@@ -232,7 +232,7 @@ const TowRequest = () =>
                                             style={ServiceStyles.directionButton}
                                             onPress={() => setStep(2)}
                                         >
-                                            <FontAwesome name='arrow-left' size={24} color='white' />
+                                            <AntDesign name='left' size={25} color='white' />
                                             <Text style={Styles.actionText}>Back</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity
@@ -240,7 +240,7 @@ const TowRequest = () =>
                                             onPress={() => { if (selectedVehicle) setStep(4) }}
                                         >
                                             <Text style={Styles.actionText}>Continue</Text>
-                                            <FontAwesome name='arrow-right' size={24} color='white' />
+                                            <AntDesign name='right' size={25} color='white' />
                                         </TouchableOpacity>
                                     </View>
                                 </View>
@@ -333,7 +333,7 @@ const TowRequest = () =>
                                         setAnswerCheck(false);
                                     }}
                                 >
-                                    <FontAwesome name='arrow-left' size={24} color='white' />
+                                    <AntDesign name='left' size={25} color='white' />
                                     <Text style={Styles.actionText}>Back</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
@@ -351,7 +351,7 @@ const TowRequest = () =>
                                     }}
                                 >
                                     <Text style={Styles.actionText}>Continue</Text>
-                                    <FontAwesome name='arrow-right' size={24} color='white' />
+                                    <AntDesign name='right' size={25} color='white' />
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -463,7 +463,7 @@ const TowRequest = () =>
                                 style={ServiceStyles.directionButton}
                                 onPress={() => setStep(4)}
                             >
-                                <FontAwesome name='arrow-left' size={24} color='white' />
+                                <AntDesign name='left' size={25} color='white' />
                                 <Text style={Styles.actionText}>Back</Text>
                             </TouchableOpacity>
                             <TouchableOpacity

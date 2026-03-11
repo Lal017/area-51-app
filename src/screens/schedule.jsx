@@ -194,7 +194,7 @@ const Schedule = () =>
                       }
                     })
                   }}
-                  renderArrow={direction => <Entypo name={direction === 'left' ? 'chevron-with-circle-left' : 'chevron-with-circle-right'} size={24} color={Colors.backDropAccent}/>}
+                  renderArrow={direction => <Entypo name={direction === 'left' ? 'chevron-with-circle-left' : 'chevron-with-circle-right'} size={25} color={Colors.backDropAccent}/>}
                   hideExtraDays={true}
                   disableAllTouchEventsForDisabledDays={true}
                   renderHeader={date => <CalendarHeader date={date} />}
@@ -219,18 +219,20 @@ const Schedule = () =>
                   <Text style={Styles.tabText}>{selectedTime ? formatTime(selectedTime) : 'Select a time'}</Text>
                 </TouchableOpacity>
               </View>
-              { errorMessage ? (
-                <View style={Styles.errorContainer}>
-                  <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
-                  <Text style={Styles.errorText}>{errorMessage}</Text>
+              { errorMessage && (
+                <View style={Styles.block}>
+                  <View style={Styles.errorContainer}>
+                    <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
+                    <Text style={Styles.errorText}>{errorMessage}</Text>
+                  </View>
                 </View>
-              ) : null}
+              )}
               <View style={ServiceStyles.buttonContainer}>
                 <TouchableOpacity
-                  style={[ServiceStyles.directionButton, {opacity: 0}]}
+                  style={[ServiceStyles.directionButton, {opacity: 1}]}
                   disabled={true}
                 >
-                  <FontAwesome name='arrow-left' size={24} color='white' />
+                  <AntDesign name='left' size={25} color='white'/>
                   <Text style={Styles.actionText}>Back</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -244,7 +246,7 @@ const Schedule = () =>
                   }}
                 >
                   <Text style={Styles.actionText}>Continue</Text>
-                  <SimpleLineIcons name='arrow-right' size={20} color='white' />
+                  <AntDesign name='right' size={25} color='white'/>
                 </TouchableOpacity>
               </View>
               <BottomSheet
@@ -306,9 +308,11 @@ const Schedule = () =>
                 />
               </View>
               { errorMessage && (
-                <View style={Styles.errorContainer}>
-                  <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
-                  <Text style={Styles.errorText}>{errorMessage}</Text>
+                <View style={Styles.block}>
+                  <View style={Styles.errorContainer}>
+                    <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
+                    <Text style={Styles.errorText}>{errorMessage}</Text>
+                  </View>
                 </View>
               )}
               <View style={ServiceStyles.buttonContainer}>
@@ -319,7 +323,7 @@ const Schedule = () =>
                     setErrorMessage(undefined);
                   }}
                 >
-                  <FontAwesome name='arrow-left' size={24} color='white' />
+                  <AntDesign name='left' size={25} color='white' />
                   <Text style={Styles.actionText}>Back</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -334,7 +338,7 @@ const Schedule = () =>
                   }}
                 >
                   <Text style={Styles.actionText}>Continue</Text>
-                  <FontAwesome name='arrow-right' size={24} color='white' />
+                  <AntDesign name='right' size={25} color='white' />
                 </TouchableOpacity>
               </View>
             </>
@@ -417,7 +421,7 @@ const Schedule = () =>
                       setErrorMessage(undefined);
                     }}
                   >
-                    <FontAwesome name='arrow-left' size={24} color='white' />
+                    <AntDesign name='left' size={25} color='white' />
                     <Text style={Styles.actionText}>Back</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -432,7 +436,7 @@ const Schedule = () =>
                     }}
                   >
                     <Text style={Styles.actionText}>Continue</Text>
-                    <FontAwesome name='arrow-right' size={24} color='white' />
+                    <AntDesign name='right' size={25} color='white' />
                   </TouchableOpacity>
                 </View>
               </View>
@@ -509,7 +513,7 @@ const Schedule = () =>
                   style={ServiceStyles.directionButton}
                   onPress={() => setStep(3)}
                 >
-                  <FontAwesome name='arrow-left' size={24} color='white'/>
+                  <AntDesign name='left' size={25} color='white'/>
                   <Text style={Styles.actionText}>Back</Text>
                 </TouchableOpacity>
                 <TouchableOpacity

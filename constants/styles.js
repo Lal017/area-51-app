@@ -425,10 +425,9 @@ const ServiceStyles = StyleSheet.create({
     directionButton: {
         backgroundColor: Colors.button,
         borderRadius: 10,
-        alignItems: 'center', justifyContent: 'center',
-        flexDirection: 'row',
+        alignItems: 'center', justifyContent: 'space-evenly',
         height: '100%', width: '45%',
-        columnGap: 15,
+        flexDirection: 'row',
         elevation: 10,
     },
     // index.jsx
