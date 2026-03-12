@@ -131,7 +131,7 @@ const handleNotifUpdateVehicle = async (client, userId, setVehicles) =>
 };
 
 // used to update vehicle status in database once the vehicle has been picked up
-const handleUpdateVehiclePickup = async (client, vehicleId) =>
+const handleUpdateVehiclePickup = async (client, vehicleId, userId, setVehicles) =>
 {
     try {
         await client.graphql({
@@ -144,13 +144,8 @@ const handleUpdateVehiclePickup = async (client, vehicleId) =>
             }
         });
 
-        Alert.alert(
-            'Vehicle Pick Up',
-            'Vehicle has been picked up!',
-            [
-                { text: 'OK' }
-            ]
-        );
+        const getVehicles = await handleGetVehicles(client, userId);
+        setVehicles(getVehicles);
     } catch (error) {
         console.error('ERROR, could not update vehicle status:', error);
     }

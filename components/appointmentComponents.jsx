@@ -121,7 +121,7 @@ const handleCreateAppointment = async ({client, date, time, service, notes, user
         
         const getAppointments = await handleGetMyAppointments(client, userId);
         setAppointments(getAppointments);
-
+        return getAppointments;
     } catch (error) {
         console.error('ERROR, could not create appointment', error);
     }
@@ -175,7 +175,6 @@ const handleDeleteAppointment = async (client, appointmentId, userId, setAppoint
 
         const getAppointments = await handleGetMyAppointments(client, userId);
         setAppointments(getAppointments);
-
     } catch (error) {
         console.error('ERROR, could not delete appointment:', error);
     }

@@ -11,8 +11,9 @@ ToDo:
     - check to see all error message are red and not Colors.redButton
     - test UI in admin for if a customer makes a request or appointment and then deletes vehicle
     - changing bouncing icon animation to a moving border animation
-    - Schedule a vehicle pickup
-    - check vehicle has been picked up refresh bug
+    - use color pallete generator to tweak colors
+    - vehiclePickup error message
+    - change router.replace with router.dismissAll in some cases
     - need to test pretty much everything since update to SDK 55. DO THIS LAST
 
 PotentialChanges:

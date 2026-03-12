@@ -299,6 +299,7 @@ export const appointmentsByUserId = /* GraphQL */ `
           make
           model
           color
+          readyForPickup
         }
         vehicleYear
         vehicleMake

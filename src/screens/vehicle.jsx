@@ -163,8 +163,7 @@ const Vehicle = () =>
                                 getError = await handleCreateVehicle(client, {year, make, model, color, plate, vin}, userId, setVehicles);
                             }
                             if (!getError) {
-                                router.replace('(profile)');
-                                router.push('vehicleList');
+                                router.dismissAll();
                             } else {
                                 setErrorMessage(getError);
                             }

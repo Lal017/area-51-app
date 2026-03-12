@@ -67,6 +67,8 @@ const TabsContent = () =>
     const [ refreshPrompt, setRefreshPrompt ] = useState(false);
     const [ refreshing, setRefreshing ] = useState(false);
     const [ permissionScreen, setPermissionScreen ] = useState(false);
+    // refresh key
+    const [ refreshKey, setRefreshKey] = useState(0);
 
     const lastNotificationResponse = useLastNotificationResponse();
 
@@ -124,6 +126,10 @@ const TabsContent = () =>
             setNewEstimate(JSON.parse(savedEstimate));
             const savedCustomNotif = await AsyncStorage.getItem('customNotification');
             setCustomNotification(JSON.parse(savedCustomNotif));
+
+            // increment refreshKey
+            setRefreshKey(prev => prev + 1);
+            console.log('(tab)/_layout.jsx');
         };
 
         initializeApp();
@@ -230,9 +236,10 @@ const TabsContent = () =>
         };
 
         if (client && userId) {
+            console.log('refreshKey:', refreshKey);
             handleGetRequests();
         }
-    }, [client, userId]);
+    }, [client, userId, refreshKey]);
 
     // Send to database once all data has been generated and retrieved
     useEffect(() => {

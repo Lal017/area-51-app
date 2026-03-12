@@ -98,6 +98,17 @@ const Index = () =>
     {
       const getUrls = await handleGetURLs();
       setUrls(getUrls);
+
+      // get vehicleIds that have an appointment scheduled for pickup
+      const scheduledVehiclePickups = appointments
+        ?.filter(appt => appt.service === 'Vehicle Pickup')
+        .map(appt => appt.vehicle?.id);
+
+      // filter out vehicles that already have a scheduled pickup appointment
+      const filterVehicles = vehicles
+        ?.some(item => item.readyForPickup === true && !scheduledVehiclePickups.includes(item.id));
+      
+      setVehiclePickup(filterVehicles);
     }
 
     initUrls();

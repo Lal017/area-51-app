@@ -4,7 +4,6 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Background, formatDate, formatTime, SimpleList, Tab } from '../../components/components';
 import { useApp } from '../../components/context';
 import { ServiceStyles, Styles } from '../../constants/styles';
-import { handleUpdateVehiclePickup } from '../../components/vehicleComponents';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { router } from 'expo-router';
@@ -13,11 +12,11 @@ import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import { LinearGradient } from 'expo-linear-gradient';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { handleSendAdminNotif } from '../../components/notifComponents';
-import { handleCreateAppointment, handleGetMyAppointments } from '../../components/appointmentComponents';
+import { handleCreateAppointment } from '../../components/appointmentComponents';
 
 const VehiclePickup = () =>
 {
-    const { client, vehicles, userId, setAppointments } = useApp();
+    const { client, vehicles, setVehiclePickup, userId, appointments, setAppointments } = useApp();
     const [ vehiclesToPickup, setVehiclesToPickup ] = useState();
     const [ loading, setLoading ] = useState(false);
     const [ errorMessage, setErrorMessage ] = useState(undefined);
@@ -40,10 +39,8 @@ const VehiclePickup = () =>
     useEffect(() => {
         const initVehicles = async () =>
         {
-            const getMyAppointments = await handleGetMyAppointments(client, userId);
-
             // filter vehicles out that already have a scheduled pickup date
-            const scheduledVehicles = getMyAppointments
+            const scheduledVehicles = appointments
                 ?.filter(appt => appt.service === 'Vehicle Pickup')
                 .map(appt => appt.vehicle?.id);
 
@@ -158,13 +155,22 @@ const VehiclePickup = () =>
                                         </TouchableOpacity>
                                     </View>
                                     <TouchableOpacity
-                                        style={[Styles.actionButton, {alignSelf: 'center', backgroundColor: Colors.secondary}]}
+                                        style={[Styles.actionButton, loading && {opacity: 0.5}, {alignSelf: 'center', backgroundColor: Colors.secondary}]}
                                         onPress={async () => {
                                             if (loading) return;
                                             setLoading(true);
+
                                             await handleSendAdminNotif('Pickup Scheduled', 'A customer has scheduled a vehicle pickup');
-                                            await handleCreateAppointment({client, date: date?.toLocaleDateString('sv-SE'), time, service: 'Vehicle Pickup', userId, vehicle: item, setAppointments});
-                                            router.replace('(home)');
+                                            const newAppointments = await handleCreateAppointment({client, date: date?.toLocaleDateString('sv-SE'), time, service: 'Vehicle Pickup', userId, vehicle: item, setAppointments});
+                                            // get vehicleIds that have an appointment scheduled for pickup
+                                            const scheduledVehiclePickups = newAppointments
+                                                ?.filter(appt => appt.service === 'Vehicle Pickup')
+                                                .map(appt => appt.vehicle?.id);
+                                            // filter out vehicles that already have a scheduled pickup appointment
+                                            const filterVehicles = vehicles?.some(item => item.readyForPickup === true && !scheduledVehiclePickups.includes(item.id));
+                                            setVehiclePickup(filterVehicles);
+                                            router.dismissAll();
+
                                             setLoading(false);
                                         }}
                                     >

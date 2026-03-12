@@ -293,6 +293,7 @@ const AppointmentReminder = ({appointments}) =>
     if (!appointments || appointments?.length === 0) return null;
 
     const current = appointments[index];
+    if (!current) return null;
     return (
         <View style={HomeStyles.appointmentContainer}>
             <Text style={HomeStyles.appointmentTitle}>Appt. Reminder</Text>
