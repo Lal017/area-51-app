@@ -1,19 +1,17 @@
 ToDo:
-    - handle notification when a truck driver accepts a request and an admin marks it as completed (using two phones for real time viewing)
-    - header styling on different device
-    - towRequest.jsx check why im sending that data through notifications to admin and tow drivers
-    - test vehicle pickup from customer POV
-    - test UI for appointment and tow request from admin and tow driver point of view if the user deletes the vehicle with an active request.
-    - RFValue package might be deprecated. check
-    - Add call customer or email customer button to user view and vehicle view sections
-    - check to see if pages need refresh added to them
-    - add try/catch to functions and buttons
-    - check to see all error message are red and not Colors.redButton
-    - test UI in admin for if a customer makes a request or appointment and then deletes vehicle
-    - changing bouncing icon animation to a moving border animation
-    - use color pallete generator to tweak colors
-    - vehiclePickup error message
     - change router.replace with router.dismissAll in some cases
+    - Add call customer or email customer button to user view and vehicle view sections
+    - test UI in admin for if a customer makes a request or appointment and then deletes vehicle
+    - check to see all error message are red and not Colors.redButton
+    - add try/catch to functions and buttons
+    - check to see if pages need refresh added to them
+    - test vehicle pickup from customer POV
+    - test UI for appointment and tow request from tow driver point of view if the user deletes the vehicle with an active request.
+    - RFValue package might be deprecated. check
+    - changing bouncing icon animation to a moving border animation
+    - handle notification when a truck driver accepts a request and an admin marks it as completed (using two phones for real time viewing)
+    - use color pallete generator to tweak colors
+    - header styling on different device and all styling as well
     - need to test pretty much everything since update to SDK 55. DO THIS LAST
 
 PotentialChanges:

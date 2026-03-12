@@ -486,13 +486,8 @@ const TowRequest = () =>
                                     }
                                     setLoading(true);
                                     try {
-                                        const data = {
-                                            notes: notes,
-                                            vehicleId: selectedVehicle.id,
-                                            userId: userId
-                                        };
-                                        await handleSendAdminNotif('Towing Request', 'A customer is requesting a tow', data);
-                                        await handleSendDriversNotif('Towing Request', 'A customer is requesting a tow', data);
+                                        await handleSendAdminNotif('Towing Request', 'A customer is requesting a tow');
+                                        await handleSendDriversNotif('Towing Request', 'A customer is requesting a tow');
                                         await handleCreateTowRequest(client, userId, selectedVehicle, marker, { notes, canRun, canRoll, keyIncluded, isObstructed }, setTowRequest);
                                     } catch (error) {
                                         console.error(error);

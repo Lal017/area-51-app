@@ -86,7 +86,7 @@ const TowResponse = () =>
                     <View style={Styles.infoContainer}>
                         <Tab
                             header='Pickup Address'
-                            text={address}
+                            text={<Text style={{color: Colors.secondary}}>{address}</Text>}
                             leftIcon={<Entypo name='address' size={30} style={[Styles.icon, {color: Colors.secondary}]}/>}
                             action={() => openInGoogleMaps(request.latitude, request.longitude)}
                         />
