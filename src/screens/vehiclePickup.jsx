@@ -154,6 +154,14 @@ const VehiclePickup = () =>
                                             <Text style={[Styles.text, {fontSize: RFValue(13)}]}>{time ? formatTime(time) : 'Select a Time'}</Text>
                                         </TouchableOpacity>
                                     </View>
+                                    { errorMessage && (
+                                        <View style={Styles.block}>
+                                            <View style={Styles.errorContainer}>
+                                                <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
+                                                <Text style={Styles.errorText}>{errorMessage}</Text>
+                                            </View>
+                                        </View>
+                                    )}
                                     <TouchableOpacity
                                         style={[Styles.actionButton, loading && {opacity: 0.5}, {alignSelf: 'center', backgroundColor: Colors.secondary}]}
                                         onPress={async () => {
