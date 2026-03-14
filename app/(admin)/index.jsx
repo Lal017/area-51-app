@@ -61,7 +61,7 @@ const AdminConsole = () =>
                         if (status !== 'granted') {
                             Alert.alert(
                             'NOTICE',
-                            'You must give location permissions to make a tow request',
+                            'You must give location permissions to view tow requests',
                             [
                                 {
                                 text: 'Settings',

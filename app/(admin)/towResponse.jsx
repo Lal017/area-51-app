@@ -179,6 +179,7 @@ const TowResponse = () =>
                                                     type: 'TOW_RESPONSE'
                                                 };
                                                 await sendPushNotification(request?.user?.pushToken, 'Tow Request', 'Your tow request has been completed!', data);
+                                                if (router.canDismiss()) router.dismissAll();
                                                 router.replace('(admin)');
                                             }
                                         }

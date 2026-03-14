@@ -54,6 +54,7 @@ const AdminContent = () =>
         const permission = await getPermissionsAsync();
         if (permission.granted) {
             setPermissionScreen(false);
+            if (router.canDismiss()) router.dismissAll();
             router.replace('(admin)');
         }
         setRefreshing(false);

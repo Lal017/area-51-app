@@ -91,6 +91,7 @@ const TowDriverContent = () =>
         const permission = await getPermissionsAsync();
         if (permission.granted) {
             setPermissionScreen(false);
+            if (router.canDismiss()) router.dismissAll();
             router.replace('(tow)');
         }
         setRefreshing(false);

@@ -48,17 +48,19 @@ const RootLayout = () =>
           const user = await handleGetCurrentUser();
           const isAdmin = user?.accessToken?.payload["cognito:groups"]?.includes('Admins');
           const isDriver = user?.accessToken?.payload["cognito:groups"]?.includes('TowDrivers');
-          if (router.canDismiss()) { router.dismissAll(); }
+          if (router.canDismiss()) router.dismissAll();
           if (isAdmin) router.replace('(admin)');
           else if (isDriver) router.replace('(tow)');
           else router.replace('(tabs)');
           break;
         case 'signedOut':
           // Redirect to login screen after sign out
+          if (router.canDismiss()) router.dismissAll();
           router.replace('(auth)');
           break;
         case 'signedIn_failure':
           // Handle failed sign in
+          if (router.canDismiss()) router.dismissAll();
           router.replace('(auth)');
           break;
       }

@@ -77,6 +77,7 @@ const TabsContent = () =>
     const onRefresh = async () =>
     {
         setRefreshing(true);
+        if (router.canDismiss()) router.dismissAll();
         router.replace('(tow)');
         setRefreshing(false);
     };
@@ -87,6 +88,7 @@ const TabsContent = () =>
         const permission = await getPermissionsAsync();
         if (permission.granted) {
             setPermissionScreen(false);
+            if (router.canDismiss()) router.dismissAll();
             router.replace('(tabs)');
         }
         setRefreshing(false);

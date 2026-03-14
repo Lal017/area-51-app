@@ -15,7 +15,7 @@ import { RFValue } from "react-native-responsive-fontsize";
 
 const DriverAccountRequest = () =>
 {
-    const { client, userId, identityId } = useApp();
+    const { client, userId, identityId, setDriverId } = useApp();
 
     const [ loading, setLoading ] = useState(false);
 
@@ -46,15 +46,17 @@ const DriverAccountRequest = () =>
                                 if (loading) return;
                                 try {
                                     setLoading(true);
+                                    setDriverId('1');
                                     await handleDeleteAllAppointments(client, userId);
                                     await handleDeleteAllTowRequests(client, userId);
                                     await handleDeleteAllVehicles(client, userId);
                                     await handleDeleteStorage(identityId);
                                     await handleRequestDriverAccount(client, userId);
                                     await handleSendAdminNotif('Tow Driver Account Request', 'A user is requesting to become a tow driver');
+                                    if (router.canDismiss()) router.dismissAll();
                                     setLoading(false);
-                                    router.replace('(tabs)');
                                 } catch (error) {
+                                    console.log(error);
                                     Alert.alert('ERROR', 'Could not request a driver account');
                                 } 
                             }

@@ -85,7 +85,8 @@ const MyAppointments = () => {
                                                     try {
                                                         await handleDeleteAppointment(client, item?.id, userId, setAppointments);
                                                         await handleSendAdminNotif('Appointment Cancelled', 'A customer has cancelled their appointment');
-                                                        router.replace('(home)');
+                                                        if (router.canDismiss()) router.dismissAll();
+                                                        router.replace('(tabs)');
                                                     } catch (error) {
                                                         console.log(error);
                                                     }

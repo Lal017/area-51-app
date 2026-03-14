@@ -123,16 +123,17 @@ const UserView = () =>
                                                     try {
                                                         await handleMakeUserTowDriver(customer?.email);
                                                         await handleAssignTowDriverId(client, customer?.id);
+                                                        const data = {
+                                                            type: "DRIVER_ACCOUNT"
+                                                        };
+                                                        await sendPushNotification(customer.pushToken, 'Driver Account Request', 'Your account is ready!', data);
                                                         Alert.alert(
                                                             'Driver Created',
                                                             'The user has been converted into a tow truck driver',
                                                             [{ text: 'OK' }]
                                                         );
-                                                        const data = {
-                                                            type: "DRIVER_ACCOUNT"
-                                                        };
-                                                        await sendPushNotification(customer.pushToken, 'Driver Account Request', 'Your account is ready!', data);
-                                                        router.replace('(admin)');
+                                                        if (router.canDismiss()) router.dismissAll();
+                                                        router.replace('/');
                                                     } catch (error) {
                                                         console.error('ERROR, could not convert user to a tow truck driver:', error);
                                                     }

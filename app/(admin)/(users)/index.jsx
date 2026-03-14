@@ -76,7 +76,7 @@ const UserList = () =>
                     header={`${user.access.slice(0, -1)}`}
                     action={() => router.push({
                         params: { userParam: JSON.stringify(user) },
-                        pathname: '/(admin)/userView'
+                        pathname: 'userView'
                     })}
                     leftIcon={<Ionicons name='person' size={30} style={Styles.icon} />}
                     rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon} />}
