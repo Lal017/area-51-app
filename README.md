@@ -1,5 +1,4 @@
 ToDo:
-    - Add call customer or email customer button to user view and vehicle view sections
     - test UI in admin for if a customer makes a request or appointment and then deletes vehicle
     - check to see all error message are red and not Colors.redButton
     - add try/catch to functions and buttons

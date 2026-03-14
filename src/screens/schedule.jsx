@@ -29,14 +29,14 @@ const Schedule = () =>
   const [selectedDay, setSelectedDay] = useState(appointment?.date ?? undefined);
   const [selectedTime, setSelectedTime] = useState(appointment?.time ?? undefined);
   const [selectedService, setSelectedService] = useState(appointment?.service ?? undefined);
-  const [selectedVehicle, setSelectedVehicle] = useState(appointment?.vehicle ?? (appointment?.vehicleYear ? {
+  const [selectedVehicle, setSelectedVehicle] = useState(appointment?.vehicle ?? (appointment?.vehicleYear && {
     year: appointment.vehicleYear,
     make: appointment.vehicleMake,
     model: appointment.vehicleModel,
     color: appointment.vehicleColor,
     plate: appointment.vehiclePlate,
     vin: appointment.vehicleVin
-    } : null)
+    })
   );
   const [scheduledAppointments, setScheduledAppointments] = useState();
   const [availableAppointments, setAvailableAppointments] = useState();

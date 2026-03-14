@@ -20,6 +20,16 @@ const TowResponse = () =>
 
     const [ address, setAddress ] = useState();
 
+    // sets fallback vehicle values incase customer deleted the vehicle
+    const vehicle = request?.vehicle ?? (request?.vehicleYear && {
+        year: request.vehicleYear,
+        make: request?.vehicleMake,
+        model: request?.vehicleModel,
+        color: request?.vehicleColor,
+        plate: request?.vehiclePlate,
+        vin: request?.vehicleVin
+    });
+
     const openInGoogleMaps = (latitude, longitude) =>
     {
         const url = `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}&travelmode=driving`;
@@ -105,29 +115,29 @@ const TowResponse = () =>
                         <Text style={Styles.headerTitle}>Vehicle</Text>
                     </View>
                     <Tab
-                        header={`${request?.vehicle?.year}`}
-                        text={`${request?.vehicle?.make} ${request?.vehicle?.model}`}
+                        header={`${vehicle?.year}`}
+                        text={`${vehicle?.make} ${vehicle?.model}`}
                         leftIcon={<Ionicons name='car-sport' size={30} style={Styles.icon}/>}
                         style={{height: 'none'}}
                     />
                     <Tab
                         header='Vehicle Color'
-                        text={`${request?.vehicle?.color}`}
+                        text={`${vehicle?.color}`}
                         leftIcon={<FontAwesome name='paint-brush' size={30} style={Styles.icon}/>}
                         style={{height: 'none'}}
                     />
-                    { request?.vehicle?.plate && (
+                    { vehicle?.plate && (
                         <Tab
                             header='License Plate #'
-                            text={`${request?.vehicle?.plate}`}
+                            text={`${vehicle?.plate}`}
                             leftIcon={<FontAwesome name='id-card' size={30} style={Styles.icon}/>}
                             style={{height: 'none'}}
                         />
                     )}
-                    { request?.vehicle?.vin && (
+                    { vehicle?.vin && (
                         <Tab
                             header='VIN'
-                            text={`${request?.vehicle?.vin}`}
+                            text={`${vehicle?.vin}`}
                             leftIcon={<FontAwesome name='barcode' size={30} style={Styles.icon}/>}
                             style={{height: 'none'}}
                         />

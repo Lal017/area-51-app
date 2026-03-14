@@ -10,6 +10,15 @@ const AppointmentView = () =>
     const { appointmentParam } = useLocalSearchParams();
     const appointment = JSON.parse(appointmentParam);
 
+    const vehicle = appointment?.vehicle ?? (appointment?.vehicleYear && {
+        year: appointment.vehicleYear,
+        make: appointment?.vehicleMake,
+        model: appointment?.vehicleModel,
+        color: appointment?.vehicleColor,
+        plate: appointment?.vehiclePlate,
+        vin: appointment?.vehicleVin
+    });
+
     return (
         <Background>
             <View style={Styles.block}>
@@ -63,29 +72,29 @@ const AppointmentView = () =>
                     <Text style={Styles.headerTitle}>Vehicle</Text>
                 </View>
                 <Tab
-                    header={`${appointment?.vehicle?.year}`}
-                    text={`${appointment?.vehicle?.make} ${appointment?.vehicle?.model}`}
+                    header={`${vehicle?.year}`}
+                    text={`${vehicle?.make} ${vehicle?.model}`}
                     leftIcon={<Ionicons name='car-sport' size={30} style={Styles.icon}/>}
                     style={{height: 'none'}}
                 />
                 <Tab
                     header='Vehicle Color'
-                    text={`${appointment?.vehicle?.color}`}
+                    text={`${vehicle?.color}`}
                     leftIcon={<FontAwesome name='paint-brush' size={30} style={Styles.icon}/>}
                     style={{height: 'none'}}
                 />
-                { appointment?.vehicle?.plate && (
+                { vehicle?.plate && (
                     <Tab
                         header='License Plate #'
-                        text={`${appointment?.vehicle?.plate}`}
+                        text={`${vehicle?.plate}`}
                         leftIcon={<FontAwesome name='id-card' size={30} style={Styles.icon}/>}
                         style={{height: 'none'}}
                     />
                 )}
-                { appointment?.vehicle?.vin && (
+                { vehicle?.vin && (
                     <Tab
                         header='VIN'
-                        text={`${appointment?.vehicle?.vin}`}
+                        text={`${vehicle?.vin}`}
                         leftIcon={<FontAwesome name='barcode' size={30} style={Styles.icon}/>}
                         style={{height: 'none'}}
                     />
