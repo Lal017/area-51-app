@@ -44,8 +44,8 @@ const DriverAccountRequest = () =>
                             text: 'Yes',
                             onPress: async () => {
                                 if (loading) return;
+                                setLoading(true);
                                 try {
-                                    setLoading(true);
                                     setDriverId('1');
                                     await handleDeleteAllAppointments(client, userId);
                                     await handleDeleteAllTowRequests(client, userId);
@@ -54,11 +54,11 @@ const DriverAccountRequest = () =>
                                     await handleRequestDriverAccount(client, userId);
                                     await handleSendAdminNotif('Tow Driver Account Request', 'A user is requesting to become a tow driver');
                                     if (router.canDismiss()) router.dismissAll();
-                                    setLoading(false);
                                 } catch (error) {
                                     console.log(error);
                                     Alert.alert('ERROR', 'Could not request a driver account');
-                                } 
+                                }
+                                setLoading(false);
                             }
                         }
                     ]

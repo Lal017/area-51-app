@@ -1,7 +1,4 @@
 ToDo:
-    - UI for User View from admin page when they request to become a towDriver
-    - use Notification to trigger useEffect rerender to refresh screens instead of sending the actual data. for example when a user becomes a towDriver
-    - test vehicle pickup from customer POV
     - test UI for appointment and tow request from tow driver point of view if the user deletes the vehicle with an active request.
     - RFValue package might be deprecated. check
     - changing bouncing icon animation to a moving border animation
@@ -14,9 +11,11 @@ ToDo:
     - check to see all error message are red and not Colors.redButton
     - check to see if pages need refresh added to them
     - add glare animations for important info wherever needed
+    - condense code into functions in _layout files and wherever else necessary for readability and shorter code
     - need to test pretty much everything since update to SDK 55. DO THIS LAST
 
 PotentialChanges:
+    - use Notification to trigger useEffect rerender to refresh screens instead of sending the actual data.
     - Add notification tab in header for home page (only do this if you add a datamodel for notifications)
     - Add dataModel to save data for notifications instead of sending data directly through a notification
     - newEstimate and newInvoice do not update if you launch the app from the terminated state by clicking on the app itself (Adding dataModel for notification data would fix this)

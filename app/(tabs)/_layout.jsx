@@ -309,6 +309,10 @@ const TabsContent = () =>
             }
             else if (type === "DRIVER_ACCOUNT") {
                 setRefreshPrompt(true);
+                const userInfo = await handleGetCurrentUser();
+                const access_arr = userInfo.accessToken.payload["cognito:groups"];
+                const getAccess = access_arr.includes('Admins') ? 'Admins' : access_arr.includes('TowDrivers') ? 'TowDrivers' : 'Customers';
+                setAccess(getAccess);
             }
             else if (type === "CUSTOM_NOTIFICATION") {
                 await setCustomNotification(notification.request.content);
