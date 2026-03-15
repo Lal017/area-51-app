@@ -560,9 +560,9 @@ const AdminStyles = StyleSheet.create({
         backgroundColor: Colors.backgroundAccent,
     },
     picker: {
-        backgroundColor: Colors.backDropAccent,
+        backgroundColor: Colors.button,
         borderRadius: 25,
-        width: 200,
+        width: '30%',
         paddingLeft: 10
     },
     // index.jsx

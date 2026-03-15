@@ -104,13 +104,13 @@ const UserView = () =>
                         </View>
                     </View>
                     { customer?.driverId === '1' ? (
-                        <View style={[Styles.floatingBlock, {backgroundColor: Colors.tertiary}]}>
+                        <View style={[Styles.floatingBlock, {backgroundColor: Colors.redButton}]}>
                             <View style={Styles.infoContainer}>
                                 <Text style={Styles.headerTitle}>NOTICE</Text>
                                 <Text style={Styles.tabHeader}>This user is requesting to become a tow truck driver. Would you like to convert their account into a TowDriver account?</Text>
                             </View>
                             <TouchableOpacity
-                                style={[Styles.actionButton, {backgroundColor: Colors.secondary, alignSelf: 'center'}]}
+                                style={[Styles.actionButton, {backgroundColor: Colors.contrast, alignSelf: 'center'}]}
                                 onPress={() => {
                                     Alert.alert(
                                         'Confirmation',
@@ -143,7 +143,7 @@ const UserView = () =>
                                     );
                                 }}
                             >
-                                <Text style={Styles.actionText}>Convert</Text>
+                                <Text style={[Styles.actionText, {color: Colors.textAlt}]}>Convert</Text>
                             </TouchableOpacity>
                         </View>
                     ) : null}

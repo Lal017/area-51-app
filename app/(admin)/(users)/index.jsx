@@ -8,6 +8,9 @@ import { useEffect, useState } from "react";
 import { router } from "expo-router";
 import { AntDesign, Entypo, Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
+import { LinearGradient } from "expo-linear-gradient";
+import MaskedView from "@react-native-masked-view/masked-view";
+import Animated, { useSharedValue, withRepeat, withTiming, Easing, useAnimatedStyle } from "react-native-reanimated";
 
 const UserList = () =>
 {
@@ -18,13 +21,15 @@ const UserList = () =>
     const [ refreshing, setRefreshing ] = useState();
     const [ statusFilter, setStatusFilter ] = useState('All');
 
+    const shimmer = useSharedValue(-10);
+
     const onRefresh = async () =>
     {
         setRefreshing(true);
         const getUsers = await handleListUsers(client);
         setUsers(getUsers);
         setRefreshing(false);
-    }
+    };
 
     useEffect(() => {
         const fetchUsers = async () =>
@@ -34,7 +39,19 @@ const UserList = () =>
         }
 
         fetchUsers();
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        shimmer.value = withRepeat(
+              withTiming(1, { duration: 3000, easing: Easing.inOut(Easing.ease) }),
+              -1,
+              false
+            );
+    }, [users]);
+
+    const shimmerStyle = useAnimatedStyle(() => ({
+        transform: [{ translateX: shimmer.value * 100 }]
+    }));
 
     return (
         <Background refreshing={refreshing} onRefresh={onRefresh}>
@@ -53,7 +70,7 @@ const UserList = () =>
                     <Picker
                         selectedValue={statusFilter}
                         onValueChange={(itemvalue) => setStatusFilter(itemvalue)}
-                        style={{color: 'black'}}
+                        style={{color: Colors.text}}
                     >
                         <Picker.Item label='All' value='All'/>
                         <Picker.Item label='Customers' value='Customers'/>
@@ -78,8 +95,40 @@ const UserList = () =>
                         params: { userParam: JSON.stringify(user) },
                         pathname: 'userView'
                     })}
-                    leftIcon={<Ionicons name='person' size={30} style={Styles.icon} />}
-                    rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon} />}
+                    leftIcon={
+                        <MaskedView
+                            style={[Styles.icon, {width: 30, height: 30}]}
+                            maskElement={
+                                <Ionicons
+                                    name='person'
+                                    size={30}
+                                />
+                            }
+                        >
+                            <View style={[{flex: 1},
+                                user?.driverId === '1' ? {backgroundColor: Colors.redButton}
+                                : user?.driverId === null ? {backgroundColor: Colors.backDropAccent}
+                                : {backgroundColor: Colors.secondary}
+                            ]}/>
+                            { user?.driverId === '1' && (
+                                <Animated.View
+                                    style={[shimmerStyle, {
+                                    position: 'absolute',
+                                    top: 0, bottom: 0,
+                                    width: '100%'
+                                    }]}
+                                >
+                                    <LinearGradient
+                                    colors={[Colors.backDropAccent, Colors.backDropAccent, Colors.backDropAccent]}
+                                    style={{flex: 1}}
+                                    start={{ x: 0, y: 0}}
+                                    end={{ x: 1, y: 1}}
+                                    />
+                                </Animated.View>
+                            )}
+                        </MaskedView>
+                    }
+                    rightIcon={<AntDesign name='right' size={30} style={Styles.rightIcon}/>}
                 />
             ))}
         </Background>

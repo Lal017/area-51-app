@@ -30,7 +30,8 @@ const handleMakeUserTowDriver = async (username) =>
 
         return str;
     } catch (error) {
-        console.error('ERROR, could not make user a tow driver:', error);
+        console.error('handleMakeUserTowDriver ERROR:');
+        throw error;
     }
 };
 
@@ -50,7 +51,8 @@ const handleAssignTowDriverId = async (client, userId) =>
             }
         });
     } catch (error) {
-        console.error('ERROR, could not assign tow driver Id:', error);
+        console.error('handleAssignTowDriverId ERROR:', error);
+        throw error;
     }
 };
 
