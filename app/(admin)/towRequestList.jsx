@@ -1,9 +1,10 @@
-import { View, TextInput, Text } from 'react-native';
+import { View, TextInput } from 'react-native';
 import { useApp } from '../../components/context';
 import { AdminStyles, Styles } from '../../constants/styles';
 import { useEffect, useState } from 'react';
 import { listTowRequests } from '../../src/graphql/queries';
 import { Background, Tab } from '../../components/components';
+import { getStatus } from '../../components/towComponents';
 import { router } from 'expo-router';
 import { AntDesign, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
@@ -50,22 +51,6 @@ const TowRequestList = () =>
 
         handleGetTowRequests();
     }, []);
-
-    const getStatus = (status) =>
-    {
-        switch (status) {
-            case 'COMPLETED':
-                return <Text style={Styles.tabText}>Completed</Text>;
-            case 'IN_PROGRESS':
-                return <Text style={[Styles.tabText, {color: Colors.primary}]}>In Progress</Text>;
-            case 'CANCELLED':
-                return <Text style={[Styles.tabText, {color: Colors.redButton}]}>Cancelled</Text>;
-            case 'REQUESTED':
-                return <Text style={[Styles.tabText, {color: Colors.secondary}]}>Requested</Text>;
-            default:
-                return <Text>N/A</Text>
-        }
-    };
 
     return (
         <Background refreshing={refresing} onRefresh={onRefresh}>

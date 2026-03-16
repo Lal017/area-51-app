@@ -1,12 +1,12 @@
 import Colors from '../../../constants/colors';
 import length from '@turf/length';
 import lineSlice from '@turf/line-slice';
-import { Loading } from '../../../components/components';
+import { BackgroundAlt, callUser, Loading } from '../../../components/components';
 import { Styles, TowStyles } from '../../../constants/styles';
 import { useApp } from '../../../components/context';
-import { getDistance, getInstructionText, snapToRoute, getArrivalTime, sendDriverLocation, getInitialCompassHeading } from '../../../components/towComponents';
+import { getDistance, getInstructionText, snapToRoute, getArrivalTime, sendDriverLocation, getInitialCompassHeading, handleCompleteTowRequest } from '../../../components/towComponents';
 import { useEffect, useRef, useState } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import { MapView, Camera, ShapeSource, LineLayer, SymbolLayer, Images } from '@maplibre/maplibre-react-native';
 import { get, post } from 'aws-amplify/api';
 import { decode } from '@here/flexpolyline';
@@ -15,16 +15,16 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { point, lineString } from '@turf/helpers';
 import { bearing } from '@turf/bearing';
 import { along } from '@turf/along';
-import { Entypo, MaterialIcons, Feather } from '@expo/vector-icons';
+import { Entypo, MaterialIcons } from '@expo/vector-icons';
 import { speak, stop } from 'expo-speech';
-import { openURL } from 'expo-linking';
+import { sendPushNotification } from '../../../components/notifComponents';
 
 const TowProgress = () =>
 {
-    const { towParam } = useLocalSearchParams();
-    const request = JSON.parse(towParam);
+    const { requestParam } = useLocalSearchParams();
+    const request = JSON.parse(requestParam);
 
-    const { driverId } = useApp();
+    const { client, driverId } = useApp();
 
     const [ mapStyle, setMapStyle ] = useState();
     const [ routeCoords, setRouteCoords ] = useState();
@@ -41,12 +41,6 @@ const TowProgress = () =>
     const [ rerouting, setRerouting ] = useState(false);
 
     const isMuteRef = useRef(isMute);
-    
-    const openCallCustomer = (phone) =>
-    {
-        const url = `tel:${phone}`;
-        openURL(url);
-    };
 
     // get the array of coordinates to map the route
     const getRoute = async (start, destination, driverBearing) => {
@@ -246,7 +240,7 @@ const TowProgress = () =>
     }, [isMute]);
 
     return (
-        <SafeAreaView style={{flex: 1}}>
+        <BackgroundAlt hasTab={false}>
         { mapStyle && userLocation ? (
             <MapView
                 style={{flex: 1}}
@@ -380,11 +374,11 @@ const TowProgress = () =>
             <View style={TowStyles.secondaryContainer}>
                 <TouchableOpacity
                     style={TowStyles.iconContainer}
-                    onPress={() => router.back()}
+                    onPress={() => callUser(request?.user?.phone)}
                 >
-                    <Feather
-                        name='x'
-                        size={45}
+                    <Entypo
+                        name='phone'
+                        size={40}
                         color='white'
                     />
                 </TouchableOpacity>
@@ -394,17 +388,34 @@ const TowProgress = () =>
                 </View>
                 <TouchableOpacity
                     style={TowStyles.iconContainer}
-                    onPress={() => openCallCustomer(request?.user?.phone)}
+                    onPress={() => {
+                        Alert.alert(
+                            'Request Completed',
+                            'Would you like to mark the tow request as completed?',
+                            [
+                                { text: 'No' },
+                                {
+                                    text: 'Yes',
+                                    onPress: async () => {
+                                        await handleCompleteTowRequest(client, request.id);
+                                        await sendPushNotification(request?.user?.pushToken, 'Tow Request', 'Your tow request has been completed!', { type: 'TOW_RESPONSE' });
+                                        if (router.canDismiss()) router.dismissAll();
+                                        router.replace('/');
+                                    }
+                                }
+                            ]
+                        )
+                    }}
                 >
                     <Entypo
-                        name='phone'
-                        size={45}
-                        color='white'
+                        name='check'
+                        size={40}
+                        color={Colors.primary}
                     />
                 </TouchableOpacity>
             </View>
         ) : null }
-        </SafeAreaView>
+        </BackgroundAlt>
     );
 };
 

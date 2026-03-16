@@ -1,7 +1,7 @@
 import Colors from "../../constants/colors";
 import LottieView from "lottie-react-native";
 import { Background } from "../../components/components";
-import { Styles, AdminStyles, HomeStyles } from "../../constants/styles";
+import { Styles, AdminStyles } from "../../constants/styles";
 import { router } from 'expo-router';
 import { Text, TouchableOpacity, Alert, Linking, View } from 'react-native';
 import { requestBackgroundPermissionsAsync, requestForegroundPermissionsAsync } from 'expo-location';

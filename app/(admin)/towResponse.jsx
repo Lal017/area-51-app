@@ -4,13 +4,12 @@ import { handleUpdateCustomersTowRequestStatus } from '../../components/towCompo
 import { sendPushNotification } from '../../components/notifComponents';
 import { handleGetAddress } from '../../components/adminComponents';
 import { useApp } from '../../components/context';
-import { Background, formatNumber, callCustomer, textCustomer, Tab } from '../../components/components';
+import { Background, formatNumber, callCustomer, textCustomer, openInMaps, Tab } from '../../components/components';
 import { Styles, ServiceStyles } from '../../constants/styles';
 import { View, Text, TouchableOpacity, Alert, KeyboardAvoidingView } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 import { AntDesign, FontAwesome, Entypo, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
-import { openURL } from 'expo-linking';
 
 const TowResponse = () =>
 {
@@ -29,12 +28,6 @@ const TowResponse = () =>
         plate: request?.vehiclePlate,
         vin: request?.vehicleVin
     });
-
-    const openInGoogleMaps = (latitude, longitude) =>
-    {
-        const url = `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}&travelmode=driving`;
-        openURL(url);
-    };
 
     useEffect(() => {
         const fetchAddress = async () => {
@@ -98,7 +91,7 @@ const TowResponse = () =>
                             header='Pickup Address'
                             text={<Text style={{color: Colors.secondary}}>{address}</Text>}
                             leftIcon={<Entypo name='address' size={30} style={[Styles.icon, {color: Colors.secondary}]}/>}
-                            action={() => openInGoogleMaps(request.latitude, request.longitude)}
+                            action={() => openInMaps(request.latitude, request.longitude)}
                         />
                     </View>
                 </View>

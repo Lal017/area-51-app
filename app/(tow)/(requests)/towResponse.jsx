@@ -1,28 +1,37 @@
 import Colors from "../../../constants/colors";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { handleAcceptTowRequest, handleFinalTowCheck, getInitialCompassHeading } from "../../../components/towComponents";
 import { useApp } from "../../../components/context";
 import { sendPushNotification } from '../../../components/notifComponents'
-import { Background, formatNumber, callCustomer } from "../../../components/components";
-import { TowStyles, ServiceStyles, Styles } from "../../../constants/styles";
+import { Background, formatNumber, callCustomer, openInMaps, Tab } from "../../../components/components";
+import { ServiceStyles, Styles } from "../../../constants/styles";
 import { handleGetAddress } from "../../../components/adminComponents";
 import { useLocalSearchParams, router } from "expo-router";
 import { TouchableOpacity, View, Text, KeyboardAvoidingView, Alert } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import { useEffect, useState } from "react";
-import { AntDesign, Entypo } from "@expo/vector-icons";
+import { AntDesign, Entypo, Ionicons, FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Accuracy, getCurrentPositionAsync } from "expo-location";
 import { post } from "aws-amplify/api";
 
 const TowResponse = () =>
 {
-    const { towParam } = useLocalSearchParams();
-    const request = JSON.parse(towParam);
+    const { requestParam } = useLocalSearchParams();
+    const request = JSON.parse(requestParam);
 
     const { client, driverId, firstName, phoneNumber } = useApp();
 
     const [ address, setAddress ] = useState();
     const [ waitTime, setWaitTime ] = useState();
+
+    // sets fallback vehicle values incase customer deleted the vehicle
+    const vehicle = request?.vehicle ?? (request?.vehicleYear && {
+        year: request.vehicleYear,
+        make: request?.vehicleMake,
+        model: request?.vehicleModel,
+        color: request?.vehicleColor,
+        plate: request?.vehiclePlate,
+        vin: request?.vehicleVin
+    });
 
     const getWaitTime = async (start, destination, driverBearing) => {
         // calculates the route
@@ -69,26 +78,21 @@ const TowResponse = () =>
     return (
         <KeyboardAvoidingView behavior="height" style={{flex: 1}}>
             <Background style={{paddingTop: 0}}>
-                <View style={[Styles.block, {alignItems: 'center', paddingTop: 0}]}>
+                <View style={[Styles.block, {alignItems: 'center'}]}>
                     <View style={ServiceStyles.mapContainer}>
                         <MapView
                             provider={PROVIDER_GOOGLE}
                             style={{width: '100%', height: '100%'}}
-                            showsUserLocation={true}
-                            toolbarEnabled={false}
-                            zoomControlEnabled={true}
-                            showsTraffic={false}
-                            loadingEnabled={true}
-                            userInterfaceStyle='dark'
                             region={{
                                 latitude: request.latitude,
                                 longitude: request.longitude,
-                                latitudeDelta: 0.2,
-                                longitudeDelta: 0.2
+                                latitudeDelta: 0.01,
+                                longitudeDelta: 0.01
                             }}
+                            showsUserLocation={true}
                         >
                             <Marker
-                                title="Customer Location"
+                                title='Customer Location'
                                 coordinate={{
                                     latitude: request.latitude,
                                     longitude: request.longitude
@@ -98,96 +102,145 @@ const TowResponse = () =>
                     </View>
                 </View>
                 <View style={Styles.block}>
-                    <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                        <Text style={Styles.subTitle}>Customer Info</Text>
-                        <Text style={Styles.text}>{request?.user?.firstName} {request?.user?.lastName} | {formatNumber(request?.user?.phone)}</Text>
+                    <View style={Styles.infoContainer}>
+                        <Text style={Styles.headerTitle}>{request?.user?.firstName} {request?.user?.lastName}</Text>
+                        <Text style={Styles.tabHeader}>{request?.user?.email}</Text>
+                        <Text style={Styles.tabHeader}>{formatNumber(request?.user?.phone)}</Text>
                     </View>
-                    <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                        <Text style={Styles.subTitle}>Pickup Address</Text>
-                        <Text style={[Styles.text, {width: '50%'}]}>{address}</Text>
-                    </View>
-                    <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                        <Text style={Styles.subTitle}>Vehicle Info</Text>
-                        <Text style={Styles.text}>{request?.vehicle?.year} {request?.vehicle?.make} {request?.vehicle?.model} ({request?.vehicle?.color})</Text>
-                    </View>
-                    <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                        <Text style={Styles.subTitle}>Tow Details</Text>
-                        <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingRight: '25%'}}>
-                            <Text style={Styles.text}> - Car runs?</Text>
-                            <Text style={Styles.text}>{request?.canRun ? 'Yes' : 'No'}</Text>
-                        </View>
-                        <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingRight: '25%'}}>
-                            <Text style={Styles.text}> - Car rolls?</Text>
-                            <Text style={Styles.text}>{request?.canRoll ? 'Yes' : 'No' }</Text>
-                        </View>
-                        <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingRight: '25%'}}>
-                            <Text style={Styles.text}> - Keys included?</Text>
-                            <Text style={Styles.text}>{request?.keyIncluded ? 'Yes' : 'No' }</Text>
-                        </View>
-                        <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingRight: '25%'}}>
-                            <Text style={Styles.text}> - Vehicle is obstructed?</Text>
-                            <Text style={Styles.text}>{request?.isObstructed ? 'Yes' : 'No' }</Text>
-                        </View>
-                    </View>
-                    { request?.notes ? (
-                        <View style={[Styles.infoContainer, {rowGap: 0}]}>
-                            <Text style={Styles.subTitle}>Notes</Text>
-                            <Text style={Styles.text}>{request?.notes}</Text>
-                        </View>
-                    ) : null }
-                </View>
-                <View style={Styles.block}>
-                    <View style={TowStyles.dualButtonContainer}>
+                    <View style={[Styles.rightIcon, {flexDirection: 'row', columnGap: 10}]}>
                         <TouchableOpacity
-                            style={[TowStyles.button, {backgroundColor: Colors.secondary, columnGap: 10}]}
+                            style={{padding: 5, justifyContent: 'center', alignItems: 'center'}}
                             onPress={() => callCustomer(request?.user?.phone)}
                         >
-                            <Entypo name="phone" size={25} color='white'/>
-                            <Text style={Styles.actionText}>Call customer</Text>
+                            <Entypo name='phone' size={30} color='white'/>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            style={[TowStyles.button, {backgroundColor: Colors.primary, columnGap: 10}]}
-                            onPress={() => {Alert.alert(
-                                'Confirmation',
-                                'Once you accept this request, the customer will be able to view your location. Are you sure you want to accept the request?',
-                                [
-                                    { text: 'No' },
-                                    {
-                                        text: 'Yes',
-                                        onPress: async () => {
-                                            try {
-                                                const isAccepted = await handleFinalTowCheck(client, request.id);
-                                                if (isAccepted) {
-                                                    Alert.alert(
-                                                        'Tow Request',
-                                                        'The request has already been accepted by another driver',
-                                                        [{ text: 'OK' }]
-                                                    );
-                                                    router.replace('(tow)');
-                                                    return;
-                                                }
-                                                await AsyncStorage.setItem('requestId', request?.id);
-                                                const data = {
-                                                    type: 'TOW_RESPONSE'
-                                                };
-                                                await handleAcceptTowRequest(client, request.id, 'IN_PROGRESS', waitTime, driverId, firstName, phoneNumber);
-                                                await sendPushNotification(request?.user?.pushToken, 'Tow Request', 'A driver is on the way!', data);
-                                                router.push({
-                                                    pathname: 'towProgress',
-                                                    params: { towParam: JSON.stringify(request)}
-                                                });
-                                            } catch (error) {
-                                                console.error(error);
-                                            }
-                                        }
-                                    }
-                                ]
-                            )}}
+                            style={{padding: 5, justifyContent: 'center', alignItems: 'center'}}
+                            onPress={() => textCustomer(request?.user?.phone)}
                         >
-                            <AntDesign name="check" size={25} color='white'/>
-                            <Text style={Styles.actionText}>Accept</Text>
+                            <Entypo name='message' size={30} color='white'/>
                         </TouchableOpacity>
                     </View>
+                </View>
+                <View style={Styles.block}>
+                    <View style={Styles.infoContainer}>
+                        <Tab
+                            header='Pickup Address'
+                            text={<Text style={{color: Colors.secondary}}>{address}</Text>}
+                            leftIcon={<Entypo name='address' size={30} style={[Styles.icon, {color: Colors.secondary}]}/>}
+                            action={() => openInMaps(request.latitude, request.longitude)}
+                        />
+                    </View>
+                </View>
+                { request?.notes && (
+                    <View style={Styles.block}>
+                        <View style={Styles.infoContainer}>
+                            <Text style={Styles.headerTitle}>Customer Note</Text>
+                            <Text style={Styles.text}>"{request.notes}"</Text>
+                        </View>
+                    </View>
+                )}
+                <View style={Styles.floatingBlock}>
+                    <View style={Styles.infoContainer}>
+                        <Text style={Styles.headerTitle}>Vehicle</Text>
+                    </View>
+                    <Tab
+                        header={`${vehicle?.year}`}
+                        text={`${vehicle?.make} ${vehicle?.model}`}
+                        leftIcon={<Ionicons name='car-sport' size={30} style={Styles.icon}/>}
+                        style={{height: 'none'}}
+                    />
+                    <Tab
+                        header='Vehicle Color'
+                        text={`${vehicle?.color}`}
+                        leftIcon={<FontAwesome name='paint-brush' size={30} style={Styles.icon}/>}
+                        style={{height: 'none'}}
+                    />
+                    { vehicle?.plate && (
+                        <Tab
+                            header='License Plate #'
+                            text={`${vehicle?.plate}`}
+                            leftIcon={<FontAwesome name='id-card' size={30} style={Styles.icon}/>}
+                            style={{height: 'none'}}
+                        />
+                    )}
+                    { vehicle?.vin && (
+                        <Tab
+                            header='VIN'
+                            text={`${vehicle?.vin}`}
+                            leftIcon={<FontAwesome name='barcode' size={30} style={Styles.icon}/>}
+                            style={{height: 'none'}}
+                        />
+                    )}
+                </View>
+                <View style={[Styles.block, {paddingTop: 20}]}>
+                    <View style={Styles.infoContainer}>
+                        <Tab
+                            header='Does the car run?'
+                            text={request?.canRun ? 'Yes' : 'No'}
+                            leftIcon={<MaterialCommunityIcons name='engine' size={30} style={Styles.icon}/>}
+                            style={{height: 'none', padding: 5}}
+                        />
+                        <Tab
+                            header='Does the car roll?'
+                            text={request?.canRoll ? 'Yes' : 'No'}
+                            leftIcon={<MaterialCommunityIcons name='tire' size={30} style={Styles.icon}/>}
+                            style={{height: 'none', padding: 5}}
+                        />
+                        <Tab
+                            header='Are the keys included?'
+                            text={request?.keyIncluded ? 'Yes' : 'No'}
+                            leftIcon={<Entypo name='key' size={30} style={Styles.icon}/>}
+                            style={{height: 'none', padding: 5}}
+                        />
+                        <Tab
+                            header='Is the vehicle obstructed?'
+                            text={request?.isObstructed ? 'Yes' : 'No'}
+                            leftIcon={<Entypo name='warning' size={30} style={Styles.icon}/>}
+                            style={{height: 'none', padding: 5}}
+                        />
+                    </View>
+                </View>
+                <View style={Styles.block}>
+                    <TouchableOpacity
+                        style={[Styles.actionButton, {backgroundColor: Colors.primary, alignSelf: 'center'}]}
+                        onPress={() => {Alert.alert(
+                            'Confirmation',
+                            'Once you accept this request, the customer will be able to view your location. Are you sure you want to accept the request?',
+                            [
+                                { text: 'No' },
+                                {
+                                    text: 'Yes',
+                                    onPress: async () => {
+                                        try {
+                                            const isAccepted = await handleFinalTowCheck(client, request.id);
+                                            if (isAccepted) {
+                                                Alert.alert(
+                                                    'Tow Request',
+                                                    'The request has already been accepted by another driver',
+                                                    [{ text: 'OK' }]
+                                                );
+                                                if (router.canDismiss) router.dismissAll();
+                                                router.replace('/');
+                                                return;
+                                            }
+                                            await handleAcceptTowRequest(client, request.id, 'IN_PROGRESS', waitTime, driverId, firstName, phoneNumber);
+                                            await sendPushNotification(request?.user?.pushToken, 'Tow Request', 'A driver is on the way!', { type: 'TOW_RESPONSE' });
+                                            router.replace({
+                                                pathname: 'towProgress',
+                                                params: { requestParam: JSON.stringify(request)}
+                                            });
+                                        } catch (error) {
+                                            console.error(error);
+                                        }
+                                    }
+                                }
+                            ]
+                        )}}
+                    >
+                        <AntDesign name="check" size={25} style={Styles.icon}/>
+                        <Text style={Styles.actionText}>Accept</Text>
+                    </TouchableOpacity>
                 </View>
             </Background>
         </KeyboardAvoidingView>

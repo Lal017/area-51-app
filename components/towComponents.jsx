@@ -1,9 +1,11 @@
 import nearestPointOnLine from '@turf/nearest-point-on-line';
+import Colors from '../constants/colors';
+import { Styles } from '../constants/styles';
 import { getTowRequest, listTowRequests, towRequestsByUserId } from "../src/graphql/queries";
 import { createTowRequest, updateTowRequest, deleteTowRequest } from "../src/graphql/mutations";
 import { LocationClient } from '@aws-sdk/client-location';
 import { fetchAuthSession } from 'aws-amplify/auth'
-import { Alert } from 'react-native';
+import { Alert, Text } from 'react-native';
 import { router } from "expo-router";
 import { distance } from '@turf/distance';
 import { point, lineString } from '@turf/helpers';
@@ -367,6 +369,23 @@ const getInitialCompassHeading = async () =>
     });
 };
 
+const getStatus = (status) =>
+{
+    switch (status) {
+        case 'COMPLETED':
+            return <Text style={Styles.tabText}>Completed</Text>;
+        case 'IN_PROGRESS':
+            return <Text style={[Styles.tabText, {color: Colors.primary}]}>In Progress</Text>;
+        case 'CANCELLED':
+            return <Text style={[Styles.tabText, {color: Colors.redButton}]}>Cancelled</Text>;
+        case 'REQUESTED':
+            return <Text style={[Styles.tabText, {color: Colors.secondary}]}>Requested</Text>;
+        default:
+            return <Text>N/A</Text>
+    }
+};
+
+
 // -------------------------------------
 //              CUSTOMERS
 // -------------------------------------
@@ -444,7 +463,7 @@ const handleNotifUpdateTowRequest = async (client, userId, setTowRequest) =>
 };
 
 // used to update the status of the tow request
-const handleUpdateTowRequestStatus = async (client, towId, userId, status, setTowRequest) =>
+const handleUpdateTowRequestStatus = async ({client, towId, userId, status, setTowRequest}) =>
 {
     try {
         await client.graphql({
@@ -517,6 +536,7 @@ export {
     getArrivalTime,
     sendDriverLocation,
     getInitialCompassHeading,
+    getStatus,
     handleCreateTowRequest,
     handleGetTowRequest,
     handleNotifUpdateTowRequest,

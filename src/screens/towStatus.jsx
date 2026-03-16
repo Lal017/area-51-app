@@ -3,15 +3,14 @@ import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import Colors from '../../constants/colors';
 import { Styles, ServiceStyles, TowStyles } from '../../constants/styles';
 import { useApp } from "../../components/context";
-import { Background, getRemainingETA, formatTime } from "../../components/components";
+import { Background, formatTime, callUser } from "../../components/components";
 import { handleSendAdminNotif } from '../../components/notifComponents';
 import { handleUpdateTowRequestStatus, handleGetTowRequest, createLocationClient, getArrivalTime } from '../../components/towComponents';
 import { View, Text, TouchableOpacity, Alert} from 'react-native';
 import { GetDevicePositionCommand } from '@aws-sdk/client-location';
 import { useEffect, useState } from "react";
-import { openURL } from 'expo-linking';
 import { router } from 'expo-router';
-import { MaterialCommunityIcons, AntDesign, Entypo } from '@expo/vector-icons';
+import { MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
 
 const TowStatus = () =>
 {
@@ -59,12 +58,6 @@ const TowStatus = () =>
             timeLeft: timeLeft,
             arrivalTime: formatTime(arrivalTime)
         };
-    };
-
-    const openCallDriver = (phone) =>
-    {
-        const url = `tel:${phone}`;
-        openURL(url);
     };
 
     // if no tow request, go back to home page
@@ -126,7 +119,7 @@ const TowStatus = () =>
     }, [locationClient, towRequest?.driverId]);
 
     return (
-        <Background style={{paddingBottom: 0, paddingTop: 0}}>
+        <Background>
             { towRequest?.status === 'REQUESTED' ? (
                 <>
                 <View style={Styles.infoContainer}>
@@ -167,7 +160,7 @@ const TowStatus = () =>
                                 text: 'Yes',
                                 onPress: async () => {
                                     await handleSendAdminNotif('Tow Request Cancelled', 'Customer has cancelled the tow request');
-                                    await handleUpdateTowRequestStatus(client, towRequest.id, userId, 'CANCELLED', setTowRequest);
+                                    await handleUpdateTowRequestStatus({client, towId: towRequest.id, userId, status: 'CANCELLED', setTowRequest});
                                     Alert.alert(
                                         'Cancelled',
                                         'Your tow request has been cancelled',
@@ -231,9 +224,13 @@ const TowStatus = () =>
                 <View style={TowStyles.secondaryContainer}>
                     <TouchableOpacity
                         style={TowStyles.iconContainer}
-                        onPress={() => router.back()}
+                        onPress={() => callUser(towRequest?.user?.phone)}
                     >
-                        <AntDesign name='left' size={45} color='white' />
+                        <Entypo
+                            name='phone'
+                            size={40}
+                            color='white'
+                        />
                     </TouchableOpacity>
                     <View style={TowStyles.lowerTextContainer}>
                         <Text style={[estimatedTimeLeft === `0 min` ? [Styles.text, {fontWeight: 'bold'}] : Styles.subTitle, {textAlign: 'center'}]}>{estimatedTimeLeft === `0 min` ? 'Driver is running late...' : estimatedTimeLeft}</Text>
@@ -241,12 +238,28 @@ const TowStatus = () =>
                     </View>
                     <TouchableOpacity
                         style={TowStyles.iconContainer}
-                        onPress={() => openCallDriver(towRequest?.user?.phone)}
+                        onPress={() => {
+                            Alert.alert(
+                                'Request Completed',
+                                'Would you like to mark the tow request as completed?',
+                                [
+                                    { text: 'No' },
+                                    {
+                                        text: 'Yes',
+                                        onPress: async () => {
+                                            await handleUpdateTowRequestStatus({client, towId: towRequest.id, userId, status: 'COMPLETED', setTowRequest});
+                                            if (router.canDismiss()) router.dismissAll();
+                                            router.replace('/');
+                                        }
+                                    }
+                                ]
+                            )
+                        }}
                     >
                         <Entypo
-                            name='phone'
-                            size={45}
-                            color='white'
+                            name='check'
+                            size={40}
+                            color={Colors.primary}
                         />
                     </TouchableOpacity>
                 </View>

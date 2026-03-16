@@ -90,13 +90,13 @@ const AuthBackground = ({children}) =>
 };
 
 // wraps the page
-const Background = ({children, style, refreshing, onRefresh, scrollRef, hasNoHeader = false}) =>
+const Background = ({children, style, refreshing, onRefresh, scrollRef, hasNoHeader = false, hasTab = true}) =>
 {
     const insets = useSafeAreaInsets();
 
     return (
         <LinearGradient
-            style={[{flex: 1, paddingBottom: insets.bottom}, hasNoHeader && {paddingTop: insets.top}]}
+            style={[{flex: 1}, hasNoHeader && {paddingTop: insets.top}, !hasTab && {paddingBottom: insets.bottom}]}
             colors={[Colors.background, Colors.backgroundFade, Colors.background]}
             locations={[0.1, 0.5, 0.9]}
             start={{x: 1, y: 0.9}}
@@ -120,13 +120,13 @@ const Background = ({children, style, refreshing, onRefresh, scrollRef, hasNoHea
 };
 
 // alternative background with no scroll view
-const BackgroundAlt = ({children, style, hasNoHeader = false}) =>
+const BackgroundAlt = ({children, style, hasNoHeader = false, hasTab = false}) =>
 {
     const insets = useSafeAreaInsets();
 
     return (
         <LinearGradient
-            style={[{flex: 1, paddingBottom: insets.bottom}, hasNoHeader && {paddingTop: insets.top}, style]}
+            style={[{flex: 1}, hasNoHeader && {paddingTop: insets.top}, hasTab && {paddingBottom: insets.bottom}, style]}
             colors={[Colors.background, Colors.backgroundFade, Colors.background]}
             locations={[0.1, 0.5, 0.9]}
             start={{x: 1, y: 0.9}}
@@ -326,16 +326,22 @@ const SimpleList = ({data = [], renderItem}) =>
 };
 
 // used to call the customer
-const callCustomer = (phone) =>
+const callUser = (phone) =>
 {
     const url = `tel:${phone}`;
     openURL(url);
 };
 
 // used to text the customer
-const textCustomer = (phone) =>
+const textUser = (phone) =>
 {
     const url = `sms:${phone}`;
+    openURL(url);
+};
+
+const openInMaps = (latitude, longitude) =>
+{
+    const url = `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}&travelmode=driving`;
     openURL(url);
 };
 
@@ -355,6 +361,7 @@ export {
     getRemainingETA,
     AppointmentReminder,
     SimpleList,
-    callCustomer,
-    textCustomer
+    callUser,
+    textUser,
+    openInMaps
 };

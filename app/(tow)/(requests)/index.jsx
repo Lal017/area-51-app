@@ -1,12 +1,12 @@
-import Colors from '../../../constants/colors';
 import { useApp } from '../../../components/context';
 import { Background, Loading, Tab } from '../../../components/components';
 import { Styles } from '../../../constants/styles';
-import { handleGetAllTowRequests } from '../../../components/towComponents';
+import { handleGetAllTowRequests, getStatus } from '../../../components/towComponents';
 import { Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
+import LottieView from 'lottie-react-native';
 
 const RequestList = () =>
 {
@@ -63,21 +63,28 @@ const RequestList = () =>
         { ready && towRequests ? (
             <Background refreshing={refresing} onRefresh={onRefresh}>
                 { towRequests?.length === 0 ? (
-                    <View style={{flex: 1, justifyContent: 'center'}}>
-                        <Text style={Styles.subTitle}>No Tow Requests</Text>
+                    <View style={[Styles.block, {alignItems: 'center'}]}>
+                        <LottieView
+                            source={require('../../../assets/animations/no-files.json')}
+                            style={{width: 300, height: 300}}
+                            speed={0.75}
+                            autoPlay={true}
+                            loop={false}
+                        />
+                        <Text style={Styles.title}>No Tow Requests</Text>
                     </View>
                 ) : null }
                 { towRequests?.map((request, index) => (
                     <Tab
                         key={index}
-                        text={<Text style={[Styles.headerTitle, {paddingLeft: 75}, request.status === 'REQUESTED' ? {color: Colors.primary} : request.status === 'IN_PROGRESS' ? {color: Colors.secondary} : null ]}><Text style={Styles.tabText}>{request?.user?.firstName}</Text>{'\n'}{request.status === 'IN_PROGRESS' ? 'ACTIVE REQUEST' : request.status}</Text>}
-                        action={() => 
-                            router.push({
-                                pathname: request.status === 'REQUESTED' ? 'towResponse' : 'towProgress',
-                                params: { towParam: JSON.stringify(request)}
-                            })}
-                        leftIcon={<MaterialCommunityIcons name='tow-truck' size={35} style={Styles.icon}/>}
+                        header={`${request?.user?.firstName} ${request?.user?.lastName}`}
+                        text={getStatus(request?.status)}
+                        leftIcon={<MaterialCommunityIcons name='tow-truck' size={35} style={Styles.icon} />}
                         rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon} />}
+                        action={() => router.push({
+                            pathname: request.status === 'REQUESTED' ? 'towResponse' : 'towProgress',
+                            params: { requestParam: JSON.stringify(request)}
+                        })}
                     />
                 ))}
             </Background>
