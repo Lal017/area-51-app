@@ -9,7 +9,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
 import { MaterialIcons } from '@expo/vector-icons';
 import { signOut } from '@aws-amplify/auth';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { openURL } from 'expo-linking';
 
 // loading page
@@ -26,9 +26,10 @@ const CustHeader = ({title, index}) =>
 {
     const { isStuck } = useApp();
     const [ loading, setLoading ] = useState();
+    const insets = useSafeAreaInsets();
 
     return (
-        <SafeAreaView style={Styles.HeaderContainer}>
+        <View style={[Styles.HeaderContainer, {paddingTop: insets.top}]}>
             { !index && !isStuck && router.canGoBack() ? (
                 <TouchableOpacity
                     style={{position: 'absolute', left: 20, top: 45}}
@@ -63,16 +64,17 @@ const CustHeader = ({title, index}) =>
                     <MaterialIcons name='logout' size={30} color={loading ? 'gray' : 'white'}/>
                 </TouchableOpacity>
             ) : null}
-        </SafeAreaView>
+        </View>
     );
 };
 
 // wraps the (auth) pages
 const AuthBackground = ({children}) =>
 {
+    const insets = useSafeAreaInsets();
     return (
         <LinearGradient
-            style={{flex: 1}}
+            style={{flex: 1, paddingBottom: insets.bottom, paddingTop: insets.top}}
             colors={[Colors.backgroundFade, Colors.background]}
             start={{ x: 0, y: 1 }}
             end={{ x: 1, y: 0 }}
@@ -90,9 +92,11 @@ const AuthBackground = ({children}) =>
 // wraps the page
 const Background = ({children, style, refreshing, onRefresh, scrollRef}) =>
 {
+    const insets = useSafeAreaInsets();
+
     return (
         <LinearGradient
-            style={{flex: 1}}
+            style={{flex: 1, paddingBottom: insets.bottom}}
             colors={[Colors.background, Colors.backgroundFade, Colors.background]}
             locations={[0.1, 0.5, 0.9]}
             start={{x: 1, y: 0.9}}
@@ -118,9 +122,11 @@ const Background = ({children, style, refreshing, onRefresh, scrollRef}) =>
 // alternative background with no scroll view
 const BackgroundAlt = ({children, style}) =>
 {
+    const insets = useSafeAreaInsets();
+
     return (
         <LinearGradient
-            style={[{flex: 1}, style]}
+            style={[{flex: 1, paddingBottom: insets.bottom}, style]}
             colors={[Colors.background, Colors.backgroundFade, Colors.background]}
             locations={[0.1, 0.5, 0.9]}
             start={{x: 1, y: 0.9}}
