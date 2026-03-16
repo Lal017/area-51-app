@@ -9,7 +9,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
 import { MaterialIcons } from '@expo/vector-icons';
 import { signOut } from '@aws-amplify/auth';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { openURL } from 'expo-linking';
 
 // loading page
@@ -90,13 +90,13 @@ const AuthBackground = ({children}) =>
 };
 
 // wraps the page
-const Background = ({children, style, refreshing, onRefresh, scrollRef}) =>
+const Background = ({children, style, refreshing, onRefresh, scrollRef, hasNoHeader = false}) =>
 {
     const insets = useSafeAreaInsets();
 
     return (
         <LinearGradient
-            style={{flex: 1, paddingBottom: insets.bottom}}
+            style={[{flex: 1, paddingBottom: insets.bottom}, hasNoHeader && {paddingTop: insets.top}]}
             colors={[Colors.background, Colors.backgroundFade, Colors.background]}
             locations={[0.1, 0.5, 0.9]}
             start={{x: 1, y: 0.9}}
@@ -120,13 +120,13 @@ const Background = ({children, style, refreshing, onRefresh, scrollRef}) =>
 };
 
 // alternative background with no scroll view
-const BackgroundAlt = ({children, style}) =>
+const BackgroundAlt = ({children, style, hasNoHeader = false}) =>
 {
     const insets = useSafeAreaInsets();
 
     return (
         <LinearGradient
-            style={[{flex: 1, paddingBottom: insets.bottom}, style]}
+            style={[{flex: 1, paddingBottom: insets.bottom}, hasNoHeader && {paddingTop: insets.top}, style]}
             colors={[Colors.background, Colors.backgroundFade, Colors.background]}
             locations={[0.1, 0.5, 0.9]}
             start={{x: 1, y: 0.9}}
