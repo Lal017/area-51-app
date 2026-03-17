@@ -12,7 +12,7 @@ const Index = () =>
     const { firstName, lastName, email } = useApp();
 
     return(
-        <Background style={{rowGap: 5}}>
+        <Background style={{rowGap: 5}} hasTab={false}>
             <View style={Styles.block}>
                 <View style={Styles.infoContainer}>
                     <Text style={Styles.headerTitle}>{firstName} {lastName}</Text>

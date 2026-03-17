@@ -3,8 +3,8 @@ import { Background, Loading, Tab } from '../../../components/components';
 import { Styles } from '../../../constants/styles';
 import { handleGetAllTowRequests, getStatus } from '../../../components/towComponents';
 import { Text, View } from 'react-native';
-import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { router, useFocusEffect } from 'expo-router';
+import { useCallback, useState } from 'react';
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
 
@@ -37,26 +37,29 @@ const RequestList = () =>
         setRefreshing(false);
     };
 
-    useEffect(() => {
-        const getTowRequests = async () =>
-        {
-            try {
-                const getTowRequests = await handleGetAllTowRequests(client);
-                const getActiveRequest = getTowRequests.find(item => item.driverId === driverId);
-                if (getActiveRequest) {
-                    setTowRequests([getActiveRequest]);
-                } else {
-                    const filteredRequests = getTowRequests.filter(item => item.status === 'REQUESTED');
-                    setTowRequests(filteredRequests);
+    useFocusEffect(
+        useCallback(() => {
+            const getTowRequests = async () =>
+            {
+                try {
+                    const getTowRequests = await handleGetAllTowRequests(client);
+                    const getActiveRequest = getTowRequests.find(item => item.driverId === driverId);
+                    if (getActiveRequest) {
+                        setTowRequests([getActiveRequest]);
+                    } else {
+                        const filteredRequests = getTowRequests.filter(item => item.status === 'REQUESTED');
+                        setTowRequests(filteredRequests);
+                    }
+                    setReady(true);
+                } catch (error) {
+                    console.error('ERROR, could not get tow requests:', error);
                 }
-                setReady(true);
-            } catch (error) {
-                console.error('ERROR, could not get tow requests:', error);
-            }
-        };
+            };
 
-        getTowRequests();
-    }, []);
+            console.log('called');
+            getTowRequests();
+        }, [client, driverId])
+    );
 
     return (
         <>

@@ -1,6 +1,6 @@
 ToDo:
-    - fix styling for (tow)
     - test UI for appointment and tow request from tow driver point of view if the user deletes the vehicle with an active request.
+    - add option to view request details after the tow driver has accepted the request
     - RFValue package might be deprecated. check
     - changing bouncing icon animation to a moving border animation
     - check if device returns compass heading if not proceed with GPS without it
