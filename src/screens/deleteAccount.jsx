@@ -6,7 +6,7 @@ import { useApp } from '../../components/context';
 import { View, Text, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
 import { useState } from 'react';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
-import { RFValue } from 'react-native-responsive-fontsize';
+import { textSize } from '../../constants/constants';
 
 const DeleteAccount = () =>
 {
@@ -53,7 +53,7 @@ const DeleteAccount = () =>
                                     style={[Styles.input, missingEmail && !inputEmail && {borderColor: 'red', borderBottomWidth: 2}]}
                                 />
                             </View>
-                            {missingEmail && !inputEmail && (<Text style={[Styles.text, {color: 'red', paddingLeft: 30, fontSize: RFValue(13)}]}>Missing Email</Text>)}
+                            {missingEmail && !inputEmail && (<Text style={[Styles.text, {color: 'red', paddingLeft: 30, fontSize: textSize(13)}]}>Missing Email</Text>)}
                         </View>
                     </View>
                     { errorMessage && (

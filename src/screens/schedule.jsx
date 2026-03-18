@@ -15,7 +15,7 @@ import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { useLocalSearchParams, router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
-import { RFValue } from 'react-native-responsive-fontsize';
+import { textSize } from '../../constants/constants';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -175,7 +175,7 @@ const Schedule = () =>
                   }}
                   theme={{
                     todayTextColor: Colors.secondary,
-                    textDayFontSize: RFValue(15),
+                    textDayFontSize: textSize(15),
                     calendarBackground: 'transparent',
                     dayTextColor: Colors.secondary,
                     textDisabledColor: 'grey'

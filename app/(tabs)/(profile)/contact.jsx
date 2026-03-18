@@ -3,7 +3,7 @@ import { Styles } from '../../../constants/styles';
 import { Background, Tab } from '../../../components/components';
 import { Entypo } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { RFValue } from 'react-native-responsive-fontsize';
+import { textSize } from '../../../constants/constants';
 
 const Contact = () =>
 {
@@ -15,7 +15,7 @@ const Contact = () =>
                 </View>
                 <View style={Styles.floatingBlock}>
                     <View style={Styles.infoContainer}>
-                        <Text style={[Styles.text, {fontSize: RFValue(17)}]}>Customer Support</Text>
+                        <Text style={[Styles.text, {fontSize: textSize(17)}]}>Customer Support</Text>
                     </View>
                     <Tab
                         header='Email'
@@ -38,7 +38,7 @@ const Contact = () =>
                 </View>
                 <View style={Styles.floatingBlock}>
                     <View style={Styles.infoContainer}>
-                        <Text style={[Styles.text, {fontSize: RFValue(17)}]}>Social Media</Text>
+                        <Text style={[Styles.text, {fontSize: textSize(17)}]}>Social Media</Text>
                     </View>
                     <Tab
                         header='Instagram'

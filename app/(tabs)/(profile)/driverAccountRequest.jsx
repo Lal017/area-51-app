@@ -11,7 +11,7 @@ import { router } from "expo-router";
 import { View, Text, TouchableOpacity, Alert } from "react-native";
 import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { RFValue } from "react-native-responsive-fontsize";
+import { textSize } from "../../../constants/constants";
 
 const DriverAccountRequest = () =>
 {
@@ -29,7 +29,7 @@ const DriverAccountRequest = () =>
                     <View style={Styles.infoContainer}>
                         <View style={[Styles.infoContainer, {flexDirection: 'row', columnGap: 5}]}>
                             <Ionicons name='information-circle' size={18} color='white'/>
-                            <Text style={[Styles.text, {fontSize: RFValue(10)}]}>Requesting a driver account will <Text style={{color: 'red', fontWeight: 'bold'}}>DELETE</Text> all your vehicles, requests, and documents. Are you sure you want to continue?</Text>
+                            <Text style={[Styles.text, {fontSize: textSize(10)}]}>Requesting a driver account will <Text style={{color: 'red', fontWeight: 'bold'}}>DELETE</Text> all your vehicles, requests, and documents. Are you sure you want to continue?</Text>
                         </View>
                     </View>
             </View>

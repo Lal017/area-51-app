@@ -12,7 +12,7 @@ import { Entypo, FontAwesome, FontAwesome5, Ionicons, MaterialIcons, MaterialCom
 import { View, Text, TouchableOpacity, TextInput, ActivityIndicator, Alert, KeyboardAvoidingView } from "react-native";
 import { requestForegroundPermissionsAsync, getCurrentPositionAsync } from 'expo-location';
 import { router } from "expo-router";
-import { RFValue } from "react-native-responsive-fontsize";
+import { textSize } from "../../constants/constants";
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -113,7 +113,7 @@ const TowRequest = () =>
                         </View>
                         <View style={[Styles.infoContainer, {flexDirection: 'row', columnGap: 5, justifyContent: 'flex-start'}]}>
                             <Ionicons name='information-circle' size={18} color='white'/>
-                            <Text style={[Styles.text, {fontSize: RFValue(10)}]}>
+                            <Text style={[Styles.text, {fontSize: textSize(10)}]}>
                                 Once a driver has accepted your request, you will <Text style={{color: 'red', fontWeight: 'bold'}}>NOT</Text> be able to cancel
                             </Text>
                         </View>

@@ -7,7 +7,7 @@ import { useLocalSearchParams, router } from 'expo-router';
 import { AntDesign, FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { TextInput, View, Text, TouchableOpacity, Alert, KeyboardAvoidingView } from 'react-native';
 import { useState } from 'react';
-import { RFValue } from 'react-native-responsive-fontsize';
+import { textSize } from '../../constants/constants';
 
 const Vehicle = () =>
 {   
@@ -69,7 +69,7 @@ const Vehicle = () =>
                                     style={[Styles.input, errorCheck && !year && {borderColor: 'red', borderBottomWidth: 2}]}
                                 />
                             </View>
-                            { errorCheck && !year && (<Text style={[Styles.text, {color: 'red', paddingLeft: 15, fontSize: RFValue(13)}]}>Missing Year</Text>)}
+                            { errorCheck && !year && (<Text style={[Styles.text, {color: 'red', paddingLeft: 15, fontSize: textSize(13)}]}>Missing Year</Text>)}
                         </View>
                         <View>
                             <View style={Styles.inputWrapper}>
@@ -82,7 +82,7 @@ const Vehicle = () =>
                                     style={[Styles.input, errorCheck && !make && {borderColor: 'red', borderBottomWidth: 2}]}
                                 />
                             </View>
-                            { errorCheck && !make && (<Text style={[Styles.text, {color: 'red', paddingLeft: 15, fontSize: RFValue(13)}]}>Missing Make</Text>)}
+                            { errorCheck && !make && (<Text style={[Styles.text, {color: 'red', paddingLeft: 15, fontSize: textSize(13)}]}>Missing Make</Text>)}
                         </View>
                         <View>
                             <View style={Styles.inputWrapper}>
@@ -95,7 +95,7 @@ const Vehicle = () =>
                                     style={[Styles.input, errorCheck && !model && {borderColor: 'red', borderBottomWidth: 2}]}
                                 />
                             </View>
-                            { errorCheck && !model && (<Text style={[Styles.text, {color: 'red', paddingLeft: 15, fontSize: RFValue(13)}]}>Missing Model</Text>)}
+                            { errorCheck && !model && (<Text style={[Styles.text, {color: 'red', paddingLeft: 15, fontSize: textSize(13)}]}>Missing Model</Text>)}
                         </View>
                         <View>
                             <View style={Styles.inputWrapper}>
@@ -108,13 +108,13 @@ const Vehicle = () =>
                                     style={[Styles.input, errorCheck && !color && {borderColor: 'red', borderBottomWidth: 2}]}
                                 />
                             </View>
-                            { errorCheck && !color && (<Text style={[Styles.text, {color: 'red', paddingLeft: 15, fontSize: RFValue(13)}]}>Missing Color</Text>)}
+                            { errorCheck && !color && (<Text style={[Styles.text, {color: 'red', paddingLeft: 15, fontSize: textSize(13)}]}>Missing Color</Text>)}
                         </View>
                     </View>
                     <View style={Styles.infoContainer}>
                         <View style={[Styles.infoContainer, {flexDirection: 'row', columnGap: 5}]}>
                             <Ionicons name='information-circle' size={18} color='white'/>
-                            <Text style={[Styles.text, {fontSize: RFValue(10)}]}>Optional: Adding your license plate or VIN number helps us identify your vehicle</Text>
+                            <Text style={[Styles.text, {fontSize: textSize(10)}]}>Optional: Adding your license plate or VIN number helps us identify your vehicle</Text>
                         </View>
                     </View>
                     <View style={[Styles.inputContainer, {rowGap: 5}]}>

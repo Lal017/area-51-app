@@ -10,9 +10,9 @@ import { router } from 'expo-router';
 import { FontAwesome, FontAwesome6, Ionicons } from '@expo/vector-icons';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import { LinearGradient } from 'expo-linear-gradient';
-import { RFValue } from 'react-native-responsive-fontsize';
 import { handleSendAdminNotif } from '../../components/notifComponents';
 import { handleCreateAppointment } from '../../components/appointmentComponents';
+import { textSize } from '../../constants/constants';
 
 const VehiclePickup = () =>
 {
@@ -135,7 +135,7 @@ const VehiclePickup = () =>
                                                 end={{ x: 1, y: 1}}
                                             />
                                             <FontAwesome6 name='caret-down' size={25} style={[Styles.rightIcon, {color: Colors.contrast}]}/>
-                                            <Text style={[Styles.text, {fontSize: RFValue(13)}]}>{formatDate(date.toLocaleDateString('sv-SE'))}</Text>
+                                            <Text style={[Styles.text, {fontSize: textSize(13)}]}>{formatDate(date.toLocaleDateString('sv-SE'))}</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity
                                             style={ServiceStyles.timeSelectContainer}
@@ -151,7 +151,7 @@ const VehiclePickup = () =>
                                                 end={{ x: 1, y: 1}}
                                             />
                                             <FontAwesome6 name='caret-down' size={25} style={[Styles.rightIcon, {color: Colors.contrast}]}/>
-                                            <Text style={[Styles.text, {fontSize: RFValue(13)}]}>{time ? formatTime(time) : 'Select a Time'}</Text>
+                                            <Text style={[Styles.text, {fontSize: textSize(13)}]}>{time ? formatTime(time) : 'Select a Time'}</Text>
                                         </TouchableOpacity>
                                     </View>
                                     { errorMessage && (

@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { RFValue } from "react-native-responsive-fontsize";
+import { textSize } from "./constants";
 import Colors from "./colors";
 
 const Styles = StyleSheet.create({
@@ -137,41 +137,41 @@ const Styles = StyleSheet.create({
     },
     // Text
     headerTitle: {
-        fontSize: RFValue(25),
+        fontSize: textSize(25),
         fontFamily: 'Roboto-Condensed-Light',
         color: Colors.text
     },
     title: {
-        fontSize: RFValue(30),
+        fontSize: textSize(30),
         fontFamily: 'Roboto-Condensed-Light',
         color: Colors.text,
     },
     subTitle: {
-        fontSize: RFValue(22),
+        fontSize: textSize(22),
         fontFamily: 'Roboto-SemiCondensed-Bold',
         textAlign: 'left',
         color: Colors.text,
     },
     text: {
-        fontSize: RFValue(15),
+        fontSize: textSize(15),
         fontFamily: 'Roboto-Light',
         textAlign: 'left',
         color: Colors.text,
     },
     tabHeader: {
-        fontSize: RFValue(15),
+        fontSize: textSize(15),
         fontFamily: 'Roboto-Light',
         textAlign: 'left',
         color: Colors.subText
     },
     tabText: {
-        fontSize: RFValue(15),
+        fontSize: textSize(15),
         fontFamily: 'Roboto-Light',
         textAlign: 'left',
         color: Colors.text
     },
     errorText: {
-        fontSize: RFValue(15),
+        fontSize: textSize(15),
         fontFamily: 'SpaceMono-Regular',
         textAlign: 'left',
         color: 'red'
@@ -245,7 +245,7 @@ const AuthStyles = StyleSheet.create({
     },
     description: {
         color: Colors.text,
-        fontSize: RFValue(15),
+        fontSize: textSize(15),
         textAlign: 'center',
         width: '75%',
     },
@@ -350,12 +350,12 @@ const HomeStyles = StyleSheet.create({
     },
     // index.jsx
     appointmentTitle: {
-        fontSize: RFValue(25),
+        fontSize: textSize(25),
         fontFamily: 'Roboto-Condensed-Light',
         color: Colors.text
     },
     appointmentText: {
-        fontSize: RFValue(12),
+        fontSize: textSize(12),
         fontFamily: 'Roboto-Light',
         color: Colors.text
     },
@@ -390,13 +390,13 @@ const ServiceStyles = StyleSheet.create({
     },
     // (service)
     subTitle: {
-        fontSize: RFValue(12),
+        fontSize: textSize(12),
         fontFamily: 'Roboto-bold',
         textAlign: 'left',
         color: Colors.text,
     },
     text: {
-        fontSize: RFValue(22),
+        fontSize: textSize(22),
         fontFamily: 'Roboto-light',
         textAlign: 'left',
         color: Colors.text,
@@ -432,7 +432,7 @@ const ServiceStyles = StyleSheet.create({
     },
     // index.jsx
     title: {
-        fontSize: RFValue(23),
+        fontSize: textSize(23),
         fontFamily: 'Roboto-Light',
         color: Colors.text,
         textAlign: 'left',
@@ -499,7 +499,7 @@ const ServiceStyles = StyleSheet.create({
 const ProfileStyles = StyleSheet.create({
     // index.jsx
     name: {
-        fontSize: RFValue(30),
+        fontSize: textSize(30),
         fontFamily: 'Roboto-Bold',
         color: Colors.text,
     },

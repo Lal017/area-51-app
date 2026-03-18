@@ -5,7 +5,7 @@ import { handleUpdatePassword } from '../../components/authComponents';
 import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import { useEffect, useState } from 'react';
 import { Feather, FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
-import { RFValue } from 'react-native-responsive-fontsize';
+import { textSize } from '../../constants/constants';
 
 const ResetPassword = () =>
 {
@@ -74,7 +74,7 @@ const ResetPassword = () =>
                                     ) : <Ionicons name='eye' size={20} color={Colors.backDropAccent}/> }
                                 </TouchableOpacity>
                             </View>
-                            {errorCheck && !oldPassword && (<Text style={[Styles.text, {color: 'red', paddingLeft: 30, fontSize: RFValue(13)}]}>Missing Password</Text>)}
+                            {errorCheck && !oldPassword && (<Text style={[Styles.text, {color: 'red', paddingLeft: 30, fontSize: textSize(13)}]}>Missing Password</Text>)}
                         </View>
                     </View>
                     <View style={{rowGap: 5}}>
@@ -102,7 +102,7 @@ const ResetPassword = () =>
                                     ) : <Ionicons name='eye' size={20} color={Colors.backDropAccent}/> }
                                 </TouchableOpacity>
                             </View>
-                            {errorCheck && !newPassword && (<Text style={[Styles.text, {color: 'red', paddingLeft: 30, fontSize: RFValue(13)}]}>Missing New Password</Text>)}
+                            {errorCheck && !newPassword && (<Text style={[Styles.text, {color: 'red', paddingLeft: 30, fontSize: textSize(13)}]}>Missing New Password</Text>)}
                         </View>
                     </View>
                     <View style={ProfileStyles.requirementsContainer}>
@@ -148,7 +148,7 @@ const ResetPassword = () =>
                                     ) : <Ionicons name='eye' size={20} color={Colors.backDropAccent}/> }
                                 </TouchableOpacity>
                             </View>
-                            {errorCheck && !confNewPassword && (<Text style={[Styles.text, {color: 'red', paddingLeft: 30, fontSize: RFValue(13)}]}>Missing New Password Confirmation</Text>)}
+                            {errorCheck && !confNewPassword && (<Text style={[Styles.text, {color: 'red', paddingLeft: 30, fontSize: textSize(13)}]}>Missing New Password Confirmation</Text>)}
                         </View>
                     </View>
                 </View>

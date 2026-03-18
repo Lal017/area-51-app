@@ -7,9 +7,9 @@ import { View } from 'react-native';
 import { AntDesign, Entypo } from '@expo/vector-icons';
 import { AgendaList, CalendarProvider, Calendar } from 'react-native-calendars';
 import { useState, useEffect, useMemo } from 'react';
-import { RFValue } from 'react-native-responsive-fontsize';
 import { router } from 'expo-router';
 import { useApp } from '../../../components/context';
+import { textSize } from '../../../constants/constants';
 
 const AppointmentIndex = () =>
 {
@@ -100,7 +100,7 @@ const AppointmentIndex = () =>
                             theme={{
                                 calendarBackground: 'transparent',
                                 todayTextColor: Colors.secondary,
-                                textDayFontSize: RFValue(15),
+                                textDayFontSize: textSize(15),
                                 dayTextColor: Colors.secondary,
                                 textDisabledColor: Colors.backgroundAccent
                             }}

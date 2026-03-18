@@ -6,7 +6,7 @@ import { useApp } from "../../components/context";
 import { useState } from "react";
 import { View, Text, TextInput, KeyboardAvoidingView, TouchableOpacity } from "react-native";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
-import { RFValue } from "react-native-responsive-fontsize";
+import { textSize } from "../../constants/constants";
 
 const AccountEdit = () =>
 {
@@ -39,7 +39,7 @@ const AccountEdit = () =>
                                     style={[Styles.input, !editFirstName && {borderColor: 'red', borderBottomWidth: 2}]}
                                 />
                             </View>
-                            {!editFirstName && (<Text style={[Styles.text, {color: 'red', paddingLeft: 25, fontSize: RFValue(13)}]}>Missing First Name</Text>)}
+                            {!editFirstName && (<Text style={[Styles.text, {color: 'red', paddingLeft: 25, fontSize: textSize(13)}]}>Missing First Name</Text>)}
                         </View>
                         <View>
                             <View style={Styles.inputWrapper}>
@@ -52,7 +52,7 @@ const AccountEdit = () =>
                                     style={[Styles.input, !editLastName && {borderColor: 'red', borderBottomWidth: 2}]}
                                 />
                             </View>
-                            {!editLastName && (<Text style={[Styles.text, {color: 'red', paddingLeft: 25, fontSize: RFValue(13)}]}>Missing Last Name</Text>)}
+                            {!editLastName && (<Text style={[Styles.text, {color: 'red', paddingLeft: 25, fontSize: textSize(13)}]}>Missing Last Name</Text>)}
                         </View>
                     </View>
                     <View style={{rowGap: 5}}>
@@ -69,7 +69,7 @@ const AccountEdit = () =>
                                     style={[Styles.input, !editEmail && {borderColor: 'red', borderBottomWidth: 2}]}
                                 />
                             </View>
-                            {!editEmail && (<Text style={[Styles.text, {color: 'red', paddingLeft: 25, fontSize: RFValue(13)}]}>Missing Email</Text>)}
+                            {!editEmail && (<Text style={[Styles.text, {color: 'red', paddingLeft: 25, fontSize: textSize(13)}]}>Missing Email</Text>)}
                         </View>
                     </View>
                     <View style={{rowGap: 5}}>
@@ -86,7 +86,7 @@ const AccountEdit = () =>
                                     style={[Styles.input, !editPhone && {borderColor: 'red', borderBottomWidth: 2}]}
                                 />
                             </View>
-                            {!editPhone && (<Text style={[Styles.text, {color: 'red', paddingLeft: 25, fontSize: RFValue(13)}]}>Missing Phone Number</Text>)}
+                            {!editPhone && (<Text style={[Styles.text, {color: 'red', paddingLeft: 25, fontSize: textSize(13)}]}>Missing Phone Number</Text>)}
                         </View>
                     </View>
                 </View>
