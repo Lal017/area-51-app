@@ -3,7 +3,7 @@ import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import Colors from '../../constants/colors';
 import { Styles, ServiceStyles, TowStyles } from '../../constants/styles';
 import { useApp } from "../../components/context";
-import { Background } from "../../components/components";
+import { Background, Tab } from "../../components/components";
 import { callUser, formatTime } from '../../constants/utils';
 import { handleSendAdminNotif } from '../../components/notifComponents';
 import { handleUpdateTowRequestStatus, handleGetTowRequest, createLocationClient, getArrivalTime } from '../../components/towComponents';
@@ -11,7 +11,7 @@ import { View, Text, TouchableOpacity, Alert} from 'react-native';
 import { GetDevicePositionCommand } from '@aws-sdk/client-location';
 import { useEffect, useState } from "react";
 import { router } from 'expo-router';
-import { MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
+import { MaterialCommunityIcons, Entypo, Ionicons, FontAwesome } from '@expo/vector-icons';
 
 const TowStatus = () =>
 {
@@ -22,6 +22,16 @@ const TowStatus = () =>
     const [ estimatedTravelTime, setEstimatedTravelTime ] = useState();
     const [ estimatedTimeLeft, setEstimatedTimeLeft ] = useState();
     const [ locationClient, setLocationClient ] = useState();
+
+    // sets fallback vehicle values incase customer deleted the vehicle
+    const vehicle = towRequest?.vehicle ?? (towRequest?.vehicleYear && {
+        year: towRequest.vehicleYear,
+        make: towRequest?.vehicleMake,
+        model: towRequest?.vehicleModel,
+        color: towRequest?.vehicleColor,
+        plate: towRequest?.vehiclePlate,
+        vin: towRequest?.vehicleVin
+    });
 
     // returns the drivers location
     const getDriverPosition = async (driverId) =>
@@ -150,32 +160,59 @@ const TowStatus = () =>
                         />
                     </View>
                 </View>
-                <TouchableOpacity
-                    style={[Styles.actionButton, {backgroundColor: 'rgba(0,0,0,0.25)', elevation: 0, alignSelf: 'center', borderWidth: 1, borderColor: 'red'}]}
-                    onPress={() => Alert.alert(
-                        'Cancellation',
-                        'Are you sure you want to cancel your tow request?',
-                        [
-                            { text: 'No' },
-                            {
-                                text: 'Yes',
-                                onPress: async () => {
-                                    await handleSendAdminNotif('Tow Request Cancelled', 'Customer has cancelled the tow request');
-                                    await handleUpdateTowRequestStatus({client, towId: towRequest.id, userId, status: 'CANCELLED', setTowRequest});
-                                    Alert.alert(
-                                        'Cancelled',
-                                        'Your tow request has been cancelled',
-                                        [{ text: 'OK' }]
-                                    );
-                                    setTowRequest(undefined);
-                                    router.replace('(tabs)');
-                                }
-                            }
-                        ]
+                <View style={Styles.block}>
+                    <View style={Styles.infoContainer}>
+                        <Text style={Styles.headerTitle}>Request Details</Text>
+                    </View>
+                    <View style={Styles.infoContainer}>
+                        <Tab
+                            header={`${vehicle.year}`}
+                            text={`${vehicle.make} ${vehicle.model}`}
+                            leftIcon={<Ionicons name='car-sport' size={30} style={Styles.icon}/>}
+                            style={{height: 'none'}}
+                        />
+                        <Tab
+                            header='Vehicle Color'
+                            text={`${vehicle.color}`}
+                            leftIcon={<FontAwesome name='paint-brush' size={30} style={Styles.icon}/>}
+                            style={{height: 'none'}}
+                        />
+                    </View>
+                    { towRequest?.notes && (
+                        <View style={Styles.infoContainer}>
+                            <Text style={Styles.tabHeader}>Request Note</Text>
+                            <Text style={Styles.text}>{towRequest.notes}</Text>
+                        </View>
                     )}
-                >
-                    <Text style={[Styles.actionText, {color: 'red'}]}>Cancel Request</Text>
-                </TouchableOpacity>
+                </View>
+                <View style={Styles.block}>
+                    <TouchableOpacity
+                        style={[Styles.actionButton, {backgroundColor: 'rgba(0,0,0,0.25)', elevation: 0, alignSelf: 'center', borderWidth: 1, borderColor: 'red'}]}
+                        onPress={() => Alert.alert(
+                            'Cancellation',
+                            'Are you sure you want to cancel your tow request?',
+                            [
+                                { text: 'No' },
+                                {
+                                    text: 'Yes',
+                                    onPress: async () => {
+                                        await handleSendAdminNotif('Tow Request Cancelled', 'Customer has cancelled the tow request');
+                                        await handleUpdateTowRequestStatus({client, towId: towRequest.id, userId, status: 'CANCELLED', setTowRequest});
+                                        Alert.alert(
+                                            'Cancelled',
+                                            'Your tow request has been cancelled',
+                                            [{ text: 'OK' }]
+                                        );
+                                        setTowRequest(undefined);
+                                        router.replace('(tabs)');
+                                    }
+                                }
+                            ]
+                        )}
+                    >
+                        <Text style={[Styles.actionText, {color: 'red'}]}>Cancel Request</Text>
+                    </TouchableOpacity>
+                </View>
                 </>
             ) : towRequest?.status === 'IN_PROGRESS' ? (
                 <>

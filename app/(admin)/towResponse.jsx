@@ -96,14 +96,6 @@ const TowResponse = () =>
                         />
                     </View>
                 </View>
-                { request?.notes && (
-                    <View style={Styles.block}>
-                        <View style={Styles.infoContainer}>
-                            <Text style={Styles.headerTitle}>Customer Note</Text>
-                            <Text style={Styles.text}>"{request.notes}"</Text>
-                        </View>
-                    </View>
-                )}
                 <View style={Styles.floatingBlock}>
                     <View style={Styles.infoContainer}>
                         <Text style={Styles.headerTitle}>Vehicle</Text>
@@ -165,6 +157,14 @@ const TowResponse = () =>
                         />
                     </View>
                 </View>
+                { request?.notes && (
+                    <View style={Styles.block}>
+                        <View style={Styles.infoContainer}>
+                            <Text style={Styles.tabHeader}>Customer Note</Text>
+                            <Text style={Styles.text}>"{request.notes}"</Text>
+                        </View>
+                    </View>
+                )}
                 { request?.status === 'IN_PROGRESS' && (
                     <View style={[Styles.block, {alignItems: 'center'}]}>
                         <TouchableOpacity

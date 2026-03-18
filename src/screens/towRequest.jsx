@@ -452,12 +452,12 @@ const TowRequest = () =>
                                 style={{height: 'none', padding: 5}}
                             />
                         </View>
-                        { notes ? (
+                        { notes && (
                             <View style={Styles.infoContainer}>
-                                <Text style={Styles.headerTitle}>Customer Note</Text>
+                                <Text style={Styles.tabHeader}>Customer Note</Text>
                                 <Text style={Styles.text}>{notes}</Text>
                             </View>
-                        ) : null}
+                        )}
                         <View style={ServiceStyles.buttonContainer}>
                             <TouchableOpacity
                                 style={ServiceStyles.directionButton}
