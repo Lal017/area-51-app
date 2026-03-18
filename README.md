@@ -1,6 +1,5 @@
 ToDo:
     - add animations
-    - check if device returns compass heading if not proceed with GPS without it
     - handle notification when a truck driver accepts a request and an admin marks it as completed (using two phones for real time viewing)
     - use color pallete generator to tweak colors
     - check all functions to make sure they throw try and catch errors correctly

@@ -255,27 +255,30 @@ const AppointmentReminder = ({appointments}) =>
     const current = appointments[index];
     if (!current) return null;
     return (
-        <View style={[HomeStyles.appointmentContainer, {overflow: 'hidden'}]}>
-              <Animated.View
-                style={[shimmerStyle, {
-                  position: 'absolute',
-                  top: 0, bottom: 0,
-                  width: '500%',
-                }]}
-              >
-                <LinearGradient
-                  colors={['transparent', 'rgba(150, 150, 150, 0.5)', 'transparent']}
-                  style={{flex: 1}}
-                  start={{ x: 0, y: 0}}
-                  end={{ x: 1, y: 0}}
-                />
-              </Animated.View>
+        <TouchableOpacity
+            style={[HomeStyles.appointmentContainer, {overflow: 'hidden'}]}
+            onPress={() => router.push('myAppointments')}
+        >
+            <Animated.View
+            style={[shimmerStyle, {
+                position: 'absolute',
+                top: 0, bottom: 0,
+                width: '500%',
+            }]}
+            >
+            <LinearGradient
+                colors={['transparent', 'rgba(150, 150, 150, 0.5)', 'transparent']}
+                style={{flex: 1}}
+                start={{ x: 0, y: 0}}
+                end={{ x: 1, y: 0}}
+            />
+            </Animated.View>
             <Text style={HomeStyles.appointmentTitle}>Appt. Reminder</Text>
             <RNAnimated.View style={{ opacity: fadeAnim }}>
                 <Text style={HomeStyles.appointmentText}>{formatDate(current.date)}</Text>
                 <Text style={HomeStyles.appointmentText}>{formatTime(current.time)}</Text>
             </RNAnimated.View>
-        </View>
+        </TouchableOpacity>
     );
 };
 

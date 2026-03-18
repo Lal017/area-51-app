@@ -1,10 +1,7 @@
 import { Stack } from 'expo-router';
 import { CustHeader } from '../../../components/components';
-import { useApp } from '../../../components/context';
-
 const scheduleLayout = () =>
 {
-    const { towRequest } = useApp();
     return(
         <Stack
             screenOptions={{
@@ -17,7 +14,6 @@ const scheduleLayout = () =>
             <Stack.Screen name='towRequest' options={{title: 'Tow Request', header: () => <CustHeader title='Tow Request'/>}}/>
             <Stack.Screen name='towStatus' options={{title: 'Tow Status', header: () => <CustHeader title='Tow Status'/>}}/>
             <Stack.Screen name='myAppointments' options={{title: 'My Appointments', header: () => <CustHeader title='My Appointments'/>}}/>
-            <Stack.Screen name='editAppointment' options={{title: 'Edit Appointment', header: () => <CustHeader title='Edit Appointment'/>}}/>
             <Stack.Screen name="vehicleList" options={{title: "My Vehicles", header: () => <CustHeader title="Vehicles" />}}/>
             <Stack.Screen name="vehicleAdd" options={{title: "New Vehicle", header: () => <CustHeader title="New Vehicle" />}}/>
             <Stack.Screen name="vehicleEdit" options={{title: "Edit Vehicle", header: () => <CustHeader title="Edit Vehicle" />}}/>

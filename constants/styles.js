@@ -283,7 +283,7 @@ const AuthStyles = StyleSheet.create({
 const HomeStyles = StyleSheet.create({
     panel: {
         width: '95%',
-        maxHeight: '25%',
+        maxHeight: '20%',
         flexDirection: 'row',
         flexWrap: 'wrap',
         gap: 5,
@@ -326,9 +326,7 @@ const HomeStyles = StyleSheet.create({
         minWidth: '40%',
         maxHeight: '100%',
         borderRadius: 10,
-        padding: 25,
-        paddingTop: 15,
-        paddingBottom: 15
+        paddingLeft: 25, paddingRight: 25, paddingTop: 10, paddingBottom: 10
     },
     shortcutContainer: {
         width: '100%',
@@ -350,9 +348,9 @@ const HomeStyles = StyleSheet.create({
     },
     // index.jsx
     appointmentTitle: {
-        fontSize: textSize(25),
+        fontSize: textSize(20),
         fontFamily: 'Roboto-Condensed-Light',
-        color: Colors.text
+        color: Colors.subText
     },
     appointmentText: {
         fontSize: textSize(12),
