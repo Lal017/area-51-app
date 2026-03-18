@@ -79,6 +79,10 @@ const UserList = () =>
                 </View>
             </View>
             {users && users
+                .sort((a, b) => {
+                    const order = { 'Customers': 0, 'TowDrivers': 1};
+                    return (order[a.access] ?? 2) - (order[b.access] ?? 2);
+                })
                 .filter(user => {
                     const query = search?.toLowerCase();
                     const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();

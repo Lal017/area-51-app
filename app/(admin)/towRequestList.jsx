@@ -98,6 +98,10 @@ const TowRequestList = () =>
             </View>
             <View style={[Styles.block, {rowGap: 0}]}>
                 {requests && requests
+                    .sort((a, b) => {
+                        const order = { 'IN_PROGRESS': 0, 'REQUESTED': 1, 'COMPLETED': 2, 'CANCELLED': 3 };
+                        return (order[a.status] ?? 4) - (order[b.status] ?? 4);
+                    })
                     .filter(request => {
                         const query = search?.toLowerCase() || '';
                         const fullName = `${request.user.firstName} ${request.user.lastName}`.toLowerCase();
