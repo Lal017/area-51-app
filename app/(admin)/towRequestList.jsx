@@ -5,10 +5,13 @@ import { useEffect, useState } from 'react';
 import { listTowRequests } from '../../src/graphql/queries';
 import { Background, Tab } from '../../components/components';
 import { getStatus } from '../../components/towComponents';
+import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { AntDesign, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
 import Colors from '../../constants/colors';
+import Animated, { Easing, withRepeat, withTiming, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
+import MaskedView from '@react-native-masked-view/masked-view';
 
 const TowRequestList = () =>
 {
@@ -17,6 +20,8 @@ const TowRequestList = () =>
     const [ search, setSearch ] = useState();
     const [ statusFilter, setStatusFilter ] = useState('ALL');
     const [ refresing, setRefreshing ] = useState();
+
+    const shimmer = useSharedValue(-10);
 
     const onRefresh = async () =>
     {
@@ -51,6 +56,18 @@ const TowRequestList = () =>
 
         handleGetTowRequests();
     }, []);
+
+    useEffect(() => {
+        shimmer.value = withRepeat(
+            withTiming(1, { duration: 3000, easing: Easing.inOut(Easing.ease) }),
+            -1,
+            false
+        );
+    }, [requests]);
+
+    const shimmerStyle = useAnimatedStyle(() => ({
+        transform: [{ translateX: shimmer.value * 100 }]
+    }));
 
     return (
         <Background refreshing={refresing} onRefresh={onRefresh}>
@@ -90,18 +107,50 @@ const TowRequestList = () =>
                         return matchesSearch && matchesStatus;
                     })
                     .map((request, index) => (
-                        <View key={index}>
-                            <Tab
-                                header={`${request?.user?.firstName} ${request?.user?.lastName}`}
-                                text={getStatus(request?.status)}
-                                leftIcon={<MaterialCommunityIcons name='tow-truck' size={35} style={Styles.icon} />}
-                                rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon} />}
-                                action={() => router.push({
-                                    pathname: 'towResponse',
-                                    params: { requestParam: JSON.stringify(request)}
-                                })}
-                            />
-                        </View>
+                        <Tab
+                            key={index}
+                            header={`${request?.user?.firstName} ${request?.user?.lastName}`}
+                            text={getStatus(request?.status)}
+                            leftIcon={
+                                <MaskedView
+                                    style={[Styles.icon, {width: 30, height: 30}]}
+                                    maskElement={
+                                        <MaterialCommunityIcons
+                                            name='tow-truck'
+                                            size={30}
+                                        />
+                                    }
+                                >
+                                    <View style={[{flex: 1},
+                                        request?.status === 'IN_PROGRESS' ? {backgroundColor: Colors.primary}
+                                        : request?.status === 'COMPLETED' ? {backgroundColor: Colors.backDropAccent}
+                                        : request?.status === 'REQUESTED' ? {backgroundColor: Colors.secondary}
+                                        : {backgroundColor: Colors.redButton}
+                                    ]}/>
+                                    { request?.status !== 'COMPLETED' && request?.status !== 'CANCELLED' && (
+                                        <Animated.View
+                                            style={[shimmerStyle, {
+                                            position: 'absolute',
+                                            top: 0, bottom: 0,
+                                            width: '100%'
+                                            }]}
+                                        >
+                                            <LinearGradient
+                                            colors={[Colors.backDropAccent, Colors.backDropAccent, Colors.backDropAccent]}
+                                            style={{flex: 1}}
+                                            start={{ x: 0, y: 0}}
+                                            end={{ x: 1, y: 1}}
+                                            />
+                                        </Animated.View>
+                                    )}
+                                </MaskedView>
+                            }
+                            rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon} />}
+                            action={() => router.push({
+                                pathname: 'towResponse',
+                                params: { requestParam: JSON.stringify(request)}
+                            })}
+                        />
                 ))}
             </View>
         </Background>

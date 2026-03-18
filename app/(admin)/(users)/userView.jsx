@@ -69,7 +69,7 @@ const UserView = () =>
 
     return (
         <KeyboardAvoidingView behavior='height' style={{flex: 1}}>
-            <Background>
+            <Background hasTab={false}>
                 <View style={[Styles.block, {alignItems: 'center'}]}>
                     <View style={Styles.block}>
                         <View style={Styles.infoContainer}>

@@ -10,6 +10,7 @@ ToDo:
     - add glare animations for important info wherever needed
     - check if you can replace useState variables with useRef variables
     - check if you can add useMemos for calculations in app
+    - review logic for app i.e. why do i need to use async local storage etc.
     - condense code into functions in _layout files and wherever else necessary for readability and shorter code
     - need to test pretty much everything since update to SDK 55. DO THIS LAST
 

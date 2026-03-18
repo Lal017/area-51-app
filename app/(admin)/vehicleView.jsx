@@ -21,7 +21,7 @@ const VehicleView = () =>
     const [ isReady, setIsReady ] = useState(vehicle?.readyForPickup);
 
     return (
-        <Background>
+        <Background hasTab={false}>
             <View style={Styles.block}>
                 <View style={Styles.infoContainer}>
                     <Text style={Styles.headerTitle}>{vehicle?.user?.firstName} {vehicle?.user?.lastName}</Text>

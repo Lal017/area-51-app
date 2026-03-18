@@ -9,7 +9,7 @@ import { router } from 'expo-router';
 const AdminConsole = () =>
 {
     return (
-        <Background style={{rowGap: 2}}>
+        <Background style={{rowGap: 2}} hasTab={false}>
             <View style={{flexDirection: 'row', flexWrap: 'wrap', flex: 1, gap: 5, justifyContent: 'center'}}>
                 <TouchableOpacity
                     style={[Styles.consoleBubbleAlt, {backgroundColor: Colors.tertiary}]}

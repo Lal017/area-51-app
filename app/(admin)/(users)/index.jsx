@@ -43,10 +43,10 @@ const UserList = () =>
 
     useEffect(() => {
         shimmer.value = withRepeat(
-              withTiming(1, { duration: 3000, easing: Easing.inOut(Easing.ease) }),
-              -1,
-              false
-            );
+            withTiming(1, { duration: 3000, easing: Easing.inOut(Easing.ease) }),
+            -1,
+            false
+        );
     }, [users]);
 
     const shimmerStyle = useAnimatedStyle(() => ({
@@ -54,7 +54,7 @@ const UserList = () =>
     }));
 
     return (
-        <Background refreshing={refreshing} onRefresh={onRefresh}>
+        <Background refreshing={refreshing} onRefresh={onRefresh} hasTab={false}>
             <View style={Styles.block}>
                 <View style={Styles.inputWrapper}>
                     <Entypo name='magnifying-glass' size={20} color='black' style={Styles.icon} />
