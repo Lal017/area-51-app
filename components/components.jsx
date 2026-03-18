@@ -3,7 +3,7 @@ import React from 'react';
 import { useApp } from './context';
 import { formatDate, formatTime } from '../constants/utils';
 import { Styles, HomeStyles } from '../constants/styles';
-import { View, Text, TouchableOpacity, ScrollView, Animated, ActivityIndicator, RefreshControl, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Animated as RNAnimated, ActivityIndicator, RefreshControl, Alert } from 'react-native';
 import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign } from '@expo/vector-icons';
@@ -11,6 +11,7 @@ import { useEffect, useRef, useState } from 'react';
 import { MaterialIcons } from '@expo/vector-icons';
 import { signOut } from '@aws-amplify/auth';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Animated, { Easing, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
 
 // loading page
 const Loading = () => {
@@ -211,26 +212,40 @@ const BinarySelect = ({trueText, falseText, value, onChange}) =>
 const AppointmentReminder = ({appointments}) =>
 {
     const [ index, setIndex ] = useState(0);
-    const fadeAnim = useRef(new Animated.Value(1)).current;
+    const fadeAnim = useRef(new RNAnimated.Value(1)).current;
+
+    const shimmer = useSharedValue(-5);
+
+    useEffect(() => {
+        shimmer.value = withRepeat(
+            withTiming(1, { duration: 5000, easing: Easing.inOut(Easing.ease) }),
+            -1,
+            false
+        );
+    }, [appointments]);
+
+    const shimmerStyle = useAnimatedStyle(() => ({
+        transform: [{ translateX: shimmer.value * 300}]
+    }));
 
     useEffect(() => {
         if(!appointments || appointments?.length <= 1) return;
 
         const interval = setInterval(() => {
-            Animated.timing(fadeAnim, {
+            RNAnimated.timing(fadeAnim, {
                 toValue: 0,
                 duration: 500,
                 useNativeDriver: true,
             }).start(() => {
                 setIndex((prevIndex) => (prevIndex + 1) % appointments.length);
 
-                Animated.timing(fadeAnim, {
+                RNAnimated.timing(fadeAnim, {
                     toValue: 1,
                     duration: 500,
                     useNativeDriver: true,
                 }).start();
             });
-        }, 4000)
+        }, 4000);
 
         return () => clearInterval(interval);
     }, [appointments]);
@@ -240,12 +255,26 @@ const AppointmentReminder = ({appointments}) =>
     const current = appointments[index];
     if (!current) return null;
     return (
-        <View style={HomeStyles.appointmentContainer}>
+        <View style={[HomeStyles.appointmentContainer, {overflow: 'hidden'}]}>
+              <Animated.View
+                style={[shimmerStyle, {
+                  position: 'absolute',
+                  top: 0, bottom: 0,
+                  width: '500%',
+                }]}
+              >
+                <LinearGradient
+                  colors={['transparent', 'rgba(150, 150, 150, 0.5)', 'transparent']}
+                  style={{flex: 1}}
+                  start={{ x: 0, y: 0}}
+                  end={{ x: 1, y: 0}}
+                />
+              </Animated.View>
             <Text style={HomeStyles.appointmentTitle}>Appt. Reminder</Text>
-            <Animated.View style={{ opacity: fadeAnim }}>
+            <RNAnimated.View style={{ opacity: fadeAnim }}>
                 <Text style={HomeStyles.appointmentText}>{formatDate(current.date)}</Text>
                 <Text style={HomeStyles.appointmentText}>{formatTime(current.time)}</Text>
-            </Animated.View>
+            </RNAnimated.View>
         </View>
     );
 };
