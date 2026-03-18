@@ -1,6 +1,5 @@
 ToDo:
-    - test UI for appointment and tow request from tow driver point of view if the user deletes the vehicle with an active request.
-    - add option to view request details after the tow driver has accepted the request
+    - switch modal to bottom sheet
     - RFValue package might be deprecated. check
     - changing bouncing icon animation to a moving border animation
     - check if device returns compass heading if not proceed with GPS without it
@@ -11,6 +10,8 @@ ToDo:
     - check to see all error message are red and not Colors.redButton
     - check to see if pages need refresh added to them
     - add glare animations for important info wherever needed
+    - check if you can replace useState variables with useRef variables
+    - check if you can add useMemos for calculations in app
     - condense code into functions in _layout files and wherever else necessary for readability and shorter code
     - need to test pretty much everything since update to SDK 55. DO THIS LAST
 
@@ -21,6 +22,7 @@ PotentialChanges:
     - newEstimate and newInvoice do not update if you launch the app from the terminated state by clicking on the app itself (Adding dataModel for notification data would fix this)
     - move initialize app functions to components file
     - make a function to catch certain error messages so i can output my desired user friendly error message
+    - add navigation screen that doesnt compute bearing in case phone doesnt have a bearing sensor (rare) OR don't allow navigation if no bearing sensor
     - update notification listeners for Admins and TowDrivers
     - Add appointments to google calendar
     - incorporate more images to make the UI more user friendly

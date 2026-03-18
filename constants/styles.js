@@ -680,17 +680,10 @@ const TowStyles = StyleSheet.create({
         top: 25
     },
     secondaryContainer: {
-        position: 'absolute',
         width: '100%',
         alignItems: 'center',
         justifyContent: 'space-between',
-        flexDirection: 'row',
-        bottom: 0,
-        padding: 15,
-        paddingBottom: 30,
-        borderTopLeftRadius: 15,
-        borderTopRightRadius: 15,
-        backgroundColor: Colors.backgroundFade
+        flexDirection: 'row'
     },
     stepContainer: {
         width: '95%',

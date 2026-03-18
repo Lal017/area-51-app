@@ -1,7 +1,8 @@
 import Colors from '../../../constants/colors';
 import length from '@turf/length';
 import lineSlice from '@turf/line-slice';
-import { BackgroundAlt, callUser, Loading } from '../../../components/components';
+import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import { BackgroundAlt, callUser, Loading, Tab, textUser } from '../../../components/components';
 import { Styles, TowStyles } from '../../../constants/styles';
 import { useApp } from '../../../components/context';
 import { getDistance, getInstructionText, snapToRoute, getArrivalTime, sendDriverLocation, getInitialCompassHeading, handleCompleteTowRequest } from '../../../components/towComponents';
@@ -15,9 +16,12 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { point, lineString } from '@turf/helpers';
 import { bearing } from '@turf/bearing';
 import { along } from '@turf/along';
-import { Entypo, MaterialIcons } from '@expo/vector-icons';
+import { Entypo, MaterialIcons, Ionicons, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import { speak, stop } from 'expo-speech';
 import { sendPushNotification } from '../../../components/notifComponents';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { handleGetAddress } from '../../../components/adminComponents';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const TowProgress = () =>
 {
@@ -26,11 +30,12 @@ const TowProgress = () =>
 
     const { client, driverId } = useApp();
 
+    const insets = useSafeAreaInsets();
+
     const [ mapStyle, setMapStyle ] = useState();
     const [ routeCoords, setRouteCoords ] = useState();
     const [ steps, setSteps ] = useState();
     const [ currentInstruction, setCurrentInstruction ] = useState();
-    const [ totalDuration, setTotalDuration ] = useState();
     const [ estimatedTravelTime, setEstimatedTravelTime ] = useState();
     const [ estimatedArrivalTime, setEstimatedArrivalTime ] = useState();
     const [ estimatedDistance, setEstimatedDistance ] = useState()
@@ -39,8 +44,22 @@ const TowProgress = () =>
     const [ mapBearing, setMapBearing ] = useState();
     const [ isMute, setIsMute ] = useState(false);
     const [ rerouting, setRerouting ] = useState(false);
+    const [ address, setAddress ] = useState();
+    const [ showContent, setShowContent ] = useState(false);
 
+    const totalDurationRef = useRef();
     const isMuteRef = useRef(isMute);
+    const bottomSheetRef = useRef(null);
+
+    // sets fallback vehicle values incase customer deleted the vehicle
+    const vehicle = request?.vehicle ?? (request?.vehicleYear && {
+        year: request.vehicleYear,
+        make: request?.vehicleMake,
+        model: request?.vehicleModel,
+        color: request?.vehicleColor,
+        plate: request?.vehiclePlate,
+        vin: request?.vehicleVin
+    });
 
     // get the array of coordinates to map the route
     const getRoute = async (start, destination, driverBearing) => {
@@ -61,7 +80,7 @@ const TowProgress = () =>
         const routeData = await body.json();
 
         const steps = routeData.Routes[0].Legs[0].VehicleLegDetails.TravelSteps;
-        setTotalDuration(routeData.Routes[0].Summary.Duration);
+        totalDurationRef.current = routeData.Routes[0].Summary.Duration;
 
         const {travelTime, arrivalTime} = getArrivalTime(routeData.Routes[0].Summary.Duration);
         setEstimatedDistance(getDistance(routeData.Routes[0].Summary.Distance));
@@ -130,6 +149,10 @@ const TowProgress = () =>
                 // set direction for camera
                 const getMapBearing = bearing(point(route[0]), point(route[1]));
                 setMapBearing(getMapBearing);
+
+                // get address
+                const getAddress = await handleGetAddress(request.latitude, request.longitude);
+                setAddress(getAddress);
             } catch (error) {
                 console.error('ERROR, could not initialize map:', error);
             }
@@ -165,7 +188,7 @@ const TowProgress = () =>
                 }
 
                 // handle rerouting
-                if (offRouteDistance > 30) {
+                if (offRouteDistance > 50) {
                     setRerouting(true);
                     // get route polyline
                     const start = [location.coords.longitude, location.coords.latitude];
@@ -195,7 +218,7 @@ const TowProgress = () =>
                     const distanceUntilNextStep = steps[currentIndex].endDistance - distanceAlongRoute;
 
                     const progress = distanceAlongRoute / routeLength;
-                    const remainingTime = totalDuration * (1 - progress);
+                    const remainingTime = totalDurationRef.current * (1 - progress);
 
                     const { travelTime } = getArrivalTime(remainingTime);
                     setEstimatedTravelTime(travelTime);
@@ -240,182 +263,253 @@ const TowProgress = () =>
     }, [isMute]);
 
     return (
-        <BackgroundAlt hasTab={false}>
-        { mapStyle && userLocation ? (
-            <MapView
-                style={{flex: 1}}
-                mapStyle={mapStyle}
-                compassEnabled={false}
-            >
-                <Camera
-                    zoomLevel={17}
-                    centerCoordinate={userLocation}
-                    animationMode='linearTo'
-                    animationDuration={250}
-                    heading={mapBearing}
-                    pitch={35}
-                />
-                <Images
-                    images={{
-                        marker: require('../../../assets/images/navigation_icon.png'),
-                        destination: require('../../../assets/images/marker.png')
-                    }}
-                />
-                { routeCoords?.length > 0 && (
+        <GestureHandlerRootView>
+            <BackgroundAlt hasTab={false}>
+            { mapStyle && userLocation ? (
+                <MapView
+                    style={{flex: 1}}
+                    mapStyle={mapStyle}
+                    compassEnabled={false}
+                >
+                    <Camera
+                        zoomLevel={17}
+                        centerCoordinate={userLocation}
+                        animationMode='linearTo'
+                        animationDuration={250}
+                        heading={mapBearing}
+                        pitch={35}
+                    />
+                    <Images
+                        images={{
+                            marker: require('../../../assets/images/navigation_icon.png'),
+                            destination: require('../../../assets/images/marker.png')
+                        }}
+                    />
+                    { routeCoords?.length > 0 && (
+                        <ShapeSource
+                            id='routeSource'
+                            shape={{
+                                type: 'Feature',
+                                geometry: {
+                                    type: 'LineString',
+                                    coordinates: routeCoords
+                                }
+                            }}
+                        >
+                            <LineLayer
+                                id='routeLine'
+                                sourceID='routeSource'
+                                style={{
+                                    lineColor: Colors.tertiary,
+                                    lineWidth: 9,
+                                    lineCap: 'round',
+                                    lineJoin: 'round',
+                                    lineOpacity: 1
+                                }}
+                            />
+                        </ShapeSource>
+                    )}
                     <ShapeSource
-                        id='routeSource'
+                        id='userLocationSource'
                         shape={{
                             type: 'Feature',
                             geometry: {
-                                type: 'LineString',
-                                coordinates: routeCoords
+                                type: 'Point',
+                                coordinates: userLocation
                             }
                         }}
                     >
-                        <LineLayer
-                            id='routeLine'
-                            sourceID='routeSource'
+                        <SymbolLayer
+                            id='userLocationMarker'
                             style={{
-                                lineColor: Colors.tertiary,
-                                lineWidth: 9,
-                                lineCap: 'round',
-                                lineJoin: 'round',
-                                lineOpacity: 1
+                                iconImage: 'marker',
+                                iconSize: 0.5,
+                                iconAnchor: 'center',
+                                iconRotate: mapBearing,
+                                iconRotationAlignment: 'map'
+                            }}
+                            animationDuration={10}
+                        />
+                    </ShapeSource>
+                    <ShapeSource
+                        id='destinationMarker'
+                        shape={{
+                            type: 'Feature',
+                            geometry: {
+                                type: 'Point',
+                                coordinates: [request.longitude, request.latitude]
+                            }
+                        }}
+                    >
+                        <SymbolLayer
+                            id='destinationSymbol'
+                            style={{
+                                iconImage: 'destination',
+                                iconSize: 0.5,
+                                iconAnchor: 'center'
                             }}
                         />
                     </ShapeSource>
-                )}
-                <ShapeSource
-                    id='userLocationSource'
-                    shape={{
-                        type: 'Feature',
-                        geometry: {
-                            type: 'Point',
-                            coordinates: userLocation
-                        }
-                    }}
-                >
-                    <SymbolLayer
-                        id='userLocationMarker'
-                        style={{
-                            iconImage: 'marker',
-                            iconSize: 0.5,
-                            iconAnchor: 'center',
-                            iconRotate: mapBearing,
-                            iconRotationAlignment: 'map'
-                        }}
-                        animationDuration={10}
-                    />
-                </ShapeSource>
-                <ShapeSource
-                    id='destinationMarker'
-                    shape={{
-                        type: 'Feature',
-                        geometry: {
-                            type: 'Point',
-                            coordinates: [request.longitude, request.latitude]
-                        }
-                    }}
-                >
-                    <SymbolLayer
-                        id='destinationSymbol'
-                        style={{
-                            iconImage: 'destination',
-                            iconSize: 0.5,
-                            iconAnchor: 'center'
-                        }}
-                    />
-                </ShapeSource>
-            </MapView>
-        ) : <Loading/> }
-        { currentInstruction ? (
-            <View style={TowStyles.mainContainer}>
-                <View style={TowStyles.stepContainer}>
-                    <View style={TowStyles.iconContainer}>
-                        <MaterialIcons
-                            name={direction}
-                            size={50}
-                            color='white'
-                        />
+                </MapView>
+            ) : <Loading/> }
+            { currentInstruction ? (
+                <View style={TowStyles.mainContainer}>
+                    <View style={TowStyles.stepContainer}>
+                        <View style={TowStyles.iconContainer}>
+                            <MaterialIcons
+                                name={direction}
+                                size={50}
+                                color='white'
+                            />
+                        </View>
+                        <View style={TowStyles.textContainer}>
+                            <Text style={Styles.subTitle}>{currentInstruction || 'Calculating Route...'}</Text>
+                        </View>
+                        <TouchableOpacity
+                            style={TowStyles.iconContainer}
+                            onPress={() => {
+                                setIsMute(!isMute);
+                                if (!isMute) stop();
+                            }}
+                        >
+                            <MaterialIcons
+                                name={isMute ? 'volume-off' : 'volume-up'}
+                                size={35}
+                                color='white'
+                            />
+                        </TouchableOpacity>
                     </View>
-                    <View style={TowStyles.textContainer}>
-                        <Text style={Styles.subTitle}>{currentInstruction || 'Calculating Route...'}</Text>
+                </View>
+            ) : rerouting ? (
+                <View style={TowStyles.mainContainer}>
+                    <View style={TowStyles.stepContainer}>
+                        <Text style={Styles.subTitle}>Rerouting...</Text>
                     </View>
-                    <TouchableOpacity
-                        style={TowStyles.iconContainer}
-                        onPress={() => {
-                            setIsMute(!isMute);
-                            if (!isMute) stop();
-                        }}
-                    >
-                        <MaterialIcons
-                            name={isMute ? 'volume-off' : 'volume-up'}
-                            size={35}
-                            color='white'
-                        />
-                    </TouchableOpacity>
                 </View>
-            </View>
-        ) : rerouting ? (
-            <View style={TowStyles.mainContainer}>
-                <View style={TowStyles.stepContainer}>
-                    <Text style={Styles.subTitle}>Rerouting...</Text>
-                </View>
-            </View>
-        ) : null}
-        <View style={{width: '100%'}}>
-            <TouchableOpacity
-                onPress={() => setUserLocation([userLocation.longitude, userLocation.latitude + 0.01])}
-            >
-                <Text>Up</Text>
-            </TouchableOpacity>
-        </View>
-        { estimatedTravelTime && estimatedDistance && estimatedArrivalTime ? (
-            <View style={TowStyles.secondaryContainer}>
-                <TouchableOpacity
-                    style={TowStyles.iconContainer}
-                    onPress={() => callUser(request?.user?.phone)}
-                >
-                    <Entypo
-                        name='phone'
-                        size={40}
-                        color='white'
-                    />
-                </TouchableOpacity>
-                <View style={TowStyles.lowerTextContainer}>
-                    <Text style={Styles.subTitle}>{estimatedTravelTime}</Text>
-                    <Text style={Styles.text}>{estimatedDistance} | {estimatedArrivalTime}</Text>
-                </View>
-                <TouchableOpacity
-                    style={TowStyles.iconContainer}
-                    onPress={() => {
-                        Alert.alert(
-                            'Request Completed',
-                            'Would you like to mark the tow request as completed?',
-                            [
-                                { text: 'No' },
-                                {
-                                    text: 'Yes',
-                                    onPress: async () => {
-                                        await handleCompleteTowRequest(client, request.id);
-                                        await sendPushNotification(request?.user?.pushToken, 'Tow Request', 'Your tow request has been completed!', { type: 'TOW_RESPONSE' });
-                                        if (router.canDismiss()) router.dismissAll();
-                                        router.replace('/');
-                                    }
-                                }
-                            ]
-                        )
+            ) : null}
+            { estimatedTravelTime && estimatedDistance && estimatedArrivalTime && (
+                <BottomSheet
+                    ref={bottomSheetRef}
+                    snapPoints={[`${13 + (insets.bottom / 10)}%`,'80%']}
+                    index={0}
+                    backgroundStyle={{ backgroundColor: Colors.backgroundFade }}
+                    enablePanDownToClose={false}
+                    enableDynamicSizing={false}
+                    onChange={(index) => {
+                        if (index === 1) setShowContent(true);
+                        else setShowContent(false);
                     }}
                 >
-                    <Entypo
-                        name='check'
-                        size={40}
-                        color={Colors.primary}
-                    />
-                </TouchableOpacity>
-            </View>
-        ) : null }
-        </BackgroundAlt>
+                    <BottomSheetView style={{ paddingBottom: insets.bottom }}>
+                        <View style={Styles.block}>
+                            <View style={TowStyles.secondaryContainer}>
+                                <TouchableOpacity
+                                    style={TowStyles.iconContainer}
+                                    onPress={() => bottomSheetRef?.current?.snapToIndex(showContent ? 0 : 1)}
+                                >
+                                    <MaterialCommunityIcons
+                                        name='account-details'
+                                        size={40}
+                                        color='white'
+                                    />
+                                </TouchableOpacity>
+                                <View style={TowStyles.lowerTextContainer}>
+                                    <Text style={Styles.subTitle}>{estimatedTravelTime}</Text>
+                                    <Text style={Styles.text}>{estimatedDistance} | {estimatedArrivalTime}</Text>
+                                </View>
+                                <TouchableOpacity
+                                    style={TowStyles.iconContainer}
+                                    onPress={() => {
+                                        Alert.alert(
+                                            'Request Completed',
+                                            'Would you like to mark the tow request as completed?',
+                                            [
+                                                { text: 'No' },
+                                                {
+                                                    text: 'Yes',
+                                                    onPress: async () => {
+                                                        await handleCompleteTowRequest(client, request.id);
+                                                        await sendPushNotification(request?.user?.pushToken, 'Tow Request', 'Your tow request has been completed!', { type: 'TOW_RESPONSE' });
+                                                        if (router.canDismiss()) router.dismissAll();
+                                                        router.replace('/');
+                                                    }
+                                                }
+                                            ]
+                                        )
+                                    }}
+                                >
+                                    <Entypo
+                                        name='check'
+                                        size={40}
+                                        color={Colors.primary}
+                                    />
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                        <View style={Styles.block}>
+                            { showContent && (
+                                <>
+                                <View style={Styles.infoContainer}>
+                                    <Text style={[Styles.headerTitle, {textAlign: 'left'}]}>{request?.user?.firstName} {request?.user?.lastName}</Text>
+                                </View>
+                                <View style={[Styles.rightIcon, {flexDirection: 'row', columnGap: 10}]}>
+                                    <TouchableOpacity
+                                        style={{padding: 5, justifyContent: 'center', alignItems: 'center'}}
+                                        onPress={() => callUser(request?.user?.phone)}
+                                    >
+                                        <Entypo name='phone' size={30} color='white'/>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={{padding: 5, justifyContent: 'center', alignItems: 'center'}}
+                                        onPress={() => textUser(request?.user?.phone)}
+                                    >
+                                        <Entypo name='message' size={30} color='white'/>
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={Styles.infoContainer}>
+                                    <Tab
+                                        header={`${vehicle?.year} (${vehicle?.color})`}
+                                        text={`${vehicle?.make} ${vehicle?.model}`}
+                                        leftIcon={<Ionicons name='car-sport' size={30} style={Styles.icon}/>}
+                                        style={{height: 'none', padding: 5}}
+                                    />
+                                    <Tab
+                                        header='Does the car run?'
+                                        text={request?.canRun ? 'Yes' : 'No'}
+                                        leftIcon={<MaterialCommunityIcons name='engine' size={30} style={Styles.icon}/>}
+                                        style={{height: 'none', padding: 5}}
+                                    />
+                                    <Tab
+                                        header='Does the car roll?'
+                                        text={request?.canRoll ? 'Yes' : 'No'}
+                                        leftIcon={<MaterialCommunityIcons name='tire' size={30} style={Styles.icon}/>}
+                                        style={{height: 'none', padding: 5}}
+                                    />
+                                    <Tab
+                                        header='Are the keys included?'
+                                        text={request?.keyIncluded ? 'Yes' : 'No'}
+                                        leftIcon={<Entypo name='key' size={30} style={Styles.icon}/>}
+                                        style={{height: 'none', padding: 5}}
+                                    />
+                                    <Tab
+                                        header='Is the vehicle obstructed?'
+                                        text={request?.isObstructed ? 'Yes' : 'No'}
+                                        leftIcon={<Entypo name='warning' size={30} style={Styles.icon}/>}
+                                        style={{height: 'none', padding: 5}}
+                                    />
+                                </View>
+                                <View style={Styles.infoContainer}>
+                                    <Text style={Styles.headerTitle}>Customer Note</Text>
+                                    <Text style={Styles.text}>"{request.notes}"</Text>
+                                </View>
+                                </>
+                            )}
+                        </View>
+                    </BottomSheetView>
+                </BottomSheet>
+            )}
+            </BackgroundAlt>
+        </GestureHandlerRootView>
     );
 };
 

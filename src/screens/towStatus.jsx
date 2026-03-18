@@ -79,7 +79,7 @@ const TowStatus = () =>
                 setLocationClient(getLocationClient);
             
                 // set estimated wait time and arrival time
-                const { travelTime } = getArrivalTime(getTowRequest.waitTime);
+                const { travelTime } = getArrivalTime(getTowRequest?.waitTime);
                 setEstimatedTravelTime(travelTime);
                 const { timeLeft, arrivalTime } = getTimeLeft(towRequest?.acceptedAt, towRequest?.waitTime);
                 setEstimatedTimeLeft(timeLeft);
@@ -221,7 +221,21 @@ const TowStatus = () =>
                         )}
                     </MapView>
                 )}
-                <View style={TowStyles.secondaryContainer}>
+                <View
+                    style={[
+                        TowStyles.secondaryContainer,
+                        {
+                            position: 'absolute',
+                            flexDirection: 'row',
+                            bottom: 0,
+                            padding: 15,
+                            paddingBottom: 30,
+                            borderTopLeftRadius: 15,
+                            borderTopRightRadius: 15,
+                            backgroundColor: Colors.backgroundFade
+                        }
+                    ]}
+                >
                     <TouchableOpacity
                         style={TowStyles.iconContainer}
                         onPress={() => callUser(towRequest?.user?.phone)}

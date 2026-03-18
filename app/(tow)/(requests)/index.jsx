@@ -14,7 +14,7 @@ const RequestList = () =>
 
     const [ towRequests, setTowRequests ] = useState();
     const [ ready, setReady ] = useState(false);
-    const [ refresing, setRefreshing ] = useState();
+    const [ refreshing, setRefreshing ] = useState();
 
     const onRefresh = async () =>
     {
@@ -41,6 +41,7 @@ const RequestList = () =>
         useCallback(() => {
             const getTowRequests = async () =>
             {
+                setReady(false);
                 try {
                     const getTowRequests = await handleGetAllTowRequests(client);
                     const getActiveRequest = getTowRequests.find(item => item.driverId === driverId);
@@ -50,13 +51,12 @@ const RequestList = () =>
                         const filteredRequests = getTowRequests.filter(item => item.status === 'REQUESTED');
                         setTowRequests(filteredRequests);
                     }
-                    setReady(true);
                 } catch (error) {
                     console.error('ERROR, could not get tow requests:', error);
                 }
+                setReady(true);
             };
 
-            console.log('called');
             getTowRequests();
         }, [client, driverId])
     );
@@ -64,7 +64,7 @@ const RequestList = () =>
     return (
         <>
         { ready && towRequests ? (
-            <Background refreshing={refresing} onRefresh={onRefresh}>
+            <Background refreshing={refreshing} onRefresh={onRefresh}>
                 { towRequests?.length === 0 ? (
                     <View style={[Styles.block, {alignItems: 'center'}]}>
                         <LottieView
