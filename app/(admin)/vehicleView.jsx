@@ -1,5 +1,5 @@
 import Colors from '../../constants/colors';
-import { Background, formatNumber, Tab, callCustomer, textCustomer } from '../../components/components';
+import { Background, Tab } from '../../components/components';
 import { Styles } from '../../constants/styles';
 import { handleUpdateVehiclePickupStatus } from '../../components/vehicleComponents';
 import { sendPushNotification } from '../../components/notifComponents';
@@ -8,6 +8,7 @@ import { View, Text, Alert, Switch, TouchableOpacity } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Entypo, Ionicons, FontAwesome } from '@expo/vector-icons';
+import { callUser, textUser, formatNumber } from '../../constants/utils';
 
 const VehicleView = () =>
 {
@@ -30,13 +31,13 @@ const VehicleView = () =>
                 <View style={[Styles.rightIcon, {flexDirection: 'row', columnGap: 10}]}>
                     <TouchableOpacity
                         style={{padding: 5, justifyContent: 'center', alignItems: 'center'}}
-                        onPress={() => callCustomer(vehicle?.user?.phone)}
+                        onPress={() => callUser(vehicle?.user?.phone)}
                     >
                         <Entypo name='phone' size={30} color='white'/>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={{padding: 5, justifyContent: 'center', alignItems: 'center'}}
-                        onPress={() => textCustomer(vehicle?.user?.phone)}
+                        onPress={() => textUser(vehicle?.user?.phone)}
                     >
                         <Entypo name='message' size={30} color='white'/>
                     </TouchableOpacity>

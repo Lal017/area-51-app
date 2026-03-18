@@ -1,6 +1,7 @@
 import Colors from '../constants/colors';
 import React from 'react';
 import { useApp } from './context';
+import { formatDate, formatTime } from '../constants/utils';
 import { Styles, HomeStyles } from '../constants/styles';
 import { View, Text, TouchableOpacity, ScrollView, Animated, ActivityIndicator, RefreshControl, Alert } from 'react-native';
 import { router } from 'expo-router';
@@ -206,67 +207,6 @@ const BinarySelect = ({trueText, falseText, value, onChange}) =>
     );
 };
 
-// format phone number for readability
-const formatNumber = (phone) =>
-{
-    const clean = phone.replace(/\D/g, '').slice(-10);
-    const match = clean.match(/^(\d{3})(\d{3})(\d{4})$/);
-
-    if (match) {
-        return `(${match[1]}) ${match[2]} - ${match[3]}`;
-    }
-    return phone;
-};
-
-// format date for readability
-const formatDate = (dateString) =>
-{
-    let date;
-
-    if (dateString.includes('T')) {
-        date = new Date(dateString);
-    } else {
-        const [year, month, day] = dateString.split('-');
-        date = new Date(year, month - 1, day);
-    }
-    
-    return date.toLocaleDateString('en-US', {
-        month: 'long',
-        day: 'numeric',
-        year: 'numeric'
-    });
-};
-
-// format time for readability
-const formatTime = (timeString) =>
-{
-    const isValidISODate = !isNaN(Date.parse(timeString));
-
-    const date = isValidISODate
-        ? new Date(timeString)
-        : new Date(`${new Date().toISOString().split('T')[0]}T${timeString}`);
-
-    return date.toLocaleTimeString('en-US', {
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true
-    });
-};
-
-// get remaining time left for tow driver to arrive
-const getRemainingETA = (isoStartTime, estimatedMinutes) =>
-{
-    const start = new Date(isoStartTime); // e.g. "2025-07-09T13:25:00Z"
-    const now = new Date();
-
-    const elapsedMs = now - start;
-    const elapsedMinutes = Math.floor(elapsedMs / 60000); // Convert ms to minutes
-
-    const remaining = Math.max(estimatedMinutes - elapsedMinutes, 0); // Prevent negative time
-
-    return remaining;
-};
-
 // component for home page to show a reminder for upcoming appointments
 const AppointmentReminder = ({appointments}) =>
 {
@@ -334,10 +274,6 @@ export {
     Tab,
     Select,
     BinarySelect,
-    formatNumber,
-    formatDate,
-    formatTime,
-    getRemainingETA,
     AppointmentReminder,
     SimpleList
 };

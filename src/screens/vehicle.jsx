@@ -7,7 +7,7 @@ import { useLocalSearchParams, router } from 'expo-router';
 import { AntDesign, FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { TextInput, View, Text, TouchableOpacity, Alert, KeyboardAvoidingView } from 'react-native';
 import { useState } from 'react';
-import { textSize } from '../../constants/constants';
+import { textSize } from '../../constants/utils';
 
 const Vehicle = () =>
 {   

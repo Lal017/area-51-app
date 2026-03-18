@@ -6,7 +6,7 @@ import { useApp } from '../../components/context';
 import { View, Text, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
 import { useState } from 'react';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
-import { textSize } from '../../constants/constants';
+import { textSize } from '../../constants/utils';
 
 const DeleteAccount = () =>
 {

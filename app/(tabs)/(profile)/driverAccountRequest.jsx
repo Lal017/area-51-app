@@ -11,7 +11,7 @@ import { router } from "expo-router";
 import { View, Text, TouchableOpacity, Alert } from "react-native";
 import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { textSize } from "../../../constants/constants";
+import { textSize } from "../../../constants/utils";
 
 const DriverAccountRequest = () =>
 {

@@ -3,7 +3,7 @@ import { Styles } from '../../../constants/styles';
 import { Background, Tab } from '../../../components/components';
 import { Entypo } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { textSize } from '../../../constants/constants';
+import { textSize } from '../../../constants/utils';
 
 const Contact = () =>
 {

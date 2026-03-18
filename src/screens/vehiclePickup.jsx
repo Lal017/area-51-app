@@ -1,7 +1,7 @@
 import Colors from '../../constants/colors';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { Background, formatDate, formatTime, SimpleList, Tab } from '../../components/components';
+import { Background, SimpleList, Tab } from '../../components/components';
 import { useApp } from '../../components/context';
 import { ServiceStyles, Styles } from '../../constants/styles';
 import { View, Text, TouchableOpacity } from 'react-native';
@@ -12,7 +12,7 @@ import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import { LinearGradient } from 'expo-linear-gradient';
 import { handleSendAdminNotif } from '../../components/notifComponents';
 import { handleCreateAppointment } from '../../components/appointmentComponents';
-import { textSize } from '../../constants/constants';
+import { textSize, formatDate, formatTime } from '../../constants/utils';
 
 const VehiclePickup = () =>
 {

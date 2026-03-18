@@ -1,5 +1,6 @@
 import Colors from '../../../constants/colors';
-import { Background, BackgroundAlt, formatDate, formatTime, Tab } from '../../../components/components';
+import { Background, BackgroundAlt, Tab } from '../../../components/components';
+import { formatDate, formatTime } from '../../../constants/utils';
 import { handleDeleteAppointment, handleGetMyAppointments } from '../../../components/appointmentComponents';
 import { useApp } from '../../../components/context';
 import { handleSendAdminNotif } from '../../../components/notifComponents';

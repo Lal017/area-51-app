@@ -2,7 +2,7 @@ import Colors from "../../../constants/colors";
 import { handleAcceptTowRequest, handleFinalTowCheck, getInitialCompassHeading } from "../../../components/towComponents";
 import { useApp } from "../../../components/context";
 import { sendPushNotification } from '../../../components/notifComponents'
-import { Background, formatNumber, callCustomer, openInMaps, Tab } from "../../../components/components";
+import { Background, Tab } from "../../../components/components";
 import { ServiceStyles, Styles } from "../../../constants/styles";
 import { handleGetAddress } from "../../../components/adminComponents";
 import { useLocalSearchParams, router } from "expo-router";
@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { AntDesign, Entypo, Ionicons, FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Accuracy, getCurrentPositionAsync } from "expo-location";
 import { post } from "aws-amplify/api";
+import { callUser, textUser, openInMaps, formatNumber } from "../../../constants/utils";
 
 const TowResponse = () =>
 {
@@ -110,13 +111,13 @@ const TowResponse = () =>
                     <View style={[Styles.rightIcon, {flexDirection: 'row', columnGap: 10}]}>
                         <TouchableOpacity
                             style={{padding: 5, justifyContent: 'center', alignItems: 'center'}}
-                            onPress={() => callCustomer(request?.user?.phone)}
+                            onPress={() => callUser(request?.user?.phone)}
                         >
                             <Entypo name='phone' size={30} color='white'/>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={{padding: 5, justifyContent: 'center', alignItems: 'center'}}
-                            onPress={() => textCustomer(request?.user?.phone)}
+                            onPress={() => textUser(request?.user?.phone)}
                         >
                             <Entypo name='message' size={30} color='white'/>
                         </TouchableOpacity>

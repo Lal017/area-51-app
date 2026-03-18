@@ -1,9 +1,10 @@
 import { Styles } from '../../../constants/styles';
 import { iconCheck } from '../../../components/appointmentComponents';
-import { formatNumber, formatDate, formatTime, Background, Tab, callCustomer, textCustomer } from '../../../components/components';
+import { Background, Tab } from '../../../components/components';
 import { useLocalSearchParams } from 'expo-router';
 import { AntDesign, Entypo, MaterialCommunityIcons, FontAwesome, Ionicons } from '@expo/vector-icons';
 import { View, Text, TouchableOpacity } from 'react-native';
+import { callUser, textUser, formatNumber, formatDate, formatTime } from '../../../constants/utils';
 
 const AppointmentView = () =>
 {
@@ -30,13 +31,13 @@ const AppointmentView = () =>
                 <View style={[Styles.rightIcon, {flexDirection: 'row', columnGap: 10}]}>
                     <TouchableOpacity
                         style={{padding: 5, justifyContent: 'center', alignItems: 'center'}}
-                        onPress={() => callCustomer(appointment?.user?.phone)}
+                        onPress={() => callUser(appointment?.user?.phone)}
                     >
                         <Entypo name='phone' size={30} color='white'/>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={{padding: 5, justifyContent: 'center', alignItems: 'center'}}
-                        onPress={() => textCustomer(appointment?.user?.phone)}
+                        onPress={() => textUser(appointment?.user?.phone)}
                     >
                         <Entypo name='message' size={30} color='white'/>
                     </TouchableOpacity>

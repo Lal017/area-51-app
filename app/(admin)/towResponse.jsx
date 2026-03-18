@@ -4,12 +4,13 @@ import { handleUpdateCustomersTowRequestStatus } from '../../components/towCompo
 import { sendPushNotification } from '../../components/notifComponents';
 import { handleGetAddress } from '../../components/adminComponents';
 import { useApp } from '../../components/context';
-import { Background, formatNumber, callCustomer, textCustomer, openInMaps, Tab } from '../../components/components';
+import { Background, Tab } from '../../components/components';
 import { Styles, ServiceStyles } from '../../constants/styles';
 import { View, Text, TouchableOpacity, Alert, KeyboardAvoidingView } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 import { AntDesign, FontAwesome, Entypo, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
+import { callUser, textUser, openInMaps, formatNumber } from '../../constants/utils';
 
 const TowResponse = () =>
 {
@@ -73,13 +74,13 @@ const TowResponse = () =>
                     <View style={[Styles.rightIcon, {flexDirection: 'row', columnGap: 10}]}>
                         <TouchableOpacity
                             style={{padding: 5, justifyContent: 'center', alignItems: 'center'}}
-                            onPress={() => callCustomer(request?.user?.phone)}
+                            onPress={() => callUser(request?.user?.phone)}
                         >
                             <Entypo name='phone' size={30} color='white'/>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={{padding: 5, justifyContent: 'center', alignItems: 'center'}}
-                            onPress={() => textCustomer(request?.user?.phone)}
+                            onPress={() => textUser(request?.user?.phone)}
                         >
                             <Entypo name='message' size={30} color='white'/>
                         </TouchableOpacity>

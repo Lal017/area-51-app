@@ -1,7 +1,7 @@
 import Colors from '../../../constants/colors';
 import moment from 'moment';
 import { handleGetAllAppointments } from '../../../components/appointmentComponents';
-import { BackgroundAlt, CalendarHeader, Loading, Tab, formatTime } from '../../../components/components';
+import { BackgroundAlt, CalendarHeader, Loading, Tab } from '../../../components/components';
 import { Styles } from '../../../constants/styles';
 import { View } from 'react-native';
 import { AntDesign, Entypo } from '@expo/vector-icons';
@@ -9,7 +9,7 @@ import { AgendaList, CalendarProvider, Calendar } from 'react-native-calendars';
 import { useState, useEffect, useMemo } from 'react';
 import { router } from 'expo-router';
 import { useApp } from '../../../components/context';
-import { textSize } from '../../../constants/constants';
+import { textSize, formatTime } from '../../../constants/utils';
 
 const AppointmentIndex = () =>
 {

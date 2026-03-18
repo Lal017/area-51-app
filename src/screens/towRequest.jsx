@@ -12,7 +12,7 @@ import { Entypo, FontAwesome, FontAwesome5, Ionicons, MaterialIcons, MaterialCom
 import { View, Text, TouchableOpacity, TextInput, ActivityIndicator, Alert, KeyboardAvoidingView } from "react-native";
 import { requestForegroundPermissionsAsync, getCurrentPositionAsync } from 'expo-location';
 import { router } from "expo-router";
-import { textSize } from "../../constants/constants";
+import { textSize } from "../../constants/utils";
 
 const screenWidth = Dimensions.get('window').width;
 

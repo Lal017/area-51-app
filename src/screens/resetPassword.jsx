@@ -5,7 +5,7 @@ import { handleUpdatePassword } from '../../components/authComponents';
 import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import { useEffect, useState } from 'react';
 import { Feather, FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
-import { textSize } from '../../constants/constants';
+import { textSize } from '../../constants/utils';
 
 const ResetPassword = () =>
 {

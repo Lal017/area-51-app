@@ -1,6 +1,6 @@
 import Colors from '../../../constants/colors';
 import { Styles } from '../../../constants/styles';
-import { Background, formatDate, formatNumber, Tab, SimpleList, callCustomer, textCustomer } from '../../../components/components';
+import { Background, Tab, SimpleList } from '../../../components/components';
 import { sendPushNotification } from '../../../components/notifComponents';
 import { View, Text, Alert, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { handleAssignTowDriverId, handleMakeUserTowDriver } from '../../../components/adminComponents';
 import { useApp } from '../../../components/context';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import { callUser, textUser, formatDate, formatNumber } from '../../../constants/utils';
 
 const UserView = () =>
 {
@@ -91,13 +92,13 @@ const UserView = () =>
                         <View style={[Styles.rightIcon, {flexDirection: 'row', columnGap: 10}]}>
                             <TouchableOpacity
                                 style={{justifyContent: 'center', alignItems: 'center', padding: 5}}
-                                onPress={() => callCustomer(customer?.phone)}
+                                onPress={() => callUser(customer?.phone)}
                             >
                                 <Entypo name='phone' size={30} color='white'/>
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={{justifyContent: 'center', alignItems: 'center', padding: 5}}
-                                onPress={() => textCustomer(customer?.phone)}    
+                                onPress={() => textUser(customer?.phone)}    
                             >
                                 <Entypo name='message' size={30} color='white'/>
                             </TouchableOpacity>

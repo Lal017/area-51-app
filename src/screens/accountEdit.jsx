@@ -6,7 +6,7 @@ import { useApp } from "../../components/context";
 import { useState } from "react";
 import { View, Text, TextInput, KeyboardAvoidingView, TouchableOpacity } from "react-native";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
-import { textSize } from "../../constants/constants";
+import { textSize } from "../../constants/utils";
 
 const AccountEdit = () =>
 {

@@ -7,15 +7,15 @@ import { Dimensions, KeyboardAvoidingView } from 'react-native';
 import { handleGetAppointments, iconCheck, handleSetTimes, handleCreateAppointment, handleFinalCheck, handleUpdateAppointment } from '../../components/appointmentComponents';
 import { useApp } from '../../components/context';
 import { handleSendAdminNotif } from '../../components/notifComponents';
-import { Select, CalendarHeader, formatDate, formatTime, Background, Loading, SimpleList, Tab } from '../../components/components';
+import { Select, CalendarHeader, Background, Loading, SimpleList, Tab } from '../../components/components';
 import { ServiceStyles, Styles } from "../../constants/styles";
-import { MaterialIcons, Ionicons, FontAwesome, FontAwesome6, AntDesign, FontAwesome5, Entypo, MaterialCommunityIcons, SimpleLineIcons } from '@expo/vector-icons';
+import { MaterialIcons, Ionicons, FontAwesome, FontAwesome6, AntDesign, FontAwesome5, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useEffect, useRef, useState, useMemo } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { useLocalSearchParams, router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
-import { textSize } from '../../constants/constants';
+import { textSize, formatDate, formatTime } from '../../constants/utils';
 
 const screenWidth = Dimensions.get('window').width;
 
