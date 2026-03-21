@@ -202,27 +202,25 @@ const UserView = () =>
                         <Text style={Styles.headerTitle}>Send Notification</Text>
                         <Text style={Styles.tabHeader}>Send a push notification to {customer.firstName}</Text>
                     </View>
-                    <View style={Styles.inputContainer}>
-                        <View style={Styles.inputWrapper}>
-                            <Ionicons name='notifications' size={20} style={Styles.icon} />
-                            <TextInput
-                                placeholder='Title'
-                                placeholderTextColor={Colors.grayText}
-                                value={title}
-                                onChangeText={setTitle}
-                                style={Styles.input}
-                            />
-                        </View>
-                        <View style={Styles.inputWrapper}>
-                            <MaterialIcons name='subject' size={20} style={Styles.icon} />
-                            <TextInput
-                                placeholder='Body'
-                                placeholderTextColor={Colors.grayText}
-                                value={body}
-                                onChangeText={setBody}
-                                style={Styles.input}
-                            />
-                        </View>
+                    <View style={Styles.inputWrapper}>
+                        <Ionicons name='notifications' size={20} style={Styles.icon} />
+                        <TextInput
+                            placeholder='Title'
+                            placeholderTextColor={Colors.grayText}
+                            value={title}
+                            onChangeText={setTitle}
+                            style={Styles.input}
+                        />
+                    </View>
+                    <View style={Styles.inputWrapper}>
+                        <MaterialIcons name='subject' size={20} style={Styles.icon} />
+                        <TextInput
+                            placeholder='Body'
+                            placeholderTextColor={Colors.grayText}
+                            value={body}
+                            onChangeText={setBody}
+                            style={Styles.input}
+                        />
                     </View>
                     <ActionButton
                         text='Send'

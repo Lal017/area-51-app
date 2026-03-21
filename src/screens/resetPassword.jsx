@@ -104,7 +104,7 @@ const ResetPassword = () =>
                             {errorCheck && !newPassword && (<Text style={[Styles.text, {color: 'red', paddingLeft: 30, fontSize: textSize(13)}]}>Missing New Password</Text>)}
                         </View>
                     </View>
-                    <View style={ProfileStyles.requirementsContainer}>
+                    <View style={{justifyContent: 'flex-start', paddingLeft: 20}}>
                         <View style={ProfileStyles.requirementsWrapper}>
                             <Feather name={hasEightChar ? 'check' : 'x'} size={15} color={hasEightChar ? Colors.primary : 'red'}/>
                             <Text style={Styles.text}>8 characters</Text>

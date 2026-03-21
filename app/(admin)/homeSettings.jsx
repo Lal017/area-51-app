@@ -104,7 +104,13 @@ const HomeSettings = () =>
                                                     style={{width: '100%', height: '100%'}}
                                                 />
                                                 <TouchableOpacity
-                                                    style={AdminStyles.removeButton}
+                                                    style={{
+                                                        position: 'absolute',
+                                                        right: 10, top: 10,
+                                                        borderRadius: 5,
+                                                        backgroundColor: Colors.error,
+                                                        padding: 2
+                                                    }}
                                                     onPress={() => {
                                                         Alert.alert(
                                                             'Remove Image',
@@ -165,27 +171,25 @@ const HomeSettings = () =>
                             <Text style={Styles.headerTitle}>Send Notification</Text>
                             <Text style={Styles.tabHeader}>Send a push notification to all users</Text>
                         </View>
-                        <View style={Styles.inputContainer}>
-                            <View style={Styles.inputWrapper}>
-                                <Ionicons name='notifications' size={20} style={Styles.icon} />
-                                <TextInput
-                                    placeholder='Title'
-                                    placeholderTextColor={Colors.text}
-                                    value={title}
-                                    onChangeText={setTitle}
-                                    style={Styles.input}
-                                />
-                            </View>
-                            <View style={Styles.inputWrapper}>
-                                <MaterialIcons name='subject' size={20} style={Styles.icon} />
-                                <TextInput
-                                    placeholder='Body'
-                                    placeholderTextColor={Colors.text}
-                                    value={body}
-                                    onChangeText={setBody}
-                                    style={Styles.input}
-                                />
-                            </View>
+                        <View style={Styles.inputWrapper}>
+                            <Ionicons name='notifications' size={20} style={Styles.icon} />
+                            <TextInput
+                                placeholder='Title'
+                                placeholderTextColor={Colors.text}
+                                value={title}
+                                onChangeText={setTitle}
+                                style={Styles.input}
+                            />
+                        </View>
+                        <View style={Styles.inputWrapper}>
+                            <MaterialIcons name='subject' size={20} style={Styles.icon} />
+                            <TextInput
+                                placeholder='Body'
+                                placeholderTextColor={Colors.text}
+                                value={body}
+                                onChangeText={setBody}
+                                style={Styles.input}
+                            />
                         </View>
                         <ActionButton
                             text='Send'

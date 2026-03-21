@@ -30,17 +30,24 @@ const CustHeader = ({title, index}) =>
     const insets = useSafeAreaInsets();
 
     return (
-        <View style={[Styles.HeaderContainer, {paddingTop: insets.top}]}>
-            { !index && !isStuck && router.canGoBack() ? (
+        <View style={{
+            justifyContent: 'center', alignItems: 'center',
+            flexDirection: 'row',
+            position: 'relative',
+            backgroundColor: Colors.backgroundShade,
+            paddingTop: insets.top, padding: 5
+            }}
+        >
+            { !index && !isStuck && router.canGoBack() && (
                 <TouchableOpacity
                     style={{position: 'absolute', left: 20, top: 45}}
                     onPress={() => router.back()}
                 >
                     <AntDesign name='left' size={30} color='white' />
                 </TouchableOpacity>
-            ) : null }
+            )}
             <Text style={[Styles.headerTitle, {textAlign: 'center'}]}>{title}</Text>
-            { title === 'Settings' || title === 'Profile' ? (
+            { title === 'Settings' || title === 'Profile' && (
                 <TouchableOpacity
                     style={Styles.signOutButton}
                     onPress={async () => {
@@ -64,7 +71,7 @@ const CustHeader = ({title, index}) =>
                 >
                     <MaterialIcons name='logout' size={30} color={loading ? 'gray' : 'white'}/>
                 </TouchableOpacity>
-            ) : null}
+            )}
         </View>
     );
 };
@@ -145,7 +152,7 @@ const CalendarHeader = ({date}) =>
     const d = new Date(date);
     const month = d.toLocaleString('default', { month: 'long' });
     return (
-        <View style={Styles.calendarHeaderContainer}>
+        <View style={{width: '100%'}}>
             <Text style={Styles.text}>{month}</Text>
         </View>
     );
@@ -197,7 +204,11 @@ const Select = ({header, text, selected, action, leftIcon, rightIcon, style}) =>
 const BinarySelect = ({trueText, falseText, value, onChange}) =>
 {
     return(
-        <View style={Styles.binaryTabContainer}>
+        <View style={{
+            flexDirection: 'row',
+            justifyContent: 'center', alignItems: 'center',
+            height: 50
+        }}>
             <TouchableOpacity
                 style={[Styles.binaryTabWrapper, value && {padding: 15, backgroundColor: Colors.secondary}]}
                 onPress={() => onChange(true)}
@@ -262,7 +273,14 @@ const AppointmentReminder = ({appointments}) =>
     if (!current) return null;
     return (
         <TouchableOpacity
-            style={[HomeStyles.appointmentContainer, {overflow: 'hidden'}]}
+            style={{
+                flex: 1,
+                minWidth: '40%',
+                maxHeight: '100%',
+                borderRadius: 10,
+                paddingHorizontal: 25, paddingVertical: 10,
+                overflow: 'hidden'
+            }}
             onPress={() => router.push('myAppointments')}
         >
             <LinearGradient
@@ -312,7 +330,15 @@ const SimpleList = ({data = [], renderItem}) =>
 const FloatingBlock = ({ children, glareTop = false }) =>
 {
     return(
-        <View style={Styles.floatingBlock}>
+        <View style={{
+            width: '90%',
+            paddingBottom: 20, paddingTop: 20,
+            rowGap: 20,
+            marginBottom: 20,
+            borderRadius: 15,
+            overflow: 'hidden',
+            borderWidth: 1, borderColor: Colors.backgroundContrast
+        }}>
             <LinearGradient
                 colors={[Colors.backgroundContrast, Colors.backgroundContrastShade, Colors.backgroundContrastShade]}
                 start={{x: 0, y: glareTop ? 0 : 1}}

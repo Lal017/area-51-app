@@ -158,11 +158,19 @@ const GoogleSignInButton = ({text}) =>
     return(
         <TouchableOpacity
             onPress={() => handleSignInWithRedirect('Google')}
-            style={AuthStyles.providerSignIn}
+            style={{
+                backgroundColor: 'white',
+                width: '100%',
+                padding: 10,
+                borderRadius: 25,
+                flexDirection: 'row',
+                columnGap: 10,
+                alignItems: 'center', justifyContent: 'center',
+            }}
         >
             <Image
                 source={require('../assets/images/google-icon.png')}
-                style={AuthStyles.signInImg}
+                style={{height: 25, width: 25}}
             />
             <Text style={{fontFamily: 'Roboto-Regular', fontSize: 17}}>{text}</Text>
         </TouchableOpacity>

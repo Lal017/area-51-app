@@ -50,7 +50,7 @@ const ServiceConsole = () =>
             router.push('/towRequest');
           }
         }}
-        style={[Styles.consoleBubble, {overflow: 'hidden'}]}
+        style={Styles.consoleBubble}
       >
         <LinearGradient
           colors={[Colors.secondary, Colors.secondaryShade]}
@@ -85,7 +85,7 @@ const ServiceConsole = () =>
             router.push('/schedule');
           }
         }}
-        style={[Styles.consoleBubble, {overflow: 'hidden'}]}
+        style={Styles.consoleBubble}
       >
         <LinearGradient
           colors={[Colors.tertiary, Colors.tertiaryShade]}
@@ -106,7 +106,7 @@ const ServiceConsole = () =>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => router.push('/(tabs)/(service)/myAppointments')}
-        style={[Styles.consoleBubble, {overflow: 'hidden'}]}
+        style={Styles.consoleBubble}
       >
         <LinearGradient
           colors={[Colors.primary, Colors.primaryShade]}

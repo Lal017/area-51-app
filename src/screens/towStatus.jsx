@@ -134,7 +134,11 @@ const TowStatus = () =>
             { towRequest?.status === 'REQUESTED' ? (
                 <>
                 <View style={Styles.infoContainer}>
-                    <View style={ServiceStyles.titleWrapper}>
+                    <View style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        columnGap: 10
+                    }}>
                         <Text style={Styles.headerTitle}>Tow Request</Text>
                         <LottieView
                             source={require('../../assets/animations/gear.json')}

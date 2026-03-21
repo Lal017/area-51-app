@@ -55,60 +55,58 @@ const Vehicle = () =>
                             </TouchableOpacity>
                         )}
                     </View>
-                    <View style={[Styles.inputContainer, {rowGap: 5}]}>
-                        <View>
-                            <View style={Styles.inputWrapper}>
-                                <Ionicons name='calendar' size={20} style={Styles.icon} />
-                                <TextInput
-                                    placeholder='Year'
-                                    placeholderTextColor={Colors.grayText}
-                                    value={year}
-                                    onChangeText={setYear}
-                                    keyboardType='number-pad'
-                                    style={[Styles.input, errorCheck && !year && {borderColor: 'red', borderBottomWidth: 2}]}
-                                />
-                            </View>
-                            { errorCheck && !year && (<Text style={[Styles.text, {color: 'red', paddingLeft: 15, fontSize: textSize(13)}]}>Missing Year</Text>)}
+                    <View>
+                        <View style={Styles.inputWrapper}>
+                            <Ionicons name='calendar' size={20} style={Styles.icon} />
+                            <TextInput
+                                placeholder='Year'
+                                placeholderTextColor={Colors.grayText}
+                                value={year}
+                                onChangeText={setYear}
+                                keyboardType='number-pad'
+                                style={[Styles.input, errorCheck && !year && {borderColor: 'red', borderBottomWidth: 2}]}
+                            />
                         </View>
-                        <View>
-                            <View style={Styles.inputWrapper}>
-                                <MaterialCommunityIcons name='car-convertible' size={20} style={Styles.icon} />
-                                <TextInput
-                                    placeholder='Make'
-                                    placeholderTextColor={Colors.grayText}
-                                    value={make}
-                                    onChangeText={setMake}
-                                    style={[Styles.input, errorCheck && !make && {borderColor: 'red', borderBottomWidth: 2}]}
-                                />
-                            </View>
-                            { errorCheck && !make && (<Text style={[Styles.text, {color: 'red', paddingLeft: 15, fontSize: textSize(13)}]}>Missing Make</Text>)}
+                        { errorCheck && !year && (<Text style={[Styles.text, {color: 'red', paddingLeft: 15, fontSize: textSize(13)}]}>Missing Year</Text>)}
+                    </View>
+                    <View>
+                        <View style={Styles.inputWrapper}>
+                            <MaterialCommunityIcons name='car-convertible' size={20} style={Styles.icon} />
+                            <TextInput
+                                placeholder='Make'
+                                placeholderTextColor={Colors.grayText}
+                                value={make}
+                                onChangeText={setMake}
+                                style={[Styles.input, errorCheck && !make && {borderColor: 'red', borderBottomWidth: 2}]}
+                            />
                         </View>
-                        <View>
-                            <View style={Styles.inputWrapper}>
-                                <AntDesign name='tags' size={20} style={Styles.icon} />
-                                <TextInput
-                                    placeholder='Model'
-                                    placeholderTextColor={Colors.grayText}
-                                    value={model}
-                                    onChangeText={setModel}
-                                    style={[Styles.input, errorCheck && !model && {borderColor: 'red', borderBottomWidth: 2}]}
-                                />
-                            </View>
-                            { errorCheck && !model && (<Text style={[Styles.text, {color: 'red', paddingLeft: 15, fontSize: textSize(13)}]}>Missing Model</Text>)}
+                        { errorCheck && !make && (<Text style={[Styles.text, {color: 'red', paddingLeft: 15, fontSize: textSize(13)}]}>Missing Make</Text>)}
+                    </View>
+                    <View>
+                        <View style={Styles.inputWrapper}>
+                            <AntDesign name='tags' size={20} style={Styles.icon} />
+                            <TextInput
+                                placeholder='Model'
+                                placeholderTextColor={Colors.grayText}
+                                value={model}
+                                onChangeText={setModel}
+                                style={[Styles.input, errorCheck && !model && {borderColor: 'red', borderBottomWidth: 2}]}
+                            />
                         </View>
-                        <View>
-                            <View style={Styles.inputWrapper}>
-                                <Ionicons name='color-palette' size={20} style={Styles.icon} />
-                                <TextInput
-                                    placeholder='Color'
-                                    placeholderTextColor={Colors.grayText}
-                                    value={color}
-                                    onChangeText={setColor}
-                                    style={[Styles.input, errorCheck && !color && {borderColor: 'red', borderBottomWidth: 2}]}
-                                />
-                            </View>
-                            { errorCheck && !color && (<Text style={[Styles.text, {color: 'red', paddingLeft: 15, fontSize: textSize(13)}]}>Missing Color</Text>)}
+                        { errorCheck && !model && (<Text style={[Styles.text, {color: 'red', paddingLeft: 15, fontSize: textSize(13)}]}>Missing Model</Text>)}
+                    </View>
+                    <View>
+                        <View style={Styles.inputWrapper}>
+                            <Ionicons name='color-palette' size={20} style={Styles.icon} />
+                            <TextInput
+                                placeholder='Color'
+                                placeholderTextColor={Colors.grayText}
+                                value={color}
+                                onChangeText={setColor}
+                                style={[Styles.input, errorCheck && !color && {borderColor: 'red', borderBottomWidth: 2}]}
+                            />
                         </View>
+                        { errorCheck && !color && (<Text style={[Styles.text, {color: 'red', paddingLeft: 15, fontSize: textSize(13)}]}>Missing Color</Text>)}
                     </View>
                     <View style={Styles.infoContainer}>
                         <View style={[Styles.infoContainer, {flexDirection: 'row', columnGap: 5}]}>
@@ -116,27 +114,25 @@ const Vehicle = () =>
                             <Text style={[Styles.text, {fontSize: textSize(10)}]}>Optional: Adding your license plate or VIN number helps us identify your vehicle</Text>
                         </View>
                     </View>
-                    <View style={[Styles.inputContainer, {rowGap: 5}]}>
-                        <View style={Styles.inputWrapper}>
-                            <FontAwesome name='id-card' size={20} style={Styles.icon} />
-                            <TextInput
-                                placeholder='License Plate #'
-                                placeholderTextColor={Colors.grayText}
-                                value={plate}
-                                onChangeText={setPlate}
-                                style={Styles.input}
-                            />
-                        </View>
-                        <View style={Styles.inputWrapper}>
-                            <FontAwesome name='barcode' size={20} style={Styles.icon} />
-                            <TextInput
-                                placeholder='VIN #'
-                                placeholderTextColor={Colors.grayText}
-                                value={vin}
-                                onChangeText={setVin}
-                                style={Styles.input}
-                            />
-                        </View>
+                    <View style={Styles.inputWrapper}>
+                        <FontAwesome name='id-card' size={20} style={Styles.icon} />
+                        <TextInput
+                            placeholder='License Plate #'
+                            placeholderTextColor={Colors.grayText}
+                            value={plate}
+                            onChangeText={setPlate}
+                            style={Styles.input}
+                        />
+                    </View>
+                    <View style={Styles.inputWrapper}>
+                        <FontAwesome name='barcode' size={20} style={Styles.icon} />
+                        <TextInput
+                            placeholder='VIN #'
+                            placeholderTextColor={Colors.grayText}
+                            value={vin}
+                            onChangeText={setVin}
+                            style={Styles.input}
+                        />
                     </View>
                 </View>
                 { errorMessage && (

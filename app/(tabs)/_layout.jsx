@@ -366,7 +366,7 @@ const TabsContent = () =>
                 >
                     <MaterialIcons name='logout' size={30} color='white'/>
                 </TouchableOpacity>
-                { refreshPrompt ? (
+                { refreshPrompt && (
                     <View style={{position: 'absolute', top: 25}}>
                         <LottieView
                             source={require('../../assets/animations/scrollDown.json')}
@@ -375,7 +375,7 @@ const TabsContent = () =>
                             style={{width: 150, height: 150}}
                         />
                     </View>
-                ) : null }
+                )}
                 <View style={Styles.infoContainer}>
                     <Text style={[Styles.title, {textAlign: 'center'}]}>{ refreshPrompt ? `Refresh` : `Tow Driver Account`}</Text>
                     <Text style={[Styles.text, {textAlign: 'center'}]}>{ refreshPrompt ? `Please refresh the screen` : `We're reviewing your request. We'll notify you once you've been granted access.`}</Text>
@@ -392,7 +392,11 @@ const TabsContent = () =>
             <Tabs
                 screenOptions={{
                     headerShown: false,
-                    tabBarStyle: Styles.tabBarStyle,
+                    tabBarStyle: {
+                        backgroundColor: Colors.backgroundShade,
+                        borderTopWidth: 0,
+                        elevation: 0,
+                    },
                     tabBarActiveTintColor: Colors.secondary,
                     tabBarInactiveTintColor: Colors.accent,
                     tabBarShowLabel: false,
@@ -417,7 +421,12 @@ const TabsContent = () =>
                         headerShown: false,
                         tabBarHideOnKeyboard: true,
                         tabBarIcon: ({ color, size, focused }) => (
-                            <View style={Styles.carIconContainer}>
+                            <View style={{
+                                width: 75, height: 75,
+                                backgroundColor: Colors.accent,
+                                borderRadius: 100,
+                                justifyContent: 'center', alignItems: 'center',
+                            }}>
                                 <Ionicons
                                     name="car-sport"
                                     size={size} 

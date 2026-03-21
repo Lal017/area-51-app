@@ -94,7 +94,7 @@ const SignUp = () =>
                     />
                 </View>
                 { step === 1 ? (
-                    <View style={[Styles.block, {alignItems: 'center'}]}>
+                    <View style={Styles.block}>
                         <Text style={[Styles.title, {paddingLeft: 20, width: '100%'}]}>Sign Up</Text>
                         <View style={Styles.inputWrapper}>
                             <Ionicons name='at' size={20} style={Styles.icon} />
@@ -152,9 +152,14 @@ const SignUp = () =>
                                 ) : <Ionicons name='eye' size={20} color={Colors.accent}/> }
                             </TouchableOpacity>
                         </View>
-                        <View style={{width: '90%', flexDirection: 'row', columnGap: 20, alignItems: 'center', justifyContent: 'flex-start'}}>
+                        <View style={{width: '90%', flexDirection: 'row', columnGap: 20, alignItems: 'center', alignSelf: 'center', justifyContent: 'flex-start'}}>
                             <TouchableOpacity
-                                style={AuthStyles.checkBox}
+                                style={{
+                                    width: 30, height: 30,
+                                    backgroundColor: Colors.accent,
+                                    borderRadius: 5,
+                                    justifyContent: 'center', alignItems: 'center'
+                                }}
                                 onPress={() => setCheck(prev => !prev)}
                             >
                                 { check ? <Entypo name='check' size={25}/> : null}
@@ -207,12 +212,12 @@ const SignUp = () =>
                                 style={[Styles.input, missingPhoneNumber && {borderColor: 'red'}]}
                             />
                         </View>
-                        { errorMessage && step === 2 ? (
+                        { errorMessage && step === 2 && (
                             <View style={Styles.errorContainer}>
                                 <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
                                 <Text style={[Styles.text, {color: 'red'}]}>{errorMessage}</Text>
                             </View>
-                        ) : null}
+                        )}
                         <ActionButton
                             text='Sign Up'
                             primaryColor={Colors.primary}

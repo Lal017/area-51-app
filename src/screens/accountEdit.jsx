@@ -25,68 +25,72 @@ const AccountEdit = () =>
         >
             <Background>
                 <View style={Styles.block}>
-                    <View style={{rowGap: 5}}>
-                        <Text style={[Styles.text, {paddingLeft: 20}]}>Name</Text>
-                        <View>
-                            <View style={Styles.inputWrapper}>
-                                <Ionicons name="person" size={20} style={Styles.icon} />
-                                <TextInput
-                                    placeholder="first name"
-                                    placeholderTextColor={Colors.grayText}
-                                    value={editFirstName}
-                                    onChangeText={setEditFirstName}
-                                    style={[Styles.input, !editFirstName && {borderColor: 'red', borderBottomWidth: 2}]}
-                                />
-                            </View>
-                            {!editFirstName && (<Text style={[Styles.text, {color: 'red', paddingLeft: 25, fontSize: textSize(13)}]}>Missing First Name</Text>)}
-                        </View>
-                        <View>
-                            <View style={Styles.inputWrapper}>
-                                <Ionicons name="person" size={20} style={Styles.icon} />
-                                <TextInput
-                                    placeholder="last name"
-                                    placeholderTextColor={Colors.grayText}
-                                    value={editLastName}
-                                    onChangeText={setEditLastName}
-                                    style={[Styles.input, !editLastName && {borderColor: 'red', borderBottomWidth: 2}]}
-                                />
-                            </View>
-                            {!editLastName && (<Text style={[Styles.text, {color: 'red', paddingLeft: 25, fontSize: textSize(13)}]}>Missing Last Name</Text>)}
-                        </View>
+                    <View style={Styles.infoContainer}>
+                        <Text style={Styles.text}>Name</Text>
                     </View>
-                    <View style={{rowGap: 5}}>
-                        <Text style={[Styles.text, {paddingLeft: 20}]}>Email</Text>
-                        <View>
-                            <View style={Styles.inputWrapper}>
-                                <Ionicons name="mail" size={20} style={Styles.icon} />
-                                <TextInput
-                                    placeholder="email"
-                                    placeholderTextColor={Colors.grayText}
-                                    value={editEmail}
-                                    onChangeText={setEditEmail}
-                                    autoCapitalize='none'
-                                    style={[Styles.input, !editEmail && {borderColor: 'red', borderBottomWidth: 2}]}
-                                />
-                            </View>
-                            {!editEmail && (<Text style={[Styles.text, {color: 'red', paddingLeft: 25, fontSize: textSize(13)}]}>Missing Email</Text>)}
+                    <View>
+                        <View style={Styles.inputWrapper}>
+                            <Ionicons name="person" size={20} style={Styles.icon} />
+                            <TextInput
+                                placeholder="first name"
+                                placeholderTextColor={Colors.grayText}
+                                value={editFirstName}
+                                onChangeText={setEditFirstName}
+                                style={[Styles.input, !editFirstName && {borderColor: 'red', borderBottomWidth: 2}]}
+                            />
                         </View>
+                        {!editFirstName && (<Text style={[Styles.text, {color: 'red', paddingLeft: 25, fontSize: textSize(13)}]}>Missing First Name</Text>)}
                     </View>
-                    <View style={{rowGap: 5}}>
-                        <Text style={[Styles.text, {paddingLeft: 20}]}>Phone Number</Text>
-                        <View>
-                            <View style={Styles.inputWrapper}>
-                                <Ionicons name="call" size={20} style={Styles.icon} />
-                                <TextInput
-                                    placeholder="phone number"
-                                    placeholderTextColor={Colors.grayText}
-                                    value={editPhone}
-                                    onChangeText={setEditPhone}
-                                    keyboardType="phone-pad"
-                                    style={[Styles.input, !editPhone && {borderColor: 'red', borderBottomWidth: 2}]}
-                                />
-                            </View>
-                            {!editPhone && (<Text style={[Styles.text, {color: 'red', paddingLeft: 25, fontSize: textSize(13)}]}>Missing Phone Number</Text>)}
+                    <View>
+                        <View style={Styles.inputWrapper}>
+                            <Ionicons name="person" size={20} style={Styles.icon} />
+                            <TextInput
+                                placeholder="last name"
+                                placeholderTextColor={Colors.grayText}
+                                value={editLastName}
+                                onChangeText={setEditLastName}
+                                style={[Styles.input, !editLastName && {borderColor: 'red', borderBottomWidth: 2}]}
+                            />
                         </View>
+                        {!editLastName && (<Text style={[Styles.text, {color: 'red', paddingLeft: 25, fontSize: textSize(13)}]}>Missing Last Name</Text>)}
+                    </View>
+                </View>
+                <View style={Styles.block}>
+                    <View style={Styles.infoContainer}>
+                        <Text style={Styles.text}>Email</Text>
+                    </View>
+                    <View>
+                        <View style={Styles.inputWrapper}>
+                            <Ionicons name="mail" size={20} style={Styles.icon} />
+                            <TextInput
+                                placeholder="email"
+                                placeholderTextColor={Colors.grayText}
+                                value={editEmail}
+                                onChangeText={setEditEmail}
+                                autoCapitalize='none'
+                                style={[Styles.input, !editEmail && {borderColor: 'red', borderBottomWidth: 2}]}
+                            />
+                        </View>
+                        {!editEmail && (<Text style={[Styles.text, {color: 'red', paddingLeft: 25, fontSize: textSize(13)}]}>Missing Email</Text>)}
+                    </View>
+                </View>
+                <View style={Styles.block}>
+                    <View style={Styles.infoContainer}>
+                        <Text style={Styles.text}>Phone Number</Text>
+                    </View>
+                    <View>
+                        <View style={Styles.inputWrapper}>
+                            <Ionicons name="call" size={20} style={Styles.icon} />
+                            <TextInput
+                                placeholder="phone number"
+                                placeholderTextColor={Colors.grayText}
+                                value={editPhone}
+                                onChangeText={setEditPhone}
+                                keyboardType="phone-pad"
+                                style={[Styles.input, !editPhone && {borderColor: 'red', borderBottomWidth: 2}]}
+                            />
+                        </View>
+                        {!editPhone && (<Text style={[Styles.text, {color: 'red', paddingLeft: 25, fontSize: textSize(13)}]}>Missing Phone Number</Text>)}
                     </View>
                 </View>
                 { errorMessage && (

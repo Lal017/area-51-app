@@ -3,34 +3,6 @@ import { textSize } from "./utils";
 import Colors from "./colors";
 
 const Styles = StyleSheet.create({
-    // Header/Tab Styles
-    HeaderContainer: {
-        height: 100,
-        justifyContent: 'center',
-        alignItems: 'center',
-        flexDirection: 'row',
-        position: 'relative',
-        backgroundColor: Colors.backgroundShade,
-    },
-    LogoImg: {
-        width: 200,
-        resizeMode: 'contain',
-        marginLeft: 20,
-        marginTop: 50,
-    },
-    tabBarStyle: {
-        backgroundColor: Colors.backgroundShade,
-        borderTopWidth: 0,
-        elevation: 0,
-    },
-    carIconContainer: {
-        width: 75,
-        height: 75,
-        backgroundColor: Colors.accent,
-        borderRadius: 100,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
 // Reusable Styling components
     hr: {
         borderBottomWidth: 1,
@@ -42,8 +14,8 @@ const Styles = StyleSheet.create({
         width: '95%',
         borderRadius: 10,
         flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-evenly',
+        alignItems: 'center', justifyContent: 'space-evenly',
+        overflow: 'hidden'
     },
     consoleBubbleAlt: {
         width: '48%',
@@ -68,23 +40,7 @@ const Styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: Colors.button
     },
-    binaryTabContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: 50
-    },
-    rightIcon: {
-        position: 'absolute',
-        right: 20,
-        zIndex: 1,
-        color: Colors.text,
-    },
     // Input
-    inputContainer: {
-        rowGap: 20,
-        alignItems: 'center'
-    },
     inputWrapper: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -121,7 +77,7 @@ const Styles = StyleSheet.create({
     },
     actionText: {
         color: Colors.text,
-        fontSize: textSize(13),
+        fontSize: textSize(15),
         textAlign: 'center',
         fontFamily: 'Roboto-Bold'
     },
@@ -176,7 +132,7 @@ const Styles = StyleSheet.create({
     // icons
     icon: {
         position: 'absolute',
-        left: 20,
+        left: 15,
         zIndex: 1,
         color: Colors.text,
     },
@@ -184,6 +140,12 @@ const Styles = StyleSheet.create({
         position: 'absolute',
         left: 15,
         top: 15,
+        zIndex: 1,
+        color: Colors.text,
+    },
+    rightIcon: {
+        position: 'absolute',
+        right: 20,
         zIndex: 1,
         color: Colors.text,
     },
@@ -203,15 +165,6 @@ const Styles = StyleSheet.create({
         paddingBottom: 20,
         rowGap: 20,
         width: '100%',
-    },
-    floatingBlock: {
-        width: '90%',
-        paddingBottom: 20, paddingTop: 20,
-        rowGap: 20,
-        marginBottom: 20,
-        borderRadius: 15,
-        overflow: 'hidden',
-        borderWidth: 1, borderColor: Colors.backgroundContrast
     },
     errorContainer: {
         width: '90%',
@@ -234,17 +187,6 @@ const AuthStyles = StyleSheet.create({
         width: 200,
         height: 150,
     },
-    confirmContainer: {
-        width: '100%',
-        alignItems: 'center',
-        rowGap: 10,
-    },
-    description: {
-        color: Colors.text,
-        fontSize: textSize(15),
-        textAlign: 'center',
-        width: '75%',
-    },
     providerContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
@@ -252,28 +194,6 @@ const AuthStyles = StyleSheet.create({
         paddingRight: 20,
         paddingLeft: 20
     },
-    signInImg: {
-        width: 25,
-        height: 25,
-    },
-    providerSignIn: {
-        backgroundColor: 'white',
-        width: '100%',
-        padding: 10,
-        borderRadius: 25,
-        flexDirection: 'row',
-        columnGap: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    checkBox: {
-        width: 30,
-        height: 30,
-        backgroundColor: Colors.accent,
-        borderRadius: 5,
-        justifyContent: 'center',
-        alignItems: 'center'
-    }
 });
 
 const HomeStyles = StyleSheet.create({
@@ -300,39 +220,6 @@ const HomeStyles = StyleSheet.create({
         overflow: 'hidden',
         alignSelf: 'center',
     },
-    welcomeContainer: {
-        width: '100%',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 15,
-    },
-    activityContainer: {
-        width: 30,
-        height: 30,
-        borderRadius: 100,
-        justifyContent: 'center',
-        alignItems: 'center',
-        position: 'absolute',
-        right: 10,
-        top: -15
-    },
-    appointmentContainer: {
-        flex: 1,
-        minWidth: '40%',
-        maxHeight: '100%',
-        borderRadius: 10,
-        paddingLeft: 25, paddingRight: 25, paddingTop: 10, paddingBottom: 10,
-        overflow: 'hidden'
-    },
-    shortcutContainer: {
-        width: '100%',
-        height: 60,
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingLeft: 20,
-        paddingRight: 20,
-        columnGap: 10
-    },
     shortcutButton: {
         flex: 1,
         height: '100%',
@@ -353,48 +240,10 @@ const HomeStyles = StyleSheet.create({
         fontFamily: 'Roboto-Light',
         color: Colors.text
     },
-    // vehiclePickup.jsx
-    pickupContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: Colors.accentAlt,
-        padding: 20,
-        rowGap: 20,
-        width: '95%',
-        borderRadius: 10
-    },
-    pickupInfo: {
-        flexDirection: 'row',
-        columnGap: 20
-    },
-    pickupButton: {
-        width: 50,
-        height: 50,
-        borderRadius: 10,
-        backgroundColor: Colors.button,
-        justifyContent: 'center',
-        alignItems: 'center'
-    }
 });
 
 const ServiceStyles = StyleSheet.create({
-    // components.jsx
-    calendarHeaderContainer: {
-        width: '100%'
-    },
     // (service)
-    subTitle: {
-        fontSize: textSize(12),
-        fontFamily: 'Roboto-bold',
-        textAlign: 'left',
-        color: Colors.text,
-    },
-    text: {
-        fontSize: textSize(22),
-        fontFamily: 'Roboto-light',
-        textAlign: 'left',
-        color: Colors.text,
-    },
     progressBar: {
         alignSelf: 'center',
         width: '100%',
@@ -404,11 +253,6 @@ const ServiceStyles = StyleSheet.create({
         columnGap: 10,
         backgroundColor: 'transparent',
         padding: 20
-    },
-    progressBarLine: {
-        flex: 1,
-        height: 5,
-        backgroundColor: Colors.accent
     },
     buttonContainer: {
         width: '100%',
@@ -451,20 +295,6 @@ const ServiceStyles = StyleSheet.create({
         justifyContent: 'space-evenly',
         rowGap: 10,
     },
-    timeBubble: {
-        backgroundColor: 'rgba(0,0,0,0.5)',
-        borderRadius: 5,
-        padding: 10,
-        width: '45%'
-    },
-    // myAppointments.jsx
-    fieldContainer: {
-        width: '100%',
-        borderRadius: 5,
-        position: 'relative',
-        rowGap: 10,
-        alignItems: 'center'
-    },
     // towRequest.jsx
     mapContainer: {
         elevation: 10,
@@ -473,21 +303,7 @@ const ServiceStyles = StyleSheet.create({
         height: 300,
         borderRadius: 15,
         overflow: 'hidden'
-    },
-    mapContainerAlt: {
-        elevation: 10,
-        backgroundColor: 'transparent',
-        width: '90%',
-        height: 250,
-        borderRadius: 15,
-        overflow: 'hidden'
-    },
-    // towStatus.jsx
-    titleWrapper: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        columnGap: 10
-    },
+    }
 });
 
 const ProfileStyles = StyleSheet.create({
@@ -512,33 +328,7 @@ const ProfileStyles = StyleSheet.create({
         top: 5,
         zIndex: 1,
     },
-    // Vehicle List
-    vehicleContainer: {
-        width: '100%',
-        alignItems: 'center',
-    },
-    vehicleBox: {
-        backgroundColor: Colors.accentAlt,
-        padding: 25,
-        width: '100%',
-        alignItems: 'center',
-        flexDirection: 'row',
-        columnGap: 25,
-    },
-    addVehicleButton: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: Colors.accentAlt,
-        elevation: 10,
-        padding: 25,
-        width: '100%',
-        alignItems: 'center'
-    },
     // resetPassword.jsx
-    requirementsContainer: {
-        justifyContent: 'flex-start',
-        paddingLeft: 20
-    },
     requirementsWrapper: {
         flexDirection: 'row',
         columnGap: 5,
@@ -547,12 +337,6 @@ const ProfileStyles = StyleSheet.create({
 });
 
 const AdminStyles = StyleSheet.create({
-    customerBox: {
-        width: '100%',
-        padding: 30,
-        rowGap: 10,
-        backgroundColor: Colors.backgroundContrast,
-    },
     picker: {
         backgroundColor: Colors.button,
         borderRadius: 25,
@@ -564,55 +348,12 @@ const AdminStyles = StyleSheet.create({
         width: 100,
         height: 100
     },
-    // userView.jsx
-    vehicleContainer: {
-        width: '100%',
-        paddingLeft: 25,
-        paddingRight: 25,
-        alignItems: 'center',
-        alignSelf: 'center',
-        rowGap: 5
-    },
-    labelContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        width: '100%'
-    },
-    pdf: {
-        flex: 1,
-    },
     // homeSettings.jsx
     imgPickContainer: {
         borderRadius: 10,
         width: '90%',
         overflow: 'hidden',
         alignSelf: 'center'
-    },
-    imgPick: {
-        resizeMode: 'contain',
-        width: 400,
-        height: 225
-    },
-    noImg: {
-        width: '100%',
-        height: 225,
-        borderRadius: 10,
-        backgroundColor: 'white',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    inputContainer: {
-        width: '100%',
-        backgroundColor: 'white',
-    },
-    removeButton: {
-        position: 'absolute',
-        right: 10,
-        top: 10,
-        borderRadius: 5,
-        backgroundColor: Colors.error,
-        padding: 2
     },
     arrow: {
         position: 'absolute',
@@ -623,11 +364,6 @@ const AdminStyles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
-    // (appointment)/index.jsx
-    agendaList: {
-        width: '100%',
-        padding: 20
-    }
 });
 
 const TowStyles = StyleSheet.create({

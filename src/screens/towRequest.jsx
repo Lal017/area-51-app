@@ -371,7 +371,12 @@ const TowRequest = () =>
                         </View>
                     </View>
                     <View style={[Styles.block, {alignItems: 'center'}]}>
-                        <View style={ServiceStyles.mapContainerAlt}>
+                        <View style={{
+                            backgroundColor: 'transparent',
+                            width: '90%', height: 250,
+                            borderRadius: 15,
+                            overflow: 'hidden'
+                        }}>
                             { marker ? (
                                 <MapView
                                     provider={PROVIDER_GOOGLE}

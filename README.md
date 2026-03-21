@@ -1,6 +1,6 @@
 ToDo:
-    - get rid of useless styling in style.js
     - use color pallete generator to tweak colors
+    - create more components to simplify code i.e error message component
     - add openInMaps option to the first step of the towRequest page
     - check all functions to make sure they throw try and catch errors correctly
     - add try/catch to functions and buttons

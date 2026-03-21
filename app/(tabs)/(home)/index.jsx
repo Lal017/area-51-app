@@ -117,7 +117,13 @@ const Index = () =>
   return (
     <Background refreshing={refreshing} onRefresh={onRefresh}>
       <View style={Styles.block}>
-        <View style={HomeStyles.shortcutContainer}>
+        <View style={{
+          width: '100%', height: 60,
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingHorizontal: 20,
+          columnGap: 10
+        }}>
           <TouchableOpacity
             style={HomeStyles.shortcutButton}
             onPress={async () => {
@@ -244,7 +250,12 @@ const Index = () =>
           </TouchableOpacity>
         </View>
       </View>
-      <View style={HomeStyles.welcomeContainer}>
+      <View style={{
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 15,
+      }}>
       { vehiclePickup ? (
         <Text style={Styles.text}>Your vehicle is ready for pickup!</Text>
       ) : (

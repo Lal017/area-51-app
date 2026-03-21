@@ -211,7 +211,12 @@ const VehiclePickup = () =>
                                         <TouchableOpacity
                                             onPress={() => setTime(item)}
                                             style={[
-                                            ServiceStyles.timeBubble,
+                                            {
+                                                backgroundColor: 'rgba(0,0,0,0.5)',
+                                                borderRadius: 5,
+                                                padding: 10,
+                                                width: '45%'
+                                            },
                                             time === item && {
                                                 backgroundColor: Colors.contrast
                                             }

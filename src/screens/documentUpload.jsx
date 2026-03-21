@@ -55,7 +55,7 @@ const DocumentUpload = () =>
                     <Pdf
                         source={{uri: document, cache: true}}
                         onError={(error) => console.log('PDF Error: ', error)}
-                        style={[AdminStyles.pdf, {width: Dimensions.get('window').width, height: Dimensions.get('window').height}]}
+                        style={{width: Dimensions.get('window').width, height: Dimensions.get('window').height, flex: 1}}
                         horizontal={true}
                         enablePaging={true}
                         enableAnnotationRendering={true}
@@ -64,7 +64,12 @@ const DocumentUpload = () =>
             ) : (
                 <View style={AdminStyles.imgPickContainer}>
                     <TouchableOpacity
-                        style={AdminStyles.noImg}
+                        style={{
+                            width: '100%', height: 225,
+                            borderRadius: 10,
+                            backgroundColor: 'white',
+                            justifyContent: 'center', alignItems: 'center'
+                        }}
                         onPress={pickDocument}
                     >
                         <FontAwesome6 name="file-pdf" size={50} color="black" />
