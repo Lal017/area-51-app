@@ -472,7 +472,7 @@ const TabsContent = () =>
                 </View>
             </Background>
         </Modal>
-        { !permissionScreen ? (
+        { !permissionScreen && (
             <Modal
                 isVisible={isMissingAttr}
                 onBackdropPress={null}
@@ -482,7 +482,7 @@ const TabsContent = () =>
             >
                 <AccountEdit/>
             </Modal>
-        ) : null }
+        )}
         </>
     );
 };

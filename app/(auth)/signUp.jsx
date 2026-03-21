@@ -162,7 +162,7 @@ const SignUp = () =>
                                 }}
                                 onPress={() => setCheck(prev => !prev)}
                             >
-                                { check ? <Entypo name='check' size={25}/> : null}
+                                { check && <Entypo name='check' size={25}/>}
                             </TouchableOpacity>
                             <Text style={Styles.text}>Request a tow truck driver account?</Text>
                         </View>

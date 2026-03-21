@@ -33,14 +33,14 @@ const Settings = () =>
                 leftIcon={<MaterialIcons name='lock-reset' size={30} style={Styles.icon} />}
                 rightIcon={<AntDesign name="right" size={25} style={Styles.rightIcon} />}
             />
-            { access === "Customers" ? (
+            { access === "Customers" && (
                 <Tab
                     text="Tow Driver Account"
                     action={() => router.push('driverAccountRequest')}
                     leftIcon={<MaterialCommunityIcons name='tow-truck' size={30} style={Styles.icon}/>}
                     rightIcon={<AntDesign name='right' size={25} style={Styles.rightIcon}/>}
                 />
-            ) : null}
+            )}
             <Tab
                 text="Delete Account"
                 action={() => router.push('deleteAccount')}

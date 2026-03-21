@@ -65,7 +65,7 @@ const RequestList = () =>
         <>
         { ready && towRequests ? (
             <Background refreshing={refreshing} onRefresh={onRefresh}>
-                { towRequests?.length === 0 ? (
+                { towRequests?.length === 0 && (
                     <View style={[Styles.block, {alignItems: 'center'}]}>
                         <LottieView
                             source={require('../../../assets/animations/no-files.json')}
@@ -76,7 +76,7 @@ const RequestList = () =>
                         />
                         <Text style={Styles.title}>No Tow Requests</Text>
                     </View>
-                ) : null }
+                )}
                 { towRequests?.map((request, index) => (
                     <Tab
                         key={index}

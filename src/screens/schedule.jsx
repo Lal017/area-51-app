@@ -353,35 +353,35 @@ const Schedule = () =>
                   selected={selectedService === 'Oil Change' ? true : false}
                   action={() => {selectedService === 'Oil Change' ? setSelectedService(undefined) : setSelectedService('Oil Change')}}
                   rightIcon={<FontAwesome5 name="oil-can" size={30} style={Styles.rightIcon} color={Colors.accentAlt} />}
-                  leftIcon={<FontAwesome name={selectedService === 'Oil Change' ? "circle" : "circle-o"} size={25} style={Styles.icon} color={selectedService === 'Oil Change' ? Colors.accentAlt : null}/>}
+                  leftIcon={<FontAwesome name={selectedService === 'Oil Change' ? "circle" : "circle-o"} size={25} style={Styles.icon} color={selectedService === 'Oil Change' && Colors.accentAlt}/>}
                 />
                 <Select
                   text="Diagnosis"
                   selected={selectedService === 'Diagnosis' ? true : false}
                   action={() => {selectedService === 'Diagnosis' ? setSelectedService(undefined) : setSelectedService('Diagnosis')}}
                   rightIcon={<FontAwesome name="stethoscope" size={30} style={Styles.rightIcon} color={Colors.accentAlt}/>}
-                  leftIcon={<FontAwesome name={selectedService === 'Diagnosis' ? "circle" : "circle-o"} size={25} style={Styles.icon} color={selectedService === 'Diagnosis' ? Colors.accentAlt : null}/>}
+                  leftIcon={<FontAwesome name={selectedService === 'Diagnosis' ? "circle" : "circle-o"} size={25} style={Styles.icon} color={selectedService === 'Diagnosis' && Colors.accentAlt}/>}
                 />
                 <Select
                   text="Tuning"
                   selected={selectedService === 'Tuning' ? true : false}
                   action={() => {selectedService === 'Tuning' ? setSelectedService(undefined) : setSelectedService('Tuning')}}
                   rightIcon={<Entypo name="area-graph" size={30} style={Styles.rightIcon} color={Colors.accentAlt}/>}
-                  leftIcon={<FontAwesome name={selectedService === 'Tuning' ? "circle" : "circle-o"} size={25} style={Styles.icon} color={selectedService === 'Tuning' ? Colors.accentAlt : null}/>}
+                  leftIcon={<FontAwesome name={selectedService === 'Tuning' ? "circle" : "circle-o"} size={25} style={Styles.icon} color={selectedService === 'Tuning' && Colors.accentAlt}/>}
                 />
                 <Select
                   text="A/C"
                   selected={selectedService === 'A/C' ? true : false}
                   action={() => {selectedService === 'A/C' ? setSelectedService(undefined) : setSelectedService('A/C')}}
                   rightIcon={<MaterialIcons name="air" size={30} style={Styles.rightIcon} color={Colors.accentAlt}/>}
-                  leftIcon={<FontAwesome name={selectedService === 'A/C' ? "circle" : "circle-o"} size={25} style={Styles.icon} color={selectedService === 'A/C' ? Colors.accentAlt : null}/>}
+                  leftIcon={<FontAwesome name={selectedService === 'A/C' ? "circle" : "circle-o"} size={25} style={Styles.icon} color={selectedService === 'A/C' && Colors.accentAlt}/>}
                 />
                 <Select
                   text="Other"
                   selected={selectedService === 'Other' ? true : false}
                   action={() => {selectedService === 'Other' ? setSelectedService(undefined) : setSelectedService('Other')}}
                   rightIcon={<MaterialCommunityIcons name="dots-horizontal-circle" size={30} style={Styles.rightIcon} color={Colors.accentAlt} />}
-                  leftIcon={<FontAwesome name={selectedService === 'Other' ? "circle" : "circle-o"} size={25} style={Styles.icon} color={selectedService === 'Other' ? Colors.accentAlt : null}/>}
+                  leftIcon={<FontAwesome name={selectedService === 'Other' ? "circle" : "circle-o"} size={25} style={Styles.icon} color={selectedService === 'Other' && Colors.accentAlt}/>}
                 />
               </View>
               { errorMessage && (
@@ -462,12 +462,12 @@ const Schedule = () =>
                 text={`${selectedService}`}
                 leftIcon={iconCheck(selectedService)}
               />
-              { notes ? (
+              { notes && (
                 <View style={Styles.infoContainer}>
                   <Text style={Styles.headerTitle}>Customer Note</Text>
                   <Text style={Styles.text}>{notes}</Text>
                 </View>
-              ) : null }
+              )}
             </View>
             <FloatingBlock>
               <View style={Styles.infoContainer}>

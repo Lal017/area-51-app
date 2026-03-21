@@ -116,9 +116,7 @@ const Background = ({children, style, refreshing, onRefresh, scrollRef, hasNoHea
                 keyboardShouldPersistTaps='handled'
                 ref={scrollRef}
                 refreshControl={
-                    onRefresh ? (
-                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-                    ) : null
+                    onRefresh && <RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>
                 }
             >
                 {children}

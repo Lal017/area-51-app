@@ -272,9 +272,9 @@ const Index = () =>
             style={{resizeMode: 'contain', width: 100}}
           />
         </TouchableOpacity>
-        { appointments?.length > 0 ? (
+        { appointments?.length > 0 && (
           <AppointmentReminder appointments={appointments} />
-        ) : null}
+        )}
       </View>
       <View style={{alignItems: 'center'}}>
         { urls ? (
@@ -300,7 +300,7 @@ const Index = () =>
           </View>
         )}
       </View>
-      { customNotification ? (
+      { customNotification && (
         <View style={HomeStyles.panel}>
           <View style={[HomeStyles.panelContainer, {backgroundColor: Colors.backgroundContrast, paddingTop: 25, paddingBottom: 25, position: 'relative'}]}>
             <TouchableOpacity
@@ -315,7 +315,7 @@ const Index = () =>
             </View>
           </View>
         </View>
-      ) : null }
+      )}
     </Background>
   );
 };

@@ -51,11 +51,11 @@ const Profile = () =>
                 rightIcon={<AntDesign name="right" size={25} style={Styles.rightIcon} />}
             />
             <View style={ProfileStyles.tabContainer}>
-                { vehiclePickup ? (
+                { vehiclePickup && (
                     <Animated.View style={[ProfileStyles.activityContainer, animatedStyle, {backgroundColor: Colors.tertiary}]}>
                         <Text style={[Styles.subTitle, {fontSize: 20, textAlign: 'center'}]}>!</Text>
                     </Animated.View>
-                ) : null }
+                )}
                 <Tab
                     text="My Vehicles"
                     action={() => router.push('/vehicleList')}
@@ -64,11 +64,11 @@ const Profile = () =>
                 />
             </View>
             <View style={ProfileStyles.tabContainer}>
-                { newInvoice ? (
+                { newInvoice && (
                     <Animated.View style={[ProfileStyles.activityContainer, animatedStyle, {backgroundColor: Colors.tertiary}]}>
                         <Text style={[Styles.subTitle, {fontSize: 20, textAlign: 'center'}]}>!</Text>
                     </Animated.View>
-                ) : null }
+                )}
                 <Tab
                     text="Invoices"
                     action={() => {
@@ -83,11 +83,11 @@ const Profile = () =>
                 />
             </View>
             <View style={ProfileStyles.tabContainer}>
-                { newEstimate ? (
+                { newEstimate && (
                     <Animated.View style={[ProfileStyles.activityContainer, animatedStyle, {backgroundColor: Colors.tertiary}]}>
                         <Text style={[Styles.subTitle, {fontSize: 20, textAlign: 'center'}]}>!</Text>
                     </Animated.View>
-                ) : null }
+                )}
                 <Tab
                     text="Estimates"
                     action={() => {

@@ -284,7 +284,7 @@ const TowDriverContent = () =>
                 </View>
             </Background>
         </Modal>
-        { !permissionScreen ? (
+        { !permissionScreen && (
             <Modal
                 isVisible={isMissingAttr}
                 onBackdropPress={null}
@@ -294,7 +294,7 @@ const TowDriverContent = () =>
             >
                 <AccountEdit/>
             </Modal>
-        ) : null }
+        )}
         </>
     );
 };

@@ -238,7 +238,7 @@ const AdminContent = () =>
                 </View>
             </Background>
         </Modal>
-        { !permissionScreen ? (
+        { !permissionScreen && (
             <Modal
                 isVisible={isMissingAttr}
                 onBackdropPress={null}
@@ -248,7 +248,7 @@ const AdminContent = () =>
             >
                 <AccountEdit/>
             </Modal>
-        ) : null }
+        )}
         </>
     );
 }
