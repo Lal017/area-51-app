@@ -97,7 +97,7 @@ const VehicleList = () =>
                                         )
                                     }}
                                 >
-                                    <Entypo name='check' size={25} color={Colors.backDropAccent}/>
+                                    <Entypo name='check' size={25} color={Colors.accent}/>
                                 </TouchableOpacity>
                             ) : pickupVehicles?.includes(item.id) ? (
                                 <TouchableOpacity
@@ -109,7 +109,7 @@ const VehicleList = () =>
                                     }}
                                     onPress={() => router.push('vehiclePickup')}
                                 >
-                                    <AntDesign name='calendar' size={25} color={Colors.backDropAccent}/>
+                                    <AntDesign name='calendar' size={25} color={Colors.accent}/>
                                 </TouchableOpacity>
                             ) : (
                                 <>
@@ -122,10 +122,10 @@ const VehicleList = () =>
                                             });
                                         }}
                                     >
-                                        <Entypo name='edit' size={25} color={Colors.backDropAccent}/>
+                                        <Entypo name='edit' size={25} color={Colors.accent}/>
                                     </TouchableOpacity>
                                     <TouchableOpacity
-                                        style={{backgroundColor: Colors.redButton, padding: 10, borderRadius: 10}}
+                                        style={{backgroundColor: Colors.error, padding: 10, borderRadius: 10}}
                                         onPress={() => {
                                             Alert.alert(
                                                 'Delete Vehicle',
@@ -144,7 +144,7 @@ const VehicleList = () =>
                                             );
                                         }}
                                     >
-                                        <Feather name='x' size={25} color={Colors.backDropAccent}/>
+                                        <Feather name='x' size={25} color={Colors.accent}/>
                                     </TouchableOpacity>
                                 </>
                             )}

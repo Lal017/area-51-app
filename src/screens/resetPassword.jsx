@@ -1,5 +1,5 @@
 import Colors from '../../constants/colors';
-import { Background } from '../../components/components';
+import { ActionButton, Background } from '../../components/components';
 import { ProfileStyles, Styles } from '../../constants/styles';
 import { handleUpdatePassword } from '../../components/authComponents';
 import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
@@ -12,7 +12,6 @@ const ResetPassword = () =>
     const [ oldPassword, setOldPassword ] = useState(undefined);
     const [ newPassword, setNewPassword ] = useState('');
     const [ confNewPassword, setConfNewPassword ] = useState(undefined);
-    const [ loading, setLoading ] = useState(false);
     const [ showOldPassword, setShowOldPassword ] = useState(false);
     const [ showPassword, setShowPassword ] = useState(false);
     const [ showConfirmPassword, setShowConfirmPassword ] = useState(false);
@@ -56,7 +55,7 @@ const ResetPassword = () =>
                                 <Ionicons name='lock-open' size={20} style={Styles.icon} />
                                 <TextInput
                                     placeholder='Current Password'
-                                    placeholderTextColor={Colors.subText}
+                                    placeholderTextColor={Colors.grayText}
                                     value={oldPassword}
                                     onChangeText={setOldPassword}
                                     secureTextEntry={!showOldPassword}
@@ -70,8 +69,8 @@ const ResetPassword = () =>
                                     }}
                                 >
                                     { showOldPassword ? (
-                                        <Ionicons name='eye-off' size={20} color={Colors.backDropAccent}/>
-                                    ) : <Ionicons name='eye' size={20} color={Colors.backDropAccent}/> }
+                                        <Ionicons name='eye-off' size={20} color={Colors.accent}/>
+                                    ) : <Ionicons name='eye' size={20} color={Colors.accent}/> }
                                 </TouchableOpacity>
                             </View>
                             {errorCheck && !oldPassword && (<Text style={[Styles.text, {color: 'red', paddingLeft: 30, fontSize: textSize(13)}]}>Missing Password</Text>)}
@@ -84,7 +83,7 @@ const ResetPassword = () =>
                                 <MaterialIcons name='lock-reset' size={20} style={Styles.icon} />
                                 <TextInput
                                     placeholder='New Password'
-                                    placeholderTextColor={Colors.subText}
+                                    placeholderTextColor={Colors.grayText}
                                     value={newPassword}
                                     onChangeText={setNewPassword}
                                     secureTextEntry={!showPassword}
@@ -98,8 +97,8 @@ const ResetPassword = () =>
                                     }}
                                 >
                                     { showPassword ? (
-                                        <Ionicons name='eye-off' size={20} color={Colors.backDropAccent}/>
-                                    ) : <Ionicons name='eye' size={20} color={Colors.backDropAccent}/> }
+                                        <Ionicons name='eye-off' size={20} color={Colors.accent}/>
+                                    ) : <Ionicons name='eye' size={20} color={Colors.accent}/> }
                                 </TouchableOpacity>
                             </View>
                             {errorCheck && !newPassword && (<Text style={[Styles.text, {color: 'red', paddingLeft: 30, fontSize: textSize(13)}]}>Missing New Password</Text>)}
@@ -130,7 +129,7 @@ const ResetPassword = () =>
                                 <MaterialCommunityIcons name='lock-check' size={20} style={Styles.icon} />
                                 <TextInput
                                     placeholder='Confirm New Password'
-                                    placeholderTextColor={Colors.subText}
+                                    placeholderTextColor={Colors.grayText}
                                     value={confNewPassword}
                                     onChangeText={setConfNewPassword}
                                     secureTextEntry={!showConfirmPassword}
@@ -144,34 +143,37 @@ const ResetPassword = () =>
                                     }}
                                 >
                                     { showConfirmPassword ? (
-                                        <Ionicons name='eye-off' size={20} color={Colors.backDropAccent}/>
-                                    ) : <Ionicons name='eye' size={20} color={Colors.backDropAccent}/> }
+                                        <Ionicons name='eye-off' size={20} color={Colors.accent}/>
+                                    ) : <Ionicons name='eye' size={20} color={Colors.accent}/> }
                                 </TouchableOpacity>
                             </View>
                             {errorCheck && !confNewPassword && (<Text style={[Styles.text, {color: 'red', paddingLeft: 30, fontSize: textSize(13)}]}>Missing New Password Confirmation</Text>)}
                         </View>
                     </View>
                 </View>
-                <View style={[Styles.block, {alignItems: 'center', paddingTop: 0}]}>
-                    { errorMessage ? (
+                { errorMessage && (
+                    <View style={Styles.block}>
                         <View style={Styles.errorContainer}>
                             <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
                             <Text style={Styles.errorText}>{errorMessage}</Text>
                         </View>
-                    ) : null }
-                    <TouchableOpacity
+                    </View>
+                )}
+                <View style={Styles.block}>
+                    <ActionButton
+                        text='Reset'
+                        primaryColor={Colors.primary}
+                        secondaryColor={Colors.primaryShade}
                         onPress={async () => {
-                            if (loading) return;
-                            setLoading(true);
-                            setErrorCheck(true);
-                            if (!oldPassword || !newPassword || !confNewPassword) { setLoading(false); return; }
-                            setErrorMessage(await handleUpdatePassword(oldPassword, newPassword, confNewPassword));
-                            setLoading(false);
+                            try {
+                                setErrorCheck(true);
+                                if (!oldPassword || !newPassword || !confNewPassword) { setLoading(false); return; }
+                                setErrorMessage(await handleUpdatePassword(oldPassword, newPassword, confNewPassword));
+                            } catch (error) {
+                                console.error(error);
+                            }
                         }}
-                        style={[Styles.actionButton, loading && { opacity: 0.5 }, {backgroundColor: Colors.primary}]}
-                        disabled={loading}>
-                        <Text style={Styles.actionText}>Reset</Text>
-                    </TouchableOpacity>
+                    />
                 </View>
             </Background>
         </KeyboardAvoidingView>

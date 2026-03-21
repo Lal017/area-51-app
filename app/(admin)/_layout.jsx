@@ -1,6 +1,6 @@
 import AccountEdit from '../../src/screens/accountEdit';
 import Modal from 'react-native-modal';
-import { Background, CustHeader, Loading } from "../../components/components";
+import { ActionButton, Background, CustHeader, Loading } from "../../components/components";
 import { AppProvider, useApp } from "../../components/context";
 import { registerForPushNotifications } from "../../components/notifComponents";
 import { handleCreateUser, handleUpdateUser, handleGetUser } from '../../components/userComponents';
@@ -231,12 +231,10 @@ const AdminContent = () =>
                     <Text style={Styles.text}>This app requires push notification permissions to function properly</Text>
                 </View>
                 <View style={Styles.block}>
-                    <TouchableOpacity
-                        style={[Styles.actionButton, {alignSelf: 'center'}]}
-                        onPress={() => Linking.openSettings()}
-                    >
-                        <Text style={Styles.actionText}>Settings</Text>
-                    </TouchableOpacity>
+                    <ActionButton
+                        text='Settings'
+                        onPress={async () => Linking.openSettings()}
+                    />
                 </View>
             </Background>
         </Modal>

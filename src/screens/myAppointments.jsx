@@ -70,10 +70,10 @@ const MyAppointments = () => {
                                     });
                                 }}
                             >
-                                <Entypo name='edit' size={25} color={Colors.backDropAccent}/>
+                                <Entypo name='edit' size={25} color={Colors.accent}/>
                             </TouchableOpacity>
                             <TouchableOpacity
-                                style={{backgroundColor: Colors.redButton, padding: 10, borderRadius: 10}}
+                                style={{backgroundColor: Colors.error, padding: 10, borderRadius: 10}}
                                 onPress={() => {
                                     Alert.alert(
                                         'Cancel Appointment',
@@ -97,7 +97,7 @@ const MyAppointments = () => {
                                     )
                                 }}
                             >
-                                <Feather name='x' size={25} color={Colors.backDropAccent}/>
+                                <Feather name='x' size={25} color={Colors.accent}/>
                             </TouchableOpacity>
                         </View>
                     }
@@ -114,7 +114,7 @@ const MyAppointments = () => {
                         <Tab
                             header={`Vehicle${item?.vehicle?.plate ? ` (${item.vehicle.plate})` : ``}`}
                             text={`${item.vehicle ? `${item.vehicle.year} ${item.vehicle.make} ${item.vehicle.model}` : `${item.vehicleYear} ${item.vehicleMake} ${item.vehicleModel}`}`}
-                            rightIcon={<Ionicons name="car-sport" size={30} style={Styles.rightIcon} color={Colors.backDrop}/>}
+                            rightIcon={<Ionicons name="car-sport" size={30} style={Styles.rightIcon} color={Colors.accentAlt}/>}
                             style={{height: 'none', paddingBottom: 5}}
                         />
                         { item?.notes && (

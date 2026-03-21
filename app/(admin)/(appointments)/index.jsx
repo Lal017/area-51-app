@@ -102,7 +102,7 @@ const AppointmentIndex = () =>
                                 todayTextColor: Colors.secondary,
                                 textDayFontSize: textSize(15),
                                 dayTextColor: Colors.secondary,
-                                textDisabledColor: Colors.backgroundAccent
+                                textDisabledColor: Colors.backgroundContrast
                             }}
                             onDayPress={(day) => {
                                 setSelected(day.dateString);
@@ -117,7 +117,7 @@ const AppointmentIndex = () =>
                                 }
                             }}
                             renderHeader={date => <CalendarHeader date={date}/>}
-                            renderArrow={direction => <Entypo name={direction === 'left' ? 'chevron-with-circle-left' : 'chevron-with-circle-right'} size={24} color={Colors.backDropAccent}/>}
+                            renderArrow={direction => <Entypo name={direction === 'left' ? 'chevron-with-circle-left' : 'chevron-with-circle-right'} size={24} color={Colors.accent}/>}
                         />
                         <AgendaList
                             theme={{

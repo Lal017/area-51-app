@@ -1,5 +1,5 @@
 import Colors from '../../constants/colors';
-import { Background, Tab } from '../../components/components';
+import { Background, FloatingBlock, Tab } from '../../components/components';
 import { Styles } from '../../constants/styles';
 import { handleUpdateVehiclePickupStatus } from '../../components/vehicleComponents';
 import { sendPushNotification } from '../../components/notifComponents';
@@ -43,7 +43,7 @@ const VehicleView = () =>
                     </TouchableOpacity>
                 </View>
             </View>
-            <View style={Styles.floatingBlock}>
+            <FloatingBlock>
                 <View style={Styles.infoContainer}>
                     <Text style={Styles.headerTitle}>Vehicle</Text>
                 </View>
@@ -75,7 +75,7 @@ const VehicleView = () =>
                         style={{height: 'none'}}
                     />
                 )}
-            </View>
+            </FloatingBlock>
             <View style={[Styles.block, {paddingTop: 20}]}>
                 <View style={{
                     flexDirection: 'row',
@@ -109,8 +109,8 @@ const VehicleView = () =>
                                 ]
                             );
                         }}
-                        trackColor={{ false: Colors.backDropAccent, true: Colors.backDropAccent}}
-                        thumbColor={isReady ? Colors.primary : Colors.redButton }
+                        trackColor={{ false: Colors.accent, true: Colors.accent}}
+                        thumbColor={isReady ? Colors.primary : Colors.error }
                     />
                     <View>
                         <Text style={Styles.headerTitle}>{isReady ? 'Ready' : 'Not Ready'}</Text>

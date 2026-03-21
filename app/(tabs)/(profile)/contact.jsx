@@ -1,6 +1,6 @@
 import { Linking, Text, View } from 'react-native';
 import { Styles } from '../../../constants/styles';
-import { Background, Tab } from '../../../components/components';
+import { Background, FloatingBlock, Tab } from '../../../components/components';
 import { Entypo } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { textSize } from '../../../constants/utils';
@@ -13,7 +13,7 @@ const Contact = () =>
                 <View style={Styles.infoContainer}>
                     <Text style={Styles.tabHeader}>You can get into contact with us using any of the links below!</Text>
                 </View>
-                <View style={Styles.floatingBlock}>
+                <FloatingBlock>
                     <View style={Styles.infoContainer}>
                         <Text style={[Styles.text, {fontSize: textSize(17)}]}>Customer Support</Text>
                     </View>
@@ -35,8 +35,8 @@ const Contact = () =>
                         leftIcon={<Entypo name='location' size={25} style={Styles.icon}/>}
                         action={() => Linking.openURL('https://www.google.com/maps/search/?api=1&query=Area+51+Motorsports+Las+Vegas+NV')}
                     />
-                </View>
-                <View style={Styles.floatingBlock}>
+                </FloatingBlock>
+                <FloatingBlock>
                     <View style={Styles.infoContainer}>
                         <Text style={[Styles.text, {fontSize: textSize(17)}]}>Social Media</Text>
                     </View>
@@ -70,7 +70,7 @@ const Contact = () =>
                         }
                         action={() => Linking.openURL('https://www.facebook.com/Area51MotorsportsLv/')}
                     />
-                </View>
+                </FloatingBlock>
             </View>
         </Background>
     );

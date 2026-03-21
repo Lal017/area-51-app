@@ -1,12 +1,13 @@
 import Colors from '../../constants/colors';
 import { AuthStyles, Styles } from '../../constants/styles';
 import { GoogleSignInButton } from '../../components/authComponents';
-import { AuthBackground } from '../../components/components';
+import { ActionButton, AuthBackground } from '../../components/components';
 import { handleSignIn } from '../../components/authComponents';
 import { Text, TextInput, View, TouchableOpacity, Image } from 'react-native';
 import { useState } from 'react';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import { Link } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const SignIn = () =>
 {
@@ -33,7 +34,7 @@ const SignIn = () =>
                         <Ionicons name='mail' size={20} style={Styles.icon} />
                         <TextInput
                             placeholder='email'
-                            placeholderTextColor={Colors.subText}
+                            placeholderTextColor={Colors.grayText}
                             value={email}
                             onChangeText={setEmail}
                             keyboardType='email-address'
@@ -45,7 +46,7 @@ const SignIn = () =>
                         <Ionicons name='lock-closed' size={20} style={Styles.icon} />
                         <TextInput
                             placeholder='password'
-                            placeholderTextColor={Colors.subText}
+                            placeholderTextColor={Colors.grayText}
                             value={password}
                             onChangeText={setPassword}
                             autoCapitalize='none'
@@ -59,8 +60,8 @@ const SignIn = () =>
                             }}
                         >
                             { showPassword ? (
-                                <Ionicons name='eye-off' size={20} color={Colors.backDropAccent}/>
-                            ) : <Ionicons name='eye' size={20} color={Colors.backDropAccent}/> }
+                                <Ionicons name='eye-off' size={20} color={Colors.accent}/>
+                            ) : <Ionicons name='eye' size={20} color={Colors.accent}/> }
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -70,22 +71,18 @@ const SignIn = () =>
                         <Text style={[Styles.text, {color: 'red'}]}>{errorMessage}</Text>
                     </View>
                 ) : null }
-                <TouchableOpacity
+                <ActionButton
+                    text='Login'
+                    primaryColor={Colors.secondary}
+                    secondaryColor={Colors.secondaryShade}
                     onPress={async () => {
-                        if (loading) return;
-                        setLoading(true);
                         setErrorMessage(await handleSignIn(email, password));
                         if (!email) setMissingEmail(true);
                         else setMissingEmail(false);
                         if (!password) setMissingPassword(true);
                         else setMissingPassword(false);
-                        setLoading(false);
                     }}
-                    style={[Styles.actionButton, {backgroundColor: Colors.secondary}, loading && { opacity: 0.5 }]}
-                    disabled={loading}
-                >
-                    <Text style={Styles.actionText}>Login</Text>
-                </TouchableOpacity>
+                />
             </View>
             <View style={[Styles.block, {alignItems: 'center'}]}>
                 <View style={Styles.hr}/>

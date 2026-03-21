@@ -110,8 +110,8 @@ const UserList = () =>
                             }
                         >
                             <View style={[{flex: 1},
-                                user?.driverId === '1' ? {backgroundColor: Colors.redButton}
-                                : user?.driverId === null ? {backgroundColor: Colors.backDropAccent}
+                                user?.driverId === '1' ? {backgroundColor: Colors.error}
+                                : user?.driverId === null ? {backgroundColor: Colors.accent}
                                 : {backgroundColor: Colors.secondary}
                             ]}/>
                             { user?.driverId === '1' && (
@@ -123,7 +123,7 @@ const UserList = () =>
                                     }]}
                                 >
                                     <LinearGradient
-                                    colors={[Colors.backDropAccent, Colors.backDropAccent, Colors.backDropAccent]}
+                                    colors={[Colors.accent, Colors.accent, Colors.accent]}
                                     style={{flex: 1}}
                                     start={{ x: 0, y: 0}}
                                     end={{ x: 1, y: 1}}

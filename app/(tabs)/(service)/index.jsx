@@ -6,6 +6,7 @@ import { ServiceStyles, Styles } from "../../../constants/styles";
 import { router } from "expo-router";
 import { requestForegroundPermissionsAsync } from "expo-location";
 import { Text, TouchableOpacity, Alert, View, Linking } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
 const ServiceConsole = () =>
 {
@@ -49,8 +50,14 @@ const ServiceConsole = () =>
             router.push('/towRequest');
           }
         }}
-        style={[Styles.consoleBubble, {backgroundColor: Colors.secondary}]}
+        style={[Styles.consoleBubble, {overflow: 'hidden'}]}
       >
+        <LinearGradient
+          colors={[Colors.secondary, Colors.secondaryShade]}
+          start={{ x: 0, y: 0}}
+          end={{ x: 0, y: 1}}
+          style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, height:'100%'}}
+        />
         <Text style={ServiceStyles.title}>Request a tow</Text>
         <LottieView
           source={require('../../../assets/animations/ufo.json')}
@@ -78,8 +85,14 @@ const ServiceConsole = () =>
             router.push('/schedule');
           }
         }}
-        style={[Styles.consoleBubble, {backgroundColor: Colors.tertiary}]}
+        style={[Styles.consoleBubble, {overflow: 'hidden'}]}
       >
+        <LinearGradient
+          colors={[Colors.tertiary, Colors.tertiaryShade]}
+          start={{ x: 0, y: 0}}
+          end={{ x: 0, y: 1}}
+          style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, height:'100%'}}
+        />
         <Text style={ServiceStyles.title}>Schedule an Appointment</Text>
         <View style={[ServiceStyles.lottieAnim, {justifyContent: 'center', alignItems: 'center'}]}>
           <LottieView
@@ -93,8 +106,14 @@ const ServiceConsole = () =>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => router.push('/(tabs)/(service)/myAppointments')}
-        style={[Styles.consoleBubble, {backgroundColor: Colors.primary}]}
+        style={[Styles.consoleBubble, {overflow: 'hidden'}]}
       >
+        <LinearGradient
+          colors={[Colors.primary, Colors.primaryShade]}
+          start={{ x: 0, y: 0}}
+          end={{ x: 0, y: 1}}
+          style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, height:'100%'}}
+        />
         <Text style={ServiceStyles.title}>Appointments</Text>
         <View style={[ServiceStyles.lottieAnim, {justifyContent: 'center', alignItems: 'center'}]}>
           <LottieView

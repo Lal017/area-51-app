@@ -1,10 +1,10 @@
 import Colors from "../../constants/colors";
 import { Styles } from "../../constants/styles";
-import { Background } from "../../components/components";
+import { ActionButton, Background } from "../../components/components";
 import { handleUpdateAttributes } from "../../components/authComponents";
 import { useApp } from "../../components/context";
 import { useState } from "react";
-import { View, Text, TextInput, KeyboardAvoidingView, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, KeyboardAvoidingView } from "react-native";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { textSize } from "../../constants/utils";
 
@@ -16,7 +16,6 @@ const AccountEdit = () =>
     const [ editLastName, setEditLastName ] = useState(lastName);
     const [ editEmail, setEditEmail ] = useState(email);
     const [ editPhone, setEditPhone ] = useState(phoneNumber?.slice(2,12));
-    const [ loading, setLoading ] = useState(false);
     const [ errorMessage, setErrorMessage ] = useState(false);
     
     return(
@@ -33,7 +32,7 @@ const AccountEdit = () =>
                                 <Ionicons name="person" size={20} style={Styles.icon} />
                                 <TextInput
                                     placeholder="first name"
-                                    placeholderTextColor={Colors.subText}
+                                    placeholderTextColor={Colors.grayText}
                                     value={editFirstName}
                                     onChangeText={setEditFirstName}
                                     style={[Styles.input, !editFirstName && {borderColor: 'red', borderBottomWidth: 2}]}
@@ -46,7 +45,7 @@ const AccountEdit = () =>
                                 <Ionicons name="person" size={20} style={Styles.icon} />
                                 <TextInput
                                     placeholder="last name"
-                                    placeholderTextColor={Colors.subText}
+                                    placeholderTextColor={Colors.grayText}
                                     value={editLastName}
                                     onChangeText={setEditLastName}
                                     style={[Styles.input, !editLastName && {borderColor: 'red', borderBottomWidth: 2}]}
@@ -62,7 +61,7 @@ const AccountEdit = () =>
                                 <Ionicons name="mail" size={20} style={Styles.icon} />
                                 <TextInput
                                     placeholder="email"
-                                    placeholderTextColor={Colors.subText}
+                                    placeholderTextColor={Colors.grayText}
                                     value={editEmail}
                                     onChangeText={setEditEmail}
                                     autoCapitalize='none'
@@ -79,7 +78,7 @@ const AccountEdit = () =>
                                 <Ionicons name="call" size={20} style={Styles.icon} />
                                 <TextInput
                                     placeholder="phone number"
-                                    placeholderTextColor={Colors.subText}
+                                    placeholderTextColor={Colors.grayText}
                                     value={editPhone}
                                     onChangeText={setEditPhone}
                                     keyboardType="phone-pad"
@@ -90,17 +89,20 @@ const AccountEdit = () =>
                         </View>
                     </View>
                 </View>
-                <View style={[Styles.block, {alignItems: 'center', paddingTop: 0}]}>
-                    { errorMessage ? (
+                { errorMessage && (
+                    <View style={Styles.block}>
                         <View style={Styles.errorContainer}>
                             <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
                             <Text style={Styles.errorText}>{errorMessage}</Text>
                         </View>
-                    ) : null}
-                    <TouchableOpacity
+                    </View>
+                )}
+                <View style={Styles.block}>
+                    <ActionButton
+                        text='Update'
+                        primaryColor={Colors.primary}
+                        secondaryColor={Colors.primaryShade}
                         onPress={async () => {
-                            if (loading) return;
-                            setLoading(true);
                             const errMsg = await handleUpdateAttributes(
                                 isMissingAttr,
                                 editEmail,
@@ -113,13 +115,8 @@ const AccountEdit = () =>
                             );
                             if (!errMsg) setIsMissingAttr(false);
                             else setErrorMessage(errMsg);
-                            setLoading(false);
                         }}
-                        style={[Styles.actionButton, loading && { opacity: 0.5 }, {backgroundColor: Colors.primary}]}
-                        disabled={loading}
-                    >
-                        <Text style={Styles.actionText}>Update</Text>
-                    </TouchableOpacity>
+                    />
                 </View>
             </Background>
         </KeyboardAvoidingView>

@@ -1,6 +1,6 @@
 import Colors from '../../constants/colors';
 import { Styles } from '../../constants/styles';
-import { Background } from '../../components/components';
+import { ActionButton, Background } from '../../components/components';
 import { handleCreateVehicle, handleDeleteVehicle, handleUpdateVehicle } from '../../components/vehicleComponents';
 import { useApp } from '../../components/context';
 import { useLocalSearchParams, router } from 'expo-router';
@@ -22,7 +22,6 @@ const Vehicle = () =>
     const [ color, setColor ] = useState(vehicle?.color ?? undefined);
     const [ plate, setPlate ] = useState(vehicle?.plate ?? undefined);
     const [ vin, setVin ] = useState(vehicle?.vin ?? undefined);
-    const [ loading, setLoading ] = useState(false);
     const [ errorCheck, setErrorCheck ] = useState(false);
     const [ errorMessage, setErrorMessage ] = useState(undefined);
 
@@ -35,7 +34,7 @@ const Vehicle = () =>
                         <Text style={Styles.tabHeader}>{vehicle ? 'Edit' : 'Add'} a vehicle</Text>
                         { vehicle && (
                             <TouchableOpacity
-                                style={[Styles.rightIcon, {padding: 5, backgroundColor: Colors.redButton, borderRadius: 5}]}
+                                style={[Styles.rightIcon, {padding: 5, backgroundColor: Colors.error, borderRadius: 5}]}
                                 onPress={() => Alert.alert(
                                     'Delete Vehicle',
                                     'Are you sure you want to delete this vehicle?',
@@ -62,7 +61,7 @@ const Vehicle = () =>
                                 <Ionicons name='calendar' size={20} style={Styles.icon} />
                                 <TextInput
                                     placeholder='Year'
-                                    placeholderTextColor={Colors.subText}
+                                    placeholderTextColor={Colors.grayText}
                                     value={year}
                                     onChangeText={setYear}
                                     keyboardType='number-pad'
@@ -76,7 +75,7 @@ const Vehicle = () =>
                                 <MaterialCommunityIcons name='car-convertible' size={20} style={Styles.icon} />
                                 <TextInput
                                     placeholder='Make'
-                                    placeholderTextColor={Colors.subText}
+                                    placeholderTextColor={Colors.grayText}
                                     value={make}
                                     onChangeText={setMake}
                                     style={[Styles.input, errorCheck && !make && {borderColor: 'red', borderBottomWidth: 2}]}
@@ -89,7 +88,7 @@ const Vehicle = () =>
                                 <AntDesign name='tags' size={20} style={Styles.icon} />
                                 <TextInput
                                     placeholder='Model'
-                                    placeholderTextColor={Colors.subText}
+                                    placeholderTextColor={Colors.grayText}
                                     value={model}
                                     onChangeText={setModel}
                                     style={[Styles.input, errorCheck && !model && {borderColor: 'red', borderBottomWidth: 2}]}
@@ -102,7 +101,7 @@ const Vehicle = () =>
                                 <Ionicons name='color-palette' size={20} style={Styles.icon} />
                                 <TextInput
                                     placeholder='Color'
-                                    placeholderTextColor={Colors.subText}
+                                    placeholderTextColor={Colors.grayText}
                                     value={color}
                                     onChangeText={setColor}
                                     style={[Styles.input, errorCheck && !color && {borderColor: 'red', borderBottomWidth: 2}]}
@@ -122,7 +121,7 @@ const Vehicle = () =>
                             <FontAwesome name='id-card' size={20} style={Styles.icon} />
                             <TextInput
                                 placeholder='License Plate #'
-                                placeholderTextColor={Colors.subText}
+                                placeholderTextColor={Colors.grayText}
                                 value={plate}
                                 onChangeText={setPlate}
                                 style={Styles.input}
@@ -132,7 +131,7 @@ const Vehicle = () =>
                             <FontAwesome name='barcode' size={20} style={Styles.icon} />
                             <TextInput
                                 placeholder='VIN #'
-                                placeholderTextColor={Colors.subText}
+                                placeholderTextColor={Colors.grayText}
                                 value={vin}
                                 onChangeText={setVin}
                                 style={Styles.input}
@@ -140,38 +139,40 @@ const Vehicle = () =>
                         </View>
                     </View>
                 </View>
-                { errorMessage ? (
-                    <View style={Styles.errorContainer}>
-                        <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
-                        <Text style={Styles.errorText}>{errorMessage}</Text>
+                { errorMessage && (
+                    <View style={Styles.block}>
+                        <View style={Styles.errorContainer}>
+                            <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
+                            <Text style={Styles.errorText}>{errorMessage}</Text>
+                        </View>
                     </View>
-                ) : null}
-                <View style={[Styles.block, {alignItems: 'center', rowGap: 10}]}>
-                    <TouchableOpacity
-                        style={[Styles.actionButton, vehicle ? {backgroundColor: Colors.secondary} : {backgroundColor: Colors.primary}, loading && { opacity: 0.5 }]}
-                        disabled={loading}
+                )}
+                <View style={Styles.block}>
+                    <ActionButton
+                        text={vehicle ? 'Update' : 'Create'}
+                        primaryColor={vehicle ? Colors.secondary : Colors.primary}
+                        secondaryColor={vehicle ? Colors.secondaryShade : Colors.primaryShade}
                         onPress={async () => {
-                            if (loading) return;
-                            setLoading(true);
-                            let getError;
+                            try {
+                                let getError;
+                                setErrorCheck(true);
 
-                            setErrorCheck(true);
-                            if (!year || !make || !model || !color) { setLoading(false); return; }
-                            if (vehicle) {
-                                getError = await handleUpdateVehicle(client, {year, make, model, color, plate, vin}, vehicle.id, userId, setVehicles);
-                            } else {
-                                getError = await handleCreateVehicle(client, {year, make, model, color, plate, vin}, userId, setVehicles);
+                                if (!year || !make || !model || !color) { setLoading(false); return; }
+                                if (vehicle) {
+                                    getError = await handleUpdateVehicle(client, {year, make, model, color, plate, vin}, vehicle.id, userId, setVehicles);
+                                } else {
+                                    getError = await handleCreateVehicle(client, {year, make, model, color, plate, vin}, userId, setVehicles);
+                                }
+                                if (!getError) {
+                                    router.dismissAll();
+                                } else {
+                                    setErrorMessage(getError);
+                                }
+                            } catch (error) {
+                                console.error(error);
                             }
-                            if (!getError) {
-                                router.dismissAll();
-                            } else {
-                                setErrorMessage(getError);
-                            }
-                            setLoading(false);
                         }}
-                    >
-                        <Text style={Styles.actionText}>{vehicle ? 'Update' : 'Create'}</Text>
-                    </TouchableOpacity>
+                    />
                 </View>
             </Background>
         </KeyboardAvoidingView>

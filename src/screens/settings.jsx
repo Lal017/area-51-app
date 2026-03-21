@@ -1,5 +1,5 @@
 import { ProfileStyles, Styles } from '../../constants/styles'
-import { Background, Tab } from '../../components/components';
+import { Background, FloatingBlock, Tab } from '../../components/components';
 import { formatNumber } from '../../constants/utils';
 import { useApp } from '../../components/context';
 import { View, Text } from 'react-native';
@@ -14,13 +14,13 @@ const Settings = () =>
 
     return(
         <Background>
-            <View style={Styles.block}>
+            <FloatingBlock glareTop={true}>
                 <View style={Styles.infoContainer}>
                     <Text style={ProfileStyles.name}>{firstName} {lastName}</Text>
                     <Text style={Styles.tabHeader}>{email}</Text>
                     <Text style={Styles.tabHeader}>{readableNumber}</Text>
                 </View>
-            </View>
+            </FloatingBlock>
             <Tab
                 text="Edit Profile"
                 action={() => router.push('accountEdit')}

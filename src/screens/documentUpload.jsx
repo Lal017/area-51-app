@@ -1,6 +1,6 @@
 import * as DocumentPicker from 'expo-document-picker';
 import Pdf from 'react-native-pdf';
-import { BackgroundAlt } from '../../components/components';
+import { ActionButton, BackgroundAlt } from '../../components/components';
 import { Styles, AdminStyles } from '../../constants/styles';
 import { handleUploadInvoice, handleUploadEstimate } from '../../components/adminComponents';
 import { sendPushNotification } from '../../components/notifComponents';
@@ -16,7 +16,6 @@ const DocumentUpload = () =>
 
     const [ document, setDocument ] = useState();
     const [ name, setName ] = useState();
-    const [ loading, setLoading ] = useState();
 
     const data = {
         type: isInvoice ? 'NEW_INVOICE' : 'NEW_ESTIMATE'
@@ -67,35 +66,31 @@ const DocumentUpload = () =>
                     <TouchableOpacity
                         style={AdminStyles.noImg}
                         onPress={pickDocument}
-                        disabled={loading}
                     >
                         <FontAwesome6 name="file-pdf" size={50} color="black" />
                     </TouchableOpacity>
                 </View>
-            ) }
-            <TouchableOpacity
-                style={[Styles.actionButton, loading && {opacity: 0.5}, {alignSelf: 'center'}]}
-                onPress={async () =>{
-                    if (loading) return;
-                    setLoading(true);
-                    if (document) {
-                        if (isInvoice) {
-                            await handleUploadInvoice(customer.identityId, document, name);
+            )}
+            <ActionButton
+                text={document ? 'Upload Document' : 'Select Document'}
+                onPress={async () => {
+                    try {
+                        if (document) {
+                            if (isInvoice) {
+                                await handleUploadInvoice(customer.identityId, document, name);
+                            } else {
+                                await handleUploadEstimate(customer.identityId, document, name);
+                            }
+                            await sendPushNotification(customer.pushToken, `New ${DOCUMENT_TYPE}`, `A new ${DOCUMENT_TYPE} has been uploaded to your account`, data);
+                            router.replace('(admin)');
                         } else {
-                            await handleUploadEstimate(customer.identityId, document, name);
+                            await pickDocument();
                         }
-                        await sendPushNotification(customer.pushToken, `New ${DOCUMENT_TYPE}`, `A new ${DOCUMENT_TYPE} has been uploaded to your account`, data);
-                        router.replace('(admin)');
-                    } else {
-                        await pickDocument();
+                    } catch (error) {
+                        console.error(error);
                     }
-                    setLoading(false);
                 }}
-            >
-                <Text style={Styles.actionText}>
-                    { document ? 'Upload Document' : 'Select Document'}
-                </Text>
-            </TouchableOpacity>
+            />
         </BackgroundAlt>
     );
 };

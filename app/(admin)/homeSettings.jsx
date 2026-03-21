@@ -3,7 +3,7 @@ import Carousel from 'react-native-reanimated-carousel';
 import Colors from '../../constants/colors';
 import { useApp } from '../../components/context';
 import { AdminStyles, Styles } from '../../constants/styles';
-import { Background, Loading, Tab } from '../../components/components';
+import { ActionButton, Background, FloatingBlock, Loading, Tab } from '../../components/components';
 import { sendMassPushNotification } from '../../components/notifComponents';
 import { handleUploadHomeImage, handleGetURLs, handleRemoveHomeImage } from '../../components/adminComponents';
 import { TouchableOpacity, Text, Image, View, Dimensions, Alert, TextInput, KeyboardAvoidingView } from 'react-native';
@@ -160,7 +160,7 @@ const HomeSettings = () =>
                             />
                         )}
                     </View>
-                    <View style={[Styles.floatingBlock, {marginBottom: 10}]}>
+                    <FloatingBlock>
                         <View style={Styles.infoContainer}>
                             <Text style={Styles.headerTitle}>Send Notification</Text>
                             <Text style={Styles.tabHeader}>Send a push notification to all users</Text>
@@ -187,10 +187,9 @@ const HomeSettings = () =>
                                 />
                             </View>
                         </View>
-                        <TouchableOpacity
+                        <ActionButton
+                            text='Send'
                             onPress={async () => {
-                                if (loading) return;
-                                setLoading(true);
                                 Alert.alert(
                                     'Confirmation',
                                     `Send this notification?\n\n${title}\n${body}`,
@@ -199,22 +198,21 @@ const HomeSettings = () =>
                                         {
                                             text: 'Yes',
                                             onPress: async () => {
-                                                const data = {
-                                                    type: "CUSTOM_NOTIFICATION"
-                                                };
-                                                await sendMassPushNotification(client, title, body, data);
+                                                if (loading) return;
+                                                setLoading(true);
+                                                try {
+                                                    await sendMassPushNotification(client, title, body, { type: 'CUSTOM_NOTIFICATION' });
+                                                } catch (error) {
+                                                    console.error(error);
+                                                }
+                                                setLoading(false);
                                             }
                                         }
                                     ]
-                                )
-                                setLoading(false);
+                                );
                             }}
-                            style={[Styles.actionButton, {alignSelf: 'center'}, loading && {opacity: 0.5}]}
-                            disabled={loading}
-                        >
-                            <Text style={Styles.actionText}>Send</Text>
-                        </TouchableOpacity>
-                    </View>
+                        />
+                    </FloatingBlock>
                 </Background>
             </KeyboardAvoidingView>
         ) : (

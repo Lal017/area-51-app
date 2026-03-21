@@ -1,6 +1,6 @@
 import Colors from "../../constants/colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AuthBackground } from "../../components/components";
+import { ActionButton, AuthBackground } from "../../components/components";
 import { handleSignUp, GoogleSignInButton } from "../../components/authComponents";
 import { AuthStyles, Styles } from "../../constants/styles";
 import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Image, Alert } from "react-native";
@@ -29,6 +29,58 @@ const SignUp = () =>
     const [missingLastName, setMissingLastName] = useState(false);
     const [missingPhoneNumber, setMissingPhoneNumber] = useState(false);
 
+    const continueButton = async () =>
+    {
+        if (!email) setMissingEmail(true);
+        else setMissingEmail(false);
+        if (!password) setMissingPassword(true);
+        else setMissingPassword(false);
+        if (!confPassword) setMissingConfPassword(true);
+        else setMissingConfPassword(false);
+        
+        if (password !== confPassword) {
+            setErrorMessage('Passwords do not match');
+            return;
+        }
+        if (email && password && confPassword && !check) {
+            setErrorMessage(undefined);
+            setStep(2);
+        }
+        else if (email && password && confPassword && check) {
+            Alert.alert(
+                'Confirmation',
+                'Are you sure you want to sign up for a tow truck driver account?',
+                [
+                    { text: 'Back'},
+                    {
+                        text: 'Continue',
+                        onPress: () => setStep(2)
+                    }
+                ]
+            );
+        }
+        else {
+            setErrorMessage('All fields are required to continue');
+        }
+    };
+
+    const signUpButton = async () =>
+    {
+        if (!firstName) setMissingFirstName(true);
+        else setMissingFirstName(false);
+        if (!lastName) setMissingLastName(true);
+        else setMissingLastName(false);
+        if (!phoneNumber) setMissingPhoneNumber(true);
+        else setMissingPhoneNumber(false);
+        
+        if (!firstName || !lastName || !phoneNumber) {
+            setErrorMessage('All fields are required to continue');
+        } else {
+            setErrorMessage(await handleSignUp(firstName, lastName, email, password, phoneNumber));
+            await AsyncStorage.setItem('wantsToBeTowDriver', JSON.stringify(check));
+        }
+    };
+
     return(
         <KeyboardAvoidingView
             behavior='height'
@@ -48,7 +100,7 @@ const SignUp = () =>
                             <Ionicons name='at' size={20} style={Styles.icon} />
                             <TextInput
                                 placeholder="email"
-                                placeholderTextColor={Colors.subText}
+                                placeholderTextColor={Colors.grayText}
                                 value={email}
                                 onChangeText={setEmail}
                                 keyboardType="email-address"
@@ -60,7 +112,7 @@ const SignUp = () =>
                             <Ionicons name='key' size={20} style={Styles.icon} />
                             <TextInput
                                 placeholder="password"
-                                placeholderTextColor={Colors.subText}
+                                placeholderTextColor={Colors.grayText}
                                 value={password}
                                 onChangeText={setPassword}
                                 autoCapitalize="none"
@@ -74,15 +126,15 @@ const SignUp = () =>
                                 }}
                             >
                                 { showPassword ? (
-                                    <Ionicons name='eye-off' size={20} color={Colors.backDropAccent}/>
-                                ) : <Ionicons name='eye' size={20} color={Colors.backDropAccent}/> }
+                                    <Ionicons name='eye-off' size={20} color={Colors.accent}/>
+                                ) : <Ionicons name='eye' size={20} color={Colors.accent}/> }
                             </TouchableOpacity>
                         </View>
                         <View style={Styles.inputWrapper}>
                             <Ionicons name="lock-open" size={20} style={Styles.icon} />
                             <TextInput
                                 placeholder="confirm password"
-                                placeholderTextColor={Colors.subText}
+                                placeholderTextColor={Colors.grayText}
                                 value={confPassword}
                                 onChangeText={setConfPassword}
                                 autoCapitalize="none"
@@ -96,8 +148,8 @@ const SignUp = () =>
                                 }}
                             >
                                 { showConfirmPassword ? (
-                                    <Ionicons name='eye-off' size={20} color={Colors.backDropAccent}/>
-                                ) : <Ionicons name='eye' size={20} color={Colors.backDropAccent}/> }
+                                    <Ionicons name='eye-off' size={20} color={Colors.accent}/>
+                                ) : <Ionicons name='eye' size={20} color={Colors.accent}/> }
                             </TouchableOpacity>
                         </View>
                         <View style={{width: '90%', flexDirection: 'row', columnGap: 20, alignItems: 'center', justifyContent: 'flex-start'}}>
@@ -109,50 +161,16 @@ const SignUp = () =>
                             </TouchableOpacity>
                             <Text style={Styles.text}>Request a tow truck driver account?</Text>
                         </View>
-                        { errorMessage && step === 1 ? (
+                        { errorMessage && step === 1 && (
                             <View style={Styles.errorContainer}>
                                 <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
                                 <Text style={[Styles.text, {color: 'red'}]}>{errorMessage}</Text>
                             </View>
-                        ) : null}
-                        <TouchableOpacity
-                            onPress={() => {
-                                if (!email) setMissingEmail(true);
-                                else setMissingEmail(false);
-                                if (!password) setMissingPassword(true);
-                                else setMissingPassword(false);
-                                if (!confPassword) setMissingConfPassword(true);
-                                else setMissingConfPassword(false);
-                                
-                                if (password !== confPassword) {
-                                    setErrorMessage('Passwords do not match');
-                                    return;
-                                }
-                                if (email && password && confPassword && !check) {
-                                    setErrorMessage(undefined);
-                                    setStep(2);
-                                }
-                                else if (email && password && confPassword && check) {
-                                    Alert.alert(
-                                        'Confirmation',
-                                        'Are you sure you want to sign up for a tow truck driver account?',
-                                        [
-                                            { text: 'Back'},
-                                            {
-                                                text: 'Continue',
-                                                onPress: () => setStep(2)
-                                            }
-                                        ]
-                                    );
-                                }
-                                else {
-                                    setErrorMessage('All fields are required to continue');
-                                }
-                            }}
-                            style={Styles.actionButton}
-                        >
-                            <Text style={Styles.actionText}>Continue</Text>
-                        </TouchableOpacity>
+                        )}
+                        <ActionButton
+                            text='Continue'
+                            onPress={async () => await continueButton()}
+                        />
                     </View>
                 ) : step === 2 ? (
                     <View style={[Styles.block, {alignItems: 'center'}]}>
@@ -161,7 +179,7 @@ const SignUp = () =>
                             <Ionicons name='person' size={20} style={Styles.icon} />
                             <TextInput
                                 placeholder="first name"
-                                placeholderTextColor={Colors.subText}
+                                placeholderTextColor={Colors.grayText}
                                 value={firstName}
                                 onChangeText={setFirstName}
                                 style={[Styles.input, missingFirstName && {borderColor: 'red'}]}
@@ -171,7 +189,7 @@ const SignUp = () =>
                             <Ionicons name='person' size={20} style={Styles.icon} />
                             <TextInput
                                 placeholder="last name"
-                                placeholderTextColor={Colors.subText}
+                                placeholderTextColor={Colors.grayText}
                                 value={lastName}
                                 onChangeText={setLastName}
                                 style={[Styles.input, missingLastName && {borderColor: 'red'}]}
@@ -181,7 +199,7 @@ const SignUp = () =>
                             <Ionicons name='call' size={20} style={Styles.icon} />
                             <TextInput
                                 placeholder="phone number"
-                                placeholderTextColor={Colors.subText}
+                                placeholderTextColor={Colors.grayText}
                                 value={phoneNumber}
                                 onChangeText={setPhoneNumber}
                                 autoCapitalize="none"
@@ -195,31 +213,12 @@ const SignUp = () =>
                                 <Text style={[Styles.text, {color: 'red'}]}>{errorMessage}</Text>
                             </View>
                         ) : null}
-                        <TouchableOpacity
-                            onPress={async () => {
-                                if (loading) return;
-                                setLoading(true);
-
-                                if (!firstName) setMissingFirstName(true);
-                                else setMissingFirstName(false);
-                                if (!lastName) setMissingLastName(true);
-                                else setMissingLastName(false);
-                                if (!phoneNumber) setMissingPhoneNumber(true);
-                                else setMissingPhoneNumber(false);
-                                
-                                if (!firstName || !lastName || !phoneNumber) {
-                                    setErrorMessage('All fields are required to continue');
-                                } else {
-                                    setErrorMessage(await handleSignUp(firstName, lastName, email, password, phoneNumber));
-                                    await AsyncStorage.setItem('wantsToBeTowDriver', JSON.stringify(check));
-                                }
-                                setLoading(false);
-                            }}
-                            style={[Styles.actionButton, {backgroundColor: Colors.secondary}, loading && { opacity: 0.5 }]}
-                            disabled={loading}
-                        >
-                            <Text style={Styles.actionText}>Sign Up</Text>
-                        </TouchableOpacity>
+                        <ActionButton
+                            text='Sign Up'
+                            primaryColor={Colors.primary}
+                            secondaryColor={Colors.primaryShade}
+                            onPress={async () => await signUpButton()}
+                        />
                     </View>
                 ) : null}
                 <View style={[Styles.block, {alignItems: 'center'}]}>

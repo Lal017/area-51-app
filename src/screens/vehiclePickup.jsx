@@ -1,7 +1,7 @@
 import Colors from '../../constants/colors';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { Background, SimpleList, Tab } from '../../components/components';
+import { ActionButton, Background, SimpleList, Tab } from '../../components/components';
 import { useApp } from '../../components/context';
 import { ServiceStyles, Styles } from '../../constants/styles';
 import { View, Text, TouchableOpacity } from 'react-native';
@@ -18,7 +18,6 @@ const VehiclePickup = () =>
 {
     const { client, vehicles, setVehiclePickup, userId, appointments, setAppointments } = useApp();
     const [ vehiclesToPickup, setVehiclesToPickup ] = useState();
-    const [ loading, setLoading ] = useState(false);
     const [ errorMessage, setErrorMessage ] = useState(undefined);
     const [ date, setDate ] = useState(new Date());
     const [ time, setTime ] = useState(undefined);
@@ -129,12 +128,12 @@ const VehiclePickup = () =>
                                             onPress={showDateMode}
                                         >
                                             <LinearGradient
-                                                colors={[Colors.button, Colors.backgroundAccent]}
+                                                colors={[Colors.button, Colors.backgroundContrast]}
                                                 style={{position: 'absolute', top: 0, bottom: 0, right: 0, left: 0}}
                                                 start={{ x: 0, y: 0}}
                                                 end={{ x: 1, y: 1}}
                                             />
-                                            <FontAwesome6 name='caret-down' size={25} style={[Styles.rightIcon, {color: Colors.contrast}]}/>
+                                            <FontAwesome6 name='caret-down' size={25} style={Styles.rightIcon}/>
                                             <Text style={[Styles.text, {fontSize: textSize(13)}]}>{formatDate(date.toLocaleDateString('sv-SE'))}</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity
@@ -145,12 +144,12 @@ const VehiclePickup = () =>
                                             }}
                                         >
                                             <LinearGradient
-                                                colors={[Colors.button, Colors.backgroundAccent]}
+                                                colors={[Colors.button, Colors.backgroundContrast]}
                                                 style={{position: 'absolute', top: 0, bottom: 0, right: 0, left: 0}}
                                                 start={{ x: 0, y: 0}}
                                                 end={{ x: 1, y: 1}}
                                             />
-                                            <FontAwesome6 name='caret-down' size={25} style={[Styles.rightIcon, {color: Colors.contrast}]}/>
+                                            <FontAwesome6 name='caret-down' size={25} style={Styles.rightIcon}/>
                                             <Text style={[Styles.text, {fontSize: textSize(13)}]}>{time ? formatTime(time) : 'Select a Time'}</Text>
                                         </TouchableOpacity>
                                     </View>
@@ -162,28 +161,27 @@ const VehiclePickup = () =>
                                             </View>
                                         </View>
                                     )}
-                                    <TouchableOpacity
-                                        style={[Styles.actionButton, loading && {opacity: 0.5}, {alignSelf: 'center', backgroundColor: Colors.secondary}]}
+                                    <ActionButton
+                                        text='Schedule Pickup'
+                                        primaryColor={Colors.secondary}
+                                        secondaryColor={Colors.secondaryShade}
                                         onPress={async () => {
-                                            if (loading) return;
-                                            setLoading(true);
-
-                                            await handleSendAdminNotif('Pickup Scheduled', 'A customer has scheduled a vehicle pickup');
-                                            const newAppointments = await handleCreateAppointment({client, date: date?.toLocaleDateString('sv-SE'), time, service: 'Vehicle Pickup', userId, vehicle: item, setAppointments});
-                                            // get vehicleIds that have an appointment scheduled for pickup
-                                            const scheduledVehiclePickups = newAppointments
-                                                ?.filter(appt => appt.service === 'Vehicle Pickup')
-                                                .map(appt => appt.vehicle?.id);
-                                            // filter out vehicles that already have a scheduled pickup appointment
-                                            const filterVehicles = vehicles?.some(item => item.readyForPickup === true && !scheduledVehiclePickups.includes(item.id));
-                                            setVehiclePickup(filterVehicles);
-                                            router.dismissAll();
-
-                                            setLoading(false);
+                                            try {
+                                                await handleSendAdminNotif('Pickup Scheduled', 'A customer has scheduled a vehicle pickup');
+                                                const newAppointments = await handleCreateAppointment({client, date: date?.toLocaleDateString('sv-SE'), time, service: 'Vehicle Pickup', userId, vehicle: item, setAppointments});
+                                                // get vehicleIds that have an appointment scheduled for pickup
+                                                const scheduledVehiclePickups = newAppointments
+                                                    ?.filter(appt => appt.service === 'Vehicle Pickup')
+                                                    .map(appt => appt.vehicle?.id);
+                                                // filter out vehicles that already have a scheduled pickup appointment
+                                                const filterVehicles = vehicles?.some(item => item.readyForPickup === true && !scheduledVehiclePickups.includes(item.id));
+                                                setVehiclePickup(filterVehicles);
+                                                router.dismissAll();
+                                            } catch (error) {
+                                                console.error(error);
+                                            }
                                         }}
-                                    >
-                                        <Text style={Styles.actionText}>Schedule Pickup</Text>
-                                    </TouchableOpacity>
+                                    />
                                 </View>
                             </>
                         }
@@ -229,12 +227,10 @@ const VehiclePickup = () =>
                                 </View>
                             )}
                         </View>
-                        <TouchableOpacity
-                            style={[Styles.actionButton, {backgroundColor: Colors.backgroundFade, alignSelf: 'center'}]}
-                            onPress={handleClosePress}
-                        >
-                            <Text style={Styles.actionText}>Done</Text>
-                        </TouchableOpacity>
+                        <ActionButton
+                            text='Done'
+                            onPress={async () => handleClosePress()}
+                        />
                     </View>
                 </BottomSheetScrollView>
             </BottomSheet>

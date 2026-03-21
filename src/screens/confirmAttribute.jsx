@@ -1,6 +1,6 @@
 import Colors from '../../constants/colors';
 import { handleConfirmUserAttribute } from '../../components/authComponents';
-import { Background } from '../../components/components';
+import { ActionButton, Background } from '../../components/components';
 import { useApp } from '../../components/context';
 import { Styles } from '../../constants/styles';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
@@ -27,7 +27,7 @@ const ConfirmAttribute = () =>
                     <MaterialIcons name='numbers' size={20} style={Styles.icon} />
                     <TextInput
                         placeholder="code"
-                        placeholderTextColor={Colors.subText}
+                        placeholderTextColor={Colors.grayText}
                         value={code}
                         onChangeText={setCode}
                         keyboardType='number-pad'
@@ -35,18 +35,12 @@ const ConfirmAttribute = () =>
                     />
                 </View>
             </View>
-            <TouchableOpacity
-                onPress={async () => {
-                    if (loading) return;
-                    setLoading(true);
-                    await handleConfirmUserAttribute('email', code, email, setEmail);
-                    setLoading(false);
-                }}
-                style={[Styles.actionButton, loading && {opacity: 0.5}, {backgroundColor: Colors.primary}]}
-                disabled={loading}
-            >
-                <Text style={Styles.actionText}>Confirm</Text>
-            </TouchableOpacity>
+            <ActionButton
+                text='Confirm'
+                primaryColor={Colors.primary}
+                secondaryColor={Colors.primaryShade}
+                onPress={async () => await handleConfirmUserAttribute('email', code, email, setEmail)}
+            />
         </Background>
     );
 };

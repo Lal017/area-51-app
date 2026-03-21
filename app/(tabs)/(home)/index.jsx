@@ -119,7 +119,7 @@ const Index = () =>
       <View style={Styles.block}>
         <View style={HomeStyles.shortcutContainer}>
           <TouchableOpacity
-            style={[HomeStyles.shortcutButton, {overflow: 'hidden'}]}
+            style={HomeStyles.shortcutButton}
             onPress={async () => {
               if (vehicles?.length === 0) {
                 Alert.alert(
@@ -156,6 +156,12 @@ const Index = () =>
               }
             }}
           >
+            <LinearGradient
+              colors={[Colors.backgroundContrast, Colors.backgroundContrastShade, Colors.backgroundContrastShade]}
+              style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}}
+              start={{ x: 0, y: 0}}
+              end={{ x: 0, y: 1}}
+            />
             { towRequest && (
               <Animated.View
                 style={[shimmerStyle, {
@@ -172,12 +178,6 @@ const Index = () =>
                 />
               </Animated.View>
             )}
-            <LinearGradient
-              colors={['rgba(255,255,255,0.25)', 'transparent']}
-              style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, height:'60%', borderRadius: 5}}
-              start={{ x: 0, y: 0}}
-              end={{ x: 0, y: 1}}
-            />
             <MaterialCommunityIcons name="tow-truck" size={30} color="white" />
           </TouchableOpacity>
           <TouchableOpacity
@@ -201,15 +201,15 @@ const Index = () =>
             }}
           >
             <LinearGradient
-              colors={['rgba(255,255,255,0.25)', 'transparent']}
-              style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, height:'60%', borderRadius: 5}}
+              colors={[Colors.backgroundContrast, Colors.backgroundContrastShade, Colors.backgroundContrastShade]}
+              style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}}
               start={{ x: 0, y: 0}}
               end={{ x: 0, y: 1}}
             />
             <Entypo name='calendar' size={30} color="white" />
           </TouchableOpacity>
           <TouchableOpacity
-            style={[HomeStyles.shortcutButton, {overflow: 'hidden'}]}
+            style={HomeStyles.shortcutButton}
             onPress={() => {
               if (vehiclePickup === true) {
                 router.push('vehiclePickup');
@@ -219,8 +219,8 @@ const Index = () =>
             }}
           >
             <LinearGradient
-              colors={['rgba(255,255,255,0.25)', 'transparent']}
-              style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, height:'60%'}}
+              colors={[Colors.backgroundContrast, Colors.backgroundContrastShade, Colors.backgroundContrastShade]}
+              style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}}
               start={{ x: 0, y: 0}}
               end={{ x: 0, y: 1}}
             />
@@ -253,7 +253,7 @@ const Index = () =>
       </View>
       <View style={HomeStyles.panel}>
         <TouchableOpacity
-          style={[HomeStyles.panelContainer, {backgroundColor: Colors.backDropAccent, minWidth: '40%'}]}
+          style={[HomeStyles.panelContainer, {backgroundColor: Colors.accent, minWidth: '40%'}]}
           onPress={() => Linking.openURL('https://apply.snapfinance.com/snap-loan/landing?paramId=BEQypIc2AUit0%2BNU%2Fm1jaPTPmNwVgcoBY9btcVvwhMCDJ8qdDYWfFVb5WW%2BxBO51f%2BgPNPmcvPPGEqOKyqcCy57l581i30Mhc54AQ4Uv4I9COQxyDewFNEYSJJRGvQ379a7K2SmTgeFlpEssm%2FParIJh1%2FqwsslQ14TK0wPysRM%2B5wQQIZY5lILxig1G1ms0SOVMj1t76bwiCSSvuzFBeA%3D%3D&source=QR_CODE&merchantId=490307391&lang=en')}
         >
           <Image
@@ -291,12 +291,12 @@ const Index = () =>
       </View>
       { customNotification ? (
         <View style={HomeStyles.panel}>
-          <View style={[HomeStyles.panelContainer, {backgroundColor: Colors.backgroundAccent, paddingTop: 25, paddingBottom: 25, position: 'relative'}]}>
+          <View style={[HomeStyles.panelContainer, {backgroundColor: Colors.backgroundContrast, paddingTop: 25, paddingBottom: 25, position: 'relative'}]}>
             <TouchableOpacity
               style={{position: 'absolute', right: 10, top: 10}}
               onPress={() => setCustomNotification()}
             >
-              <AntDesign name="closecircle" size={20} color={Colors.backDropAccent}/>
+              <AntDesign name="closecircle" size={20} color={Colors.accent}/>
             </TouchableOpacity>
             <View style={Styles.infoContainer}>
               <Text style={HomeStyles.appointmentTitle}>{customNotification?.title}</Text>

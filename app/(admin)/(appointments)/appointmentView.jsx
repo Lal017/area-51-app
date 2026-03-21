@@ -1,6 +1,6 @@
 import { Styles } from '../../../constants/styles';
 import { iconCheck } from '../../../components/appointmentComponents';
-import { Background, Tab } from '../../../components/components';
+import { Background, FloatingBlock, Tab } from '../../../components/components';
 import { useLocalSearchParams } from 'expo-router';
 import { AntDesign, Entypo, MaterialCommunityIcons, FontAwesome, Ionicons } from '@expo/vector-icons';
 import { View, Text, TouchableOpacity } from 'react-native';
@@ -44,23 +44,21 @@ const AppointmentView = () =>
                 </View>
             </View>
             <View style={Styles.block}>
-                <View style={Styles.infoContainer}>
-                    <Tab
-                        header='Date'
-                        text={`${formatDate(appointment?.date)}`}
-                        leftIcon={<AntDesign name='calendar' size={30} style={Styles.icon}/>}
-                    />
-                    <Tab
-                        header='Time'
-                        text={`${formatTime(appointment?.time)}`}
-                        leftIcon={<MaterialCommunityIcons name='clock' size={30} style={Styles.icon}/>}
-                    />
-                    <Tab
-                        header='Service'
-                        text={`${appointment?.service}`}
-                        leftIcon={iconCheck(appointment?.service)}
-                    />
-                </View>
+                <Tab
+                    header='Date'
+                    text={`${formatDate(appointment?.date)}`}
+                    leftIcon={<AntDesign name='calendar' size={30} style={Styles.icon}/>}
+                />
+                <Tab
+                    header='Time'
+                    text={`${formatTime(appointment?.time)}`}
+                    leftIcon={<MaterialCommunityIcons name='clock' size={30} style={Styles.icon}/>}
+                />
+                <Tab
+                    header='Service'
+                    text={`${appointment?.service}`}
+                    leftIcon={iconCheck(appointment?.service)}
+                />
                 { appointment?.notes && (
                     <View style={Styles.infoContainer}>
                         <Text style={Styles.headerTitle}>Customer Note</Text>
@@ -68,7 +66,7 @@ const AppointmentView = () =>
                     </View>
                 )}
             </View>
-            <View style={[Styles.floatingBlock, {marginBottom: 10}]}>
+            <FloatingBlock>
                 <View style={Styles.infoContainer}>
                     <Text style={Styles.headerTitle}>Vehicle</Text>
                 </View>
@@ -100,7 +98,7 @@ const AppointmentView = () =>
                         style={{height: 'none'}}
                     />
                 )}
-            </View>
+            </FloatingBlock>
         </Background>
     );
 };

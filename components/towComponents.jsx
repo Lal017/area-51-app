@@ -377,7 +377,7 @@ const getStatus = (status) =>
         case 'IN_PROGRESS':
             return <Text style={[Styles.tabText, {color: Colors.primary}]}>In Progress</Text>;
         case 'CANCELLED':
-            return <Text style={[Styles.tabText, {color: Colors.redButton}]}>Cancelled</Text>;
+            return <Text style={[Styles.tabText, {color: Colors.error}]}>Cancelled</Text>;
         case 'REQUESTED':
             return <Text style={[Styles.tabText, {color: Colors.secondary}]}>Requested</Text>;
         default:

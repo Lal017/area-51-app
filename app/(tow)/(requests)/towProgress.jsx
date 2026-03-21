@@ -393,7 +393,7 @@ const TowProgress = () =>
                     ref={bottomSheetRef}
                     snapPoints={[`${13 + (insets.bottom / 10)}%`,'80%']}
                     index={0}
-                    backgroundStyle={{ backgroundColor: Colors.backgroundFade }}
+                    backgroundStyle={{ backgroundColor: Colors.background }}
                     enablePanDownToClose={false}
                     enableDynamicSizing={false}
                     onChange={(index) => {
@@ -467,38 +467,36 @@ const TowProgress = () =>
                                         <Entypo name='message' size={30} color='white'/>
                                     </TouchableOpacity>
                                 </View>
-                                <View style={Styles.infoContainer}>
-                                    <Tab
-                                        header={`${vehicle?.year} (${vehicle?.color})`}
-                                        text={`${vehicle?.make} ${vehicle?.model}`}
-                                        leftIcon={<Ionicons name='car-sport' size={30} style={Styles.icon}/>}
-                                        style={{height: 'none', padding: 5}}
-                                    />
-                                    <Tab
-                                        header='Does the car run?'
-                                        text={request?.canRun ? 'Yes' : 'No'}
-                                        leftIcon={<MaterialCommunityIcons name='engine' size={30} style={Styles.icon}/>}
-                                        style={{height: 'none', padding: 5}}
-                                    />
-                                    <Tab
-                                        header='Does the car roll?'
-                                        text={request?.canRoll ? 'Yes' : 'No'}
-                                        leftIcon={<MaterialCommunityIcons name='tire' size={30} style={Styles.icon}/>}
-                                        style={{height: 'none', padding: 5}}
-                                    />
-                                    <Tab
-                                        header='Are the keys included?'
-                                        text={request?.keyIncluded ? 'Yes' : 'No'}
-                                        leftIcon={<Entypo name='key' size={30} style={Styles.icon}/>}
-                                        style={{height: 'none', padding: 5}}
-                                    />
-                                    <Tab
-                                        header='Is the vehicle obstructed?'
-                                        text={request?.isObstructed ? 'Yes' : 'No'}
-                                        leftIcon={<Entypo name='warning' size={30} style={Styles.icon}/>}
-                                        style={{height: 'none', padding: 5}}
-                                    />
-                                </View>
+                                <Tab
+                                    header={`${vehicle?.year} (${vehicle?.color})`}
+                                    text={`${vehicle?.make} ${vehicle?.model}`}
+                                    leftIcon={<Ionicons name='car-sport' size={30} style={Styles.icon}/>}
+                                    style={{height: 'none', padding: 5}}
+                                />
+                                <Tab
+                                    header='Does the car run?'
+                                    text={request?.canRun ? 'Yes' : 'No'}
+                                    leftIcon={<MaterialCommunityIcons name='engine' size={30} style={Styles.icon}/>}
+                                    style={{height: 'none', padding: 5}}
+                                />
+                                <Tab
+                                    header='Does the car roll?'
+                                    text={request?.canRoll ? 'Yes' : 'No'}
+                                    leftIcon={<MaterialCommunityIcons name='tire' size={30} style={Styles.icon}/>}
+                                    style={{height: 'none', padding: 5}}
+                                />
+                                <Tab
+                                    header='Are the keys included?'
+                                    text={request?.keyIncluded ? 'Yes' : 'No'}
+                                    leftIcon={<Entypo name='key' size={30} style={Styles.icon}/>}
+                                    style={{height: 'none', padding: 5}}
+                                />
+                                <Tab
+                                    header='Is the vehicle obstructed?'
+                                    text={request?.isObstructed ? 'Yes' : 'No'}
+                                    leftIcon={<Entypo name='warning' size={30} style={Styles.icon}/>}
+                                    style={{height: 'none', padding: 5}}
+                                />
                                 <View style={Styles.infoContainer}>
                                     <Text style={Styles.headerTitle}>Customer Note</Text>
                                     <Text style={Styles.text}>"{request.notes}"</Text>

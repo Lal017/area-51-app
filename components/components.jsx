@@ -76,9 +76,9 @@ const AuthBackground = ({children}) =>
     return (
         <LinearGradient
             style={{flex: 1, paddingBottom: insets.bottom, paddingTop: insets.top}}
-            colors={[Colors.backgroundFade, Colors.background]}
-            start={{ x: 0, y: 1 }}
-            end={{ x: 1, y: 0 }}
+            colors={[Colors.background, Colors.backgroundShade, Colors.backgroundShade]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
         >
             <ScrollView
                 contentContainerStyle={Styles.page}
@@ -98,7 +98,7 @@ const Background = ({children, style, refreshing, onRefresh, scrollRef, hasNoHea
     return (
         <LinearGradient
             style={[{flex: 1}, hasNoHeader && {paddingTop: insets.top}, !hasTab && {paddingBottom: insets.bottom}]}
-            colors={[Colors.background, Colors.backgroundFade, Colors.background]}
+            colors={[Colors.backgroundShade, Colors.background, Colors.backgroundShade]}
             locations={[0.1, 0.5, 0.9]}
             start={{x: 1, y: 0.9}}
             end={{x: 0, y: 0.4}}
@@ -128,7 +128,7 @@ const BackgroundAlt = ({children, style, hasNoHeader = false, hasTab = false}) =
     return (
         <LinearGradient
             style={[{flex: 1}, hasNoHeader && {paddingTop: insets.top}, hasTab && {paddingBottom: insets.bottom}, style]}
-            colors={[Colors.background, Colors.backgroundFade, Colors.background]}
+            colors={[Colors.backgroundShade, Colors.background, Colors.backgroundShade]}
             locations={[0.1, 0.5, 0.9]}
             start={{x: 1, y: 0.9}}
             end={{x: 0, y: 0.4}}
@@ -166,17 +166,23 @@ const Tab = ({header, text, action, leftIcon, rightIcon, style}) =>
             </View>
             {rightIcon}
         </TouchableOpacity>
-    )
+    );
 };
 
 // reusable tab component for Selections
-const Select = ({header, text, selected, action, leftIcon, rightIcon}) =>
+const Select = ({header, text, selected, action, leftIcon, rightIcon, style}) =>
 {
     return(
         <TouchableOpacity
-            style={[Styles.tabWrapper, {borderBottomWidth: 1, borderTopWidth: 1, borderColor: Colors.backgroundAccent}, selected && {backgroundColor: Colors.secondary}]}
+            style={[Styles.tabWrapper, style, {width: '90%', borderRadius: 10, alignSelf: 'center'}, selected && {backgroundColor: Colors.secondary}]}
             onPress={action}
         >
+            <LinearGradient
+                colors={[Colors.backgroundContrast, Colors.backgroundContrastShade, Colors.backgroundContrastShade]}
+                start={{ x: 0, y: 0}}
+                end={{ x: 0, y: 1}}
+                style={{position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, borderRadius: 10}}
+            />
             {leftIcon}
             <View style={!header ? {flexDirection: 'row'} : {flexDirection: 'column'}}>
                 <Text style={[Styles.tabHeader, selected && {color: Colors.text}]}>{header}</Text>
@@ -199,7 +205,7 @@ const BinarySelect = ({trueText, falseText, value, onChange}) =>
                 <Text style={[Styles.tabText, {textAlign: 'center'}]}>{trueText}</Text>
             </TouchableOpacity>
             <TouchableOpacity
-                style={[Styles.binaryTabWrapper, value === false && {padding: 15, backgroundColor: Colors.redButton}]}
+                style={[Styles.binaryTabWrapper, value === false && {padding: 15, backgroundColor: Colors.error}]}
                 onPress={() => onChange(false)}
             >
                 <Text style={[Styles.tabText, {textAlign: 'center'}]}>{falseText}</Text>
@@ -259,6 +265,12 @@ const AppointmentReminder = ({appointments}) =>
             style={[HomeStyles.appointmentContainer, {overflow: 'hidden'}]}
             onPress={() => router.push('myAppointments')}
         >
+            <LinearGradient
+                colors={[Colors.backgroundContrast, Colors.backgroundContrastShade, Colors.backgroundContrastShade]}
+                start={{ x: 1, y: 0}}
+                end={{ x: 0, y: 1}}
+                style={{position: 'absolute', top: 0, bottom: 0, right: 0, left: 0}}
+            />
             <Animated.View
             style={[shimmerStyle, {
                 position: 'absolute',
@@ -267,7 +279,7 @@ const AppointmentReminder = ({appointments}) =>
             }]}
             >
             <LinearGradient
-                colors={['transparent', 'rgba(150, 150, 150, 0.5)', 'transparent']}
+                colors={['transparent', Colors.backgroundContrast, 'transparent']}
                 style={{flex: 1}}
                 start={{ x: 0, y: 0}}
                 end={{ x: 1, y: 0}}
@@ -296,6 +308,49 @@ const SimpleList = ({data = [], renderItem}) =>
     )
 };
 
+// floating block used to contain information
+const FloatingBlock = ({ children, glareTop = false }) =>
+{
+    return(
+        <View style={Styles.floatingBlock}>
+            <LinearGradient
+                colors={[Colors.backgroundContrast, Colors.backgroundContrastShade, Colors.backgroundContrastShade]}
+                start={{x: 0, y: glareTop ? 0 : 1}}
+                end={{x: 0, y: glareTop ? 1 : 0}}
+                style={{position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}}
+            />
+            {children}
+        </View>
+    );
+};
+
+const ActionButton = ({text, onPress, primaryColor = Colors.button, secondaryColor = Colors.buttonShade, icon}) =>
+{
+    const [ loading, setLoading ] = useState(false);
+
+    return(
+        <TouchableOpacity
+            onPress={async () => {
+                if(loading) return;
+                setLoading(true);
+                await onPress();
+                setLoading(false);
+            }}
+            style={[Styles.actionButton, {overflow: 'hidden'}, loading && { opacity: 0.5 }]}
+            disabled={loading}
+        >
+            <LinearGradient
+                colors={[primaryColor, secondaryColor]}
+                start={{ x: 0, y: 0}}
+                end={{ x: 0, y: 1}}
+                style={{position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, height: '100%'}}
+            />
+            {icon}
+            <Text style={Styles.actionText}>{text}</Text>
+        </TouchableOpacity>
+    );
+};
+
 export {
     Loading,
     CustHeader,
@@ -307,5 +362,7 @@ export {
     Select,
     BinarySelect,
     AppointmentReminder,
-    SimpleList
+    SimpleList,
+    FloatingBlock,
+    ActionButton
 };

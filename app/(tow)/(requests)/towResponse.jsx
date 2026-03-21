@@ -2,7 +2,7 @@ import Colors from "../../../constants/colors";
 import { handleAcceptTowRequest, handleFinalTowCheck, getInitialCompassHeading } from "../../../components/towComponents";
 import { useApp } from "../../../components/context";
 import { sendPushNotification } from '../../../components/notifComponents'
-import { Background, Tab } from "../../../components/components";
+import { ActionButton, Background, FloatingBlock, Tab } from "../../../components/components";
 import { ServiceStyles, Styles } from "../../../constants/styles";
 import { handleGetAddress } from "../../../components/adminComponents";
 import { useLocalSearchParams, router } from "expo-router";
@@ -23,6 +23,7 @@ const TowResponse = () =>
 
     const [ address, setAddress ] = useState();
     const [ waitTime, setWaitTime ] = useState();
+    const [ loading, setLoading ] = useState();
 
     // sets fallback vehicle values incase customer deleted the vehicle
     const vehicle = request?.vehicle ?? (request?.vehicleYear && {
@@ -124,14 +125,12 @@ const TowResponse = () =>
                     </View>
                 </View>
                 <View style={Styles.block}>
-                    <View style={Styles.infoContainer}>
-                        <Tab
-                            header='Pickup Address'
-                            text={<Text style={{color: Colors.secondary}}>{address}</Text>}
-                            leftIcon={<Entypo name='address' size={30} style={[Styles.icon, {color: Colors.secondary}]}/>}
-                            action={() => openInMaps(request.latitude, request.longitude)}
-                        />
-                    </View>
+                    <Tab
+                        header='Pickup Address'
+                        text={<Text style={{color: Colors.secondary}}>{address}</Text>}
+                        leftIcon={<Entypo name='address' size={30} style={[Styles.icon, {color: Colors.secondary}]}/>}
+                        action={() => openInMaps(request.latitude, request.longitude)}
+                    />
                 </View>
                 { request?.notes && (
                     <View style={Styles.block}>
@@ -141,7 +140,7 @@ const TowResponse = () =>
                         </View>
                     </View>
                 )}
-                <View style={Styles.floatingBlock}>
+                <FloatingBlock>
                     <View style={Styles.infoContainer}>
                         <Text style={Styles.headerTitle}>Vehicle</Text>
                     </View>
@@ -173,74 +172,77 @@ const TowResponse = () =>
                             style={{height: 'none'}}
                         />
                     )}
+                </FloatingBlock>
+                <View style={Styles.block}>
+                    <Tab
+                        header='Does the car run?'
+                        text={request?.canRun ? 'Yes' : 'No'}
+                        leftIcon={<MaterialCommunityIcons name='engine' size={30} style={Styles.icon}/>}
+                        style={{height: 'none', padding: 5}}
+                    />
+                    <Tab
+                        header='Does the car roll?'
+                        text={request?.canRoll ? 'Yes' : 'No'}
+                        leftIcon={<MaterialCommunityIcons name='tire' size={30} style={Styles.icon}/>}
+                        style={{height: 'none', padding: 5}}
+                    />
+                    <Tab
+                        header='Are the keys included?'
+                        text={request?.keyIncluded ? 'Yes' : 'No'}
+                        leftIcon={<Entypo name='key' size={30} style={Styles.icon}/>}
+                        style={{height: 'none', padding: 5}}
+                    />
+                    <Tab
+                        header='Is the vehicle obstructed?'
+                        text={request?.isObstructed ? 'Yes' : 'No'}
+                        leftIcon={<Entypo name='warning' size={30} style={Styles.icon}/>}
+                        style={{height: 'none', padding: 5}}
+                    />
                 </View>
-                <View style={[Styles.block, {paddingTop: 20}]}>
-                    <View style={Styles.infoContainer}>
-                        <Tab
-                            header='Does the car run?'
-                            text={request?.canRun ? 'Yes' : 'No'}
-                            leftIcon={<MaterialCommunityIcons name='engine' size={30} style={Styles.icon}/>}
-                            style={{height: 'none', padding: 5}}
-                        />
-                        <Tab
-                            header='Does the car roll?'
-                            text={request?.canRoll ? 'Yes' : 'No'}
-                            leftIcon={<MaterialCommunityIcons name='tire' size={30} style={Styles.icon}/>}
-                            style={{height: 'none', padding: 5}}
-                        />
-                        <Tab
-                            header='Are the keys included?'
-                            text={request?.keyIncluded ? 'Yes' : 'No'}
-                            leftIcon={<Entypo name='key' size={30} style={Styles.icon}/>}
-                            style={{height: 'none', padding: 5}}
-                        />
-                        <Tab
-                            header='Is the vehicle obstructed?'
-                            text={request?.isObstructed ? 'Yes' : 'No'}
-                            leftIcon={<Entypo name='warning' size={30} style={Styles.icon}/>}
-                            style={{height: 'none', padding: 5}}
-                        />
-                    </View>
-                </View>
-                <TouchableOpacity
-                    style={[Styles.actionButton, {backgroundColor: Colors.primary, alignSelf: 'center'}]}
-                    onPress={() => {Alert.alert(
-                        'Confirmation',
-                        'Once you accept this request, the customer will be able to view your location. Are you sure you want to accept the request?',
-                        [
-                            { text: 'No' },
-                            {
-                                text: 'Yes',
-                                onPress: async () => {
-                                    try {
-                                        const isAccepted = await handleFinalTowCheck(client, request.id);
-                                        if (isAccepted) {
-                                            Alert.alert(
-                                                'Tow Request',
-                                                'The request has already been accepted by another driver',
-                                                [{ text: 'OK' }]
-                                            );
-                                            if (router.canDismiss) router.dismissAll();
-                                            router.replace('/');
-                                            return;
+                <ActionButton
+                    text='Accept'
+                    primaryColor={Colors.primary}
+                    secondaryColor={Colors.primaryShade}
+                    icon={<AntDesign name="check" size={25} style={Styles.icon}/>}
+                    onPress={async () => {
+                        Alert.alert(
+                            'Confirmation',
+                            'Once you accept this request, the customer will be able to view your location. Are you sure you want to accept the request?',
+                            [
+                                { text: 'No' },
+                                {
+                                    text: 'Yes',
+                                    onPress: async () => {
+                                        if (loading) return;
+                                        setLoading(true);
+                                        try {
+                                            const isAccepted = await handleFinalTowCheck(client, request.id);
+                                            if (isAccepted) {
+                                                Alert.alert(
+                                                    'Tow Request',
+                                                    'The request has already been accepted by another driver',
+                                                    [{ text: 'OK' }]
+                                                );
+                                                if (router.canDismiss) router.dismissAll();
+                                                router.replace('/');
+                                                return;
+                                            }
+                                            await handleAcceptTowRequest(client, request.id, 'IN_PROGRESS', waitTime, driverId, firstName, phoneNumber);
+                                            await sendPushNotification(request?.user?.pushToken, 'Tow Request', 'A driver is on the way!', { type: 'TOW_RESPONSE' });
+                                            router.replace({
+                                                pathname: 'towProgress',
+                                                params: { requestParam: JSON.stringify(request)}
+                                            });
+                                        } catch (error) {
+                                            console.error(error);
                                         }
-                                        await handleAcceptTowRequest(client, request.id, 'IN_PROGRESS', waitTime, driverId, firstName, phoneNumber);
-                                        await sendPushNotification(request?.user?.pushToken, 'Tow Request', 'A driver is on the way!', { type: 'TOW_RESPONSE' });
-                                        router.replace({
-                                            pathname: 'towProgress',
-                                            params: { requestParam: JSON.stringify(request)}
-                                        });
-                                    } catch (error) {
-                                        console.error(error);
+                                        setLoading(false);
                                     }
                                 }
-                            }
-                        ]
-                    )}}
-                >
-                    <AntDesign name="check" size={25} style={Styles.icon}/>
-                    <Text style={Styles.actionText}>Accept</Text>
-                </TouchableOpacity>
+                            ]
+                        )
+                    }}
+                />
             </Background>
         </KeyboardAvoidingView>
     );

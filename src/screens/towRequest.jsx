@@ -5,7 +5,7 @@ import { Dimensions } from "react-native";
 import { ServiceStyles, Styles } from "../../constants/styles"
 import { useApp } from '../../components/context';
 import { handleSendAdminNotif, handleSendDriversNotif } from "../../components/notifComponents";
-import { Background, BinarySelect, Select, SimpleList, Tab } from "../../components/components";
+import { Background, BinarySelect, FloatingBlock, Select, SimpleList, Tab } from "../../components/components";
 import { handleCreateTowRequest } from "../../components/towComponents";
 import { useEffect, useRef, useState } from "react";
 import { Entypo, FontAwesome, FontAwesome5, Ionicons, MaterialIcons, MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
@@ -75,7 +75,7 @@ const TowRequest = () =>
                         progress={step === 1 ? 0 : 1}
                         color={Colors.secondary}
                     />
-                    <Ionicons name="car-sport" size={30} color={step >= 2 ? Colors.secondary : Colors.backDropAccent}/>
+                    <Ionicons name="car-sport" size={30} color={step >= 2 ? Colors.secondary : Colors.accent}/>
                     <Bar
                         width={screenWidth * 0.09}
                         unfilledColor='white'
@@ -83,7 +83,7 @@ const TowRequest = () =>
                         progress={step <= 2 ? 0 : 1}
                         color={Colors.secondary}
                     />
-                    <FontAwesome5 name="map-marker-alt" size={30} color={step >= 3 ? Colors.secondary : Colors.backDropAccent} />
+                    <FontAwesome5 name="map-marker-alt" size={30} color={step >= 3 ? Colors.secondary : Colors.accent} />
                     <Bar
                         width={screenWidth * 0.09}
                         unfilledColor='white'
@@ -91,7 +91,7 @@ const TowRequest = () =>
                         progress={step <= 3 ? 0 : 1}
                         color={Colors.secondary}
                     />
-                    <FontAwesome5 name='pencil-alt' size={30} color={step >= 4 ? Colors.secondary: Colors.backDropAccent}/>
+                    <FontAwesome5 name='pencil-alt' size={30} color={step >= 4 ? Colors.secondary: Colors.accent}/>
                     <Bar
                         width={screenWidth * 0.09}
                         unfilledColor='white'
@@ -99,23 +99,29 @@ const TowRequest = () =>
                         progress={step <= 4 ? 0 : 1}
                         color={Colors.secondary}
                     />
-                    <Entypo name="clipboard" size={30} color={step >= 5 ? Colors.secondary : Colors.backDropAccent}/>
+                    <Entypo name="clipboard" size={30} color={step >= 5 ? Colors.secondary : Colors.accent}/>
                 </View>
                 { step === 1 ? (
                     <>
-                    <View style={[Styles.block, {alignItems: 'center'}]}>
-                        <View style={[Styles.infoContainer]}>
+                    <View style={Styles.block}>
+                        <View style={Styles.infoContainer}>
                             <Text style={Styles.headerTitle}>Pricing</Text>
+                        </View>
+                        <View style={Styles.infoContainer}>
                             <Text style={Styles.text}>
                                 All tow requests start at a base price of <Text style={{fontWeight: 'bold'}}>$100</Text>. Extra fees may apply depending on the situation. You will recieve a phone call from one of our drivers if extra fees are going to be applied.
                             </Text>
+                        </View>
+                        <View style={Styles.infoContainer}>
                             <Text style={Styles.text}>Your vehicle will be towed to 4420 Arville St Unit #9, Las Vegas, NV 89102</Text>
                         </View>
-                        <View style={[Styles.infoContainer, {flexDirection: 'row', columnGap: 5, justifyContent: 'flex-start'}]}>
-                            <Ionicons name='information-circle' size={18} color='white'/>
-                            <Text style={[Styles.text, {fontSize: textSize(10)}]}>
-                                Once a driver has accepted your request, you will <Text style={{color: 'red', fontWeight: 'bold'}}>NOT</Text> be able to cancel
-                            </Text>
+                        <View style={Styles.infoContainer}>
+                            <View style={{flexDirection: 'row', columnGap: 5, justifyContent: 'flex-start'}}>
+                                <Ionicons name='information-circle' size={18} color='white'/>
+                                <Text style={[Styles.text, {fontSize: textSize(10)}]}>
+                                    Once a driver has accepted your request, you will <Text style={{color: 'red', fontWeight: 'bold'}}>NOT</Text> be able to cancel
+                                </Text>
+                            </View>
                         </View>
                     </View>
                     <View style={ServiceStyles.buttonContainer}>
@@ -143,7 +149,7 @@ const TowRequest = () =>
                                 <Text style={Styles.tabHeader}>Select the vehicle to be towed</Text>
                             </View>
                         </View>
-                        <View style={[Styles.block, {rowGap: 0}]}>
+                        <View style={[Styles.block, {rowGap: 5}]}>
                             <SimpleList
                                 data={vehicles}
                                 renderItem={({item}) =>
@@ -152,8 +158,8 @@ const TowRequest = () =>
                                         text={`${item.make} ${item.model}`}
                                         selected={item.id === selectedVehicle?.id ? true : false}
                                         action={() => {item.id === selectedVehicle?.id ? setSelectedVehicle(undefined) : setSelectedVehicle(item)}}
-                                        rightIcon={<Ionicons name="car-sport" size={30} style={Styles.rightIcon} color={Colors.backDropAccent}/>}
-                                        leftIcon={<FontAwesome name={selectedVehicle?.id === item.id ? "circle" : "circle-o"} size={25} style={Styles.icon} color={Colors.backDropAccent}/>}
+                                        rightIcon={<Ionicons name="car-sport" size={30} style={Styles.rightIcon} color={Colors.accent}/>}
+                                        leftIcon={<FontAwesome name={selectedVehicle?.id === item.id ? "circle" : "circle-o"} size={25} style={Styles.icon} color={Colors.accent}/>}
                                     />
                                 }
                             />
@@ -306,7 +312,7 @@ const TowRequest = () =>
                                 </View>
                             </View>
                         )}
-                        <View style={[Styles.floatingBlock, {rowGap: 10}]}>
+                        <FloatingBlock>
                             <View style={Styles.infoContainer}>
                                 <Text style={Styles.headerTitle}>Description <Text style={Styles.text}>(optional)</Text></Text>
                                 <Text style={Styles.tabHeader}>Please, describe why the vehicle needs to be towed</Text>
@@ -315,14 +321,14 @@ const TowRequest = () =>
                                 <MaterialIcons name="notes" size={30} style={Styles.iconAlt} />
                                 <TextInput
                                     placeholder="e.g. Flat tire, dead battery, etc."
-                                    placeholderTextColor={Colors.subText}
+                                    placeholderTextColor={Colors.grayText}
                                     style={Styles.inputAlt}
                                     multiline={true}
                                     value={notes}
                                     onChangeText={setNotes}
                                 />
                             </View>
-                        </View>
+                        </FloatingBlock>
                         <View style={[Styles.block, {paddingTop: 20}]}>
                             <View style={ServiceStyles.buttonContainer}>
                                 <TouchableOpacity
@@ -392,7 +398,7 @@ const TowRequest = () =>
                             ) }
                         </View>
                     </View>
-                    <View style={Styles.floatingBlock}>
+                    <FloatingBlock glareTop={true}>
                         <View style={Styles.infoContainer}>
                             <Text style={Styles.headerTitle}>Vehicle</Text>
                         </View>
@@ -424,40 +430,40 @@ const TowRequest = () =>
                                 style={{height: 'none'}}
                             />
                         )}
-                    </View>
-                    <View style={[Styles.block, {paddingTop: 20}]}>
-                        <View style={Styles.infoContainer}>
-                            <Tab
-                                header='Does the vehicle start?'
-                                text={canRun ? 'Yes' : 'No'}
-                                leftIcon={<MaterialCommunityIcons name='engine' size={30} style={Styles.icon}/>}
-                                style={{height: 'none', padding: 5}}
-                            />
-                            <Tab
-                                header='Does the vehicle roll?'
-                                text={canRoll ? 'Yes' : 'No'}
-                                leftIcon={<MaterialCommunityIcons name='tire' size={30} style={Styles.icon}/>}
-                                style={{height: 'none', padding: 5}}
-                            />
-                            <Tab
-                                header='Are the keys included?'
-                                text={keyIncluded ? 'Yes' : 'No'}
-                                leftIcon={<Entypo name='key' size={30} style={Styles.icon}/>}
-                                style={{height: 'none', padding: 5}}
-                            />
-                            <Tab
-                                header='Is the vehicle obstructed?'
-                                text={isObstructed ? 'Yes' : 'No'}
-                                leftIcon={<Entypo name='warning' size={30} style={Styles.icon}/>}
-                                style={{height: 'none', padding: 5}}
-                            />
-                        </View>
+                    </FloatingBlock>
+                    <View style={[Styles.block, {rowGap: 0}]}>
+                        <Tab
+                            header='Does the vehicle start?'
+                            text={canRun ? 'Yes' : 'No'}
+                            leftIcon={<MaterialCommunityIcons name='engine' size={30} style={Styles.icon}/>}
+                            style={{height: 'none', padding: 5}}
+                        />
+                        <Tab
+                            header='Does the vehicle roll?'
+                            text={canRoll ? 'Yes' : 'No'}
+                            leftIcon={<MaterialCommunityIcons name='tire' size={30} style={Styles.icon}/>}
+                            style={{height: 'none', padding: 5}}
+                        />
+                        <Tab
+                            header='Are the keys included?'
+                            text={keyIncluded ? 'Yes' : 'No'}
+                            leftIcon={<Entypo name='key' size={30} style={Styles.icon}/>}
+                            style={{height: 'none', padding: 5}}
+                        />
+                        <Tab
+                            header='Is the vehicle obstructed?'
+                            text={isObstructed ? 'Yes' : 'No'}
+                            leftIcon={<Entypo name='warning' size={30} style={Styles.icon}/>}
+                            style={{height: 'none', padding: 5}}
+                        />
                         { notes && (
                             <View style={Styles.infoContainer}>
                                 <Text style={Styles.tabHeader}>Customer Note</Text>
                                 <Text style={Styles.text}>{notes}</Text>
                             </View>
                         )}
+                    </View>
+                    <View style={Styles.block}>
                         <View style={ServiceStyles.buttonContainer}>
                             <TouchableOpacity
                                 style={ServiceStyles.directionButton}

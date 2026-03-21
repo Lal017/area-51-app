@@ -4,7 +4,7 @@ import { handleUpdateCustomersTowRequestStatus } from '../../components/towCompo
 import { sendPushNotification } from '../../components/notifComponents';
 import { handleGetAddress } from '../../components/adminComponents';
 import { useApp } from '../../components/context';
-import { Background, Tab } from '../../components/components';
+import { ActionButton, Background, FloatingBlock, Tab } from '../../components/components';
 import { Styles, ServiceStyles } from '../../constants/styles';
 import { View, Text, TouchableOpacity, Alert, KeyboardAvoidingView } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
@@ -19,6 +19,7 @@ const TowResponse = () =>
     const request = JSON.parse(requestParam);
 
     const [ address, setAddress ] = useState();
+    const [ loading, setLoading ] = useState(false);
 
     // sets fallback vehicle values incase customer deleted the vehicle
     const vehicle = request?.vehicle ?? (request?.vehicleYear && {
@@ -87,16 +88,14 @@ const TowResponse = () =>
                     </View>
                 </View>
                 <View style={Styles.block}>
-                    <View style={Styles.infoContainer}>
-                        <Tab
-                            header='Pickup Address'
-                            text={<Text style={{color: Colors.secondary}}>{address}</Text>}
-                            leftIcon={<Entypo name='address' size={30} style={[Styles.icon, {color: Colors.secondary}]}/>}
-                            action={() => openInMaps(request.latitude, request.longitude)}
-                        />
-                    </View>
+                    <Tab
+                        header='Pickup Address'
+                        text={<Text style={{color: Colors.secondary}}>{address}</Text>}
+                        leftIcon={<Entypo name='address' size={30} style={[Styles.icon, {color: Colors.secondary}]}/>}
+                        action={() => openInMaps(request.latitude, request.longitude)}
+                    />
                 </View>
-                <View style={Styles.floatingBlock}>
+                <FloatingBlock>
                     <View style={Styles.infoContainer}>
                         <Text style={Styles.headerTitle}>Vehicle</Text>
                     </View>
@@ -128,34 +127,32 @@ const TowResponse = () =>
                             style={{height: 'none'}}
                         />
                     )}
-                </View>
-                <View style={[Styles.block, {paddingTop: 20}]}>
-                    <View style={Styles.infoContainer}>
-                        <Tab
-                            header='Does the car run?'
-                            text={request?.canRun ? 'Yes' : 'No'}
-                            leftIcon={<MaterialCommunityIcons name='engine' size={30} style={Styles.icon}/>}
-                            style={{height: 'none', padding: 5}}
-                        />
-                        <Tab
-                            header='Does the car roll?'
-                            text={request?.canRoll ? 'Yes' : 'No'}
-                            leftIcon={<MaterialCommunityIcons name='tire' size={30} style={Styles.icon}/>}
-                            style={{height: 'none', padding: 5}}
-                        />
-                        <Tab
-                            header='Are the keys included?'
-                            text={request?.keyIncluded ? 'Yes' : 'No'}
-                            leftIcon={<Entypo name='key' size={30} style={Styles.icon}/>}
-                            style={{height: 'none', padding: 5}}
-                        />
-                        <Tab
-                            header='Is the vehicle obstructed?'
-                            text={request?.isObstructed ? 'Yes' : 'No'}
-                            leftIcon={<Entypo name='warning' size={30} style={Styles.icon}/>}
-                            style={{height: 'none', padding: 5}}
-                        />
-                    </View>
+                </FloatingBlock>
+                <View style={Styles.block}>
+                    <Tab
+                        header='Does the car run?'
+                        text={request?.canRun ? 'Yes' : 'No'}
+                        leftIcon={<MaterialCommunityIcons name='engine' size={30} style={Styles.icon}/>}
+                        style={{height: 'none', padding: 5}}
+                    />
+                    <Tab
+                        header='Does the car roll?'
+                        text={request?.canRoll ? 'Yes' : 'No'}
+                        leftIcon={<MaterialCommunityIcons name='tire' size={30} style={Styles.icon}/>}
+                        style={{height: 'none', padding: 5}}
+                    />
+                    <Tab
+                        header='Are the keys included?'
+                        text={request?.keyIncluded ? 'Yes' : 'No'}
+                        leftIcon={<Entypo name='key' size={30} style={Styles.icon}/>}
+                        style={{height: 'none', padding: 5}}
+                    />
+                    <Tab
+                        header='Is the vehicle obstructed?'
+                        text={request?.isObstructed ? 'Yes' : 'No'}
+                        leftIcon={<Entypo name='warning' size={30} style={Styles.icon}/>}
+                        style={{height: 'none', padding: 5}}
+                    />
                 </View>
                 { request?.notes && (
                     <View style={Styles.block}>
@@ -166,18 +163,23 @@ const TowResponse = () =>
                     </View>
                 )}
                 { request?.status === 'IN_PROGRESS' && (
-                    <View style={[Styles.block, {alignItems: 'center'}]}>
-                        <TouchableOpacity
-                            style={[Styles.actionButton, {backgroundColor: Colors.primary}]}
-                            onPress={() => {
-                                Alert.alert(
-                                    'Complete Tow Request',
-                                    'Mark tow request as completed?',
-                                    [
-                                        { text: 'No' },
-                                        {
-                                            text: 'Yes',
-                                            onPress: async () => {
+                    <ActionButton
+                        text='Complete'
+                        primaryColor={Colors.primary}
+                        secondaryColor={Colors.secondary}
+                        icon={<AntDesign name="check" size={25} color='white' style={Styles.icon}/>}
+                        onPress={async () => {
+                            Alert.alert(
+                                'Complete Tow Request',
+                                'Mark tow request as completed?',
+                                [
+                                    { text: 'No' },
+                                    {
+                                        text: 'Yes',
+                                        onPress: async () => {
+                                            if (loading) return;
+                                            setLoading(true);
+                                            try {
                                                 await handleUpdateCustomersTowRequestStatus(client, request.id, 'COMPLETED');
                                                 const data = {
                                                     type: 'TOW_RESPONSE'
@@ -185,16 +187,16 @@ const TowResponse = () =>
                                                 await sendPushNotification(request?.user?.pushToken, 'Tow Request', 'Your tow request has been completed!', data);
                                                 if (router.canDismiss()) router.dismissAll();
                                                 router.replace('(admin)');
+                                            } catch (error) {
+                                                console.error(error);
                                             }
+                                            setLoading(false);
                                         }
-                                    ]
-                                )
-                            }}
-                        >
-                            <AntDesign name="check" size={25} color='white' style={Styles.icon}/>
-                            <Text style={Styles.actionText}>Completed</Text>
-                        </TouchableOpacity>
-                    </View>
+                                    }
+                                ]
+                            );
+                        }}
+                    />
                 )}
             </Background>
         </KeyboardAvoidingView>

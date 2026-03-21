@@ -1,12 +1,12 @@
 ToDo:
-    - add animations
-    - handle notification when a truck driver accepts a request and an admin marks it as completed (using two phones for real time viewing)
+    - get rid of useless styling in style.js
     - use color pallete generator to tweak colors
+    - add openInMaps option to the first step of the towRequest page
     - check all functions to make sure they throw try and catch errors correctly
     - add try/catch to functions and buttons
     - check to see all error message are red and not Colors.redButton
     - check to see if pages need refresh added to them
-    - add glare animations for important info wherever needed
+    - handle notification when a truck driver accepts a request and an admin marks it as completed (using two phones for real time viewing)
     - check if you can replace useState variables with useRef variables
     - check if you can add useMemos for calculations in app
     - review logic for app i.e. why do i need to use async local storage etc.

@@ -10,7 +10,7 @@ const Styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row',
         position: 'relative',
-        backgroundColor: Colors.background,
+        backgroundColor: Colors.backgroundShade,
     },
     LogoImg: {
         width: 200,
@@ -19,14 +19,14 @@ const Styles = StyleSheet.create({
         marginTop: 50,
     },
     tabBarStyle: {
-        backgroundColor: Colors.background,
+        backgroundColor: Colors.backgroundShade,
         borderTopWidth: 0,
         elevation: 0,
     },
     carIconContainer: {
         width: 75,
         height: 75,
-        backgroundColor: Colors.backDropAccent,
+        backgroundColor: Colors.accent,
         borderRadius: 100,
         justifyContent: 'center',
         alignItems: 'center',
@@ -54,12 +54,11 @@ const Styles = StyleSheet.create({
     },
     // Tab Select
     tabWrapper: {
-        width: '100%',
+        width: '100%', height: 75,
         paddingLeft: 75,
         alignItems: 'center',
         flexDirection: 'row',
-        position: 'relative',
-        height: 75,
+        position: 'relative'
     },
     binaryTabWrapper: {
         paddingLeft: 25,
@@ -116,15 +115,13 @@ const Styles = StyleSheet.create({
     },
     // button
     actionButton: {
-        backgroundColor: Colors.button,
-        height: 50,
-        width: '90%',
-        justifyContent: 'center',
-        borderRadius: 5,
-        elevation: 5,
+        height: 50, width: '90%',
+        justifyContent: 'center', alignSelf: 'center',
+        borderRadius: 5
     },
     actionText: {
         color: Colors.text,
+        fontSize: textSize(13),
         textAlign: 'center',
         fontFamily: 'Roboto-Bold'
     },
@@ -162,7 +159,7 @@ const Styles = StyleSheet.create({
         fontSize: textSize(15),
         fontFamily: 'Roboto-Light',
         textAlign: 'left',
-        color: Colors.subText
+        color: Colors.grayText
     },
     tabText: {
         fontSize: textSize(15),
@@ -179,7 +176,7 @@ const Styles = StyleSheet.create({
     // icons
     icon: {
         position: 'absolute',
-        left: 17,
+        left: 20,
         zIndex: 1,
         color: Colors.text,
     },
@@ -200,8 +197,7 @@ const Styles = StyleSheet.create({
     infoContainer: {
         width: '100%',
         justifyContent: 'center',
-        paddingRight: 20,
-        paddingLeft: 20
+        paddingRight: 20, paddingLeft: 20,
     },
     block: {
         paddingBottom: 20,
@@ -210,12 +206,12 @@ const Styles = StyleSheet.create({
     },
     floatingBlock: {
         width: '90%',
-        padding: 10,
+        paddingBottom: 20, paddingTop: 20,
         rowGap: 20,
-        paddingTop: 25,
-        paddingBottom: 25,
+        marginBottom: 20,
         borderRadius: 15,
-        backgroundColor: Colors.backgroundAccent
+        overflow: 'hidden',
+        borderWidth: 1, borderColor: Colors.backgroundContrast
     },
     errorContainer: {
         width: '90%',
@@ -273,7 +269,7 @@ const AuthStyles = StyleSheet.create({
     checkBox: {
         width: 30,
         height: 30,
-        backgroundColor: Colors.backDropAccent,
+        backgroundColor: Colors.accent,
         borderRadius: 5,
         justifyContent: 'center',
         alignItems: 'center'
@@ -321,12 +317,12 @@ const HomeStyles = StyleSheet.create({
         top: -15
     },
     appointmentContainer: {
-        backgroundColor: Colors.backgroundAccent,
         flex: 1,
         minWidth: '40%',
         maxHeight: '100%',
         borderRadius: 10,
-        paddingLeft: 25, paddingRight: 25, paddingTop: 10, paddingBottom: 10
+        paddingLeft: 25, paddingRight: 25, paddingTop: 10, paddingBottom: 10,
+        overflow: 'hidden'
     },
     shortcutContainer: {
         width: '100%',
@@ -342,15 +338,15 @@ const HomeStyles = StyleSheet.create({
         height: '100%',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: Colors.backgroundAccent,
         borderRadius: 5,
-        position: 'relative'
+        position: 'relative',
+        overflow: 'hidden'
     },
     // index.jsx
     appointmentTitle: {
         fontSize: textSize(20),
         fontFamily: 'Roboto-Condensed-Light',
-        color: Colors.subText
+        color: Colors.grayText
     },
     appointmentText: {
         fontSize: textSize(12),
@@ -361,7 +357,7 @@ const HomeStyles = StyleSheet.create({
     pickupContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: Colors.backDrop,
+        backgroundColor: Colors.accentAlt,
         padding: 20,
         rowGap: 20,
         width: '95%',
@@ -412,7 +408,7 @@ const ServiceStyles = StyleSheet.create({
     progressBarLine: {
         flex: 1,
         height: 5,
-        backgroundColor: Colors.backDropAccent
+        backgroundColor: Colors.accent
     },
     buttonContainer: {
         width: '100%',
@@ -422,9 +418,9 @@ const ServiceStyles = StyleSheet.create({
     },
     directionButton: {
         backgroundColor: Colors.button,
-        borderRadius: 10,
+        borderRadius: 5,
         alignItems: 'center', justifyContent: 'space-evenly',
-        height: '100%', width: '45%',
+        height: '90%', width: '42%',
         flexDirection: 'row',
         elevation: 10,
     },
@@ -453,7 +449,7 @@ const ServiceStyles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'space-evenly',
-        gap: 5,
+        rowGap: 10,
     },
     timeBubble: {
         backgroundColor: 'rgba(0,0,0,0.5)',
@@ -522,7 +518,7 @@ const ProfileStyles = StyleSheet.create({
         alignItems: 'center',
     },
     vehicleBox: {
-        backgroundColor: Colors.backDrop,
+        backgroundColor: Colors.accentAlt,
         padding: 25,
         width: '100%',
         alignItems: 'center',
@@ -532,7 +528,7 @@ const ProfileStyles = StyleSheet.create({
     addVehicleButton: {
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: Colors.backDrop,
+        backgroundColor: Colors.accentAlt,
         elevation: 10,
         padding: 25,
         width: '100%',
@@ -555,7 +551,7 @@ const AdminStyles = StyleSheet.create({
         width: '100%',
         padding: 30,
         rowGap: 10,
-        backgroundColor: Colors.backgroundAccent,
+        backgroundColor: Colors.backgroundContrast,
     },
     picker: {
         backgroundColor: Colors.button,
@@ -615,7 +611,7 @@ const AdminStyles = StyleSheet.create({
         right: 10,
         top: 10,
         borderRadius: 5,
-        backgroundColor: Colors.redButton,
+        backgroundColor: Colors.error,
         padding: 2
     },
     arrow: {

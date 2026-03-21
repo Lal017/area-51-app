@@ -5,7 +5,7 @@ import Modal from 'react-native-modal';
 import LottieView from "lottie-react-native";
 import { handleGetMyAppointments } from "../../components/appointmentComponents";
 import { handleGetTowRequest, handleNotifUpdateTowRequest } from '../../components/towComponents';
-import { Background, Loading } from "../../components/components";
+import { ActionButton, Background, Loading } from "../../components/components";
 import { handleGetVehicles, handleNotifUpdateVehicle } from "../../components/vehicleComponents";
 import { handleSendAdminNotif, registerForPushNotifications } from "../../components/notifComponents";
 import { handleCreateUser, handleUpdateUser, handleGetUser } from '../../components/userComponents';
@@ -394,7 +394,7 @@ const TabsContent = () =>
                     headerShown: false,
                     tabBarStyle: Styles.tabBarStyle,
                     tabBarActiveTintColor: Colors.secondary,
-                    tabBarInactiveTintColor: Colors.backDropAccent,
+                    tabBarInactiveTintColor: Colors.accent,
                     tabBarShowLabel: false,
                 }}
             >
@@ -456,12 +456,10 @@ const TabsContent = () =>
                     <Text style={Styles.text}>This app requires push notification permissions to function properly</Text>
                 </View>
                 <View style={Styles.block}>
-                    <TouchableOpacity
-                        style={[Styles.actionButton, {alignSelf: 'center'}]}
-                        onPress={() => Linking.openSettings()}
-                    >
-                        <Text style={Styles.actionText}>Settings</Text>
-                    </TouchableOpacity>
+                    <ActionButton
+                        text='Settings'
+                        onPress={async () => Linking.openSettings()}
+                    />
                 </View>
             </Background>
         </Modal>

@@ -127,9 +127,9 @@ const TowRequestList = () =>
                                 >
                                     <View style={[{flex: 1},
                                         request?.status === 'IN_PROGRESS' ? {backgroundColor: Colors.primary}
-                                        : request?.status === 'COMPLETED' ? {backgroundColor: Colors.backDropAccent}
+                                        : request?.status === 'COMPLETED' ? {backgroundColor: Colors.accent}
                                         : request?.status === 'REQUESTED' ? {backgroundColor: Colors.secondary}
-                                        : {backgroundColor: Colors.redButton}
+                                        : {backgroundColor: Colors.error}
                                     ]}/>
                                     { request?.status !== 'COMPLETED' && request?.status !== 'CANCELLED' && (
                                         <Animated.View
@@ -140,7 +140,7 @@ const TowRequestList = () =>
                                             }]}
                                         >
                                             <LinearGradient
-                                            colors={[Colors.backDropAccent, Colors.backDropAccent, Colors.backDropAccent]}
+                                            colors={[Colors.accent, Colors.accent, Colors.accent]}
                                             style={{flex: 1}}
                                             start={{ x: 0, y: 0}}
                                             end={{ x: 1, y: 1}}

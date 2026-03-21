@@ -164,20 +164,18 @@ const TowStatus = () =>
                     <View style={Styles.infoContainer}>
                         <Text style={Styles.headerTitle}>Request Details</Text>
                     </View>
-                    <View style={Styles.infoContainer}>
-                        <Tab
-                            header={`${vehicle.year}`}
-                            text={`${vehicle.make} ${vehicle.model}`}
-                            leftIcon={<Ionicons name='car-sport' size={30} style={Styles.icon}/>}
-                            style={{height: 'none'}}
-                        />
-                        <Tab
-                            header='Vehicle Color'
-                            text={`${vehicle.color}`}
-                            leftIcon={<FontAwesome name='paint-brush' size={30} style={Styles.icon}/>}
-                            style={{height: 'none'}}
-                        />
-                    </View>
+                    <Tab
+                        header={`${vehicle.year}`}
+                        text={`${vehicle.make} ${vehicle.model}`}
+                        leftIcon={<Ionicons name='car-sport' size={30} style={Styles.icon}/>}
+                        style={{height: 'none'}}
+                    />
+                    <Tab
+                        header='Vehicle Color'
+                        text={`${vehicle.color}`}
+                        leftIcon={<FontAwesome name='paint-brush' size={30} style={Styles.icon}/>}
+                        style={{height: 'none'}}
+                    />
                     { towRequest?.notes && (
                         <View style={Styles.infoContainer}>
                             <Text style={Styles.tabHeader}>Request Note</Text>
@@ -270,7 +268,7 @@ const TowStatus = () =>
                             paddingBottom: 30,
                             borderTopLeftRadius: 15,
                             borderTopRightRadius: 15,
-                            backgroundColor: Colors.backgroundFade
+                            backgroundColor: Colors.backgroundShade
                         }
                     ]}
                 >

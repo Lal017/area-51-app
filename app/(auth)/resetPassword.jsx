@@ -1,16 +1,15 @@
 import Colors from "../../constants/colors";
 import { Styles, AuthStyles } from "../../constants/styles";
 import { handleResetPassword } from "../../components/authComponents";
-import { AuthBackground } from "../../components/components";
+import { ActionButton, AuthBackground } from "../../components/components";
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
+import { View, Text, TextInput, Image } from "react-native";
 import { Link } from "expo-router";
 
 const ResetPassword = () =>
 {
     const [email, setEmail] = useState();
-    const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState(undefined);
     const [missingEmail, setMissingEmail] = useState(false);
     return (
@@ -30,7 +29,7 @@ const ResetPassword = () =>
                     <Ionicons name='mail' size={20} style={Styles.icon} />
                     <TextInput
                         placeholder="email"
-                        placeholderTextColor={Colors.subText}
+                        placeholderTextColor={Colors.grayText}
                         value={email}
                         onChangeText={setEmail}
                         keyboardType="email-address"
@@ -38,28 +37,20 @@ const ResetPassword = () =>
                         style={[Styles.input, missingEmail && {borderColor: 'red'}]}
                     />
                 </View>
-                { errorMessage ? (
+                { errorMessage && (
                     <View style={Styles.errorContainer}>
                         <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
                         <Text style={[Styles.text, {color: 'red'}]}>{errorMessage}</Text>
                     </View>
-                ) : null}
-                <TouchableOpacity
+                )}
+                <ActionButton
+                    text='Continue'
                     onPress={async () => {
-                        if (loading) return;
-                        setLoading(true);
-
                         setErrorMessage(await handleResetPassword(email));
                         if (!email) setMissingEmail(true);
                         else setMissingEmail(false);
-                        
-                        setLoading(false);
                     }}
-                    style={[Styles.actionButton, loading && { opacity: 0.5 }]}
-                    disabled={loading}
-                >
-                    <Text style={Styles.actionText}>Continue</Text>
-                </TouchableOpacity>
+                />
                 <Link href="/(auth)/signIn" style={[Styles.text, {textAlign: 'center'}]}>Sign In</Link>
             </View>
         </AuthBackground>

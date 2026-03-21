@@ -5,7 +5,7 @@ import { useLocalSearchParams } from "expo-router";
 import { handleConfirmResetPassword } from "../../components/authComponents";
 import { FontAwesome, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import Colors from "../../constants/colors";
-import { AuthBackground } from "../../components/components";
+import { ActionButton, AuthBackground } from "../../components/components";
 
 const ResetPasswordConfirm = () =>
 {
@@ -13,7 +13,6 @@ const ResetPasswordConfirm = () =>
     const [confirmationCode, setConfirmationCode] = useState();
     const [newPassword, setNewPassword] = useState();
     const [confNewPassword, setConfNewPassword] = useState();
-    const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [errorMessage, setErrorMessage] = useState(undefined);
@@ -40,7 +39,7 @@ const ResetPasswordConfirm = () =>
                             <MaterialIcons name='numbers' size={20} style={Styles.icon} />
                             <TextInput
                                 placeholder="Verification Code"
-                                placeholderTextColor={Colors.subText}
+                                placeholderTextColor={Colors.grayText}
                                 value={confirmationCode}
                                 onChangeText={setConfirmationCode}
                                 keyboardType='number-pad'
@@ -52,7 +51,7 @@ const ResetPasswordConfirm = () =>
                             <Ionicons name='key' size={20} style={Styles.icon} />
                             <TextInput
                                 placeholder="New Password"
-                                placeholderTextColor={Colors.subText}
+                                placeholderTextColor={Colors.grayText}
                                 value={newPassword}
                                 onChangeText={setNewPassword}
                                 secureTextEntry={!showPassword}
@@ -66,15 +65,15 @@ const ResetPasswordConfirm = () =>
                                 }}
                             >
                                 { showPassword ? (
-                                    <Ionicons name='eye-off' size={20} color={Colors.backDropAccent}/>
-                                ) : <Ionicons name='eye' size={20} color={Colors.backDropAccent}/> }
+                                    <Ionicons name='eye-off' size={20} color={Colors.accent}/>
+                                ) : <Ionicons name='eye' size={20} color={Colors.accent}/> }
                             </TouchableOpacity>
                         </View>
                         <View style={Styles.inputWrapper}>
                             <Ionicons name="lock-open" size={20} style={Styles.icon} />
                             <TextInput
                                 placeholder="Confirm New Password"
-                                placeholderTextColor={Colors.subText}
+                                placeholderTextColor={Colors.grayText}
                                 value={confNewPassword}
                                 onChangeText={setConfNewPassword}
                                 secureTextEntry={!showConfirmPassword}
@@ -88,22 +87,20 @@ const ResetPasswordConfirm = () =>
                                 }}
                             >
                                 { showConfirmPassword ? (
-                                    <Ionicons name='eye-off' size={20} color={Colors.backDropAccent}/>
-                                ) : <Ionicons name='eye' size={20} color={Colors.backDropAccent}/> }
+                                    <Ionicons name='eye-off' size={20} color={Colors.accent}/>
+                                ) : <Ionicons name='eye' size={20} color={Colors.accent}/> }
                             </TouchableOpacity>
                         </View>
                     </View>
-                    { errorMessage ? (
+                    { errorMessage && (
                         <View style={Styles.errorContainer}>
                             <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
                             <Text style={[Styles.text, {color: 'red'}]}>{errorMessage}</Text>
                         </View>
-                    ) : null}
-                    <TouchableOpacity
+                    )}
+                    <ActionButton
+                        text='Reset'
                         onPress={async () => {
-                            if (loading) return;
-                            setLoading(true);
-                            
                             setErrorMessage(await handleConfirmResetPassword(username, confirmationCode, newPassword, confNewPassword));
                             if (!confirmationCode) setMissingConfCode(true);
                             else setMissingConfCode(false);
@@ -111,14 +108,8 @@ const ResetPasswordConfirm = () =>
                             else setMissingNewPassword(false);
                             if (!confNewPassword) setMissingConfNewPassword(true);
                             else setMissingConfNewPassword(false);
-
-                            setLoading(false);
                         }}
-                        style={[Styles.actionButton, loading && { opacity: 0.5 }]}
-                        disabled={loading}
-                    >
-                        <Text style={Styles.actionText}>Reset</Text>
-                    </TouchableOpacity>
+                    />
                 </View>
             </AuthBackground>
         </KeyboardAvoidingView>
