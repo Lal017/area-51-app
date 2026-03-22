@@ -1,6 +1,6 @@
 import Colors from "../../constants/colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ActionButton, AuthBackground } from "../../components/components";
+import { ActionButton, AuthBackground, ErrorDisplay } from "../../components/components";
 import { handleSignUp, GoogleSignInButton } from "../../components/authComponents";
 import { AuthStyles, Styles } from "../../constants/styles";
 import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Image, Alert } from "react-native";
@@ -167,10 +167,7 @@ const SignUp = () =>
                             <Text style={Styles.text}>Request a tow truck driver account?</Text>
                         </View>
                         { errorMessage && step === 1 && (
-                            <View style={Styles.errorContainer}>
-                                <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
-                                <Text style={[Styles.text, {color: 'red'}]}>{errorMessage}</Text>
-                            </View>
+                            <ErrorDisplay message={errorMessage}/>
                         )}
                         <ActionButton
                             text='Continue'
@@ -213,10 +210,7 @@ const SignUp = () =>
                             />
                         </View>
                         { errorMessage && step === 2 && (
-                            <View style={Styles.errorContainer}>
-                                <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
-                                <Text style={[Styles.text, {color: 'red'}]}>{errorMessage}</Text>
-                            </View>
+                            <ErrorDisplay message={errorMessage}/>
                         )}
                         <ActionButton
                             text='Sign Up'

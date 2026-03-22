@@ -1,7 +1,7 @@
 import Colors from '../../constants/colors';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { ActionButton, Background, SimpleList, Tab } from '../../components/components';
+import { ActionButton, Background, ErrorDisplay, SimpleList, Tab } from '../../components/components';
 import { useApp } from '../../components/context';
 import { ServiceStyles, Styles } from '../../constants/styles';
 import { View, Text, TouchableOpacity } from 'react-native';
@@ -154,12 +154,7 @@ const VehiclePickup = () =>
                                         </TouchableOpacity>
                                     </View>
                                     { errorMessage && (
-                                        <View style={Styles.block}>
-                                            <View style={Styles.errorContainer}>
-                                                <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
-                                                <Text style={Styles.errorText}>{errorMessage}</Text>
-                                            </View>
-                                        </View>
+                                        <ErrorDisplay message={errorMessage}/>
                                     )}
                                     <ActionButton
                                         text='Schedule Pickup'

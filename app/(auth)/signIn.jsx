@@ -1,7 +1,7 @@
 import Colors from '../../constants/colors';
 import { AuthStyles, Styles } from '../../constants/styles';
 import { GoogleSignInButton } from '../../components/authComponents';
-import { ActionButton, AuthBackground } from '../../components/components';
+import { ActionButton, AuthBackground, ErrorDisplay } from '../../components/components';
 import { handleSignIn } from '../../components/authComponents';
 import { Text, TextInput, View, TouchableOpacity, Image } from 'react-native';
 import { useState } from 'react';
@@ -65,12 +65,7 @@ const SignIn = () =>
                 </View>
             </View>
             { errorMessage && (
-                <View style={Styles.block}>
-                    <View style={Styles.errorContainer}>
-                        <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
-                        <Text style={[Styles.text, {color: 'red'}]}>{errorMessage}</Text>
-                    </View>
-                </View>
+                <ErrorDisplay message={errorMessage}/>
             )}
             <View style={Styles.block}>
                 <ActionButton

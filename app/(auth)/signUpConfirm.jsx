@@ -1,7 +1,7 @@
 import Colors from '../../constants/colors';
 import { Styles, AuthStyles } from '../../constants/styles';
 import { handleSignUpConfirm, handleResendSignUpCode } from '../../components/authComponents';
-import { ActionButton, AuthBackground } from '../../components/components';
+import { ActionButton, AuthBackground, ErrorDisplay } from '../../components/components';
 import { View, Text, TextInput, TouchableOpacity, Image} from 'react-native';
 import { useState, useEffect } from 'react';
 import { useLocalSearchParams } from 'expo-router';
@@ -50,10 +50,7 @@ const SignUpConfirm = () =>
                     />
                 </View>
                 { errorMessage && (
-                    <View style={Styles.errorContainer}>
-                        <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
-                        <Text style={[Styles.text, {color: 'red'}]}>{errorMessage}</Text>
-                    </View>
+                    <ErrorDisplay message={errorMessage}/>
                 )}
                 { resendMessage && (
                     <View style={Styles.errorContainer}>

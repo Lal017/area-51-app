@@ -7,7 +7,7 @@ import { Dimensions, KeyboardAvoidingView } from 'react-native';
 import { handleGetAppointments, iconCheck, handleSetTimes, handleCreateAppointment, handleFinalCheck, handleUpdateAppointment } from '../../components/appointmentComponents';
 import { useApp } from '../../components/context';
 import { handleSendAdminNotif } from '../../components/notifComponents';
-import { Select, CalendarHeader, Background, Loading, SimpleList, Tab, FloatingBlock, ActionButton } from '../../components/components';
+import { Select, CalendarHeader, Background, Loading, SimpleList, Tab, FloatingBlock, ActionButton, ErrorDisplay } from '../../components/components';
 import { ServiceStyles, Styles } from "../../constants/styles";
 import { MaterialIcons, Ionicons, FontAwesome, FontAwesome6, AntDesign, FontAwesome5, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useEffect, useRef, useState, useMemo } from 'react';
@@ -46,6 +46,8 @@ const Schedule = () =>
   const [isReady, setIsReady] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [errorMessage, setErrorMessage] = useState(undefined);
+
+  const scrollRef = useRef();
 
   // get available appointments
   useEffect(() => {
@@ -86,6 +88,13 @@ const Schedule = () =>
 
     setRefreshing(false);
   };
+
+    useEffect(() => {
+      scrollRef.current?.scrollTo({
+        y: 0,
+        animated: false
+      });
+    }, [step]);
 
   // called when a user clicks on a new day on the calendar
   const handleDayPress = async (day) =>
@@ -133,7 +142,7 @@ const Schedule = () =>
     <GestureHandlerRootView>
     { isReady ? (
       <KeyboardAvoidingView behavior='padding' style={{flex: 1}}>
-        <Background refreshing={refreshing} onRefresh={onRefresh}>
+        <Background refreshing={refreshing} onRefresh={onRefresh} scrollRef={scrollRef}>
           <View style={ServiceStyles.progressBar}>
             <AntDesign name='calendar' size={35} color={step >= 1 ? Colors.secondary : Colors.accent} />
             <ProgressBar
@@ -220,12 +229,7 @@ const Schedule = () =>
                 </TouchableOpacity>
               </View>
               { errorMessage && (
-                <View style={Styles.block}>
-                  <View style={Styles.errorContainer}>
-                    <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
-                    <Text style={Styles.errorText}>{errorMessage}</Text>
-                  </View>
-                </View>
+                <ErrorDisplay message={errorMessage}/>
               )}
               <View style={ServiceStyles.buttonContainer}>
                 <TouchableOpacity
@@ -305,12 +309,7 @@ const Schedule = () =>
                 />
               </View>
               { errorMessage && (
-                <View style={Styles.block}>
-                  <View style={Styles.errorContainer}>
-                    <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
-                    <Text style={Styles.errorText}>{errorMessage}</Text>
-                  </View>
-                </View>
+                <ErrorDisplay message={errorMessage}/>
               )}
               <View style={ServiceStyles.buttonContainer}>
                 <TouchableOpacity
@@ -385,12 +384,7 @@ const Schedule = () =>
                 />
               </View>
               { errorMessage && (
-                <View style={Styles.block}>
-                  <View style={Styles.errorContainer}>
-                    <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
-                    <Text style={Styles.errorText}>{errorMessage}</Text>
-                  </View>
-                </View>
+                <ErrorDisplay message={errorMessage}/>
               )}
               <FloatingBlock>
                   <View style={Styles.infoContainer}>
@@ -446,7 +440,7 @@ const Schedule = () =>
                 <Text style={Styles.tabHeader}>Review the information and confirm it is correct</Text>
               </View>
             </View>
-            <View style={Styles.block}>
+            <View style={[Styles.block, {rowGap: 0}]}>
               <Tab
                 header='Date'
                 text={formatDate(selectedDay)}

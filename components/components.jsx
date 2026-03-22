@@ -3,15 +3,16 @@ import React from 'react';
 import { useApp } from './context';
 import { formatDate, formatTime } from '../constants/utils';
 import { Styles, HomeStyles } from '../constants/styles';
+import { handleDeleteAppointment, iconCheck } from './appointmentComponents';
+import { handleSendAdminNotif } from './notifComponents';
 import { View, Text, TouchableOpacity, ScrollView, Animated as RNAnimated, ActivityIndicator, RefreshControl, Alert } from 'react-native';
 import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, FontAwesome, Feather, Ionicons, Entypo, MaterialIcons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
-import { MaterialIcons } from '@expo/vector-icons';
 import { signOut } from '@aws-amplify/auth';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Animated, { Easing, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
+import Animated, { Easing, useAnimatedStyle, useSharedValue, withRepeat, withTiming, withSpring } from 'react-native-reanimated';
 
 // loading page
 const Loading = () => {
@@ -47,7 +48,7 @@ const CustHeader = ({title, index}) =>
                 </TouchableOpacity>
             )}
             <Text style={[Styles.headerTitle, {textAlign: 'center'}]}>{title}</Text>
-            { title === 'Settings' || title === 'Profile' && (
+            {(title === 'Settings' || title === 'Profile') && (
                 <TouchableOpacity
                     style={Styles.signOutButton}
                     onPress={async () => {
@@ -375,6 +376,78 @@ const ActionButton = ({text, onPress, primaryColor = Colors.button, secondaryCol
     );
 };
 
+const ErrorDisplay = ({message}) =>
+{
+    return(
+        <View style={Styles.block}>
+            <View style={Styles.errorContainer}>
+                <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: Colors.errorMessage}]}/>
+                <Text style={[Styles.text, {color: Colors.errorMessage}]}>{message}</Text>
+            </View>
+        </View>
+    );
+};
+
+const DropDownTab = ({ parentTab, childTabs }) =>
+{
+    const expandedHeight = useSharedValue(0);
+    const toggleExpand = () => expandedHeight.value = expandedHeight.value === 0 ? 500 : 0;
+
+    const animatedStyle = useAnimatedStyle(() => ({
+        maxHeight: withSpring(expandedHeight.value),
+        overflow: 'hidden'
+    }));
+
+    return (
+        <>
+            {parentTab(toggleExpand)}
+            <Animated.View style={animatedStyle}>
+                <View style={{position: 'relative', paddingLeft: 20}}>
+                    {childTabs.map((tab, index) => {
+                        const isLast = index === childTabs.length - 1;
+                        return(
+                            <View key={index} style={{ position: 'relative'}}>
+                                <View style={{
+                                    position: 'absolute',
+                                    left: 10, top: 0,
+                                    width: 1, height: isLast ? '50%' : '100%',
+                                    backgroundColor: Colors.grayText
+                                }}/>
+                                <View style={{
+                                    position: 'absolute',
+                                    left: 10, top: '50%',
+                                    width: 20, height: 1,
+                                    backgroundColor: Colors.grayText,
+                                }}/>
+                                {tab}
+                            </View>
+                        )
+                    })}
+                </View>
+            </Animated.View>
+        </>
+    )
+};
+
+const SubTab = ({header, text, icon}) =>
+{
+    return(
+        <View style={{
+            width: '90%', height: 75,
+            alignItems: 'center', alignSelf: 'flex-end',
+            paddingLeft: 60,
+            flexDirection: 'row',
+            position: 'relative'
+        }}>
+            {icon}
+            <View style={!header ? {flexDirection: 'row'} : {flexDirection: 'column'}}>
+                <Text style={Styles.tabHeader}>{header}</Text>
+                <Text style={Styles.tabText}>{text}</Text>
+            </View>
+        </View>
+    );
+};
+
 export {
     Loading,
     CustHeader,
@@ -388,5 +461,8 @@ export {
     AppointmentReminder,
     SimpleList,
     FloatingBlock,
-    ActionButton
+    ActionButton,
+    ErrorDisplay,
+    DropDownTab,
+    SubTab
 };

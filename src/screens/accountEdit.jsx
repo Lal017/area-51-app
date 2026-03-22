@@ -1,6 +1,6 @@
 import Colors from "../../constants/colors";
 import { Styles } from "../../constants/styles";
-import { ActionButton, Background } from "../../components/components";
+import { ActionButton, Background, ErrorDisplay } from "../../components/components";
 import { handleUpdateAttributes } from "../../components/authComponents";
 import { useApp } from "../../components/context";
 import { useState } from "react";
@@ -94,12 +94,7 @@ const AccountEdit = () =>
                     </View>
                 </View>
                 { errorMessage && (
-                    <View style={Styles.block}>
-                        <View style={Styles.errorContainer}>
-                            <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
-                            <Text style={Styles.errorText}>{errorMessage}</Text>
-                        </View>
-                    </View>
+                    <ErrorDisplay message={errorMessage}/>
                 )}
                 <View style={Styles.block}>
                     <ActionButton

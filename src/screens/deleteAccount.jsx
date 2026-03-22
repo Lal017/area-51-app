@@ -1,5 +1,5 @@
 import Colors from '../../constants/colors';
-import { ActionButton, Background } from '../../components/components';
+import { ActionButton, Background, ErrorDisplay } from '../../components/components';
 import { handleDeleteAccount } from '../../components/authComponents';
 import { Styles } from '../../constants/styles';
 import { useApp } from '../../components/context';
@@ -56,12 +56,7 @@ const DeleteAccount = () =>
                         </View>
                     </View>
                     { errorMessage && (
-                        <View style={Styles.block}>
-                            <View style={Styles.errorContainer}>
-                                <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
-                                <Text style={Styles.errorText}>{errorMessage}</Text>
-                            </View>
-                        </View>
+                        <ErrorDisplay message={errorMessage}/>
                     )}
                     <View style={Styles.block}>
                         <ActionButton

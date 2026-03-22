@@ -1,7 +1,7 @@
 import Colors from '../../constants/colors';
-import { Background, BackgroundAlt, Tab } from '../../components/components';
+import { Background, BackgroundAlt, DropDownTab, SubTab, Tab } from '../../components/components';
 import { formatDate, formatTime } from '../../constants/utils';
-import { handleDeleteAppointment, handleGetMyAppointments } from '../../components/appointmentComponents';
+import { handleDeleteAppointment, handleGetMyAppointments, iconCheck } from '../../components/appointmentComponents';
 import { useApp } from '../../components/context';
 import { handleSendAdminNotif } from '../../components/notifComponents';
 import { Styles } from '../../constants/styles';
@@ -9,8 +9,7 @@ import { View, Text, TouchableOpacity, Alert, FlatList } from 'react-native';
 import { useEffect } from 'react';
 import { router } from 'expo-router';
 import LottieView from 'lottie-react-native';
-import { Entypo, Feather, FontAwesome, FontAwesome5, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
-import Animated, { useAnimatedStyle, withSpring, useSharedValue } from 'react-native-reanimated';
+import { Entypo, Feather, FontAwesome, Ionicons } from '@expo/vector-icons';
 
 const MyAppointments = () => {
     const { client, userId, appointments, setAppointments } = useApp();
@@ -24,111 +23,6 @@ const MyAppointments = () => {
 
         getAppointments();
     }, []);
-    
-    const iconCheck = (service, isRight) =>
-    {
-        switch (service) {
-            case 'Oil Change':
-                return <FontAwesome5 name="oil-can" size={30} style={isRight ? Styles.rightIcon : Styles.icon}/>;
-            case 'Diagnosis':
-                return <FontAwesome name="stethoscope" size={30} style={isRight ? Styles.rightIcon : Styles.icon}/>;
-            case 'Tuning':
-                return <Entypo name="area-graph" size={30} style={isRight ? Styles.rightIcon : Styles.icon}/>;
-            case 'A/C':
-                return <MaterialIcons name="air" size={30} style={isRight ? Styles.rightIcon : Styles.icon}/>;
-            case 'Vehicle Pickup':
-                return <MaterialCommunityIcons name='car-clock' size={30} style={isRight ? Styles.rightIcon : Styles.icon}/>;
-            default:
-                return <MaterialCommunityIcons name="dots-horizontal-circle" size={30} style={isRight ? Styles.rightIcon : Styles.icon}/>;
-        }
-    };
-
-    const AppointmentItem = ({ item }) =>
-    {
-        const expandedHeight = useSharedValue(0);
-        const toggleExpand = () => expandedHeight.value = expandedHeight.value === 0 ? 500 : 0;
-
-        const animatedStyle = useAnimatedStyle(() => ({
-            maxHeight: withSpring(expandedHeight.value),
-            overflow: 'hidden'
-        }));
-    
-        return (
-            <>
-                <Tab
-                    header={formatDate(item?.date)}
-                    text={formatTime(item?.time)}
-                    leftIcon={iconCheck(item?.service, false)}
-                    rightIcon={
-                        <View style={[Styles.rightIcon, {flexDirection: 'row', columnGap: 10}]}>
-                            <TouchableOpacity
-                                style={{backgroundColor: Colors.button, padding: 10, borderRadius: 10}}
-                                onPress={() => {
-                                    router.push({
-                                        params: { appointmentParam: JSON.stringify(item) },
-                                        pathname: 'schedule'
-                                    });
-                                }}
-                            >
-                                <Entypo name='edit' size={25} color={Colors.accent}/>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={{backgroundColor: Colors.error, padding: 10, borderRadius: 10}}
-                                onPress={() => {
-                                    Alert.alert(
-                                        'Cancel Appointment',
-                                        'Are you sure you would like to cancel your appointment?',
-                                        [
-                                            { text: 'No' },
-                                            {
-                                                text: 'Yes',
-                                                onPress: async () => {
-                                                    try {
-                                                        await handleDeleteAppointment(client, item?.id, userId, setAppointments);
-                                                        await handleSendAdminNotif('Appointment Cancelled', 'A customer has cancelled their appointment');
-                                                        if (router.canDismiss()) router.dismissAll();
-                                                        router.replace('(tabs)');
-                                                    } catch (error) {
-                                                        console.log(error);
-                                                    }
-                                                }
-                                            }
-                                        ]
-                                    )
-                                }}
-                            >
-                                <Feather name='x' size={25} color={Colors.accent}/>
-                            </TouchableOpacity>
-                        </View>
-                    }
-                    action={toggleExpand}
-                />
-                <Animated.View style={animatedStyle}>
-                    <>
-                        <Tab
-                            header='Service'
-                            text={item?.service}
-                            rightIcon={iconCheck(item?.service, true)}
-                            style={{height: 'none', paddingBottom: 5}}
-                        />
-                        <Tab
-                            header={`Vehicle${item?.vehicle?.plate ? ` (${item.vehicle.plate})` : ``}`}
-                            text={`${item.vehicle ? `${item.vehicle.year} ${item.vehicle.make} ${item.vehicle.model}` : `${item.vehicleYear} ${item.vehicleMake} ${item.vehicleModel}`}`}
-                            rightIcon={<Ionicons name="car-sport" size={30} style={Styles.rightIcon} color={Colors.accentAlt}/>}
-                            style={{height: 'none', paddingBottom: 5}}
-                        />
-                        { item?.notes && (
-                            <Tab
-                                header='Appointment Note'
-                                text={item?.notes}
-                                style={{height: 'none', paddingBottom: 5}}
-                            />
-                        )}
-                    </>
-                </Animated.View>
-            </>
-        )
-    };
 
     return (
         <>
@@ -137,7 +31,88 @@ const MyAppointments = () => {
                     <FlatList
                         data={appointments}
                         keyExtractor={item => item.id}
-                        renderItem={({ item }) => <AppointmentItem item={item}/>}
+                        renderItem={({ item }) => {
+                            return (
+                                <DropDownTab
+                                    parentTab={(toggleExpand) => 
+                                        <Tab
+                                            header={formatDate(item?.date)}
+                                            text={formatTime(item?.time)}
+                                            leftIcon={iconCheck(item?.service)}
+                                            rightIcon={
+                                                <View style={[Styles.rightIcon, {flexDirection: 'row', columnGap: 10}]}>
+                                                    <TouchableOpacity
+                                                        style={{backgroundColor: Colors.button, padding: 10, borderRadius: 10}}
+                                                        onPress={() => {
+                                                            router.push({
+                                                                params: { appointmentParam: JSON.stringify(item) },
+                                                                pathname: 'schedule'
+                                                            });
+                                                        }}
+                                                    >
+                                                        <Entypo name='edit' size={25} color={Colors.accent}/>
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity
+                                                        style={{backgroundColor: Colors.error, padding: 10, borderRadius: 10}}
+                                                        onPress={() => {
+                                                            Alert.alert(
+                                                                'Cancel Appointment',
+                                                                'Are you sure you would like to cancel your appointment?',
+                                                                [
+                                                                    { text: 'No' },
+                                                                    {
+                                                                        text: 'Yes',
+                                                                        onPress: async () => {
+                                                                            try {
+                                                                                await handleDeleteAppointment(client, item?.id, userId, setAppointments);
+                                                                                await handleSendAdminNotif('Appointment Cancelled', 'A customer has cancelled their appointment');
+                                                                                if (router.canDismiss()) router.dismissAll();
+                                                                                router.replace('(tabs)');
+                                                                            } catch (error) {
+                                                                                console.log(error);
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            )
+                                                        }}
+                                                    >
+                                                        <Feather name='x' size={25} color={Colors.accent}/>
+                                                    </TouchableOpacity>
+                                                </View>
+                                            }
+                                            action={toggleExpand}
+                                        />
+                                    }
+                                    childTabs={[
+                                        <SubTab
+                                            header='Service'
+                                            text={item?.service}
+                                            icon={iconCheck(item?.service)}
+                                        />,
+                                        <SubTab
+                                            header='Vehicle'
+                                            text={`${item.vehicle ? `${item.vehicle.year} ${item.vehicle.make} ${item.vehicle.model} (${item.vehicle.color})` : `${item.vehicleYear} ${item.vehicleMake} ${item.vehicleModel} (${item.vehicleColor})`}`}
+                                            icon={<Ionicons name="car-sport" size={30} style={Styles.icon}/>}
+                                        />,
+                                        item?.vehicle?.plate && (
+                                            <SubTab
+                                                header='License Plate #'
+                                                text={`${item.vehicle ? `${item.vehicle.plate}` : `${item?.vehiclePlate}`}`}
+                                                icon={<FontAwesome name='id-card' size={30} style={Styles.icon}/>}
+                                            />
+                                        ),
+                                        item?.vehicle?.vin && (
+                                            <SubTab
+                                                header='VIN'
+                                                text={`${item.vehicle ? `${item.vehicle.vin}` : `${item.vehicleVin}`}`}
+                                                icon={<FontAwesome name='barcode' size={30} style={Styles.icon}/>}
+                                            />
+                                        )
+                                    ].filter(Boolean)}
+                                />
+                            );
+                        }}
                     />
                 </BackgroundAlt>
             ) : (

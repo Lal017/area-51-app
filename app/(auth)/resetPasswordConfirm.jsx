@@ -5,7 +5,7 @@ import { useLocalSearchParams } from "expo-router";
 import { handleConfirmResetPassword } from "../../components/authComponents";
 import { FontAwesome, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import Colors from "../../constants/colors";
-import { ActionButton, AuthBackground } from "../../components/components";
+import { ActionButton, AuthBackground, ErrorDisplay } from "../../components/components";
 
 const ResetPasswordConfirm = () =>
 {
@@ -91,10 +91,7 @@ const ResetPasswordConfirm = () =>
                         </TouchableOpacity>
                     </View>
                     { errorMessage && (
-                        <View style={Styles.errorContainer}>
-                            <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
-                            <Text style={[Styles.text, {color: 'red'}]}>{errorMessage}</Text>
-                        </View>
+                        <ErrorDisplay message={errorMessage}/>
                     )}
                     <ActionButton
                         text='Reset'

@@ -4,11 +4,11 @@ const Colors = {
     tertiary: '#7836D4', tertiaryShade: '#49257a',
     background: '#2E1A3A', backgroundShade: '#0e0711',
     backgroundContrast: '#ffffff40', backgroundContrastShade: '#ffffff05',
-    accent: 'white', accentAlt: 'black',
+    accent: '#ffffff', accentAlt: '#000000',
     contrast: '#323232', contrastShade: '#1c1c1c',
     button: '#5b5b5b', buttonShade: '#272727',
-    error: '#b80000', errorShade: '#4a1405',
-    text: 'white', textAlt: 'black',
+    error: '#b80000', errorShade: '#4a1405', errorMessage: '#ff0000',
+    text: '#ffffff', textAlt: '#000000',
     grayText: '#ffffff80'
 };
 

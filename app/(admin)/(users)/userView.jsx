@@ -1,6 +1,6 @@
 import Colors from '../../../constants/colors';
 import { Styles } from '../../../constants/styles';
-import { Background, Tab, SimpleList, FloatingBlock, ActionButton } from '../../../components/components';
+import { Background, Tab, SimpleList, FloatingBlock, ActionButton, DropDownTab, SubTab } from '../../../components/components';
 import { sendPushNotification } from '../../../components/notifComponents';
 import { View, Text, Alert, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -8,7 +8,6 @@ import { AntDesign, Entypo, FontAwesome, FontAwesome6, Ionicons, MaterialIcons }
 import { useState } from 'react';
 import { handleAssignTowDriverId, handleMakeUserTowDriver } from '../../../components/adminComponents';
 import { useApp } from '../../../components/context';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { callUser, textUser, formatDate, formatNumber } from '../../../constants/utils';
 
 const UserView = () =>
@@ -20,52 +19,6 @@ const UserView = () =>
     const [ title, setTitle ] = useState();
     const [ body, setBody ] = useState();
     const [ loading, setLoading ] = useState(false);
-
-    const VehicleItem = ({item}) =>
-    {
-        const expandedHeight = useSharedValue(0);
-        const toggleExpand = () => expandedHeight.value = expandedHeight.value === 0 ? 500 : 0;
-
-        const dropStyle = useAnimatedStyle(() => ({
-            maxHeight: withSpring(expandedHeight.value),
-            overflow: 'hidden'
-        }));
-
-        return (
-            <>
-                <Tab
-                    header={`${item.year}`}
-                    text={`${item.make} ${item.model}`}
-                    action={toggleExpand}
-                    leftIcon={<Ionicons name='car-sport' style={Styles.icon} size={30}/>}
-                />
-                <Animated.View style={dropStyle}>
-                    <Tab
-                        header='Vehicle Color'
-                        text={`${item.color}`}
-                        rightIcon={<FontAwesome name='paint-brush' size={25} style={Styles.rightIcon}/>}
-                        style={{height: 'none'}}
-                    />
-                    { item.plate && (
-                        <Tab
-                            header='License Plate #'
-                            text={`${item.plate}`}
-                            rightIcon={<FontAwesome name='id-card' size={25} style={Styles.rightIcon}/>}
-                            style={{height: 'none', padding: 5}}
-                        />
-                    )}
-                    { item.vin && (
-                        <Tab
-                            header='VIN'
-                            text={`${item.vin}`}
-                            rightIcon={<FontAwesome name='barcode' size={25} style={Styles.rightIcon}/> }
-                            style={{height: 'none', padding: 5}}
-                        />
-                    )}
-                </Animated.View>
-            </>
-        );
-    };
 
     return (
         <KeyboardAvoidingView behavior='height' style={{flex: 1}}>
@@ -147,7 +100,42 @@ const UserView = () =>
                             { customer?.vehicles?.items?.length > 0 && customer?.access === 'Customers' ? (
                                 <SimpleList
                                     data={customer?.vehicles?.items}
-                                    renderItem={({item}) => <VehicleItem item={item}/>}
+                                    renderItem={({item}) => {
+                                        console.log(item);
+                                        return(
+                                            <DropDownTab
+                                                parentTab={(toggleExpand) =>
+                                                    <Tab
+                                                        header={`${item.year}`}
+                                                        text={`${item.make} ${item.model}`}
+                                                        action={toggleExpand}
+                                                        leftIcon={<Ionicons name='car-sport' style={Styles.icon} size={30}/>}
+                                                    />
+                                                }
+                                                childTabs={[
+                                                    <SubTab
+                                                        header='Vehicle Color'
+                                                        text={`${item.color}`}
+                                                        icon={<FontAwesome name='paint-brush' size={25} style={Styles.icon}/>}
+                                                    />,
+                                                    item?.plate && (
+                                                        <SubTab
+                                                            header='License Plate #'
+                                                            text={`${item.plate}`}
+                                                            icon={<FontAwesome name='id-card' size={25} style={Styles.icon}/>}
+                                                        />
+                                                    ),
+                                                    item?.vin && (
+                                                        <SubTab
+                                                            header='VIN'
+                                                            text={`${item.vin}`}
+                                                            icon={<FontAwesome name='barcode' size={25} style={Styles.icon}/> }
+                                                        />
+                                                    )
+                                                ].filter(Boolean)}
+                                            />
+                                        )
+                                    }}
                                 />
                             ) : (<Text style={Styles.tabHeader}>No Vehicles</Text>)}
                         </View>

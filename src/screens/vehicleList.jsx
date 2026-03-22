@@ -1,12 +1,11 @@
 import Colors from '../../constants/colors';
-import { BackgroundAlt, Loading, Tab } from '../../components/components';
+import { BackgroundAlt, DropDownTab, Loading, SubTab, Tab } from '../../components/components';
 import { handleDeleteVehicle, handleUpdateVehiclePickup } from '../../components/vehicleComponents';
 import { useApp } from '../../components/context';
 import { Styles } from '../../constants/styles';
 import { Ionicons, AntDesign, MaterialCommunityIcons, Entypo, Feather, FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { View, FlatList, TouchableOpacity, Alert } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
 import { useEffect, useState } from 'react';
 import { handleDeleteAppointment } from '../../components/appointmentComponents';
 
@@ -46,141 +45,6 @@ const VehicleList = () =>
         checkVehicles();
     }, []);
 
-    const VehicleItem = ({item}) =>
-    {
-        const expandedHeight = useSharedValue(0);
-        const toggleExpand = () => expandedHeight.value = expandedHeight.value === 0 ? 500 : 0;
-
-        const dropStyle = useAnimatedStyle(() => ({
-            maxHeight: withSpring(expandedHeight.value),
-            overflow: 'hidden'
-        }));
-
-        return (
-            <>
-                <Tab
-                    header={`${item.year}`}
-                    text={`${item.make} ${item.model}`}
-                    action={toggleExpand}
-                    leftIcon={<Ionicons name='car-sport' size={30} style={Styles.icon} />}
-                    rightIcon={
-                        <View style={[Styles.rightIcon, {flexDirection: 'row', columnGap: 10}]}>
-                            { scheduledVehicles?.some(appt => appt.vehicleId === item.id) ? (
-                                <TouchableOpacity
-                                    style={{
-                                        backgroundColor: Colors.primary,
-                                        padding: 10,
-                                        paddingLeft: 35, paddingRight: 35,
-                                        borderRadius: 10,
-                                    }}
-                                    onPress={() => {
-                                        Alert.alert(
-                                            'Vehicle Pickup',
-                                            'Would you like to confirm that the vehicle has been picked up?',
-                                            [
-                                                { text: 'No' },
-                                                {
-                                                    text: 'Yes',
-                                                    onPress: async () => {
-                                                        try {
-                                                            setLoading(true);
-                                                            await handleUpdateVehiclePickup(client, item.id, userId, setVehicles);
-                                                            await handleDeleteAppointment(client, scheduledVehicles.find(vehicle => vehicle.vehicleId === item.id).appointmentId, userId, setAppointments);
-                                                            router.dismissAll();
-                                                            setLoading(false);
-                                                        } catch (error) {
-                                                            console.log(error);
-                                                        }
-                                                    }
-                                                }
-                                            ]
-                                        )
-                                    }}
-                                >
-                                    <Entypo name='check' size={25} color={Colors.accent}/>
-                                </TouchableOpacity>
-                            ) : pickupVehicles?.includes(item.id) ? (
-                                <TouchableOpacity
-                                    style={{
-                                        backgroundColor: Colors.secondary,
-                                        padding: 10,
-                                        paddingLeft: 35, paddingRight: 35,
-                                        borderRadius: 10,
-                                    }}
-                                    onPress={() => router.push('vehiclePickup')}
-                                >
-                                    <AntDesign name='calendar' size={25} color={Colors.accent}/>
-                                </TouchableOpacity>
-                            ) : (
-                                <>
-                                    <TouchableOpacity
-                                        style={{backgroundColor: Colors.button, padding: 10, borderRadius: 10}}
-                                        onPress={() => {
-                                            router.push({
-                                                pathname: 'vehicleEdit',
-                                                params: { vehicleParam: JSON.stringify(item) }
-                                            });
-                                        }}
-                                    >
-                                        <Entypo name='edit' size={25} color={Colors.accent}/>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        style={{backgroundColor: Colors.error, padding: 10, borderRadius: 10}}
-                                        onPress={() => {
-                                            Alert.alert(
-                                                'Delete Vehicle',
-                                                'Are you sure you want to delete this vehicle?',
-                                                [
-                                                    { text: 'No' },
-                                                    {
-                                                        text: 'Yes',
-                                                        onPress: async () => {
-                                                            await handleDeleteVehicle(client, item.id, setVehicles);
-                                                            router.dismissAll();
-                                                            router.push('vehicleList');
-                                                        }
-                                                    }
-                                                ]
-                                            );
-                                        }}
-                                    >
-                                        <Feather name='x' size={25} color={Colors.accent}/>
-                                    </TouchableOpacity>
-                                </>
-                            )}
-                        </View>
-                    }
-                />
-                <Animated.View style={dropStyle}>
-                    <>
-                        <Tab
-                            header='Vehicle Color'
-                            text={`${item.color}`}
-                            rightIcon={<FontAwesome name='paint-brush' size={25} style={Styles.rightIcon}/> }
-                            style={{height: 'none', padding: 5}}
-                        />
-                        { item.plate && (
-                            <Tab
-                                header='License Plate #'
-                                text={`${item.plate}`}
-                                rightIcon={<FontAwesome name='id-card' size={25} style={Styles.rightIcon}/>}
-                                style={{height: 'none', padding: 5}}
-                            />
-                        )}
-                        { item.vin && (
-                            <Tab
-                                header='VIN'
-                                text={`${item.vin}`}
-                                rightIcon={<FontAwesome name='barcode' size={25} style={Styles.rightIcon}/> }
-                                style={{height: 'none', padding: 5}}
-                            />
-                        )}
-                    </>
-                </Animated.View>
-            </>
-        );
-    }
-
     return(
         <>
         { !loading ? (
@@ -189,7 +53,128 @@ const VehicleList = () =>
                     <FlatList
                         data={vehicles}
                         keyExtractor={item => item.id}
-                        renderItem={({item}) => <VehicleItem item={item}/>}
+                        renderItem={({item}) => {
+                            return(
+                                <DropDownTab
+                                    parentTab={(toggleExpand) =>
+                                        <Tab
+                                            header={`${item.year}`}
+                                            text={`${item.make} ${item.model}`}
+                                            action={toggleExpand}
+                                            leftIcon={<Ionicons name='car-sport' size={30} style={Styles.icon} />}
+                                            rightIcon={
+                                                <View style={[Styles.rightIcon, {flexDirection: 'row', columnGap: 10}]}>
+                                                    { scheduledVehicles?.some(appt => appt.vehicleId === item.id) ? (
+                                                        <TouchableOpacity
+                                                            style={{
+                                                                backgroundColor: Colors.primary,
+                                                                padding: 10,
+                                                                paddingLeft: 35, paddingRight: 35,
+                                                                borderRadius: 10,
+                                                            }}
+                                                            onPress={() => {
+                                                                Alert.alert(
+                                                                    'Vehicle Pickup',
+                                                                    'Would you like to confirm that the vehicle has been picked up?',
+                                                                    [
+                                                                        { text: 'No' },
+                                                                        {
+                                                                            text: 'Yes',
+                                                                            onPress: async () => {
+                                                                                try {
+                                                                                    setLoading(true);
+                                                                                    await handleUpdateVehiclePickup(client, item.id, userId, setVehicles);
+                                                                                    await handleDeleteAppointment(client, scheduledVehicles.find(vehicle => vehicle.vehicleId === item.id).appointmentId, userId, setAppointments);
+                                                                                    router.dismissAll();
+                                                                                    setLoading(false);
+                                                                                } catch (error) {
+                                                                                    console.log(error);
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    ]
+                                                                )
+                                                            }}
+                                                        >
+                                                            <Entypo name='check' size={25} color={Colors.accent}/>
+                                                        </TouchableOpacity>
+                                                    ) : pickupVehicles?.includes(item.id) ? (
+                                                        <TouchableOpacity
+                                                            style={{
+                                                                backgroundColor: Colors.secondary,
+                                                                padding: 10,
+                                                                paddingLeft: 35, paddingRight: 35,
+                                                                borderRadius: 10,
+                                                            }}
+                                                            onPress={() => router.push('vehiclePickup')}
+                                                        >
+                                                            <AntDesign name='calendar' size={25} color={Colors.accent}/>
+                                                        </TouchableOpacity>
+                                                    ) : (
+                                                        <>
+                                                            <TouchableOpacity
+                                                                style={{backgroundColor: Colors.button, padding: 10, borderRadius: 10}}
+                                                                onPress={() => {
+                                                                    router.push({
+                                                                        pathname: 'vehicleEdit',
+                                                                        params: { vehicleParam: JSON.stringify(item) }
+                                                                    });
+                                                                }}
+                                                            >
+                                                                <Entypo name='edit' size={25} color={Colors.accent}/>
+                                                            </TouchableOpacity>
+                                                            <TouchableOpacity
+                                                                style={{backgroundColor: Colors.error, padding: 10, borderRadius: 10}}
+                                                                onPress={() => {
+                                                                    Alert.alert(
+                                                                        'Delete Vehicle',
+                                                                        'Are you sure you want to delete this vehicle?',
+                                                                        [
+                                                                            { text: 'No' },
+                                                                            {
+                                                                                text: 'Yes',
+                                                                                onPress: async () => {
+                                                                                    await handleDeleteVehicle(client, item.id, setVehicles);
+                                                                                    router.dismissAll();
+                                                                                    router.push('vehicleList');
+                                                                                }
+                                                                            }
+                                                                        ]
+                                                                    );
+                                                                }}
+                                                            >
+                                                                <Feather name='x' size={25} color={Colors.accent}/>
+                                                            </TouchableOpacity>
+                                                        </>
+                                                    )}
+                                                </View>
+                                            }
+                                        />
+                                    }
+                                    childTabs={[
+                                        <SubTab
+                                            header='Vehicle Color'
+                                            text={`${item.color}`}
+                                            icon={<FontAwesome name='paint-brush' size={25} style={Styles.icon}/> }
+                                        />,
+                                        item?.plate && (
+                                            <SubTab
+                                                header='License Plate #'
+                                                text={`${item.plate}`}
+                                                icon={<FontAwesome name='id-card' size={25} style={Styles.icon}/>}
+                                            />
+                                        ),
+                                        item?.vin && (
+                                            <SubTab
+                                                header='VIN'
+                                                text={`${item.vin}`}
+                                                icon={<FontAwesome name='barcode' size={25} style={Styles.icon}/> }
+                                            />
+                                        )
+                                    ].filter(Boolean)}
+                                />
+                            );
+                        }}
                         style={{flexGrow: 0}}
                     />
                 ) : (

@@ -1,7 +1,7 @@
 import Colors from "../../constants/colors";
 import { Styles, AuthStyles } from "../../constants/styles";
 import { handleResetPassword } from "../../components/authComponents";
-import { ActionButton, AuthBackground } from "../../components/components";
+import { ActionButton, AuthBackground, ErrorDisplay } from "../../components/components";
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import { useState } from "react";
 import { View, Text, TextInput, Image } from "react-native";
@@ -38,10 +38,7 @@ const ResetPassword = () =>
                     />
                 </View>
                 { errorMessage && (
-                    <View style={Styles.errorContainer}>
-                        <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
-                        <Text style={[Styles.text, {color: 'red'}]}>{errorMessage}</Text>
-                    </View>
+                    <ErrorDisplay message={errorMessage}/>
                 )}
                 <ActionButton
                     text='Continue'

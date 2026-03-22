@@ -5,7 +5,7 @@ import { Dimensions } from "react-native";
 import { ServiceStyles, Styles } from "../../constants/styles"
 import { useApp } from '../../components/context';
 import { handleSendAdminNotif, handleSendDriversNotif } from "../../components/notifComponents";
-import { Background, BinarySelect, FloatingBlock, Select, SimpleList, Tab } from "../../components/components";
+import { Background, BinarySelect, ErrorDisplay, FloatingBlock, Select, SimpleList, Tab } from "../../components/components";
 import { handleCreateTowRequest } from "../../components/towComponents";
 import { useEffect, useRef, useState } from "react";
 import { Entypo, FontAwesome, FontAwesome5, Ionicons, MaterialIcons, MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
@@ -165,12 +165,7 @@ const TowRequest = () =>
                             />
                         </View>
                         { errorMessage && (
-                            <View style={Styles.block}>
-                                <View style={Styles.errorContainer}>
-                                    <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
-                                    <Text style={Styles.errorText}>{errorMessage}</Text>
-                                </View>
-                            </View>
+                            <ErrorDisplay message={errorMessage}/>
                         )}
                         <View style={ServiceStyles.buttonContainer}>
                             <TouchableOpacity
@@ -305,12 +300,7 @@ const TowRequest = () =>
                             </View>
                         </View>
                         { errorMessage && (
-                            <View style={Styles.block}>
-                                <View style={Styles.errorContainer}>
-                                    <FontAwesome name='exclamation-circle' size={20} style={[Styles.icon, {color: 'red'}]}/>
-                                    <Text style={Styles.errorText}>{errorMessage}</Text>
-                                </View>
-                            </View>
+                            <ErrorDisplay message={errorMessage}/>
                         )}
                         <FloatingBlock>
                             <View style={Styles.infoContainer}>
