@@ -315,7 +315,7 @@ const AppointmentReminder = ({appointments}) =>
 const SimpleList = ({data = [], renderItem}) =>
 {
     return(
-        <View>
+        <View style={{rowGap: 5}}>
             {data.map((item, index) => (
                 <React.Fragment key={index}>
                     {renderItem({ item })}

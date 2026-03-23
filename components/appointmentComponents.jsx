@@ -89,10 +89,13 @@ const handleSetTimes = async (appointments, day) =>
 };
 
 // checks if another customer already has an appointment on this day and time
-const handleFinalCheck = async (date, time) =>
+const handleFinalCheck = async ({date, time}) =>
 {
     const appointments = await handleGetAppointments();
-    return appointments.some(appointment => appointment.date === date && appointment.time === time);
+    return appointments.some(appointment =>
+        appointment.date === date &&
+        appointment.time === time
+    );
 };
 
 // used to create an appointment

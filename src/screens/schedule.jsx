@@ -7,7 +7,7 @@ import { Dimensions, KeyboardAvoidingView } from 'react-native';
 import { handleGetAppointments, iconCheck, handleSetTimes, handleCreateAppointment, handleFinalCheck, handleUpdateAppointment } from '../../components/appointmentComponents';
 import { useApp } from '../../components/context';
 import { handleSendAdminNotif } from '../../components/notifComponents';
-import { Select, CalendarHeader, Background, Loading, SimpleList, Tab, FloatingBlock, ActionButton, ErrorDisplay } from '../../components/components';
+import { Select, CalendarHeader, Background, Loading, SimpleList, Tab, FloatingBlock, ErrorDisplay } from '../../components/components';
 import { ServiceStyles, Styles } from "../../constants/styles";
 import { MaterialIcons, Ionicons, FontAwesome, FontAwesome6, AntDesign, FontAwesome5, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useEffect, useRef, useState, useMemo } from 'react';
@@ -293,7 +293,7 @@ const Schedule = () =>
                   <Text style={Styles.tabHeader}>Select the vehicle for the appointment</Text>
                 </View>
               </View>
-              <View style={[Styles.block, {rowGap: 5}]}>
+              <View style={Styles.block}>
                 <SimpleList
                   data={vehicles}
                   renderItem={({item}) =>
@@ -509,7 +509,12 @@ const Schedule = () =>
                   onPress={async () => {
                     if (loading) return;
                     setLoading(true);
-                    const isTaken = await handleFinalCheck(selectedDay, selectedTime);
+                    
+                    let isTaken = false;
+                    if (appointment.date === selectedDay && appointment.time === selectedTime) isTaken = false;
+                    else
+                      isTaken = await handleFinalCheck({date: selectedDay, time: selectedTime});
+
                     if (!isTaken) {
                       if (appointment) {
                         await handleSendAdminNotif('Appointment Edited', 'A customer has edited their appointment');
@@ -529,7 +534,7 @@ const Schedule = () =>
                             // refresh appointments
                             const getAppointments = await handleGetAppointments(client, userId);
                             setScheduledAppointments(getAppointments);
-                            setStep(1)
+                            setStep(1);
                           }
                         }]
                       )

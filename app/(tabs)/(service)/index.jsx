@@ -13,7 +13,7 @@ const ServiceConsole = () =>
   const { towRequest, vehicles } = useApp();
 
   return (
-    <Background style={{rowGap: 5}}>
+    <Background style={{rowGap: 5, paddingBottom: 10}}>
       <TouchableOpacity
         onPress={async () => {
           if (vehicles.length === 0) {
@@ -126,6 +126,6 @@ const ServiceConsole = () =>
       </TouchableOpacity>
     </Background>
   );
-}
+};
 
 export default ServiceConsole;
