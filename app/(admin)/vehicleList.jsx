@@ -41,7 +41,7 @@ const VehicleList = () =>
                     <Entypo name='magnifying-glass' size={20} color='black' style={Styles.inputIcon} />
                     <TextInput
                         placeholder="Search Vehicles"
-                        placeholderTextColor={Colors.text}
+                        placeholderTextColor={Colors.grayText}
                         style={Styles.input}
                         value={search}
                         onChangeText={setSearch}

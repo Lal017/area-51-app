@@ -35,12 +35,13 @@ const sendPushNotification = async (expoPushToken, title, body, data) =>
 };
 
 // used to send a notification to all users
-// (may need to edit to only send to customers group)
 const sendMassPushNotification = async (client, title, body, data) =>
 {
     try {
         const users = await handleListUsers(client);
-        const expoPushTokens = users.map(user => user.pushToken);
+        const expoPushTokens = users
+            .filter(user => user.access === 'Customers')
+            .map(user => user.pushToken);
 
         const message = {
             to: expoPushTokens,

@@ -214,17 +214,25 @@ const UserView = () =>
                     <ActionButton
                         text='Send'
                         onPress={async () => {
-                            const data = {
-                                type: "CUSTOM_NOTIFICATION"
-                            };
-                            await sendPushNotification(customer.pushToken, title, body, data);
                             Alert.alert(
-                                'Notification Sent',
-                                'Your notification has been sent!',
-                                [{ text: 'OK' }]
+                                'Notification Confirmation',
+                                `Would you like to send this notification to ${customer.firstName} ${customer.lastName}`,
+                                [
+                                    { text: 'No' },
+                                    {
+                                        text: 'Yes',
+                                        onPress: async () => {
+                                            await sendPushNotification(customer.pushToken, title, body, {type: 'CUSTOM_NOTIFICATION'});
+                                            Alert.alert(
+                                                'Notification Sent',
+                                                'Your notification has been sent!'
+                                            );
+                                            setBody('');
+                                            setTitle('');
+                                        }
+                                    }
+                                ]
                             );
-                            setBody('');
-                            setTitle('');
                         }}
                     />
                 </FloatingBlock>

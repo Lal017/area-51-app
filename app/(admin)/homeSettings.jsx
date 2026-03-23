@@ -21,8 +21,8 @@ const HomeSettings = () =>
     const [ urls, setUrls ] = useState();
     const [ loading, setLoading ] = useState(true);
     const [ currentIndex, setCurrentIndex ] = useState();
-    const [ title, setTitle ] = useState();
-    const [ body, setBody ] = useState();
+    const [ title, setTitle ] = useState('');
+    const [ body, setBody ] = useState('');
 
     const carouselRef = useRef();
     const indexRef = useRef();
@@ -175,7 +175,7 @@ const HomeSettings = () =>
                             <Ionicons name='notifications' size={20} style={Styles.inputIcon} />
                             <TextInput
                                 placeholder='Title'
-                                placeholderTextColor={Colors.text}
+                                placeholderTextColor={Colors.grayText}
                                 value={title}
                                 onChangeText={setTitle}
                                 style={Styles.input}
@@ -185,7 +185,7 @@ const HomeSettings = () =>
                             <MaterialIcons name='subject' size={20} style={Styles.inputIcon} />
                             <TextInput
                                 placeholder='Body'
-                                placeholderTextColor={Colors.text}
+                                placeholderTextColor={Colors.grayText}
                                 value={body}
                                 onChangeText={setBody}
                                 style={Styles.input}
@@ -195,8 +195,8 @@ const HomeSettings = () =>
                             text='Send'
                             onPress={async () => {
                                 Alert.alert(
-                                    'Confirmation',
-                                    `Send this notification?\n\n${title}\n${body}`,
+                                    'Notification Confirmation',
+                                    'Would you like to send this notification to all customers?',
                                     [
                                         { text: 'No'},
                                         {
@@ -206,6 +206,12 @@ const HomeSettings = () =>
                                                 setLoading(true);
                                                 try {
                                                     await sendMassPushNotification(client, title, body, { type: 'CUSTOM_NOTIFICATION' });
+                                                    Alert.alert(
+                                                        'Notification Sent',
+                                                        'Your notification has been sent!'
+                                                    );
+                                                    setBody('');
+                                                    setTitle('');
                                                 } catch (error) {
                                                     console.error(error);
                                                 }
