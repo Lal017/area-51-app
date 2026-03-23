@@ -1,7 +1,7 @@
 import Colors from "../../constants/colors";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import { Bar } from 'react-native-progress';
-import { Dimensions } from "react-native";
+import { Dimensions, Linking } from "react-native";
 import { ServiceStyles, Styles } from "../../constants/styles"
 import { useApp } from '../../components/context';
 import { handleSendAdminNotif, handleSendDriversNotif } from "../../components/notifComponents";
@@ -109,11 +109,8 @@ const TowRequest = () =>
                         </View>
                         <View style={Styles.infoContainer}>
                             <Text style={Styles.text}>
-                                All tow requests start at a base price of <Text style={{fontWeight: 'bold'}}>$100</Text>. Extra fees may apply depending on the situation. You will recieve a phone call from one of our drivers if extra fees are going to be applied.
+                                All tow requests start at a base price of <Text style={{fontWeight: 'bold', color: Colors.primary}}>$100</Text>. Extra fees may apply depending on the situation. You will recieve a phone call from one of our drivers if extra fees are going to be applied.
                             </Text>
-                        </View>
-                        <View style={Styles.infoContainer}>
-                            <Text style={Styles.text}>Your vehicle will be towed to 4420 Arville St Unit #9, Las Vegas, NV 89102</Text>
                         </View>
                         <View style={Styles.infoContainer}>
                             <View style={{flexDirection: 'row', columnGap: 5, justifyContent: 'flex-start'}}>
@@ -123,6 +120,12 @@ const TowRequest = () =>
                                 </Text>
                             </View>
                         </View>
+                        <Tab
+                            header='Your Vehicle will be towed to'
+                            text={<Text style={{color: Colors.secondary}}>4420 Arville St Unit #9, Las Vegas, NV 89102</Text>}
+                            leftIcon={<Entypo name='address' size={30} style={[Styles.icon, {color: Colors.secondary}]}/>}
+                            action={() => Linking.openURL('https://www.google.com/maps/search/?api=1&query=Area+51+Motorsports+Las+Vegas+NV')}
+                        />
                     </View>
                     <View style={ServiceStyles.buttonContainer}>
                         <TouchableOpacity

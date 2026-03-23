@@ -3,7 +3,7 @@ import { Styles } from '../../../constants/styles';
 import { Background, FloatingBlock, Tab } from '../../../components/components';
 import { Entypo } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { textSize } from '../../../constants/utils';
+import { callUser, textSize } from '../../../constants/utils';
 
 const Contact = () =>
 {
@@ -27,7 +27,7 @@ const Contact = () =>
                         header='Phone Number'
                         text='+1 (702) 578 - 4809'
                         leftIcon={<Entypo name='phone' size={25} style={Styles.icon}/>}
-                        action={() => Linking.openURL('tel:+17025784809')}
+                        action={() => callUser('+17025784809')}
                     />
                     <Tab
                         header='Address'
