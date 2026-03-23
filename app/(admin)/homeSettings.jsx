@@ -172,7 +172,7 @@ const HomeSettings = () =>
                             <Text style={Styles.tabHeader}>Send a push notification to all users</Text>
                         </View>
                         <View style={Styles.inputWrapper}>
-                            <Ionicons name='notifications' size={20} style={Styles.icon} />
+                            <Ionicons name='notifications' size={20} style={Styles.inputIcon} />
                             <TextInput
                                 placeholder='Title'
                                 placeholderTextColor={Colors.text}
@@ -182,7 +182,7 @@ const HomeSettings = () =>
                             />
                         </View>
                         <View style={Styles.inputWrapper}>
-                            <MaterialIcons name='subject' size={20} style={Styles.icon} />
+                            <MaterialIcons name='subject' size={20} style={Styles.inputIcon} />
                             <TextInput
                                 placeholder='Body'
                                 placeholderTextColor={Colors.text}

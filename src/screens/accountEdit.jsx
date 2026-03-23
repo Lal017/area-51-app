@@ -30,7 +30,7 @@ const AccountEdit = () =>
                     </View>
                     <View>
                         <View style={Styles.inputWrapper}>
-                            <Ionicons name="person" size={20} style={Styles.icon} />
+                            <Ionicons name="person" size={20} style={Styles.inputIcon} />
                             <TextInput
                                 placeholder="first name"
                                 placeholderTextColor={Colors.grayText}
@@ -43,7 +43,7 @@ const AccountEdit = () =>
                     </View>
                     <View>
                         <View style={Styles.inputWrapper}>
-                            <Ionicons name="person" size={20} style={Styles.icon} />
+                            <Ionicons name="person" size={20} style={Styles.inputIcon} />
                             <TextInput
                                 placeholder="last name"
                                 placeholderTextColor={Colors.grayText}
@@ -61,7 +61,7 @@ const AccountEdit = () =>
                     </View>
                     <View>
                         <View style={Styles.inputWrapper}>
-                            <Ionicons name="mail" size={20} style={Styles.icon} />
+                            <Ionicons name="mail" size={20} style={Styles.inputIcon} />
                             <TextInput
                                 placeholder="email"
                                 placeholderTextColor={Colors.grayText}
@@ -80,7 +80,7 @@ const AccountEdit = () =>
                     </View>
                     <View>
                         <View style={Styles.inputWrapper}>
-                            <Ionicons name="call" size={20} style={Styles.icon} />
+                            <Ionicons name="call" size={20} style={Styles.inputIcon} />
                             <TextInput
                                 placeholder="phone number"
                                 placeholderTextColor={Colors.grayText}

@@ -26,7 +26,7 @@ const ResetPassword = () =>
                     <Text style={Styles.tabHeader}>Enter your email to search for your account</Text>
                 </View>
                 <View style={Styles.inputWrapper}>
-                    <Ionicons name='mail' size={20} style={Styles.icon} />
+                    <Ionicons name='mail' size={20} style={Styles.inputIcon} />
                     <TextInput
                         placeholder="email"
                         placeholderTextColor={Colors.grayText}

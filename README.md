@@ -3,6 +3,7 @@ ToDo:
     - create more components to simplify code i.e error message component
     - add gaurd to send notification so you cant send a notif if the fields are empty
     - add openInMaps option to the first step of the towRequest page
+    - style Edit Profile and Change password subtitles better
     - check all functions to make sure they throw try and catch errors correctly
     - add try/catch to functions and buttons
     - check to see all error message are red and not Colors.redButton
@@ -15,6 +16,7 @@ ToDo:
     - need to test pretty much everything since update to SDK 55. DO THIS LAST
 
 PotentialChanges:
+    - create info tabs to replace tabs with no onPress functions
     - use Notification to trigger useEffect rerender to refresh screens instead of sending the actual data.
     - Add notification tab in header for home page (only do this if you add a datamodel for notifications)
     - Add dataModel to save data for notifications instead of sending data directly through a notification

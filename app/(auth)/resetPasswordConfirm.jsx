@@ -35,7 +35,7 @@ const ResetPasswordConfirm = () =>
                         <Text style={Styles.tabHeader}>Check your email for your verification code!</Text>
                     </View>
                     <View style={Styles.inputWrapper}>
-                        <MaterialIcons name='numbers' size={20} style={Styles.icon} />
+                        <MaterialIcons name='numbers' size={20} style={Styles.inputIcon} />
                         <TextInput
                             placeholder="Verification Code"
                             placeholderTextColor={Colors.grayText}
@@ -47,7 +47,7 @@ const ResetPasswordConfirm = () =>
                         />
                     </View>
                     <View style={Styles.inputWrapper}>
-                        <Ionicons name='key' size={20} style={Styles.icon} />
+                        <Ionicons name='key' size={20} style={Styles.inputIcon} />
                         <TextInput
                             placeholder="New Password"
                             placeholderTextColor={Colors.grayText}
@@ -69,7 +69,7 @@ const ResetPasswordConfirm = () =>
                         </TouchableOpacity>
                     </View>
                     <View style={Styles.inputWrapper}>
-                        <Ionicons name="lock-open" size={20} style={Styles.icon} />
+                        <Ionicons name="lock-open" size={20} style={Styles.inputIcon} />
                         <TextInput
                             placeholder="Confirm New Password"
                             placeholderTextColor={Colors.grayText}

@@ -76,7 +76,7 @@ const VehicleView = () =>
                     />
                 )}
             </FloatingBlock>
-            <View style={[Styles.block, {paddingTop: 20}]}>
+            <View style={Styles.block}>
                 <View style={{
                     flexDirection: 'row',
                     paddingLeft: 20,

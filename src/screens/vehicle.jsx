@@ -57,7 +57,7 @@ const Vehicle = () =>
                     </View>
                     <View>
                         <View style={Styles.inputWrapper}>
-                            <Ionicons name='calendar' size={20} style={Styles.icon} />
+                            <Ionicons name='calendar' size={20} style={Styles.inputIcon} />
                             <TextInput
                                 placeholder='Year'
                                 placeholderTextColor={Colors.grayText}
@@ -71,7 +71,7 @@ const Vehicle = () =>
                     </View>
                     <View>
                         <View style={Styles.inputWrapper}>
-                            <MaterialCommunityIcons name='car-convertible' size={20} style={Styles.icon} />
+                            <MaterialCommunityIcons name='car-convertible' size={20} style={Styles.inputIcon} />
                             <TextInput
                                 placeholder='Make'
                                 placeholderTextColor={Colors.grayText}
@@ -84,7 +84,7 @@ const Vehicle = () =>
                     </View>
                     <View>
                         <View style={Styles.inputWrapper}>
-                            <AntDesign name='tags' size={20} style={Styles.icon} />
+                            <AntDesign name='tags' size={20} style={Styles.inputIcon} />
                             <TextInput
                                 placeholder='Model'
                                 placeholderTextColor={Colors.grayText}
@@ -97,7 +97,7 @@ const Vehicle = () =>
                     </View>
                     <View>
                         <View style={Styles.inputWrapper}>
-                            <Ionicons name='color-palette' size={20} style={Styles.icon} />
+                            <Ionicons name='color-palette' size={20} style={Styles.inputIcon} />
                             <TextInput
                                 placeholder='Color'
                                 placeholderTextColor={Colors.grayText}
@@ -115,7 +115,7 @@ const Vehicle = () =>
                         </View>
                     </View>
                     <View style={Styles.inputWrapper}>
-                        <FontAwesome name='id-card' size={20} style={Styles.icon} />
+                        <FontAwesome name='id-card' size={20} style={Styles.inputIcon} />
                         <TextInput
                             placeholder='License Plate #'
                             placeholderTextColor={Colors.grayText}
@@ -125,7 +125,7 @@ const Vehicle = () =>
                         />
                     </View>
                     <View style={Styles.inputWrapper}>
-                        <FontAwesome name='barcode' size={20} style={Styles.icon} />
+                        <FontAwesome name='barcode' size={20} style={Styles.inputIcon} />
                         <TextInput
                             placeholder='VIN #'
                             placeholderTextColor={Colors.grayText}

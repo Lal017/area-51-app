@@ -73,7 +73,7 @@ const TowRequestList = () =>
         <Background refreshing={refresing} onRefresh={onRefresh}>
             <View style={Styles.block}>
                 <View style={Styles.inputWrapper}>
-                    <Entypo name='magnifying-glass' size={20} color='black' style={Styles.icon} />
+                    <Entypo name='magnifying-glass' size={20} color='black' style={Styles.inputIcon} />
                     <TextInput
                         placeholder="Search User"
                         placeholderTextColor={Colors.text}

@@ -42,7 +42,7 @@ const DeleteAccount = () =>
                         </View>
                         <View>
                             <View style={Styles.inputWrapper}>
-                                <Ionicons name='mail' size={20} style={Styles.icon} />
+                                <Ionicons name='mail' size={20} style={Styles.inputIcon} />
                                 <TextInput
                                     placeholder='email'
                                     placeholderTextColor={Colors.grayText}

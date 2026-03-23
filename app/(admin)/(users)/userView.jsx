@@ -97,48 +97,47 @@ const UserView = () =>
                     <FloatingBlock>
                         <View style={Styles.infoContainer}>
                             <Text style={Styles.headerTitle}>Vehicles</Text>
-                            { customer?.vehicles?.items?.length > 0 && customer?.access === 'Customers' ? (
-                                <SimpleList
-                                    data={customer?.vehicles?.items}
-                                    renderItem={({item}) => {
-                                        console.log(item);
-                                        return(
-                                            <DropDownTab
-                                                parentTab={(toggleExpand) =>
-                                                    <Tab
-                                                        header={`${item.year}`}
-                                                        text={`${item.make} ${item.model}`}
-                                                        action={toggleExpand}
-                                                        leftIcon={<Ionicons name='car-sport' style={Styles.icon} size={30}/>}
-                                                    />
-                                                }
-                                                childTabs={[
-                                                    <SubTab
-                                                        header='Vehicle Color'
-                                                        text={`${item.color}`}
-                                                        icon={<FontAwesome name='paint-brush' size={25} style={Styles.icon}/>}
-                                                    />,
-                                                    item?.plate && (
-                                                        <SubTab
-                                                            header='License Plate #'
-                                                            text={`${item.plate}`}
-                                                            icon={<FontAwesome name='id-card' size={25} style={Styles.icon}/>}
-                                                        />
-                                                    ),
-                                                    item?.vin && (
-                                                        <SubTab
-                                                            header='VIN'
-                                                            text={`${item.vin}`}
-                                                            icon={<FontAwesome name='barcode' size={25} style={Styles.icon}/> }
-                                                        />
-                                                    )
-                                                ].filter(Boolean)}
-                                            />
-                                        )
-                                    }}
-                                />
-                            ) : (<Text style={Styles.tabHeader}>No Vehicles</Text>)}
                         </View>
+                        { customer?.vehicles?.items?.length > 0 && customer?.access === 'Customers' ? (
+                            <SimpleList
+                                data={customer?.vehicles?.items}
+                                renderItem={({item}) => {
+                                    return(
+                                        <DropDownTab
+                                            parentTab={(toggleExpand) =>
+                                                <Tab
+                                                    header={`${item.year}`}
+                                                    text={`${item.make} ${item.model}`}
+                                                    action={toggleExpand}
+                                                    leftIcon={<Ionicons name='car-sport' style={Styles.icon} size={30}/>}
+                                                />
+                                            }
+                                            childTabs={[
+                                                <SubTab
+                                                    header='Vehicle Color'
+                                                    text={`${item.color}`}
+                                                    icon={<FontAwesome name='paint-brush' size={25} style={Styles.icon}/>}
+                                                />,
+                                                item?.plate && (
+                                                    <SubTab
+                                                        header='License Plate #'
+                                                        text={`${item.plate}`}
+                                                        icon={<FontAwesome name='id-card' size={25} style={Styles.icon}/>}
+                                                    />
+                                                ),
+                                                item?.vin && (
+                                                    <SubTab
+                                                        header='VIN'
+                                                        text={`${item.vin}`}
+                                                        icon={<FontAwesome name='barcode' size={25} style={Styles.icon}/> }
+                                                    />
+                                                )
+                                            ].filter(Boolean)}
+                                        />
+                                    )
+                                }}
+                            />
+                        ) : (<Text style={Styles.tabHeader}>No Vehicles</Text>)}
                     </FloatingBlock>
                 )}
                 { customer?.access === 'Customers' && (
@@ -191,7 +190,7 @@ const UserView = () =>
                         <Text style={Styles.tabHeader}>Send a push notification to {customer.firstName}</Text>
                     </View>
                     <View style={Styles.inputWrapper}>
-                        <Ionicons name='notifications' size={20} style={Styles.icon} />
+                        <Ionicons name='notifications' size={20} style={Styles.inputIcon} />
                         <TextInput
                             placeholder='Title'
                             placeholderTextColor={Colors.grayText}
@@ -201,7 +200,7 @@ const UserView = () =>
                         />
                     </View>
                     <View style={Styles.inputWrapper}>
-                        <MaterialIcons name='subject' size={20} style={Styles.icon} />
+                        <MaterialIcons name='subject' size={20} style={Styles.inputIcon} />
                         <TextInput
                             placeholder='Body'
                             placeholderTextColor={Colors.grayText}

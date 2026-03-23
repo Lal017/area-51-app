@@ -38,7 +38,7 @@ const VehicleList = () =>
         <Background refreshing={refreshing} onRefresh={onRefresh}>
             <View style={Styles.block}>
                 <View style={Styles.inputWrapper}>
-                    <Entypo name='magnifying-glass' size={20} color='black' style={Styles.icon} />
+                    <Entypo name='magnifying-glass' size={20} color='black' style={Styles.inputIcon} />
                     <TextInput
                         placeholder="Search Vehicles"
                         placeholderTextColor={Colors.text}

@@ -315,13 +315,13 @@ const AppointmentReminder = ({appointments}) =>
 const SimpleList = ({data = [], renderItem}) =>
 {
     return(
-        <>
+        <View>
             {data.map((item, index) => (
                 <React.Fragment key={index}>
                     {renderItem({ item })}
                 </React.Fragment>
             ))}
-        </>
+        </View>
     )
 };
 
@@ -435,7 +435,7 @@ const SubTab = ({header, text, icon}) =>
         <View style={{
             width: '90%', height: 75,
             alignItems: 'center', alignSelf: 'flex-end',
-            paddingLeft: 60,
+            paddingLeft: 70,
             flexDirection: 'row',
             position: 'relative'
         }}>

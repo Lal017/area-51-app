@@ -24,7 +24,7 @@ const ConfirmAttribute = () =>
                     <Text style={Styles.text}>Check your email for your verification code</Text>
                 </View>
                 <View style={Styles.inputWrapper}>
-                    <MaterialIcons name='numbers' size={20} style={Styles.icon} />
+                    <MaterialIcons name='numbers' size={20} style={Styles.inputIcon} />
                     <TextInput
                         placeholder="code"
                         placeholderTextColor={Colors.grayText}

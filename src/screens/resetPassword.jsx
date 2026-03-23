@@ -52,7 +52,7 @@ const ResetPassword = () =>
                         <Text style={[Styles.text, {paddingLeft: 20}]}>Current Password</Text>
                         <View>
                             <View style={Styles.inputWrapper}>
-                                <Ionicons name='lock-open' size={20} style={Styles.icon} />
+                                <Ionicons name='lock-open' size={20} style={Styles.inputIcon} />
                                 <TextInput
                                     placeholder='Current Password'
                                     placeholderTextColor={Colors.grayText}
@@ -80,7 +80,7 @@ const ResetPassword = () =>
                         <Text style={[Styles.text, {paddingLeft: 20}]}>New Password</Text>
                         <View>
                             <View style={Styles.inputWrapper}>
-                                <MaterialIcons name='lock-reset' size={20} style={Styles.icon} />
+                                <MaterialIcons name='lock-reset' size={20} style={Styles.inputIcon} />
                                 <TextInput
                                     placeholder='New Password'
                                     placeholderTextColor={Colors.grayText}
@@ -126,7 +126,7 @@ const ResetPassword = () =>
                         <Text style={[Styles.text, {paddingLeft: 20}]}>Confirm New Password</Text>
                         <View>
                             <View style={Styles.inputWrapper}>
-                                <MaterialCommunityIcons name='lock-check' size={20} style={Styles.icon} />
+                                <MaterialCommunityIcons name='lock-check' size={20} style={Styles.inputIcon} />
                                 <TextInput
                                     placeholder='Confirm New Password'
                                     placeholderTextColor={Colors.grayText}

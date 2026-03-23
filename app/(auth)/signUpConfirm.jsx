@@ -38,7 +38,7 @@ const SignUpConfirm = () =>
                     <Text style={Styles.tabHeader}>Check your email for your verification code!</Text>
                 </View>
                 <View style={Styles.inputWrapper}>
-                    <MaterialIcons name='numbers' size={20} style={Styles.icon} />
+                    <MaterialIcons name='numbers' size={20} style={Styles.inputIcon} />
                     <TextInput
                         placeholder='Verification Code'
                         placeholderTextColor={Colors.grayText}
@@ -54,7 +54,7 @@ const SignUpConfirm = () =>
                 )}
                 { resendMessage && (
                     <View style={Styles.errorContainer}>
-                        <FontAwesome name='check-circle' size={20} style={[Styles.icon, {color: Colors.primary}]}/>
+                        <FontAwesome name='check-circle' size={20} style={[Styles.inputIcon, {color: Colors.primary}]}/>
                         <Text style={[Styles.text, {color: Colors.primary}]}>{resendMessage}</Text>
                     </View>
                 )}

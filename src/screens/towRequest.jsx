@@ -319,7 +319,7 @@ const TowRequest = () =>
                                 />
                             </View>
                         </FloatingBlock>
-                        <View style={[Styles.block, {paddingTop: 20}]}>
+                        <View style={Styles.block}>
                             <View style={ServiceStyles.buttonContainer}>
                                 <TouchableOpacity
                                     style={ServiceStyles.directionButton}

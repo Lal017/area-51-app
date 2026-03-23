@@ -97,7 +97,7 @@ const SignUp = () =>
                     <View style={Styles.block}>
                         <Text style={[Styles.title, {paddingLeft: 20, width: '100%'}]}>Sign Up</Text>
                         <View style={Styles.inputWrapper}>
-                            <Ionicons name='at' size={20} style={Styles.icon} />
+                            <Ionicons name='at' size={20} style={Styles.inputIcon} />
                             <TextInput
                                 placeholder="email"
                                 placeholderTextColor={Colors.grayText}
@@ -109,7 +109,7 @@ const SignUp = () =>
                             />
                         </View>
                         <View style={Styles.inputWrapper}>
-                            <Ionicons name='key' size={20} style={Styles.icon} />
+                            <Ionicons name='key' size={20} style={Styles.inputIcon} />
                             <TextInput
                                 placeholder="password"
                                 placeholderTextColor={Colors.grayText}
@@ -131,7 +131,7 @@ const SignUp = () =>
                             </TouchableOpacity>
                         </View>
                         <View style={Styles.inputWrapper}>
-                            <Ionicons name="lock-open" size={20} style={Styles.icon} />
+                            <Ionicons name="lock-open" size={20} style={Styles.inputIcon} />
                             <TextInput
                                 placeholder="confirm password"
                                 placeholderTextColor={Colors.grayText}
@@ -178,7 +178,7 @@ const SignUp = () =>
                     <View style={[Styles.block, {alignItems: 'center'}]}>
                         <Text style={[Styles.title, {paddingLeft: 20, width: '100%'}]}>Sign Up</Text>
                         <View style={Styles.inputWrapper}>
-                            <Ionicons name='person' size={20} style={Styles.icon} />
+                            <Ionicons name='person' size={20} style={Styles.inputIcon} />
                             <TextInput
                                 placeholder="first name"
                                 placeholderTextColor={Colors.grayText}
@@ -188,7 +188,7 @@ const SignUp = () =>
                             />
                         </View>
                         <View style={Styles.inputWrapper}>
-                            <Ionicons name='person' size={20} style={Styles.icon} />
+                            <Ionicons name='person' size={20} style={Styles.inputIcon} />
                             <TextInput
                                 placeholder="last name"
                                 placeholderTextColor={Colors.grayText}
@@ -198,7 +198,7 @@ const SignUp = () =>
                             />
                         </View>
                         <View style={Styles.inputWrapper}>
-                            <Ionicons name='call' size={20} style={Styles.icon} />
+                            <Ionicons name='call' size={20} style={Styles.inputIcon} />
                             <TextInput
                                 placeholder="phone number"
                                 placeholderTextColor={Colors.grayText}

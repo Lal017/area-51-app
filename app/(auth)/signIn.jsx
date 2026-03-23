@@ -30,7 +30,7 @@ const SignIn = () =>
                     <Text style={Styles.title}>Sign In</Text>
                 </View>
                 <View style={Styles.inputWrapper}>
-                    <Ionicons name='mail' size={20} style={Styles.icon} />
+                    <Ionicons name='mail' size={20} style={Styles.inputIcon} />
                     <TextInput
                         placeholder='email'
                         placeholderTextColor={Colors.grayText}
@@ -42,7 +42,7 @@ const SignIn = () =>
                     />
                 </View>
                 <View style={Styles.inputWrapper}>
-                    <Ionicons name='lock-closed' size={20} style={Styles.icon} />
+                    <Ionicons name='lock-closed' size={20} style={Styles.inputIcon} />
                     <TextInput
                         placeholder='password'
                         placeholderTextColor={Colors.grayText}

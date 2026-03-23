@@ -132,8 +132,7 @@ const Styles = StyleSheet.create({
     // icons
     icon: {
         position: 'absolute',
-        left: 15,
-        zIndex: 1,
+        left: 25,
         color: Colors.text,
     },
     iconAlt: {
@@ -149,10 +148,15 @@ const Styles = StyleSheet.create({
         zIndex: 1,
         color: Colors.text,
     },
+    inputIcon: {
+        position: 'absolute',
+        left: 15,
+        zindex: 1,
+        color: Colors.text
+    },
     // container
     page: {
-        paddingTop: 10,
-        paddingBottom: 10,
+        paddingTop: 20,
         flexGrow: 1,
         alignItems: 'center',
     },
