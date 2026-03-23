@@ -18,8 +18,8 @@ const AdminConsole = () =>
                 >
                     <LinearGradient
                         colors={[Colors.tertiary, Colors.tertiaryShade]}
-                        start={{ x: 0, y: 1}}
-                        end={{ x: 1, y: 0}}
+                        start={{ x: 0, y: 0}}
+                        end={{ x: 0, y: 1}}
                         style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}}
                     />
                     <Text style={Styles.headerTitle}>User List</Text>
@@ -37,8 +37,8 @@ const AdminConsole = () =>
                 >
                     <LinearGradient
                         colors={[Colors.secondary, Colors.secondaryShade2]}
-                        start={{ x: 0, y: 1}}
-                        end={{ x: 1, y: 0}}
+                        start={{ x: 0, y: 0}}
+                        end={{ x: 0, y: 1}}
                         style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}}
                     />
                     <Text style={Styles.headerTitle}>Vehicle List</Text>
@@ -58,8 +58,8 @@ const AdminConsole = () =>
                 >
                     <LinearGradient
                         colors={[Colors.secondary, Colors.secondaryShade2]}
-                        start={{ x: 0, y: 1}}
-                        end={{ x: 1, y: 0}}
+                        start={{ x: 0, y: 0}}
+                        end={{ x: 0, y: 1}}
                         style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}}
                     />
                     <Text style={Styles.headerTitle}>Appointments</Text>
@@ -95,8 +95,8 @@ const AdminConsole = () =>
                 >
                     <LinearGradient
                         colors={[Colors.tertiary, Colors.tertiaryShade]}
-                        start={{ x: 0, y: 1}}
-                        end={{ x: 1, y: 0}}
+                        start={{ x: 0, y: 0}}
+                        end={{ x: 0, y: 1}}
                         style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}}
                     />
                     <Text style={Styles.headerTitle}>Tow Requests</Text>
@@ -114,8 +114,8 @@ const AdminConsole = () =>
                 >
                     <LinearGradient
                         colors={[Colors.tertiary, Colors.tertiaryShade]}
-                        start={{ x: 0, y: 1}}
-                        end={{ x: 1, y: 0}}
+                        start={{ x: 0, y: 0}}
+                        end={{ x: 0, y: 1}}
                         style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}}
                     />
                     <Text style={Styles.headerTitle}>Home Page</Text>
@@ -133,8 +133,8 @@ const AdminConsole = () =>
                 >
                     <LinearGradient
                         colors={[Colors.button, Colors.buttonShade]}
-                        start={{ x: 0, y: 1}}
-                        end={{ x: 1, y: 0}}
+                        start={{ x: 0, y: 0}}
+                        end={{ x: 0, y: 1}}
                         style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}}
                     />
                     <Text style={Styles.headerTitle}>Settings</Text>

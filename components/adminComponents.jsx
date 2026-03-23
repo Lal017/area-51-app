@@ -97,12 +97,10 @@ const handleGetURLs = async () =>
 const handleUploadHomeImage = async (file, fileType) =>
 {
     try {
-        const fileData = await uriToUint8Array(file, fileType);
-        const listImages = await handleListHomeImages();
-        const count = listImages?.length ?? 0;
+        const fileData = await uriToUint8Array(file);
 
         await uploadData({
-            path: `public/homeImages/homeImg${count}.${fileType}`,
+            path: `public/homeImages/homeImg_${uuidv4()}.${fileType}`,
             data: fileData
         }).result;
 
@@ -255,10 +253,8 @@ const handleGetAddress = async (latitude, longitude) =>
 const uriToUint8Array = async (uri) =>
 {
     try {
-        const base64 = await FileSystem.readAsStringAsync(uri, {
-            encoding: FileSystem.EncodingType.Base64,
-        });
-
+        const file = new FileSystem.File(uri);
+        const base64 = await file.base64();
         const binaryString = atob(base64);
         const bytes = new Uint8Array(binaryString.length);
 
