@@ -19,6 +19,7 @@ import { useEffect, useRef, useState } from 'react';
 import { generateClient } from "aws-amplify/api";
 import { addNotificationReceivedListener, addNotificationResponseReceivedListener, useLastNotificationResponse, getPermissionsAsync } from "expo-notifications";
 import { fetchUserAttributes, fetchAuthSession, signOut } from "aws-amplify/auth";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const TabsContent = () =>
 {
@@ -343,12 +344,19 @@ const TabsContent = () =>
         };
     }, [client, userId]);
 
+    const insets = useSafeAreaInsets();
+
     return (
         <>
         { waitingScreen === true ? (
             <Background style={{justifyContent: 'center'}} refreshing={refreshing} onRefresh={onRefresh}>
                 <TouchableOpacity
-                    style={Styles.signOutButton}
+                    style={{
+                        position: 'absolute',
+                        right: 20,
+                        top: insets.top,
+                        justifyContent: 'center'
+                    }}
                     onPress={async () => {
                         try {
                             await signOut({global: true });

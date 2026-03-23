@@ -41,7 +41,7 @@ const CustHeader = ({title, index}) =>
         >
             { !index && !isStuck && router.canGoBack() && (
                 <TouchableOpacity
-                    style={{position: 'absolute', left: 20, top: 45}}
+                    style={{position: 'absolute', left: 20, paddingTop: insets.top, justifyContent: 'center'}}
                     onPress={() => router.back()}
                 >
                     <AntDesign name='left' size={30} color='white' />
@@ -50,7 +50,12 @@ const CustHeader = ({title, index}) =>
             <Text style={[Styles.headerTitle, {textAlign: 'center'}]}>{title}</Text>
             {(title === 'Settings' || title === 'Profile') && (
                 <TouchableOpacity
-                    style={Styles.signOutButton}
+                    style={{
+                        position: 'absolute',
+                        right: 20,
+                        justifyContent: 'center',
+                        paddingTop: insets.top
+                    }}
                     onPress={async () => {
                         if (loading) return;
                         setLoading(true);

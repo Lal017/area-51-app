@@ -1,4 +1,6 @@
 ToDo:
+    - check error uploading image to homepage
+    - add more linear gradients to styling (admin) and (tow) section
     - create more components to simplify code i.e error message component
     - add gaurd to send notification so you cant send a notif if the fields are empty
     - add openInMaps option to the first step of the towRequest page

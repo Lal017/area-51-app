@@ -178,71 +178,73 @@ const TowResponse = () =>
                         header='Does the car run?'
                         text={request?.canRun ? 'Yes' : 'No'}
                         leftIcon={<MaterialCommunityIcons name='engine' size={30} style={Styles.icon}/>}
-                        style={{height: 'none', padding: 5}}
+                        style={{height: 'none'}}
                     />
                     <Tab
                         header='Does the car roll?'
                         text={request?.canRoll ? 'Yes' : 'No'}
                         leftIcon={<MaterialCommunityIcons name='tire' size={30} style={Styles.icon}/>}
-                        style={{height: 'none', padding: 5}}
+                        style={{height: 'none'}}
                     />
                     <Tab
                         header='Are the keys included?'
                         text={request?.keyIncluded ? 'Yes' : 'No'}
                         leftIcon={<Entypo name='key' size={30} style={Styles.icon}/>}
-                        style={{height: 'none', padding: 5}}
+                        style={{height: 'none'}}
                     />
                     <Tab
                         header='Is the vehicle obstructed?'
                         text={request?.isObstructed ? 'Yes' : 'No'}
                         leftIcon={<Entypo name='warning' size={30} style={Styles.icon}/>}
-                        style={{height: 'none', padding: 5}}
+                        style={{height: 'none'}}
                     />
                 </View>
-                <ActionButton
-                    text='Accept'
-                    primaryColor={Colors.primary}
-                    secondaryColor={Colors.primaryShade}
-                    icon={<AntDesign name="check" size={25} style={Styles.icon}/>}
-                    onPress={async () => {
-                        Alert.alert(
-                            'Confirmation',
-                            'Once you accept this request, the customer will be able to view your location. Are you sure you want to accept the request?',
-                            [
-                                { text: 'No' },
-                                {
-                                    text: 'Yes',
-                                    onPress: async () => {
-                                        if (loading) return;
-                                        setLoading(true);
-                                        try {
-                                            const isAccepted = await handleFinalTowCheck(client, request.id);
-                                            if (isAccepted) {
-                                                Alert.alert(
-                                                    'Tow Request',
-                                                    'The request has already been accepted by another driver',
-                                                    [{ text: 'OK' }]
-                                                );
-                                                if (router.canDismiss) router.dismissAll();
-                                                router.replace('/');
-                                                return;
+                <View style={Styles.block}>
+                    <ActionButton
+                        text='Accept'
+                        primaryColor={Colors.primary}
+                        secondaryColor={Colors.primaryShade}
+                        icon={<AntDesign name="check" size={25} style={Styles.icon}/>}
+                        onPress={async () => {
+                            Alert.alert(
+                                'Confirmation',
+                                'Once you accept this request, the customer will be able to view your location. Are you sure you want to accept the request?',
+                                [
+                                    { text: 'No' },
+                                    {
+                                        text: 'Yes',
+                                        onPress: async () => {
+                                            if (loading) return;
+                                            setLoading(true);
+                                            try {
+                                                const isAccepted = await handleFinalTowCheck(client, request.id);
+                                                if (isAccepted) {
+                                                    Alert.alert(
+                                                        'Tow Request',
+                                                        'The request has already been accepted by another driver',
+                                                        [{ text: 'OK' }]
+                                                    );
+                                                    if (router.canDismiss) router.dismissAll();
+                                                    router.replace('/');
+                                                    return;
+                                                }
+                                                await handleAcceptTowRequest(client, request.id, 'IN_PROGRESS', waitTime, driverId, firstName, phoneNumber);
+                                                await sendPushNotification(request?.user?.pushToken, 'Tow Request', 'A driver is on the way!', { type: 'TOW_RESPONSE' });
+                                                router.replace({
+                                                    pathname: 'towProgress',
+                                                    params: { requestParam: JSON.stringify(request)}
+                                                });
+                                            } catch (error) {
+                                                console.error(error);
                                             }
-                                            await handleAcceptTowRequest(client, request.id, 'IN_PROGRESS', waitTime, driverId, firstName, phoneNumber);
-                                            await sendPushNotification(request?.user?.pushToken, 'Tow Request', 'A driver is on the way!', { type: 'TOW_RESPONSE' });
-                                            router.replace({
-                                                pathname: 'towProgress',
-                                                params: { requestParam: JSON.stringify(request)}
-                                            });
-                                        } catch (error) {
-                                            console.error(error);
+                                            setLoading(false);
                                         }
-                                        setLoading(false);
                                     }
-                                }
-                            ]
-                        )
-                    }}
-                />
+                                ]
+                            )
+                        }}
+                    />
+                </View>
             </Background>
         </KeyboardAvoidingView>
     );

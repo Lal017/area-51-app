@@ -3,8 +3,8 @@ import { AdminStyles, Styles } from '../../../constants/styles';
 import { handleListUsers } from "../../../components/userComponents";
 import { useApp } from '../../../components/context';
 import { Background, Tab } from "../../../components/components";
-import { View, TextInput } from "react-native";
-import { useEffect, useState } from "react";
+import { View, TextInput, TouchableOpacity } from "react-native";
+import { useEffect, useRef, useState } from "react";
 import { router } from "expo-router";
 import { AntDesign, Entypo, Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
@@ -53,6 +53,8 @@ const UserList = () =>
         transform: [{ translateX: shimmer.value * 100 }]
     }));
 
+    const pickerRef = useRef();
+
     return (
         <Background refreshing={refreshing} onRefresh={onRefresh} hasTab={false}>
             <View style={Styles.block}>
@@ -66,17 +68,26 @@ const UserList = () =>
                         onChangeText={setSearch}
                     />
                 </View>
-                <View style={[AdminStyles.picker, {marginLeft: 20}]}>
+                <TouchableOpacity
+                    style={AdminStyles.picker}
+                    onPress={() => pickerRef.current.focus()}
+                >
+                    <LinearGradient
+                    colors={[Colors.button, Colors.buttonShade]}
+                    start={{ x: 0, y: 0}}
+                    end={{ x: 0, y: 1}}
+                    style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}}
+                    />
                     <Picker
+                        ref={pickerRef}
                         selectedValue={statusFilter}
                         onValueChange={(itemvalue) => setStatusFilter(itemvalue)}
-                        style={{color: Colors.text}}
                     >
                         <Picker.Item label='All' value='All'/>
                         <Picker.Item label='Customers' value='Customers'/>
                         <Picker.Item label='TowDrivers' value='TowDrivers'/>
                     </Picker>
-                </View>
+                </TouchableOpacity>
             </View>
             {users && users
                 .sort((a, b) => {

@@ -1,7 +1,10 @@
-import { View, TextInput } from 'react-native';
+import Colors from '../../constants/colors';
+import MaskedView from '@react-native-masked-view/masked-view';
+import Animated, { Easing, withRepeat, withTiming, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
+import { View, TextInput, TouchableOpacity } from 'react-native';
 import { useApp } from '../../components/context';
 import { AdminStyles, Styles } from '../../constants/styles';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { listTowRequests } from '../../src/graphql/queries';
 import { Background, Tab } from '../../components/components';
 import { getStatus } from '../../components/towComponents';
@@ -9,9 +12,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { AntDesign, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
-import Colors from '../../constants/colors';
-import Animated, { Easing, withRepeat, withTiming, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
-import MaskedView from '@react-native-masked-view/masked-view';
 
 const TowRequestList = () =>
 {
@@ -69,6 +69,8 @@ const TowRequestList = () =>
         transform: [{ translateX: shimmer.value * 100 }]
     }));
 
+    const pickerRef = useRef();
+
     return (
         <Background refreshing={refresing} onRefresh={onRefresh}>
             <View style={Styles.block}>
@@ -82,11 +84,20 @@ const TowRequestList = () =>
                         onChangeText={setSearch}
                     />
                 </View>
-                <View style={[AdminStyles.picker, {marginLeft: 20}]}>
+                <TouchableOpacity
+                    style={AdminStyles.picker}
+                    onPress={() => pickerRef.current.focus()}
+                >
+                    <LinearGradient
+                        colors={[Colors.button, Colors.buttonShade]}
+                        start={{ x: 0, y: 0}}
+                        end={{ x: 0, y: 1}}
+                        style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}}
+                    />
                     <Picker
+                        ref={pickerRef}
                         selectedValue={statusFilter}
                         onValueChange={(itemvalue) => setStatusFilter(itemvalue)}
-                        style={{color: 'black'}}
                     >
                         <Picker.Item label="All" value='ALL' />
                         <Picker.Item label="Requested" value="REQUESTED" />
@@ -94,7 +105,7 @@ const TowRequestList = () =>
                         <Picker.Item label="Cancelled" value="CANCELLED" />
                         <Picker.Item label="Completed" value="COMPLETED" />
                     </Picker>
-                </View>
+                </TouchableOpacity>
             </View>
             <View style={[Styles.block, {rowGap: 0}]}>
                 {requests && requests

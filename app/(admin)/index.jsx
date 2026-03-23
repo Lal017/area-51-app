@@ -4,6 +4,7 @@ import { Background } from '../../components/components';
 import { AdminStyles, Styles } from "../../constants/styles";
 import { requestForegroundPermissionsAsync } from 'expo-location';
 import { Text, TouchableOpacity, View, Alert, Linking } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 
 const AdminConsole = () =>
@@ -12,9 +13,15 @@ const AdminConsole = () =>
         <Background style={{rowGap: 2}} hasTab={false}>
             <View style={{flexDirection: 'row', flexWrap: 'wrap', flex: 1, gap: 5, justifyContent: 'center'}}>
                 <TouchableOpacity
-                    style={[Styles.consoleBubbleAlt, {backgroundColor: Colors.tertiary}]}
+                    style={Styles.consoleBubbleAlt}
                     onPress={() => router.push('/(admin)/(users)')}
                 >
+                    <LinearGradient
+                        colors={[Colors.tertiary, Colors.tertiaryShade]}
+                        start={{ x: 0, y: 1}}
+                        end={{ x: 1, y: 0}}
+                        style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}}
+                    />
                     <Text style={Styles.headerTitle}>User List</Text>
                     <LottieView
                         source={require('../../assets/animations/astronaut.json')}
@@ -25,9 +32,15 @@ const AdminConsole = () =>
                     />
                 </TouchableOpacity>
                 <TouchableOpacity
-                    style={[Styles.consoleBubbleAlt, {backgroundColor: Colors.secondary}]}
+                    style={Styles.consoleBubbleAlt}
                     onPress={() => router.push('/(admin)/vehicleList')}
                 >
+                    <LinearGradient
+                        colors={[Colors.secondary, Colors.secondaryShade2]}
+                        start={{ x: 0, y: 1}}
+                        end={{ x: 1, y: 0}}
+                        style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}}
+                    />
                     <Text style={Styles.headerTitle}>Vehicle List</Text>
                     <View style={[AdminStyles.lottieAnim, {justifyContent: 'center', alignItems: 'center'}]}>
                         <LottieView
@@ -40,9 +53,15 @@ const AdminConsole = () =>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    style={[Styles.consoleBubbleAlt, {backgroundColor: Colors.secondary}]}
+                    style={Styles.consoleBubbleAlt}
                     onPress={() => router.push('/(admin)/(appointments)')}
                 >
+                    <LinearGradient
+                        colors={[Colors.secondary, Colors.secondaryShade2]}
+                        start={{ x: 0, y: 1}}
+                        end={{ x: 1, y: 0}}
+                        style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}}
+                    />
                     <Text style={Styles.headerTitle}>Appointments</Text>
                     <View style={[AdminStyles.lottieAnim, {justifyContent: 'center', alignItems: 'center'}]}>
                         <LottieView
@@ -55,7 +74,7 @@ const AdminConsole = () =>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    style={[Styles.consoleBubbleAlt, {backgroundColor: Colors.tertiary}]}
+                    style={Styles.consoleBubbleAlt}
                     onPress={async () => {
                         const { status } = await requestForegroundPermissionsAsync();
                         if (status !== 'granted') {
@@ -74,6 +93,12 @@ const AdminConsole = () =>
                         router.push('/(admin)/towRequestList');
                     }}
                 >
+                    <LinearGradient
+                        colors={[Colors.tertiary, Colors.tertiaryShade]}
+                        start={{ x: 0, y: 1}}
+                        end={{ x: 1, y: 0}}
+                        style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}}
+                    />
                     <Text style={Styles.headerTitle}>Tow Requests</Text>
                     <LottieView
                         source={require('../../assets/animations/planet.json')}
@@ -84,9 +109,15 @@ const AdminConsole = () =>
                     />
                 </TouchableOpacity>
                 <TouchableOpacity
-                    style={[Styles.consoleBubbleAlt, {backgroundColor: Colors.tertiary}]}
+                    style={Styles.consoleBubbleAlt}
                     onPress={() => router.push('/(admin)/homeSettings')}
                 >
+                    <LinearGradient
+                        colors={[Colors.tertiary, Colors.tertiaryShade]}
+                        start={{ x: 0, y: 1}}
+                        end={{ x: 1, y: 0}}
+                        style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}}
+                    />
                     <Text style={Styles.headerTitle}>Home Page</Text>
                     <LottieView
                         source={require('../../assets/animations/house.json')}
@@ -97,9 +128,15 @@ const AdminConsole = () =>
                     />
                 </TouchableOpacity>
                 <TouchableOpacity
-                    style={[Styles.consoleBubbleAlt, {backgroundColor: 'grey'}]}
+                    style={Styles.consoleBubbleAlt}
                     onPress={() => router.push('/(admin)/(settings)')}
                 >
+                    <LinearGradient
+                        colors={[Colors.button, Colors.buttonShade]}
+                        start={{ x: 0, y: 1}}
+                        end={{ x: 1, y: 0}}
+                        style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}}
+                    />
                     <Text style={Styles.headerTitle}>Settings</Text>
                     <LottieView
                         source={require('../../assets/animations/gear.json')}

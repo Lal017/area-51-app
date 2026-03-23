@@ -133,25 +133,25 @@ const TowResponse = () =>
                         header='Does the car run?'
                         text={request?.canRun ? 'Yes' : 'No'}
                         leftIcon={<MaterialCommunityIcons name='engine' size={30} style={Styles.icon}/>}
-                        style={{height: 'none', padding: 5}}
+                        style={{height: 'none'}}
                     />
                     <Tab
                         header='Does the car roll?'
                         text={request?.canRoll ? 'Yes' : 'No'}
                         leftIcon={<MaterialCommunityIcons name='tire' size={30} style={Styles.icon}/>}
-                        style={{height: 'none', padding: 5}}
+                        style={{height: 'none'}}
                     />
                     <Tab
                         header='Are the keys included?'
                         text={request?.keyIncluded ? 'Yes' : 'No'}
                         leftIcon={<Entypo name='key' size={30} style={Styles.icon}/>}
-                        style={{height: 'none', padding: 5}}
+                        style={{height: 'none'}}
                     />
                     <Tab
                         header='Is the vehicle obstructed?'
                         text={request?.isObstructed ? 'Yes' : 'No'}
                         leftIcon={<Entypo name='warning' size={30} style={Styles.icon}/>}
-                        style={{height: 'none', padding: 5}}
+                        style={{height: 'none'}}
                     />
                 </View>
                 { request?.notes && (

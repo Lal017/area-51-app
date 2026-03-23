@@ -74,7 +74,7 @@ const HomeSettings = () =>
                 behavior='height'
                 style={{flex: 1}}
             >
-                <Background>
+                <Background hasTab={false}>
                     <View style={Styles.block}>
                         <View style={Styles.infoContainer}>
                             <Text style={Styles.headerTitle}>Images</Text>

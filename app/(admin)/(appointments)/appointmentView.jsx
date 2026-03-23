@@ -21,7 +21,7 @@ const AppointmentView = () =>
     });
 
     return (
-        <Background>
+        <Background hasTab={false}>
             <View style={Styles.block}>
                 <View style={Styles.infoContainer}>
                     <Text style={Styles.headerTitle}>{appointment?.user?.firstName} {appointment?.user?.lastName}</Text>
@@ -48,16 +48,19 @@ const AppointmentView = () =>
                     header='Date'
                     text={`${formatDate(appointment?.date)}`}
                     leftIcon={<AntDesign name='calendar' size={30} style={Styles.icon}/>}
+                    style={{height: 'none'}}
                 />
                 <Tab
                     header='Time'
                     text={`${formatTime(appointment?.time)}`}
                     leftIcon={<MaterialCommunityIcons name='clock' size={30} style={Styles.icon}/>}
+                    style={{height: 'none'}}
                 />
                 <Tab
                     header='Service'
                     text={`${appointment?.service}`}
                     leftIcon={iconCheck(appointment?.service)}
+                    style={{height: 'none'}}
                 />
                 { appointment?.notes && (
                     <View style={Styles.infoContainer}>

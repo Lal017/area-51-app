@@ -10,19 +10,17 @@ const Styles = StyleSheet.create({
         width: '90%',
     },
     consoleBubble: {
-        flex: 1,
-        width: '95%',
+        flex: 1, width: '95%',
         borderRadius: 10,
         flexDirection: 'row',
         alignItems: 'center', justifyContent: 'space-evenly',
         overflow: 'hidden'
     },
     consoleBubbleAlt: {
-        width: '48%',
-        height: '33%',
+        width: '48%', height: '33%',
         borderRadius: 10,
-        alignItems: 'center',
-        justifyContent: 'space-evenly'
+        alignItems: 'center', justifyContent: 'space-evenly',
+        overflow: 'hidden'
     },
     // Tab Select
     tabWrapper: {
@@ -80,13 +78,6 @@ const Styles = StyleSheet.create({
         fontSize: textSize(15),
         textAlign: 'center',
         fontFamily: 'Roboto-Bold'
-    },
-    signOutButton: {
-        position: 'absolute',
-        right: 20,
-        top: 45,
-        justifyContent: 'center',
-        alignItems: 'center'
     },
     // Text
     headerTitle: {
@@ -343,9 +334,10 @@ const ProfileStyles = StyleSheet.create({
 const AdminStyles = StyleSheet.create({
     picker: {
         backgroundColor: Colors.button,
-        borderRadius: 25,
-        width: '30%',
-        paddingLeft: 10
+        borderRadius: 15,
+        width: '40%',
+        paddingLeft: 10, marginLeft: 20,
+        overflow: 'hidden'
     },
     // index.jsx
     lottieAnim: {

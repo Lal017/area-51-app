@@ -6,6 +6,7 @@ import { router } from 'expo-router';
 import { Text, TouchableOpacity, Alert, Linking, View } from 'react-native';
 import { requestBackgroundPermissionsAsync, requestForegroundPermissionsAsync } from 'expo-location';
 import { useApp } from "../../components/context";
+import { LinearGradient } from "expo-linear-gradient";
 
 const Index = () =>
 {
@@ -20,7 +21,7 @@ const Index = () =>
                 </View>
             </View>
             <TouchableOpacity
-                style={[Styles.consoleBubble, {backgroundColor: Colors.secondary}]}
+                style={Styles.consoleBubble}
                 onPress={async () => {
                     const { status } = await requestForegroundPermissionsAsync();
                     if (status !== 'granted') {
@@ -54,6 +55,12 @@ const Index = () =>
                     router.push('(requests)');
                 }}
             >
+                <LinearGradient
+                    colors={[Colors.secondary, Colors.secondaryShade]}
+                    start={{ x: 0, y: 0}}
+                    end={{ x: 0, y: 1}}
+                    style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}}
+                />
                 <Text style={Styles.title}>View Requests</Text>
                 <LottieView
                     source={require('../../assets/animations/astronaut.json')}
@@ -67,6 +74,12 @@ const Index = () =>
                 style={[Styles.consoleBubble, {backgroundColor: 'gray'}]}
                 onPress={() => router.push('/(tow)/(settings)')}
             >
+                <LinearGradient
+                    colors={[Colors.button, Colors.buttonShade]}
+                    start={{ x: 0, y: 0}}
+                    end={{ x: 0, y: 1}}
+                    style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}}
+                />
                 <Text style={Styles.title}>Settings</Text>
                 <LottieView
                     source={require('../../assets/animations/gear.json')}

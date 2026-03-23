@@ -29,18 +29,6 @@ const UserView = () =>
                         <Text style={Styles.tabHeader}>{customer?.email}</Text>
                         <Text style={Styles.tabHeader}>{formatNumber(customer?.phone)}</Text>
                     </View>
-                    <Tab
-                        header='Created On'
-                        text={`${formatDate(customer.createdAt)}`}
-                        leftIcon={<Entypo name='calendar' style={Styles.icon} size={30}/>}
-                        style={{height: 'none'}}
-                    />
-                    <Tab
-                        header='Group'
-                        text={`${customer?.access}`}
-                        leftIcon={<FontAwesome name='group' size={30} style={Styles.icon}/>}
-                        style={{height: 'none'}}
-                    />
                     <View style={[Styles.rightIcon, {flexDirection: 'row', columnGap: 10}]}>
                         <TouchableOpacity
                             style={{justifyContent: 'center', alignItems: 'center', padding: 5}}
@@ -55,6 +43,20 @@ const UserView = () =>
                             <Entypo name='message' size={30} color='white'/>
                         </TouchableOpacity>
                     </View>
+                </View>
+                <View style={Styles.block}>
+                    <Tab
+                        header='Created On'
+                        text={`${formatDate(customer.createdAt)}`}
+                        leftIcon={<Entypo name='calendar' style={Styles.icon} size={30}/>}
+                        style={{height: 'none'}}
+                    />
+                    <Tab
+                        header='Group'
+                        text={`${customer?.access}`}
+                        leftIcon={<FontAwesome name='group' size={30} style={Styles.icon}/>}
+                        style={{height: 'none'}}
+                    />
                 </View>
                 { customer?.driverId === '1' && (
                     <FloatingBlock>

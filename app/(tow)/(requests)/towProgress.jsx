@@ -471,36 +471,38 @@ const TowProgress = () =>
                                     header={`${vehicle?.year} (${vehicle?.color})`}
                                     text={`${vehicle?.make} ${vehicle?.model}`}
                                     leftIcon={<Ionicons name='car-sport' size={30} style={Styles.icon}/>}
-                                    style={{height: 'none', padding: 5}}
+                                    style={{height: 'none'}}
                                 />
                                 <Tab
                                     header='Does the car run?'
                                     text={request?.canRun ? 'Yes' : 'No'}
                                     leftIcon={<MaterialCommunityIcons name='engine' size={30} style={Styles.icon}/>}
-                                    style={{height: 'none', padding: 5}}
+                                    style={{height: 'none'}}
                                 />
                                 <Tab
                                     header='Does the car roll?'
                                     text={request?.canRoll ? 'Yes' : 'No'}
                                     leftIcon={<MaterialCommunityIcons name='tire' size={30} style={Styles.icon}/>}
-                                    style={{height: 'none', padding: 5}}
+                                    style={{height: 'none'}}
                                 />
                                 <Tab
                                     header='Are the keys included?'
                                     text={request?.keyIncluded ? 'Yes' : 'No'}
                                     leftIcon={<Entypo name='key' size={30} style={Styles.icon}/>}
-                                    style={{height: 'none', padding: 5}}
+                                    style={{height: 'none'}}
                                 />
                                 <Tab
                                     header='Is the vehicle obstructed?'
                                     text={request?.isObstructed ? 'Yes' : 'No'}
                                     leftIcon={<Entypo name='warning' size={30} style={Styles.icon}/>}
-                                    style={{height: 'none', padding: 5}}
+                                    style={{height: 'none'}}
                                 />
-                                <View style={Styles.infoContainer}>
-                                    <Text style={Styles.headerTitle}>Customer Note</Text>
-                                    <Text style={Styles.text}>"{request.notes}"</Text>
-                                </View>
+                                { request?.note && (
+                                    <View style={Styles.infoContainer}>
+                                        <Text style={Styles.headerTitle}>Customer Note</Text>
+                                        <Text style={Styles.text}>"{request.notes}"</Text>
+                                    </View>
+                                )}
                                 </>
                             )}
                         </View>
