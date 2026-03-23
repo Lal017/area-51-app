@@ -1,6 +1,4 @@
 ToDo:
-    - add openInMaps option to the first step of the towRequest page
-    - style Edit Profile and Change password subtitles better
     - check all functions to make sure they throw try and catch errors correctly
     - add try/catch to functions and buttons
     - check to see all error message are red and not Colors.redButton

@@ -24,7 +24,7 @@ const AccountEdit = () =>
             style={{flex: 1}}
         >
             <Background>
-                <View style={Styles.block}>
+                <View style={[Styles.block, {rowGap: 10}]}>
                     <View style={Styles.infoContainer}>
                         <Text style={Styles.text}>Name</Text>
                     </View>
@@ -55,7 +55,7 @@ const AccountEdit = () =>
                         {!editLastName && (<Text style={[Styles.text, {color: 'red', paddingLeft: 25, fontSize: textSize(13)}]}>Missing Last Name</Text>)}
                     </View>
                 </View>
-                <View style={Styles.block}>
+                <View style={[Styles.block, {rowGap: 10}]}>
                     <View style={Styles.infoContainer}>
                         <Text style={Styles.text}>Email</Text>
                     </View>
@@ -74,7 +74,7 @@ const AccountEdit = () =>
                         {!editEmail && (<Text style={[Styles.text, {color: 'red', paddingLeft: 25, fontSize: textSize(13)}]}>Missing Email</Text>)}
                     </View>
                 </View>
-                <View style={Styles.block}>
+                <View style={[Styles.block, {rowGap: 10}]}>
                     <View style={Styles.infoContainer}>
                         <Text style={Styles.text}>Phone Number</Text>
                     </View>
