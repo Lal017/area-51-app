@@ -1,14 +1,14 @@
 import Colors from '../../constants/colors';
 import { Background, FloatingBlock, Tab } from '../../components/components';
 import { Styles } from '../../constants/styles';
-import { handleUpdateVehiclePickupStatus } from '../../components/vehicleComponents';
-import { sendPushNotification } from '../../components/notifComponents';
+import { handleUpdateVehiclePickupStatus } from '../../services/vehicleService';
+import { sendPushNotification } from '../../services/notificationService';
 import { useApp } from '../../hooks/useApp';
 import { View, Text, Alert, Switch, TouchableOpacity } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Entypo, Ionicons, FontAwesome } from '@expo/vector-icons';
-import { callUser, textUser, formatNumber } from '../../constants/utils';
+import { callUser, textUser, formatNumber } from '../../utils/utils';
 
 const VehicleView = () =>
 {

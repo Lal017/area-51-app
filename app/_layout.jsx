@@ -4,7 +4,7 @@ import awsconfig from '../src/aws-exports.js';
 Amplify.configure(awsconfig);
 // ----------------------------------------------------------------
 import Colors from '../constants/colors';
-import { handleGetCurrentUser } from '../components/authComponents';
+import { handleGetCurrentUser } from '../services/authService';
 import { Stack } from 'expo-router';
 import { setNotificationHandler } from 'expo-notifications';
 import { router } from 'expo-router';

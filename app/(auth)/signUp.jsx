@@ -1,7 +1,7 @@
 import Colors from "../../constants/colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ActionButton, AuthBackground, ErrorDisplay } from "../../components/components";
-import { handleSignUp, GoogleSignInButton } from "../../components/authComponents";
+import { ActionButton, AuthBackground, ErrorDisplay, GoogleSignInButton } from "../../components/components";
+import { handleSignUp } from "../../services/authService";
 import { AuthStyles, Styles } from "../../constants/styles";
 import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Image, Alert } from "react-native";
 import { useState } from "react";

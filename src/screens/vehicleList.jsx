@@ -1,13 +1,13 @@
 import Colors from '../../constants/colors';
 import { BackgroundAlt, DropDownTab, Loading, SubTab, Tab } from '../../components/components';
-import { handleDeleteVehicle, handleUpdateVehiclePickup } from '../../components/vehicleComponents';
+import { handleDeleteVehicle, handleUpdateVehiclePickup } from '../../services/vehicleService';
 import { useApp } from '../../hooks/useApp';
 import { Styles } from '../../constants/styles';
 import { Ionicons, AntDesign, MaterialCommunityIcons, Entypo, Feather, FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { View, FlatList, TouchableOpacity, Alert } from 'react-native';
 import { useEffect, useState } from 'react';
-import { handleDeleteAppointment } from '../../components/appointmentComponents';
+import { handleDeleteAppointment } from '../../services/appointmentService';
 
 const VehicleList = () =>
 {

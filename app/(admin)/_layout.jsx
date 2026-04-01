@@ -2,9 +2,9 @@ import AccountEdit from '../../src/screens/accountEdit';
 import Modal from 'react-native-modal';
 import { ActionButton, Background, CustHeader, Loading } from "../../components/components";
 import { AppProvider, useApp } from "../../hooks/useApp";
-import { registerForPushNotifications } from "../../components/notifComponents";
-import { handleCreateUser, handleUpdateUser, handleGetUser } from '../../components/userComponents';
-import { handleGetCurrentUser } from "../../components/authComponents";
+import { registerForPushNotifications } from "../../services/notificationService";
+import { handleCreateUser, handleUpdateUser, handleGetUser } from '../../services/userService';
+import { handleGetCurrentUser } from "../../services/authService";
 import { Styles } from '../../constants/styles';
 import { Stack, router } from "expo-router";
 import { useEffect, useRef, useState } from 'react';
@@ -73,6 +73,7 @@ const AdminContent = () =>
                 const genPushToken = await registerForPushNotifications();
                 setPushToken(genPushToken);
             } catch (error) {
+                console.error(error);
                 setPermissionScreen(true);
                 setReady(true);
                 return;

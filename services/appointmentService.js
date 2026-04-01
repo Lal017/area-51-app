@@ -1,8 +1,6 @@
-import { Styles } from '../constants/styles';
 import { appointmentsByUserId, listAppointments } from '../src/graphql/queries';
 import { createAppointment, deleteAppointment, updateAppointment } from '../src/graphql/mutations';
 import { post } from 'aws-amplify/api';
-import { FontAwesome5, FontAwesome, Entypo, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 
 // -------------------------------------
 //              ADMINS
@@ -76,20 +74,6 @@ const handleGetAppointments = async () =>
         console.error('handleGetAppointments ERROR:', error);
         throw error;
     }
-};
-
-// used to set only the available time slots on the selected day
-const handleSetTimes = async (appointments, day) =>
-{
-    const TIME_SLOTS = [ '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:00:00', '14:00:00', '15:00:00', '16:00:00' ];
-
-    const filteredSlots = TIME_SLOTS.filter(slot => {
-        return !appointments.some(
-            appointment => appointment.date === day && appointment.time === slot
-        )
-    });
-
-    return filteredSlots;
 };
 
 // checks if another customer already has an appointment on this day and time
@@ -229,34 +213,13 @@ const handleDeleteAllAppointments = async (client, userId) =>
     }
 };
 
-// used to return the correct icon for a selected service
-const iconCheck = (service) =>
-{
-    switch (service) {
-        case 'Oil Change':
-            return <FontAwesome5 name="oil-can" size={30} style={Styles.icon}/>;
-        case 'Diagnosis':
-            return <FontAwesome name="stethoscope" size={30} style={Styles.icon}/>;
-        case 'Tuning':
-            return <Entypo name="area-graph" size={30} style={Styles.icon}/>;
-        case 'A/C':
-            return <MaterialIcons name="air" size={30} style={Styles.icon}/>;
-        case 'Vehicle Pickup':
-            return <MaterialCommunityIcons name='car-clock' size={30} style={Styles.icon}/>;
-        default:
-            return <MaterialCommunityIcons name="dots-horizontal-circle" size={30} style={Styles.icon}/>;
-    }
-};
-
 export {
     handleGetAllAppointments,
     handleGetAppointments,
-    handleSetTimes,
     handleCreateAppointment,
     handleUpdateAppointment,
     handleFinalCheck,
     handleDeleteAppointment,
     handleDeleteAllAppointments,
-    handleGetMyAppointments,
-    iconCheck
+    handleGetMyAppointments
 }

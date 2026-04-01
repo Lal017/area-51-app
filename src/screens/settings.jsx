@@ -1,6 +1,6 @@
 import { ProfileStyles, Styles } from '../../constants/styles'
 import { Background, FloatingBlock, Tab } from '../../components/components';
-import { formatNumber } from '../../constants/utils';
+import { formatNumber } from '../../utils/utils';
 import { useApp } from '../../hooks/useApp';
 import { View, Text } from 'react-native';
 import { router } from 'expo-router';

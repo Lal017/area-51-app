@@ -1,9 +1,9 @@
 import Colors from "../../../constants/colors";
 import Carousel from 'react-native-reanimated-carousel';
-import { handleGetURLs } from "../../../components/adminComponents";
-import { handleGetVehicles } from "../../../components/vehicleComponents";
-import { handleGetMyAppointments } from "../../../components/appointmentComponents";
-import { handleGetTowRequest } from '../../../components/towComponents';
+import { handleGetURLs } from "../../../services/adminService";
+import { handleGetVehicles } from "../../../services/vehicleService";
+import { handleGetMyAppointments } from "../../../services/appointmentService";
+import { handleGetTowRequest } from '../../../services/towService';
 import { AppointmentReminder, Background } from "../../../components/components";
 import { HomeStyles, Styles } from "../../../constants/styles";
 import { useApp } from "../../../hooks/useApp";

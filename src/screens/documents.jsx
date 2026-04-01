@@ -1,5 +1,5 @@
 import { Background, Loading, Tab } from '../../components/components';
-import { handleListInvoices, handleListEstimates, handleGetUrl } from '../../components/adminComponents';
+import { handleListInvoices, handleListEstimates, handleGetUrl } from '../../services/adminService';
 import { useApp } from '../../hooks/useApp';
 import { Styles } from '../../constants/styles';
 import { Text, View } from 'react-native';

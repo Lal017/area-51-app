@@ -1,8 +1,8 @@
 import Colors from '../../constants/colors';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
-import { handleUpdateCustomersTowRequestStatus } from '../../components/towComponents';
-import { sendPushNotification } from '../../components/notifComponents';
-import { handleGetAddress } from '../../components/adminComponents';
+import { handleUpdateCustomersTowRequestStatus } from '../../services/towService';
+import { sendPushNotification } from '../../services/notificationService';
+import { handleGetAddress } from '../../services/adminService';
 import { useApp } from '../../hooks/useApp';
 import { ActionButton, Background, FloatingBlock, Tab } from '../../components/components';
 import { Styles, ServiceStyles } from '../../constants/styles';
@@ -10,7 +10,7 @@ import { View, Text, TouchableOpacity, Alert, KeyboardAvoidingView } from 'react
 import { useLocalSearchParams, router } from 'expo-router';
 import { AntDesign, FontAwesome, Entypo, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
-import { callUser, textUser, openInMaps, formatNumber } from '../../constants/utils';
+import { callUser, textUser, openInMaps, formatNumber } from '../../utils/utils';
 
 const TowResponse = () =>
 {

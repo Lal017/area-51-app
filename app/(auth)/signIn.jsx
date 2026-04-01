@@ -1,8 +1,7 @@
 import Colors from '../../constants/colors';
 import { AuthStyles, Styles } from '../../constants/styles';
-import { GoogleSignInButton } from '../../components/authComponents';
-import { ActionButton, AuthBackground, ErrorDisplay } from '../../components/components';
-import { handleSignIn } from '../../components/authComponents';
+import { ActionButton, AuthBackground, ErrorDisplay, GoogleSignInButton } from '../../components/components';
+import { handleSignIn } from '../../services/authService';
 import { Text, TextInput, View, TouchableOpacity, Image } from 'react-native';
 import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';

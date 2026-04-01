@@ -1,4 +1,5 @@
 import * as FileSystem from 'expo-file-system';
+import { extractPath } from '../utils/utils';
 import { updateUser } from '../src/graphql/mutations';
 import { reverseGeocodeAsync } from 'expo-location';
 import { uploadData, list, getUrl, remove } from 'aws-amplify/storage';
@@ -271,14 +272,6 @@ const uriToUint8Array = async (uri) =>
         console.error('uriToUint8Array ERROR:', error);
         throw error;
     }
-};
-
-const extractPath = (url) => {
-    const match = url.match(/\/(public\/.+?\.(jpg|jpeg|png|webp|heic))/i);
-    if (match && match[1]) {
-        return match[1];
-    }
-    throw new Error('could not extract path');
 };
 
 export {

@@ -1,14 +1,14 @@
 import Colors from '../../../constants/colors';
 import { Styles } from '../../../constants/styles';
 import { Background, Tab, SimpleList, FloatingBlock, ActionButton, DropDownTab, SubTab } from '../../../components/components';
-import { sendPushNotification } from '../../../components/notifComponents';
+import { sendPushNotification } from '../../../services/notificationService';
 import { View, Text, Alert, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { AntDesign, Entypo, FontAwesome, FontAwesome6, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useState } from 'react';
-import { handleAssignTowDriverId, handleMakeUserTowDriver } from '../../../components/adminComponents';
+import { handleAssignTowDriverId, handleMakeUserTowDriver } from '../../../services/adminService';
 import { useApp } from '../../../hooks/useApp';
-import { callUser, textUser, formatDate, formatNumber } from '../../../constants/utils';
+import { callUser, textUser, formatDate, formatNumber } from '../../../utils/utils';
 
 const UserView = () =>
 {

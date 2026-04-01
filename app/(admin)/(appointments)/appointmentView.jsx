@@ -1,10 +1,9 @@
 import { Styles } from '../../../constants/styles';
-import { iconCheck } from '../../../components/appointmentComponents';
-import { Background, FloatingBlock, Tab } from '../../../components/components';
+import { Background, FloatingBlock, Tab, iconCheck } from '../../../components/components';
 import { useLocalSearchParams } from 'expo-router';
 import { AntDesign, Entypo, MaterialCommunityIcons, FontAwesome, Ionicons } from '@expo/vector-icons';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { callUser, textUser, formatNumber, formatDate, formatTime } from '../../../constants/utils';
+import { callUser, textUser, formatNumber, formatDate, formatTime } from '../../../utils/utils';
 
 const AppointmentView = () =>
 {

@@ -1,12 +1,12 @@
 import Colors from '../../constants/colors';
 import { ActionButton, Background, ErrorDisplay } from '../../components/components';
-import { handleDeleteAccount } from '../../components/authComponents';
+import { handleDeleteAccount } from '../../services/authService';
 import { Styles } from '../../constants/styles';
 import { useApp } from '../../hooks/useApp';
 import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
-import { textSize } from '../../constants/utils';
+import { textSize } from '../../utils/utils';
 
 const DeleteAccount = () =>
 {

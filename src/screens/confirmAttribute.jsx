@@ -1,5 +1,5 @@
 import Colors from '../../constants/colors';
-import { handleConfirmUserAttribute } from '../../components/authComponents';
+import { handleConfirmUserAttribute } from '../../services/authService';
 import { ActionButton, Background } from '../../components/components';
 import { useApp } from '../../hooks/useApp';
 import { Styles } from '../../constants/styles';

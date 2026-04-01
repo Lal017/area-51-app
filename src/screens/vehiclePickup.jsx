@@ -10,9 +10,9 @@ import { router } from 'expo-router';
 import { FontAwesome, FontAwesome6, Ionicons } from '@expo/vector-icons';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import { LinearGradient } from 'expo-linear-gradient';
-import { handleSendAdminNotif } from '../../components/notifComponents';
-import { handleCreateAppointment } from '../../components/appointmentComponents';
-import { textSize, formatDate, formatTime } from '../../constants/utils';
+import { handleSendAdminNotif } from '../../services/notificationService';
+import { handleCreateAppointment } from '../../services/appointmentService';
+import { textSize, formatDate, formatTime } from '../../utils/utils';
 
 const VehiclePickup = () =>
 {

@@ -2,7 +2,7 @@ import { View, Text, TextInput, KeyboardAvoidingView, TouchableOpacity, Image } 
 import { Styles, AuthStyles } from "../../constants/styles";
 import { useState } from "react";
 import { useLocalSearchParams } from "expo-router";
-import { handleConfirmResetPassword } from "../../components/authComponents";
+import { handleConfirmResetPassword } from "../../services/authService";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import Colors from "../../constants/colors";
 import { ActionButton, AuthBackground, ErrorDisplay } from "../../components/components";

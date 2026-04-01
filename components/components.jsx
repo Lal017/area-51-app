@@ -1,12 +1,13 @@
 import Colors from '../constants/colors';
 import React from 'react';
 import { useApp } from '../hooks/useApp';
-import { formatDate, formatTime } from '../constants/utils';
+import { formatDate, formatTime } from '../utils/utils';
+import { handleSignInWithRedirect } from '../services/authService';
 import { Styles, HomeStyles } from '../constants/styles';
-import { View, Text, TouchableOpacity, ScrollView, Animated as RNAnimated, ActivityIndicator, RefreshControl, Alert } from 'react-native';
+import { View, Image, Text, TouchableOpacity, ScrollView, Animated as RNAnimated, ActivityIndicator, RefreshControl } from 'react-native';
 import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
-import { AntDesign, FontAwesome, MaterialIcons } from '@expo/vector-icons';
+import { AntDesign, FontAwesome, MaterialIcons, FontAwesome5, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
 import { signOut } from '@aws-amplify/auth';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -147,7 +148,7 @@ const CalendarHeader = ({date}) =>
     const d = new Date(date);
     const month = d.toLocaleString('default', { month: 'long' });
     return (
-        <View style={{width: '100%'}}>
+        <View>
             <Text style={Styles.text}>{month}</Text>
         </View>
     );
@@ -444,6 +445,70 @@ const SubTab = ({header, text, icon}) =>
     );
 };
 
+// auth
+// Google sign in button component
+const GoogleSignInButton = ({text}) =>
+{
+    return(
+        <TouchableOpacity
+            onPress={() => handleSignInWithRedirect('Google')}
+            style={{
+                backgroundColor: 'white',
+                width: '100%',
+                padding: 10,
+                borderRadius: 25,
+                flexDirection: 'row',
+                columnGap: 10,
+                alignItems: 'center', justifyContent: 'center',
+            }}
+        >
+            <Image
+                source={require('../assets/images/google-icon.png')}
+                style={{height: 25, width: 25}}
+            />
+            <Text style={{fontFamily: 'Roboto-Regular', fontSize: 17}}>{text}</Text>
+        </TouchableOpacity>
+    );
+};
+
+// appointments
+// used to return the correct icon for a selected service
+const iconCheck = (service) =>
+{
+    switch (service) {
+        case 'Oil Change':
+            return <FontAwesome5 name="oil-can" size={30} style={Styles.icon}/>;
+        case 'Diagnosis':
+            return <FontAwesome name="stethoscope" size={30} style={Styles.icon}/>;
+        case 'Tuning':
+            return <Entypo name="area-graph" size={30} style={Styles.icon}/>;
+        case 'A/C':
+            return <MaterialIcons name="air" size={30} style={Styles.icon}/>;
+        case 'Vehicle Pickup':
+            return <MaterialCommunityIcons name='car-clock' size={30} style={Styles.icon}/>;
+        default:
+            return <MaterialCommunityIcons name="dots-horizontal-circle" size={30} style={Styles.icon}/>;
+    }
+};
+
+// tow
+const getStatus = (status) =>
+{
+    switch (status) {
+        case 'COMPLETED':
+            return <Text style={Styles.tabText}>Completed</Text>;
+        case 'IN_PROGRESS':
+            return <Text style={[Styles.tabText, {color: Colors.primary}]}>In Progress</Text>;
+        case 'CANCELLED':
+            return <Text style={[Styles.tabText, {color: Colors.error}]}>Cancelled</Text>;
+        case 'REQUESTED':
+            return <Text style={[Styles.tabText, {color: Colors.secondary}]}>Requested</Text>;
+        default:
+            return <Text>N/A</Text>
+    }
+};
+
+
 export {
     Loading,
     CustHeader,
@@ -460,5 +525,8 @@ export {
     ActionButton,
     ErrorDisplay,
     DropDownTab,
-    SubTab
+    SubTab,
+    GoogleSignInButton,
+    iconCheck,
+    getStatus
 };

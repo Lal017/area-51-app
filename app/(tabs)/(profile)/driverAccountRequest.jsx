@@ -1,17 +1,17 @@
 import Colors from "../../../constants/colors";
-import { handleDeleteAllAppointments } from "../../../components/appointmentComponents";
+import { handleDeleteAllAppointments } from "../../../services/appointmentService";
 import { ActionButton, Background, ErrorDisplay } from "../../../components/components";
 import { useApp } from "../../../hooks/useApp";
-import { handleDeleteAllTowRequests } from "../../../components/towComponents";
-import { handleDeleteStorage, handleRequestDriverAccount } from "../../../components/userComponents";
-import { handleDeleteAllVehicles } from "../../../components/vehicleComponents";
-import { handleSendAdminNotif } from "../../../components/notifComponents";
+import { handleDeleteAllTowRequests } from "../../../services/towService";
+import { handleDeleteStorage, handleRequestDriverAccount } from "../../../services/userService";
+import { handleDeleteAllVehicles } from "../../../services/vehicleService";
+import { handleSendAdminNotif } from "../../../services/notificationService";
 import { Styles } from "../../../constants/styles";
 import { router } from "expo-router";
 import { View, Text, Alert } from "react-native";
 import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { textSize } from "../../../constants/utils";
+import { textSize } from "../../../utils/utils";
 
 const DriverAccountRequest = () =>
 {

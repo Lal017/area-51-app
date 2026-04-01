@@ -1,6 +1,6 @@
 import Colors from '../../constants/colors';
 import { Styles, AuthStyles } from '../../constants/styles';
-import { handleSignUpConfirm, handleResendSignUpCode } from '../../components/authComponents';
+import { handleSignUpConfirm, handleResendSignUpCode } from '../../services/authService';
 import { ActionButton, AuthBackground, ErrorDisplay } from '../../components/components';
 import { View, Text, TextInput, TouchableOpacity, Image} from 'react-native';
 import { useState, useEffect } from 'react';

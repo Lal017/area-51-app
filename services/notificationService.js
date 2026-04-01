@@ -1,7 +1,7 @@
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import Constants from 'expo-constants';
-import { handleListUsers } from './userComponents'
+import { handleListUsers } from './userService'
 import { post } from 'aws-amplify/api';
 
 // ------------------------------------
@@ -132,12 +132,6 @@ const handleSendDriversNotif = async (title, content, data) =>
 //              DO NOT EDIT
 // ------------------------------------------
 
-const handleRegistrationError = (errMessage) =>
-{
-    console.error('registration ERROR,', errMessage);
-    throw new Error(errMessage);
-};
-
 const registerForPushNotifications = async () =>
 {
     Notifications.setNotificationChannelAsync('default', {
@@ -156,25 +150,24 @@ const registerForPushNotifications = async () =>
                 finalStatus = status;
             }
             if (finalStatus !== 'granted') {
-                handleRegistrationError('Permission was not granted to get token');
-                return;
+                throw new Error('Permission was not granted to get token');
             }
         } catch (error) {
-            handleRegistrationError('Could not request notification permissions');
+            throw new Error('Could not request notification permissions');
         }
         
         const projectId = Constants?.expoConfig?.extra?.eas?.projectId ?? Constants?.easConfig?.projectId;
         if (!projectId) {
-            handleRegistrationError('Project ID not found');
+            throw new Error('Project ID not found');
         }
         try {
             const pushTokenString = (await Notifications.getExpoPushTokenAsync({ projectId })).data;
             return pushTokenString;
         } catch (error) {
-            handleRegistrationError(error.message);
+            throw error;
         }
     } else {
-        handleRegistrationError('Must use physical device for Push Notifications');
+        throw new Error('Must use physical device for Push Notifications');
     }
 };
 

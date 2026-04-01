@@ -1,6 +1,6 @@
 import Colors from "../../constants/colors";
 import { Styles, AuthStyles } from "../../constants/styles";
-import { handleResetPassword } from "../../components/authComponents";
+import { handleResetPassword } from "../../services/authService";
 import { ActionButton, AuthBackground, ErrorDisplay } from "../../components/components";
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from "react";

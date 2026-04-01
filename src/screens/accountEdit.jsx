@@ -1,12 +1,12 @@
 import Colors from "../../constants/colors";
 import { Styles } from "../../constants/styles";
 import { ActionButton, Background, ErrorDisplay } from "../../components/components";
-import { handleUpdateAttributes } from "../../components/authComponents";
+import { handleUpdateAttributes } from "../../services/authService";
 import { useApp } from "../../hooks/useApp";
 import { useState } from "react";
 import { View, Text, TextInput, KeyboardAvoidingView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { textSize } from "../../constants/utils";
+import { textSize } from "../../utils/utils";
 
 const AccountEdit = () =>
 {

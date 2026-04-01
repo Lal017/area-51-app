@@ -1,6 +1,4 @@
 ToDo:
-    - check all functions to make sure they throw try and catch errors correctly
-    - add try/catch to functions and buttons
     - create custom hooks to simplify code
     - add react native toast for quick messages (i.e 'Notification Sent)
     - handle error messages accordingly with UI prompts instead of console logs

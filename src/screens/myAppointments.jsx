@@ -1,9 +1,9 @@
 import Colors from '../../constants/colors';
-import { Background, BackgroundAlt, DropDownTab, SubTab, Tab } from '../../components/components';
-import { formatDate, formatTime } from '../../constants/utils';
-import { handleDeleteAppointment, handleGetMyAppointments, iconCheck } from '../../components/appointmentComponents';
+import { Background, BackgroundAlt, DropDownTab, SubTab, Tab, iconCheck } from '../../components/components';
+import { formatDate, formatTime } from '../../utils/utils';
+import { handleDeleteAppointment, handleGetMyAppointments } from '../../services/appointmentService';
 import { useApp } from '../../hooks/useApp';
-import { handleSendAdminNotif } from '../../components/notifComponents';
+import { handleSendAdminNotif } from '../../services/notificationService';
 import { Styles } from '../../constants/styles';
 import { View, Text, TouchableOpacity, Alert, FlatList } from 'react-native';
 import { useEffect } from 'react';

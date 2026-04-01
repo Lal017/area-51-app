@@ -1,13 +1,13 @@
 import Colors from '../../constants/colors';
 import { Styles } from '../../constants/styles';
 import { ActionButton, Background, ErrorDisplay } from '../../components/components';
-import { handleCreateVehicle, handleDeleteVehicle, handleUpdateVehicle } from '../../components/vehicleComponents';
+import { handleCreateVehicle, handleDeleteVehicle, handleUpdateVehicle } from '../../services/vehicleService';
 import { useApp } from '../../hooks/useApp';
 import { useLocalSearchParams, router } from 'expo-router';
 import { AntDesign, FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { TextInput, View, Text, TouchableOpacity, Alert, KeyboardAvoidingView } from 'react-native';
 import { useState } from 'react';
-import { textSize } from '../../constants/utils';
+import { textSize } from '../../utils/utils';
 
 const Vehicle = () =>
 {   

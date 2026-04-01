@@ -1,6 +1,6 @@
 import Colors from "../../../constants/colors";
 import { AdminStyles, Styles } from '../../../constants/styles';
-import { handleListUsers } from "../../../components/userComponents";
+import { handleListUsers } from "../../../services/userService";
 import { useApp } from '../../../hooks/useApp';
 import { Background, Tab } from "../../../components/components";
 import { View, TextInput, TouchableOpacity } from "react-native";

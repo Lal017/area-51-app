@@ -1,9 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { handleDeleteStorage, handleDeleteUser } from './userComponents';
-import { handleDeleteAllAppointments } from './appointmentComponents'
-import { handleDeleteAllTowRequests } from './towComponents';
-import { handleDeleteAllVehicles } from './vehicleComponents';
-import { TouchableOpacity, Image, Text, Alert } from 'react-native';
+import { handleDeleteStorage, handleDeleteUser } from './userService';
+import { handleDeleteAllAppointments } from './appointmentService'
+import { handleDeleteAllTowRequests } from './towService';
+import { handleDeleteAllVehicles } from './vehicleService';
+import { getErrorMessage } from '../utils/utils';
 import { router } from 'expo-router';
 import {
     signUp,
@@ -152,31 +152,6 @@ const handleSignInWithRedirect = async (providerName) =>
         router.replace('(auth)');
         throw new Error(getErrorMessage(error));
     }
-};
-
-// Google sign in button component
-const GoogleSignInButton = ({text}) =>
-{
-    return(
-        <TouchableOpacity
-            onPress={() => handleSignInWithRedirect('Google')}
-            style={{
-                backgroundColor: 'white',
-                width: '100%',
-                padding: 10,
-                borderRadius: 25,
-                flexDirection: 'row',
-                columnGap: 10,
-                alignItems: 'center', justifyContent: 'center',
-            }}
-        >
-            <Image
-                source={require('../assets/images/google-icon.png')}
-                style={{height: 25, width: 25}}
-            />
-            <Text style={{fontFamily: 'Roboto-Regular', fontSize: 17}}>{text}</Text>
-        </TouchableOpacity>
-    );
 };
 
 
@@ -385,42 +360,6 @@ const handleGetCurrentUser = async () =>
     }
 };
 
-// used to return a UI friendly string for an error message
-const getErrorMessage = (error) =>
-{
-    console.log(error);
-    switch(error?.name) {
-        case 'UserNotFoundException':
-            return 'A user with that email does not exist';
-        case 'UserLambdaValidationException':
-            return 'A user with that email already exists';
-        case 'NotAuthorizedException':
-            return 'The password you entered is incorrect, please try again';
-        case 'CodeMismatchException':
-            return 'The code you entered is incorrect, please try again';
-        case 'EmptyConfirmResetPasswordNewPassword':
-            return 'Please input a new password to continue';
-        case 'EmptySignInUsername':
-            return 'Please enter an email to sign in';
-        case 'EmptySignInPassword':
-            return 'Please enter a password to sign in';
-        case 'EmptyConfirmSignUpCode':
-            return 'Verification code must be entered to continue';
-        case 'EmptyResetPasswordUsername':
-            return 'Email is required to reset password';
-        case 'EmptyConfirmResetPasswordConfirmationCode':
-            return 'Verification code cannot be empty';
-        case 'LimitExceededException':
-            return 'Attempts exceeded, please try again later';
-        case 'InvalidPasswordException':
-            return 'Password does not meet the requirements, please try again';
-        case 'InvalidParameterException':
-            return 'Email has not been verified, please sign in to continue with verification';
-        default:
-            return 'Something went wrong, please try again later';
-    }
-};
-
 
 export {
     handleSignUp,
@@ -435,7 +374,6 @@ export {
     handleConfirmResetPassword,
     handleUpdatePassword,
     handleDeleteAccount,
-    GoogleSignInButton,
     handleUpdateAttributes,
     handleConfirmUserAttribute
 };

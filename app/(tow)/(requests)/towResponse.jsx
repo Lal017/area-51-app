@@ -1,10 +1,10 @@
 import Colors from "../../../constants/colors";
-import { handleAcceptTowRequest, handleFinalTowCheck, getInitialCompassHeading } from "../../../components/towComponents";
+import { handleAcceptTowRequest, handleFinalTowCheck, getInitialCompassHeading } from "../../../services/towService";
 import { useApp } from "../../../hooks/useApp";
-import { sendPushNotification } from '../../../components/notifComponents'
+import { sendPushNotification } from '../../../services/notificationService'
 import { ActionButton, Background, FloatingBlock, Tab } from "../../../components/components";
 import { ServiceStyles, Styles } from "../../../constants/styles";
-import { handleGetAddress } from "../../../components/adminComponents";
+import { handleGetAddress } from "../../../services/adminService";
 import { useLocalSearchParams, router } from "expo-router";
 import { TouchableOpacity, View, Text, KeyboardAvoidingView, Alert } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 import { AntDesign, Entypo, Ionicons, FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Accuracy, getCurrentPositionAsync } from "expo-location";
 import { post } from "aws-amplify/api";
-import { callUser, textUser, openInMaps, formatNumber } from "../../../constants/utils";
+import { callUser, textUser, openInMaps, formatNumber } from "../../../utils/utils";
 
 const TowResponse = () =>
 {

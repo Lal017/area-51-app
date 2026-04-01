@@ -4,10 +4,10 @@ import ProgressBar from 'react-native-progress/Bar';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Dimensions, KeyboardAvoidingView } from 'react-native';
-import { handleGetAppointments, iconCheck, handleSetTimes, handleCreateAppointment, handleFinalCheck, handleUpdateAppointment } from '../../components/appointmentComponents';
+import { handleGetAppointments, handleCreateAppointment, handleFinalCheck, handleUpdateAppointment } from '../../services/appointmentService';
 import { useApp } from '../../hooks/useApp';
-import { handleSendAdminNotif } from '../../components/notifComponents';
-import { Select, CalendarHeader, Background, Loading, SimpleList, Tab, FloatingBlock, ErrorDisplay } from '../../components/components';
+import { handleSendAdminNotif } from '../../services/notificationService';
+import { Select, CalendarHeader, Background, Loading, SimpleList, Tab, FloatingBlock, ErrorDisplay, iconCheck } from '../../components/components';
 import { ServiceStyles, Styles } from "../../constants/styles";
 import { MaterialIcons, Ionicons, FontAwesome, FontAwesome6, AntDesign, FontAwesome5, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useEffect, useRef, useState, useMemo } from 'react';
@@ -15,7 +15,7 @@ import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { useLocalSearchParams, router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
-import { textSize, formatDate, formatTime } from '../../constants/utils';
+import { textSize, formatDate, formatTime, setTimes } from '../../utils/utils';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -61,7 +61,7 @@ const Schedule = () =>
           (appt) => !(appt.date === appointment.date && appt.time === appointment.time)
         );
 
-        const getDay = await handleSetTimes(scheduled, appointment.date);
+        const getDay = await setTimes(scheduled, appointment.date);
         setAvailableAppointments(getDay);
       }
 
@@ -102,7 +102,7 @@ const Schedule = () =>
     setErrorMessage(undefined);
     setSelectedDay(day.dateString);
     setSelectedTime(undefined);
-    const getDay = await handleSetTimes(scheduledAppointments, day.dateString);
+    const getDay = await setTimes(scheduledAppointments, day.dateString);
     setAvailableAppointments(getDay);
   };
 

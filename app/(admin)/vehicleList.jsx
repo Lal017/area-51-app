@@ -1,7 +1,7 @@
 import Colors from "../../constants/colors";
 import { Background, Tab } from "../../components/components";
 import { Styles } from '../../constants/styles';
-import { handleListVehicles } from "../../components/vehicleComponents";
+import { handleListVehicles } from "../../services/vehicleService";
 import { useApp } from '../../hooks/useApp';
 import { View, TextInput } from "react-native";
 import { useEffect, useState } from "react";

@@ -4,15 +4,15 @@ import { Bar } from 'react-native-progress';
 import { Dimensions, Linking } from "react-native";
 import { ServiceStyles, Styles } from "../../constants/styles"
 import { useApp } from '../../hooks/useApp';
-import { handleSendAdminNotif, handleSendDriversNotif } from "../../components/notifComponents";
+import { handleSendAdminNotif, handleSendDriversNotif } from "../../services/notificationService";
 import { Background, BinarySelect, ErrorDisplay, FloatingBlock, Select, SimpleList, Tab } from "../../components/components";
-import { handleCreateTowRequest } from "../../components/towComponents";
+import { handleCreateTowRequest } from "../../services/towService";
 import { useEffect, useRef, useState } from "react";
 import { Entypo, FontAwesome, FontAwesome5, Ionicons, MaterialIcons, MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
 import { View, Text, TouchableOpacity, TextInput, ActivityIndicator, Alert, KeyboardAvoidingView } from "react-native";
 import { requestForegroundPermissionsAsync, getCurrentPositionAsync } from 'expo-location';
 import { router } from "expo-router";
-import { textSize } from "../../constants/utils";
+import { textSize } from "../../utils/utils";
 
 const screenWidth = Dimensions.get('window').width;
 

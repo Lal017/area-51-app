@@ -1,5 +1,5 @@
 import { Background } from '../components/components';
-import { handleGetCurrentUser } from '../components/authComponents';
+import { handleGetCurrentUser } from '../services/authService';
 import { Redirect } from 'expo-router';
 import { useEffect, useState } from 'react';
 import LottieView from 'lottie-react-native';
