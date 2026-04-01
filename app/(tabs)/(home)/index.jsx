@@ -6,7 +6,7 @@ import { handleGetMyAppointments } from "../../../components/appointmentComponen
 import { handleGetTowRequest } from '../../../components/towComponents';
 import { AppointmentReminder, Background } from "../../../components/components";
 import { HomeStyles, Styles } from "../../../constants/styles";
-import { useApp } from "../../../components/context";
+import { useApp } from "../../../hooks/useApp";
 import { requestForegroundPermissionsAsync } from "expo-location";
 import { Text, TouchableOpacity, Linking, View, Alert, Image, Dimensions, ActivityIndicator } from "react-native";
 import { AntDesign, Entypo, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -96,8 +96,12 @@ const Index = () =>
   useEffect(() => {
     const initUrls = async () =>
     {
-      const getUrls = await handleGetURLs();
-      setUrls(getUrls);
+      try {
+        const getUrls = await handleGetURLs();
+        setUrls(getUrls);
+      } catch (error) {
+        console.error(error);
+      }
 
       // get vehicleIds that have an appointment scheduled for pickup
       const scheduledVehiclePickups = appointments
@@ -141,7 +145,14 @@ const Index = () =>
                 );
                 return;
               }
-              const { status } = await requestForegroundPermissionsAsync();
+
+              let status;
+              try {
+                const result = await requestForegroundPermissionsAsync();
+                status = result.status;
+              } catch (error) {
+                console.error(error);
+              }
               if (status !== 'granted') {
                 Alert.alert(
                   'NOTICE',

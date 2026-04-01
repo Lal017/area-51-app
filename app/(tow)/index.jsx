@@ -5,7 +5,7 @@ import { Styles, AdminStyles } from "../../constants/styles";
 import { router } from 'expo-router';
 import { Text, TouchableOpacity, Alert, Linking, View } from 'react-native';
 import { requestBackgroundPermissionsAsync, requestForegroundPermissionsAsync } from 'expo-location';
-import { useApp } from "../../components/context";
+import { useApp } from "../../hooks/useApp";
 import { LinearGradient } from "expo-linear-gradient";
 
 const Index = () =>
@@ -37,19 +37,23 @@ const Index = () =>
                         );
                         return;
                     } else {
-                        const { status } = await requestBackgroundPermissionsAsync();
-                        if (status !== 'granted') {
-                            Alert.alert(
-                                'NOTICE',
-                                'You must give background location permissions to accept a tow request',
-                                [
-                                    {
-                                        text: 'Settings',
-                                        onPress: () => Linking.openSettings()
-                                    }
-                                ]
-                            );
-                            return;
+                        try {
+                            const { status } = await requestBackgroundPermissionsAsync();
+                            if (status !== 'granted') {
+                                Alert.alert(
+                                    'NOTICE',
+                                    'You must give location permissions to accept a tow request',
+                                    [
+                                        {
+                                            text: 'Settings',
+                                            onPress: () => Linking.openSettings()
+                                        }
+                                    ]
+                                );
+                                return;
+                            }
+                        } catch (error) {
+                            console.error(error);
                         }
                     }
                     router.push('(requests)');

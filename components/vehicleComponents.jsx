@@ -1,6 +1,5 @@
 import { listVehicles, vehiclesByUserId } from '../src/graphql/queries';
 import { createVehicle, updateVehicle, deleteVehicle } from '../src/graphql/mutations';
-import { Alert } from 'react-native';
 
 // --------------------------------------------
 //                  ADMINS
@@ -10,13 +9,15 @@ import { Alert } from 'react-native';
 const handleListVehicles = async (client) =>
 {
     try {
-        const vehicles = await client.graphql({
+        const result = await client.graphql({
             query: listVehicles
         });
 
-        return vehicles.data.listVehicles.items;
+        if (result.errors) throw new Error(result.errors[0].message);
+        else return result.data.listVehicles.items;
     } catch (error) {
-        console.error('ERROR, could not get vehicles from database:', error);
+        console.error('handleListVehicles ERROR:', error);
+        throw error;
     }
 };
 
@@ -24,7 +25,7 @@ const handleListVehicles = async (client) =>
 const handleUpdateVehiclePickupStatus = async (client, vehicleId, status) =>
 {
     try {
-        await client.graphql({
+        const result = await client.graphql({
             query: updateVehicle,
             variables: {
                 input: {
@@ -33,8 +34,11 @@ const handleUpdateVehiclePickupStatus = async (client, vehicleId, status) =>
                 }
             }
         });
+
+        if (result.errors) throw new Error(result.errors[0].message);
     } catch (error) {
-        console.error('ERROR, could not update vehicle status:', error);
+        console.error('handleUpdateVehiclePickupStatus ERROR:', error);
+        throw error;
     }
 };
 
@@ -47,7 +51,7 @@ const handleUpdateVehiclePickupStatus = async (client, vehicleId, status) =>
 const handleCreateVehicle = async (client, vehicle, userId, setVehicles) =>
 {
     try {
-        await client.graphql({
+        const result = await client.graphql({
             query: createVehicle,
             variables: {
                 input: {
@@ -62,12 +66,14 @@ const handleCreateVehicle = async (client, vehicle, userId, setVehicles) =>
             }
         });
 
-        const newVehicle = await client.graphql({ query: listVehicles });
-        await setVehicles(newVehicle.data.listVehicles.items);
+        if (result.errors) throw new Error(result.errors[0].message);
 
+        const newVehicle = await client.graphql({ query: listVehicles });
+        if (newVehicle.errors) throw new Error(newVehicle.errors[0].message);
+        else setVehicles(newVehicle.data.listVehicles.items);
     } catch (error) {
-        console.log(error.errors[0].message);
-        return 'Something went wrong, please try again later';
+        console.error('handleCreateVehicle ERROR:', error);
+        throw error;
     }
 };
 
@@ -75,7 +81,7 @@ const handleCreateVehicle = async (client, vehicle, userId, setVehicles) =>
 const handleUpdateVehicle = async (client, vehicle, vehicleId, userId, setVehicles) =>
 {
     try {
-        await client.graphql({
+        const result = await client.graphql({
             query: updateVehicle,
             variables: {
                 input: {
@@ -91,12 +97,14 @@ const handleUpdateVehicle = async (client, vehicle, vehicleId, userId, setVehicl
             }
         });
 
-        const newVehicles = await client.graphql({ query: listVehicles });
-        setVehicles(newVehicles.data.listVehicles.items);
+        if (result.errors) throw new Error(result.errors[0].message);
 
+        const newVehicles = await client.graphql({ query: listVehicles });
+        if (newVehicles.errors) throw new Error(newVehicles.errors[0].message);
+        else setVehicles(newVehicles.data.listVehicles.items);
     } catch (error) {
-        console.error(error.errors[0].message);
-        return 'Something went wrong, please try again later';
+        console.error('handleUpdateVehicle ERROR:', error);
+        throw error;
     }
 };
 
@@ -105,16 +113,18 @@ const handleGetVehicles = async (client, userId) =>
 {
     try {
         // get vehicles info from database
-        const vehiclesInfo = await client.graphql({
+        const result = await client.graphql({
             query: vehiclesByUserId,
             variables: {
                 userId: userId,
             }
         });
         
-        return vehiclesInfo.data.vehiclesByUserId.items;
+        if (result.errors) throw new Error(result.errors[0].message);
+        else return result.data.vehiclesByUserId.items;
     } catch (error) {
-        console.error('ERROR, could not get vehicles:', error);
+        console.error('handleGetVehicles ERROR:', error);
+        throw error;
     }
 };
 
@@ -126,7 +136,8 @@ const handleNotifUpdateVehicle = async (client, userId, setVehicles) =>
         const getVehicles = await handleGetVehicles(client, userId);
         setVehicles(getVehicles);
     } catch (error) {
-        console.error('ERROR, could not update vehicle after receiving notification:', error);
+        console.error('handleNotifUpdateVehicle:', error);
+        throw error;
     }
 };
 
@@ -134,7 +145,7 @@ const handleNotifUpdateVehicle = async (client, userId, setVehicles) =>
 const handleUpdateVehiclePickup = async (client, vehicleId, userId, setVehicles) =>
 {
     try {
-        await client.graphql({
+        const result = await client.graphql({
             query: updateVehicle,
             variables: {
                 input: {
@@ -144,10 +155,14 @@ const handleUpdateVehiclePickup = async (client, vehicleId, userId, setVehicles)
             }
         });
 
+        if (result.errors) throw new Error(result.errors[0].message);
+
         const getVehicles = await handleGetVehicles(client, userId);
-        setVehicles(getVehicles);
+        if (getVehicles.errors) throw new Error(getVehicles.errors[0].message);
+        else setVehicles(getVehicles);
     } catch (error) {
-        console.error('ERROR, could not update vehicle status:', error);
+        console.error('handleUpdateVehiclePickup ERROR:', error);
+        throw error;
     }
 };
 
@@ -155,7 +170,7 @@ const handleUpdateVehiclePickup = async (client, vehicleId, userId, setVehicles)
 const handleDeleteVehicle = async (client, vehicleId, setVehicles) =>
 {
     try {
-        await client.graphql({
+        const result = await client.graphql({
             query: deleteVehicle,
             variables: {
                 input: {
@@ -164,12 +179,14 @@ const handleDeleteVehicle = async (client, vehicleId, setVehicles) =>
             }
         });
 
-        const newVehicles = await client.graphql({ query: listVehicles });
-        setVehicles(newVehicles.data.listVehicles.items);
+        if (result.errors) throw new Error(result.errors[0].message);
 
+        const newVehicles = await client.graphql({ query: listVehicles });
+        if (newVehicles.errors) throw new Error(newVehicles.errors[0].message);
+        else setVehicles(newVehicles.data.listVehicles.items);
     } catch (error) {
-        console.error(error.errors[0].message);
-        return 'Something went wrong, please try again later';
+        console.error('handleDeleteVehicle ERROR:', error);
+        throw error;
     }
 };
 
@@ -184,10 +201,12 @@ const handleDeleteAllVehicles = async (client, userId) =>
             }
         });
 
+        if (result.errors) throw new Error(result.errors[0].message);
+
         const vehicles = result.data.vehiclesByUserId.items;
 
-        for (const vehicle of vehicles) {
-            await client.graphql({
+        await Promise.all(vehicles.map(async (vehicle) => {
+            const result = await client.graphql({
                 query: deleteVehicle,
                 variables: {
                     input: {
@@ -195,9 +214,11 @@ const handleDeleteAllVehicles = async (client, userId) =>
                     }
                 }
             });
-        }
+            if (result.errors) throw new Error(result.errors[0].message);
+        }));
     } catch (error) {
-        console.error('ERROR, could not delete all vehicles', error);
+        console.error('handleDeleteAllVehicles ERROR:', error);
+        throw error;
     }
 };
 

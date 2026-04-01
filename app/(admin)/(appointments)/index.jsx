@@ -8,7 +8,7 @@ import { AntDesign, Entypo } from '@expo/vector-icons';
 import { AgendaList, CalendarProvider, Calendar } from 'react-native-calendars';
 import { useState, useEffect, useMemo } from 'react';
 import { router } from 'expo-router';
-import { useApp } from '../../../components/context';
+import { useApp } from '../../../hooks/useApp';
 import { textSize, formatTime } from '../../../constants/utils';
 
 const AppointmentIndex = () =>

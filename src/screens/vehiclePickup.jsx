@@ -2,7 +2,7 @@ import Colors from '../../constants/colors';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ActionButton, Background, ErrorDisplay, SimpleList, Tab } from '../../components/components';
-import { useApp } from '../../components/context';
+import { useApp } from '../../hooks/useApp';
 import { ServiceStyles, Styles } from '../../constants/styles';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { useEffect, useMemo, useRef, useState } from 'react';

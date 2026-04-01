@@ -5,7 +5,7 @@ import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { BackgroundAlt, Loading, Tab } from '../../../components/components';
 import { callUser, textUser } from '../../../constants/utils';
 import { Styles, TowStyles } from '../../../constants/styles';
-import { useApp } from '../../../components/context';
+import { useApp } from '../../../hooks/useApp';
 import { getDistance, getInstructionText, snapToRoute, getArrivalTime, sendDriverLocation, getInitialCompassHeading, handleCompleteTowRequest } from '../../../components/towComponents';
 import { useEffect, useRef, useState } from 'react';
 import { View, Text, TouchableOpacity, Alert } from 'react-native';
@@ -21,7 +21,6 @@ import { Entypo, MaterialIcons, Ionicons, MaterialCommunityIcons } from '@expo/v
 import { speak, stop } from 'expo-speech';
 import { sendPushNotification } from '../../../components/notifComponents';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { handleGetAddress } from '../../../components/adminComponents';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const TowProgress = () =>
@@ -45,8 +44,8 @@ const TowProgress = () =>
     const [ mapBearing, setMapBearing ] = useState();
     const [ isMute, setIsMute ] = useState(false);
     const [ rerouting, setRerouting ] = useState(false);
-    const [ address, setAddress ] = useState();
     const [ showContent, setShowContent ] = useState(false);
+    const [ loading, setLoading ] = useState(false);
 
     const totalDurationRef = useRef();
     const isMuteRef = useRef(isMute);
@@ -64,57 +63,61 @@ const TowProgress = () =>
 
     // get the array of coordinates to map the route
     const getRoute = async (start, destination, driverBearing) => {
-        // calculates the route
-        const request = post({
-            apiName: 'area51RestApi',
-            path: '/getRoute',
-            options: {
-                body: {
-                    start,
-                    destination,
-                    userHeading: driverBearing
+        try {
+            // calculates the route
+            const request = post({
+                apiName: 'area51RestApi',
+                path: '/getRoute',
+                options: {
+                    body: {
+                        start,
+                        destination,
+                        userHeading: driverBearing
+                    }
                 }
-            }
-        });
+            });
 
-        const { body } = await request.response;
-        const routeData = await body.json();
+            const { body } = await request.response;
+            const routeData = await body.json();
 
-        const steps = routeData.Routes[0].Legs[0].VehicleLegDetails.TravelSteps;
-        totalDurationRef.current = routeData.Routes[0].Summary.Duration;
+            const steps = routeData.Routes[0].Legs[0].VehicleLegDetails.TravelSteps;
+            totalDurationRef.current = routeData.Routes[0].Summary.Duration;
 
-        const {travelTime, arrivalTime} = getArrivalTime(routeData.Routes[0].Summary.Duration);
-        setEstimatedDistance(getDistance(routeData.Routes[0].Summary.Distance));
-        setEstimatedTravelTime(travelTime);
-        setEstimatedArrivalTime(arrivalTime);
+            const {travelTime, arrivalTime} = getArrivalTime(routeData.Routes[0].Summary.Duration);
+            setEstimatedDistance(getDistance(routeData.Routes[0].Summary.Distance));
+            setEstimatedTravelTime(travelTime);
+            setEstimatedArrivalTime(arrivalTime);
         
-        // decode polyline
-        const decoded = decode(routeData.Routes[0].Legs[0].Geometry.Polyline);
-        const snappedCoords = decoded.polyline.map(([lat, lon]) => [lon, lat]);
-        const line = lineString(snappedCoords);
+            // decode polyline
+            const decoded = decode(routeData.Routes[0].Legs[0].Geometry.Polyline);
+            const snappedCoords = decoded.polyline.map(([lat, lon]) => [lon, lat]);
+            const line = lineString(snappedCoords);
 
-        const stepRanges = steps.map((step, i) => {
-            const startIndex = step.GeometryOffset;
-            const endIndex = i < steps.length - 1 ? steps[i + 1].GeometryOffset : snappedCoords.length - 1;
+            const stepRanges = steps.map((step, i) => {
+                const startIndex = step.GeometryOffset;
+                const endIndex = i < steps.length - 1 ? steps[i + 1].GeometryOffset : snappedCoords.length - 1;
 
-            const startCoord = snappedCoords[startIndex];
-            const endCoord = snappedCoords[endIndex];
+                const startCoord = snappedCoords[startIndex];
+                const endCoord = snappedCoords[endIndex];
 
-            const segment = lineSlice(point(startCoord), point(endCoord), line);
-            const segmentDistance = length(segment, { units: 'meters' });
+                const segment = lineSlice(point(startCoord), point(endCoord), line);
+                const segmentDistance = length(segment, { units: 'meters' });
 
-            return { ...step, startCoord, endCoord, segmentDistance };
-        });
+                return { ...step, startCoord, endCoord, segmentDistance };
+            });
 
-        let cumulative = 0;
-        for (let i = 0; i < stepRanges.length; i++) {
-            stepRanges[i].startDistance = cumulative;
-            cumulative += stepRanges[i].segmentDistance;
-            stepRanges[i].endDistance = cumulative;
+            let cumulative = 0;
+            for (let i = 0; i < stepRanges.length; i++) {
+                stepRanges[i].startDistance = cumulative;
+                cumulative += stepRanges[i].segmentDistance;
+                stepRanges[i].endDistance = cumulative;
+            }
+
+            setSteps(stepRanges);
+            return snappedCoords;
+        } catch (error) {
+            console.error(error);
         }
-
-        setSteps(stepRanges);
-        return snappedCoords;
     };
 
     useEffect(() => {
@@ -150,10 +153,6 @@ const TowProgress = () =>
                 // set direction for camera
                 const getMapBearing = bearing(point(route[0]), point(route[1]));
                 setMapBearing(getMapBearing);
-
-                // get address
-                const getAddress = await handleGetAddress(request.latitude, request.longitude);
-                setAddress(getAddress);
             } catch (error) {
                 console.error('ERROR, could not initialize map:', error);
             }
@@ -177,78 +176,81 @@ const TowProgress = () =>
                 distanceInterval: 1,
             },
             async (location) => {
-                const rawCoords = [location.coords.longitude, location.coords.latitude];
-                const { coords: snappedCoords, offRouteDistance, distanceAlongRoute } = snapToRoute(rawCoords, routeCoords);
-
-                // send coordinates to backend
                 try {
-                    await sendDriverLocation(driverId, location.coords.latitude, location.coords.longitude);
-                    console.log('sent');
-                } catch (error) {
-                    console.log('error sending coordinates:', error);
-                }
+                    const rawCoords = [location.coords.longitude, location.coords.latitude];
+                    const { coords: snappedCoords, offRouteDistance, distanceAlongRoute } = snapToRoute(rawCoords, routeCoords);
 
-                // handle rerouting
-                if (offRouteDistance > 50) {
-                    setRerouting(true);
-                    // get route polyline
-                    const start = [location.coords.longitude, location.coords.latitude];
-                    const destination = [request.longitude, request.latitude];
-
-                    const route = await getRoute(start, destination, location.coords.heading);
-                    setRouteCoords(route);
-
-                    // snap user to route
-                    const { coords: initialSnap } = snapToRoute(rawCoords, route);
-                    setUserLocation(initialSnap);
-
-                    // set direction for camera
-                    const getMapBearing = bearing(point(route[0]), point(route[1]));
-                    setMapBearing(getMapBearing);
-                    setRerouting(false);
-                    return;
-                }
-                if (steps && steps.length > 0) {
-                    const currentStep = steps.find(
-                        step => distanceAlongRoute >= step.startDistance && distanceAlongRoute < step.endDistance
-                    );
-
-                if (currentStep) {
-                    let currentIndex = steps.indexOf(currentStep);
-                    if (steps[currentIndex + 1].Type === 'Continue') { currentIndex++; }
-                    const distanceUntilNextStep = steps[currentIndex].endDistance - distanceAlongRoute;
-
-                    const progress = distanceAlongRoute / routeLength;
-                    const remainingTime = totalDurationRef.current * (1 - progress);
-
-                    const { travelTime } = getArrivalTime(remainingTime);
-                    setEstimatedTravelTime(travelTime);
-
-                    setEstimatedDistance(getDistance(routeLength - distanceAlongRoute));
-
-                    const { instructionText, instructionIcon, speechText } = getInstructionText(steps[currentIndex + 1], getDistance(distanceUntilNextStep));
-                    
-                    // speak
-                    if (!isMuteRef.current && (currentIndex !== lastIndex || distanceUntilNextStep === 60)) {
-                        speak(speechText);
-                        lastIndex = currentIndex;
+                    // send coordinates to backend
+                    try {
+                        await sendDriverLocation(driverId, location.coords.latitude, location.coords.longitude);
+                    } catch (error) {
+                        // error sending cordinated HANDLE THIS SOMEHOW
                     }
 
-                    setCurrentInstruction(instructionText);
-                    setDirection(instructionIcon);
-                } else if (distanceAlongRoute >= steps[steps.length - 1].endDistance - 10) {
-                    console.log('Arrived at destination');
-                }
-                }
-                // add 10 meters to current distance along route
-                const lookAheadDistance = Math.min(distanceAlongRoute + 10, routeLength);
+                    // handle rerouting
+                    if (offRouteDistance > 50) {
+                        setRerouting(true);
+                        // get route polyline
+                        const start = [location.coords.longitude, location.coords.latitude];
+                        const destination = [request.longitude, request.latitude];
 
-                // calculate total length of route so you dont go off the route
-                const pointAhead = along(line, lookAheadDistance, { units: 'meters' });
-                const getMapBearing = bearing(point(snappedCoords), point(pointAhead.geometry.coordinates));
-   
-                setMapBearing(getMapBearing);
-                setUserLocation(snappedCoords);
+                        const route = await getRoute(start, destination, location.coords.heading);
+                        setRouteCoords(route);
+
+                        // snap user to route
+                        const { coords: initialSnap } = snapToRoute(rawCoords, route);
+                        setUserLocation(initialSnap);
+
+                        // set direction for camera
+                        const getMapBearing = bearing(point(route[0]), point(route[1]));
+                        setMapBearing(getMapBearing);
+                        setRerouting(false);
+                        return;
+                    }
+                    if (steps && steps.length > 0) {
+                        const currentStep = steps.find(
+                            step => distanceAlongRoute >= step.startDistance && distanceAlongRoute < step.endDistance
+                        );
+
+                    if (currentStep) {
+                        let currentIndex = steps.indexOf(currentStep);
+                        if (steps[currentIndex + 1].Type === 'Continue') { currentIndex++; }
+                        const distanceUntilNextStep = steps[currentIndex].endDistance - distanceAlongRoute;
+
+                        const progress = distanceAlongRoute / routeLength;
+                        const remainingTime = totalDurationRef.current * (1 - progress);
+
+                        const { travelTime } = getArrivalTime(remainingTime);
+                        setEstimatedTravelTime(travelTime);
+
+                        setEstimatedDistance(getDistance(routeLength - distanceAlongRoute));
+
+                        const { instructionText, instructionIcon, speechText } = getInstructionText(steps[currentIndex + 1], getDistance(distanceUntilNextStep));
+                        
+                        // speak
+                        if (!isMuteRef.current && (currentIndex !== lastIndex || distanceUntilNextStep === 60)) {
+                            speak(speechText);
+                            lastIndex = currentIndex;
+                        }
+
+                        setCurrentInstruction(instructionText);
+                        setDirection(instructionIcon);
+                    } else if (distanceAlongRoute >= steps[steps.length - 1].endDistance - 10) {
+                        console.log('Arrived at destination');
+                    }
+                    }
+                    // add 10 meters to current distance along route
+                    const lookAheadDistance = Math.min(distanceAlongRoute + 10, routeLength);
+
+                    // calculate total length of route so you dont go off the route
+                    const pointAhead = along(line, lookAheadDistance, { units: 'meters' });
+                    const getMapBearing = bearing(point(snappedCoords), point(pointAhead.geometry.coordinates));
+    
+                    setMapBearing(getMapBearing);
+                    setUserLocation(snappedCoords);
+                } catch (error) {
+                    console.log('error updating locatin', error);
+                }
             });
         })();
 
@@ -429,10 +431,17 @@ const TowProgress = () =>
                                                 {
                                                     text: 'Yes',
                                                     onPress: async () => {
-                                                        await handleCompleteTowRequest(client, request.id);
-                                                        await sendPushNotification(request?.user?.pushToken, 'Tow Request', 'Your tow request has been completed!', { type: 'TOW_RESPONSE' });
-                                                        if (router.canDismiss()) router.dismissAll();
-                                                        router.replace('/');
+                                                        if (loading) return;
+                                                        setLoading(true);
+                                                        try {
+                                                            await handleCompleteTowRequest(client, request.id);
+                                                            await sendPushNotification(request?.user?.pushToken, 'Tow Request', 'Your tow request has been completed!', { type: 'TOW_RESPONSE' });
+                                                            if (router.canDismiss()) router.dismissAll();
+                                                            router.replace('/');
+                                                        } catch (error) {
+                                                            console.error(error);
+                                                        }
+                                                        setLoading(false);
                                                     }
                                                 }
                                             ]

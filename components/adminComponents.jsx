@@ -3,7 +3,6 @@ import { updateUser } from '../src/graphql/mutations';
 import { reverseGeocodeAsync } from 'expo-location';
 import { uploadData, list, getUrl, remove } from 'aws-amplify/storage';
 import { router } from 'expo-router';
-import { Alert } from 'react-native';
 import { post } from 'aws-amplify/api';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -30,7 +29,7 @@ const handleMakeUserTowDriver = async (username) =>
 
         return str;
     } catch (error) {
-        console.error('handleMakeUserTowDriver ERROR:');
+        console.error('handleMakeUserTowDriver ERROR:', error);
         throw error;
     }
 };
@@ -40,7 +39,7 @@ const handleAssignTowDriverId = async (client, userId) =>
     try {
         const driverId = uuidv4();
 
-        await client.graphql({
+        const result = await client.graphql({
             query: updateUser,
             variables: {
                 input: {
@@ -50,6 +49,8 @@ const handleAssignTowDriverId = async (client, userId) =>
                 }
             }
         });
+
+        if (result.errors) throw new Error(result.errors[0].message);
     } catch (error) {
         console.error('handleAssignTowDriverId ERROR:', error);
         throw error;
@@ -71,7 +72,8 @@ const handleListHomeImages = async () =>
 
         return result.items;
     } catch (error) {
-        console.error('ERROR, could not get home images:', error);
+        console.error('handleListHomeImages ERROR:', error);
+        throw error;
     }
 };
 
@@ -89,7 +91,8 @@ const handleGetURLs = async () =>
 
         return urls;
     } catch (error) {
-        console.error('ERROR, could not get URLs for home images:', error);
+        console.error('handleGetURLs ERROR:', error);
+        throw error;
     }
 };
 
@@ -106,7 +109,8 @@ const handleUploadHomeImage = async (file, fileType) =>
 
         router.replace('(admin)/homeSettings');
     } catch (error) {
-        console.error('ERROR, could not upload home image:', error);
+        console.error('handleUploadHomeImage ERROR:', error);
+        throw error;
     }
 };
 
@@ -121,7 +125,8 @@ const handleRemoveHomeImage = async (url) =>
         });
         router.replace('(admin)/homeSettings');
     } catch (error) {
-        console.error('ERROR, could not remove home image:', error);
+        console.error('handleRemoveHomeImage ERROR:', error);
+        throw error;
     }
 };
 
@@ -147,13 +152,10 @@ const handleUploadInvoice = async (identityId, file, name) =>
             }
         }).result;
 
-        Alert.alert(
-            'Invoice Upload',
-            'Invoice has been uploaded to customer account',
-            [{ text: 'OK' }]
-        );
+        // replace "invoice has been uploaded" with react native toast
     } catch (error) {
-        console.error('ERROR, could not upload invoice:', error);
+        console.error('handleUploadInvoice ERROR:', error);
+        throw error;
     }
 };
 
@@ -167,7 +169,8 @@ const handleListInvoices = async (identityId) =>
 
         return result.items;
     } catch (error) {
-        console.error('ERROR, could not get invoices:', error);
+        console.error('handleListInvoices ERROR:', error);
+        throw error;
     }
 };
 
@@ -188,13 +191,10 @@ const handleUploadEstimate = async (identityId, file, name) =>
             }
         }).result;
 
-        Alert.alert(
-            'Estimate Upload',
-            'Estimate has been uploaded to customer account',
-            [{ text: 'OK' }]
-        );
+        // replace "estimate has been uploaded" with react native toast
     } catch (error) {
-        console.error('ERROR, could not upload estimate:', error);
+        console.error('handleUploadEstimate ERROR:', error);
+        throw error;
     }
 };
 
@@ -208,7 +208,8 @@ const handleListEstimates = async (identityId) =>
 
         return result.items;
     } catch (error) {
-        console.error('ERROR, could not get estimates:', error);
+        console.error('handleListEstimates ERROR:', error);
+        throw error;
     }
 };
 
@@ -219,9 +220,11 @@ const handleGetUrl = async (pdfPath) =>
         const { url } = await getUrl({
             path: pdfPath
         });
+
         return url.toString();
     } catch (error) {
-        console.error('ERROR, could not get URL:', error);
+        console.error('handleGetUrl ERROR:', error);
+        throw error;
     }
 };
 
@@ -241,7 +244,8 @@ const handleGetAddress = async (latitude, longitude) =>
             return `${address.name} ${address.street}, ${address.city}, ${address.region} ${address.postalCode}`;
         }
     } catch (error) {
-        console.error('ERROR, could not get address:', error);
+        console.error('handleGetAddress ERROR:', error);
+        throw error;
     }
 };
 
@@ -264,7 +268,7 @@ const uriToUint8Array = async (uri) =>
 
         return bytes;
     } catch (error) {
-        console.error('ERROR, could not convert to blob:', error);
+        console.error('uriToUint8Array ERROR:', error);
         throw error;
     }
 };

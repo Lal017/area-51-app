@@ -1,14 +1,14 @@
 import AccountEdit from '../../src/screens/accountEdit';
 import Modal from 'react-native-modal';
 import { ActionButton, Background, CustHeader, Loading } from "../../components/components";
-import { AppProvider, useApp } from "../../components/context";
+import { AppProvider, useApp } from "../../hooks/useApp";
 import { registerForPushNotifications } from "../../components/notifComponents";
 import { handleCreateUser, handleUpdateUser, handleGetUser } from '../../components/userComponents';
 import { handleGetCurrentUser } from "../../components/authComponents";
 import { Styles } from '../../constants/styles';
 import { Stack, router } from "expo-router";
 import { useEffect, useRef, useState } from 'react';
-import { Linking, View, Text, TouchableOpacity } from 'react-native';
+import { Linking, View, Text } from 'react-native';
 import { generateClient } from "aws-amplify/api";
 import { getPermissionsAsync, addNotificationReceivedListener, addNotificationResponseReceivedListener } from "expo-notifications";
 import { fetchAuthSession, fetchUserAttributes } from "aws-amplify/auth";
@@ -51,11 +51,15 @@ const AdminContent = () =>
     const onRefresh = async () =>
     {
         setRefreshing(true);
-        const permission = await getPermissionsAsync();
-        if (permission.granted) {
-            setPermissionScreen(false);
-            if (router.canDismiss()) router.dismissAll();
-            router.replace('(admin)');
+        try {
+            const permission = await getPermissionsAsync();
+            if (permission.granted) {
+                setPermissionScreen(false);
+                if (router.canDismiss()) router.dismissAll();
+                router.replace('(admin)');
+            }
+        } catch (error) {
+            console.error('Could not refresh:', error);
         }
         setRefreshing(false);
     };
@@ -74,16 +78,20 @@ const AdminContent = () =>
                 return;
             }
 
-            // generate client
-            const genClient = generateClient();
-            setClient(genClient);
+            try {
+                // generate client
+                const genClient = generateClient();
+                setClient(genClient);
 
-            // get and set cognito info
-            const userInfo = await handleGetCurrentUser();
-            const access_arr = userInfo.accessToken.payload["cognito:groups"];
-            const getAccess = access_arr.includes('Admins') ? 'Admins' : access_arr.includes('TowDrivers') ? 'TowDrivers' : 'Customers';
-            setAccess(getAccess);
-            setUserId(userInfo.accessToken.payload.sub);
+                // get and set cognito info
+                const userInfo = await handleGetCurrentUser();
+                const access_arr = userInfo.accessToken.payload["cognito:groups"];
+                const getAccess = access_arr.includes('Admins') ? 'Admins' : access_arr.includes('TowDrivers') ? 'TowDrivers' : 'Customers';
+                setAccess(getAccess);
+                setUserId(userInfo.accessToken.payload.sub);
+            } catch (error) {
+                console.error('Error initializing app:', error);
+            }
 
         }
 
@@ -186,12 +194,12 @@ const AdminContent = () =>
     // Listeners for push notifications
     useEffect(() => {
         // triggered when the notification is actually received. foreground and background
-        notificationListener.current = addNotificationReceivedListener(notification => {
+        notificationListener.current = addNotificationReceivedListener(() => {
             console.log('Notification recieved');
         });
 
         // triggered when the user taps on the notification
-        responseListener.current = addNotificationResponseReceivedListener(response => {
+        responseListener.current = addNotificationResponseReceivedListener(() => {
             router.push('/index');
         });
 

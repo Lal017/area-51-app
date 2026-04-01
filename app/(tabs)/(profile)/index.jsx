@@ -1,7 +1,7 @@
 import Colors from "../../../constants/colors";
 import { ProfileStyles, Styles } from "../../../constants/styles";
 import { Background, Tab } from "../../../components/components";
-import { useApp } from "../../../components/context";
+import { useApp } from "../../../hooks/useApp";
 import { View, Text } from "react-native";
 import Animated, { Easing , useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from "react-native-reanimated";
 import { AntDesign, FontAwesome6, Ionicons, MaterialIcons } from "@expo/vector-icons";

@@ -1,10 +1,8 @@
 import { Stack } from 'expo-router';
 import { CustHeader } from '../../../components/components';
-import { useApp } from '../../../components/context';
 
 const homeLayout = () =>
 {
-    const { towRequest } = useApp();
     return(
         <Stack
             screenOptions={{

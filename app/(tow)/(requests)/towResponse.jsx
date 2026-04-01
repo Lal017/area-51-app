@@ -1,6 +1,6 @@
 import Colors from "../../../constants/colors";
 import { handleAcceptTowRequest, handleFinalTowCheck, getInitialCompassHeading } from "../../../components/towComponents";
-import { useApp } from "../../../components/context";
+import { useApp } from "../../../hooks/useApp";
 import { sendPushNotification } from '../../../components/notifComponents'
 import { ActionButton, Background, FloatingBlock, Tab } from "../../../components/components";
 import { ServiceStyles, Styles } from "../../../constants/styles";
@@ -37,22 +37,26 @@ const TowResponse = () =>
 
     const getWaitTime = async (start, destination, driverBearing) => {
         // calculates the route
-        const request = post({
-            apiName: 'area51RestApi',
-            path: '/getRoute',
-            options: {
-                body: {
-                    start,
-                    destination,
-                    userHeading: driverBearing
+        try {
+            const request = post({
+                apiName: 'area51RestApi',
+                path: '/getRoute',
+                options: {
+                    body: {
+                        start,
+                        destination,
+                        userHeading: driverBearing
+                    }
                 }
-            }
-        });
+            });
 
-        const { body } = await request.response;
-        const routeData = await body.json();
-        
-        setWaitTime(routeData.Routes[0].Summary.Duration);
+            const { body } = await request.response;
+            const routeData = await body.json();
+            
+            setWaitTime(routeData.Routes[0].Summary.Duration);
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     useEffect(() => {

@@ -1,9 +1,7 @@
 import AccountEdit from '../../src/screens/accountEdit';
 import Modal from 'react-native-modal';
-import * as TaskManager from 'expo-task-manager';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ActionButton, Background, CustHeader, Loading } from "../../components/components";
-import { AppProvider, useApp } from "../../components/context";
+import { AppProvider, useApp } from "../../hooks/useApp";
 import { registerForPushNotifications } from "../../components/notifComponents";
 import { handleGetCurrentUser } from "../../components/authComponents";
 import { Styles } from '../../constants/styles';
@@ -11,43 +9,9 @@ import { handleGetUser, handleCreateUser, handleUpdateUser } from "../../compone
 import { getPermissionsAsync, addNotificationReceivedListener, addNotificationResponseReceivedListener } from "expo-notifications";
 import { Stack, router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { View, Text, TouchableOpacity, Linking } from 'react-native';
-import { generateClient, post } from "aws-amplify/api";
+import { View, Text, Linking } from 'react-native';
+import { generateClient } from "aws-amplify/api";
 import { fetchUserAttributes, fetchAuthSession } from "@aws-amplify/auth";
-import { useNavigation } from '@react-navigation/native';
-
-const LOCATION_TASK_NAME = "area51-background-location-task";
-
-// define task to track tow truck drivers location
-TaskManager.defineTask(LOCATION_TASK_NAME, ({data, error}) => {
-    if (error || !data) return;
-
-    const { locations } = data;
-    const { latitude, longitude } = locations[0].coords;
-
-    AsyncStorage.getItem('requestId').then((requestId) => {
-        if (!requestId) return;
-
-        // invoke here
-        const restOperation = post({
-            apiName: 'area51RestApi',
-            path: '/updateDriverLocation',
-            options: {
-                body: {
-                    requestId: requestId,
-                    latitude: latitude,
-                    longitude: longitude
-                }
-            }
-        });
-
-        restOperation.response.then((event) => {
-            event.body.json().then((response) => {
-                console.log(response);
-            }).catch((error) => console.error('ERROR, could not parse lambda response:', error));
-        }).catch((error) => console.error('ERROR, could not get lambda response:', error));
-    }).catch((error) => console.error('ERROR, could not get requestId from local storage:', error));
-});
 
 const TowDriverContent = () =>
 {
@@ -79,7 +43,6 @@ const TowDriverContent = () =>
     const [ ready, setReady ] = useState(false);
     const [ permissionScreen, setPermissionScreen ] = useState(false);
     const [ refreshing, setRefreshing ] = useState(false);
-    const navigate = useNavigation();
 
     // notification listeners
     const notificationListener = useRef();
@@ -88,11 +51,15 @@ const TowDriverContent = () =>
     const onRefresh = async () =>
     {
         setRefreshing(true);
-        const permission = await getPermissionsAsync();
-        if (permission.granted) {
-            setPermissionScreen(false);
-            if (router.canDismiss()) router.dismissAll();
-            router.replace('(tow)');
+        try {
+            const permission = await getPermissionsAsync();
+            if (permission.granted) {
+                setPermissionScreen(false);
+                if (router.canDismiss()) router.dismissAll();
+                router.replace('(tow)');
+            }
+        } catch (error) {
+            console.error(error);
         }
         setRefreshing(false);
     }
@@ -111,16 +78,20 @@ const TowDriverContent = () =>
                 return;
             }
 
-            // generate client
-            const genClient = generateClient();
-            setClient(genClient);
+            try {
+                // generate client
+                const genClient = generateClient();
+                setClient(genClient);
 
-            // get and set cognito info
-            const userInfo = await handleGetCurrentUser();
-            const access_arr = userInfo.accessToken.payload["cognito:groups"];
-            const getAccess = access_arr.includes('Admins') ? 'Admins' : access_arr.includes('TowDrivers') ? 'TowDrivers' : 'Customers';
-            setAccess(getAccess);
-            setUserId(userInfo.accessToken.payload.sub);
+                // get and set cognito info
+                const userInfo = await handleGetCurrentUser();
+                const access_arr = userInfo.accessToken.payload["cognito:groups"];
+                const getAccess = access_arr.includes('Admins') ? 'Admins' : access_arr.includes('TowDrivers') ? 'TowDrivers' : 'Customers';
+                setAccess(getAccess);
+                setUserId(userInfo.accessToken.payload.sub);
+            } catch (error) {
+                console.error('error initializing app:', error);
+            }
         };
 
         initializeApp();

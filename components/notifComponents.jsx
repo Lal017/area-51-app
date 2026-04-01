@@ -11,26 +11,27 @@ import { post } from 'aws-amplify/api';
 // sends a push notification to a specific user
 const sendPushNotification = async (expoPushToken, title, body, data) =>
 {
-    const message = {
-        to: expoPushToken,
-        sound: 'default',
-        title: title,
-        body: body,
-        data: data
-    };
-
     try {
-        await fetch('https://exp.host/--/api/v2/push/send', {
+        const response = await fetch('https://exp.host/--/api/v2/push/send', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
                 'Accept-Encoding': 'gzip, deflate',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(message),
+            body: JSON.stringify({
+                to: expoPushToken,
+                sound: 'default',
+                title: title,
+                body: body,
+                data: data
+            }),
         });
+
+        if (!response.ok) throw new Error(`Push Notification Failed: ${response.status}`);
     } catch (error) {
-        console.error('Error sending push notification:', error);
+        console.error('sendPushNotification ERROR:', error);
+        throw error;
     }
 };
 
@@ -43,25 +44,26 @@ const sendMassPushNotification = async (client, title, body, data) =>
             .filter(user => user.access === 'Customers')
             .map(user => user.pushToken);
 
-        const message = {
-            to: expoPushTokens,
-            sound: 'default',
-            title: title,
-            body: body,
-            data: data
-        };
-
-        await fetch('https://exp.host/--/api/v2/push/send', {
+        const response = await fetch('https://exp.host/--/api/v2/push/send', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
                 'Accept-Encoding': 'gzip, deflate',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(message),
+            body: JSON.stringify({
+                to: expoPushTokens,
+                sound: 'default',
+                title: title,
+                body: body,
+                data: data
+            })
         });
+
+        if (!response.ok) throw new Error(`Mass Push Notification Failed: ${response.status}`)
     } catch (error) {
-        console.error('ERROR, could not send mass push notification:', error);
+        console.error('sendMassPushNotification ERROR:', error);
+        throw error;
     }
 };
 
@@ -90,10 +92,11 @@ const handleSendAdminNotif = async (title, content, data) =>
         const response = await body.json();
 
         if (response?.data?.listUsers?.items?.length <= 0) {
-            console.error('ERROR, could not find any admin accounts', response.data.listUsers);
+            throw new Error('Could not find any admin accounts');
         }
     } catch (error) {
-        console.error('ERROR, could not send notification to admins:', error);
+        console.error('handleSendAdminNotif ERROR:', error);
+        throw error;
     }
 };
 
@@ -117,10 +120,11 @@ const handleSendDriversNotif = async (title, content, data) =>
         const response = await body.json();
 
         if (response?.data?.listUsers?.items?.length <= 0) {
-            console.error('ERROR, could not find TowDrivers', response.data.listUsers);
+            throw new Error('Could not find any tow truck driver accounts');
         }
     } catch (error) {
-        console.error('ERROR, could not send notification to TowDrivers', error);
+        console.error('handleSendDriversNotif ERROR:', error);
+        throw error;
     }
 };
 
@@ -130,7 +134,7 @@ const handleSendDriversNotif = async (title, content, data) =>
 
 const handleRegistrationError = (errMessage) =>
 {
-    console.error('ERROR,', errMessage);
+    console.error('registration ERROR,', errMessage);
     throw new Error(errMessage);
 };
 
@@ -144,19 +148,22 @@ const registerForPushNotifications = async () =>
     });
 
     if (Device.isDevice) {
-        const { status: existingStatus } = await Notifications.getPermissionsAsync();
-        let finalStatus = existingStatus;
-        if (existingStatus !== 'granted') {
-            const { status } = await Notifications.requestPermissionsAsync();
-            finalStatus = status;
-        }
-        if (finalStatus !== 'granted') {
-            handleRegistrationError('Permission was not granted to get token');
-            return;
+        try {
+            const { status: existingStatus } = await Notifications.getPermissionsAsync();
+            let finalStatus = existingStatus;
+            if (existingStatus !== 'granted') {
+                const { status } = await Notifications.requestPermissionsAsync();
+                finalStatus = status;
+            }
+            if (finalStatus !== 'granted') {
+                handleRegistrationError('Permission was not granted to get token');
+                return;
+            }
+        } catch (error) {
+            handleRegistrationError('Could not request notification permissions');
         }
         
         const projectId = Constants?.expoConfig?.extra?.eas?.projectId ?? Constants?.easConfig?.projectId;
-        
         if (!projectId) {
             handleRegistrationError('Project ID not found');
         }

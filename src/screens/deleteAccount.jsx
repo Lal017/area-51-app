@@ -2,10 +2,10 @@ import Colors from '../../constants/colors';
 import { ActionButton, Background, ErrorDisplay } from '../../components/components';
 import { handleDeleteAccount } from '../../components/authComponents';
 import { Styles } from '../../constants/styles';
-import { useApp } from '../../components/context';
+import { useApp } from '../../hooks/useApp';
 import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 import { useState } from 'react';
-import { Ionicons, FontAwesome } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { textSize } from '../../constants/utils';
 
 const DeleteAccount = () =>
@@ -65,7 +65,11 @@ const DeleteAccount = () =>
                             secondaryColor={Colors.errorShade}
                             onPress={async () => {
                                 if (!inputEmail) { setMissingEmail(true); return; }
-                                setErrorMessage(await handleDeleteAccount(client, userId, identityId, email, inputEmail));
+                                try {
+                                    await handleDeleteAccount(client, userId, identityId, email, inputEmail);
+                                } catch (error) {
+                                    setErrorMessage(error);
+                                }
                             }}
                         />
                     </View>

@@ -3,7 +3,7 @@ import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import { Bar } from 'react-native-progress';
 import { Dimensions, Linking } from "react-native";
 import { ServiceStyles, Styles } from "../../constants/styles"
-import { useApp } from '../../components/context';
+import { useApp } from '../../hooks/useApp';
 import { handleSendAdminNotif, handleSendDriversNotif } from "../../components/notifComponents";
 import { Background, BinarySelect, ErrorDisplay, FloatingBlock, Select, SimpleList, Tab } from "../../components/components";
 import { handleCreateTowRequest } from "../../components/towComponents";

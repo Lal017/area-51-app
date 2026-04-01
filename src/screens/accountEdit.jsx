@@ -2,10 +2,10 @@ import Colors from "../../constants/colors";
 import { Styles } from "../../constants/styles";
 import { ActionButton, Background, ErrorDisplay } from "../../components/components";
 import { handleUpdateAttributes } from "../../components/authComponents";
-import { useApp } from "../../components/context";
+import { useApp } from "../../hooks/useApp";
 import { useState } from "react";
 import { View, Text, TextInput, KeyboardAvoidingView } from "react-native";
-import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { textSize } from "../../constants/utils";
 
 const AccountEdit = () =>
@@ -102,18 +102,21 @@ const AccountEdit = () =>
                         primaryColor={Colors.primary}
                         secondaryColor={Colors.primaryShade}
                         onPress={async () => {
-                            const errMsg = await handleUpdateAttributes(
-                                isMissingAttr,
-                                editEmail,
-                                editFirstName,
-                                editLastName,
-                                editPhone.replace(/\D/g, ''),
-                                setFirstName,
-                                setLastName,
-                                setPhoneNumber
-                            );
-                            if (!errMsg) setIsMissingAttr(false);
-                            else setErrorMessage(errMsg);
+                            try {
+                                await handleUpdateAttributes(
+                                    isMissingAttr,
+                                    editEmail,
+                                    editFirstName,
+                                    editLastName,
+                                    editPhone.replace(/\D/g, ''),
+                                    setFirstName,
+                                    setLastName,
+                                    setPhoneNumber
+                                );
+                                setIsMissingAttr(false);
+                            } catch (error) {
+                                setErrorMessage(error);
+                            }
                         }}
                     />
                 </View>

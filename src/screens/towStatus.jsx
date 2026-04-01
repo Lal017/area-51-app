@@ -1,8 +1,8 @@
 import LottieView from 'lottie-react-native';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import Colors from '../../constants/colors';
-import { Styles, ServiceStyles, TowStyles } from '../../constants/styles';
-import { useApp } from "../../components/context";
+import { Styles, TowStyles } from '../../constants/styles';
+import { useApp } from "../../hooks/useApp";
 import { Background, Tab } from "../../components/components";
 import { callUser, formatTime } from '../../constants/utils';
 import { handleSendAdminNotif } from '../../components/notifComponents';

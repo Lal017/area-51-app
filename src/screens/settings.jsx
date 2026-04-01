@@ -1,7 +1,7 @@
 import { ProfileStyles, Styles } from '../../constants/styles'
 import { Background, FloatingBlock, Tab } from '../../components/components';
 import { formatNumber } from '../../constants/utils';
-import { useApp } from '../../components/context';
+import { useApp } from '../../hooks/useApp';
 import { View, Text } from 'react-native';
 import { router } from 'expo-router';
 import { AntDesign, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';

@@ -1,4 +1,3 @@
-import Colors from '../constants/colors';
 import { Styles } from '../constants/styles';
 import { appointmentsByUserId, listAppointments } from '../src/graphql/queries';
 import { createAppointment, deleteAppointment, updateAppointment } from '../src/graphql/mutations';
@@ -16,9 +15,11 @@ const handleGetAllAppointments = async (client) =>
             query: listAppointments
         });
 
-        return result.data.listAppointments.items;
+        if (result.errors) throw new Error(result.errors[0].message);
+        else return result.data.listAppointments.items;
     } catch (error) {
-        console.error('ERROR, could not get appointments:', error);
+        console.error('handleGetAllAppointments ERROR:', error);
+        throw error;
     }
 };
 
@@ -32,7 +33,7 @@ const handleGetMyAppointments = async (client, userId) =>
     try {
         const today = new Date().toLocaleDateString('en-CA');
 
-        const appointments = await client.graphql({
+        const result = await client.graphql({
             query: appointmentsByUserId,
             variables: {
                 userId: userId,
@@ -42,9 +43,11 @@ const handleGetMyAppointments = async (client, userId) =>
             }
         });
 
-        return appointments.data.appointmentsByUserId.items;
+        if (result.errors) throw new Error(result.errors[0].message);
+        else return result.data.appointmentsByUserId.items;
     } catch (error) {
-        console.error('ERROR, could not get appointments', error);
+        console.error('handleGetMyAppointments ERROR:', error);
+        throw error;
     }
 };
 
@@ -70,7 +73,8 @@ const handleGetAppointments = async () =>
 
         return str;
     } catch (error) {
-        console.error('ERROR, could not get appointments', error);
+        console.error('handleGetAppointments ERROR:', error);
+        throw error;
     }
 };
 
@@ -91,18 +95,23 @@ const handleSetTimes = async (appointments, day) =>
 // checks if another customer already has an appointment on this day and time
 const handleFinalCheck = async ({date, time}) =>
 {
-    const appointments = await handleGetAppointments();
-    return appointments.some(appointment =>
-        appointment.date === date &&
-        appointment.time === time
-    );
+    try {
+        const appointments = await handleGetAppointments();
+        return appointments.some(appointment =>
+            appointment.date === date &&
+            appointment.time === time
+        );
+    } catch (error) {
+        console.error('handleFinalCheck ERROR:', error);
+        throw error;
+    }
 };
 
 // used to create an appointment
 const handleCreateAppointment = async ({client, date, time, service, notes, userId, vehicle, setAppointments}) =>
 {
     try {
-        await client.graphql({
+        const result = await client.graphql({
             query: createAppointment,
             variables: {
                 input: {
@@ -121,12 +130,15 @@ const handleCreateAppointment = async ({client, date, time, service, notes, user
                 }
             }
         });
+
+        if (result.errors) throw new Error(result.errors[0].message);
         
         const getAppointments = await handleGetMyAppointments(client, userId);
         setAppointments(getAppointments);
         return getAppointments;
     } catch (error) {
-        console.error('ERROR, could not create appointment', error);
+        console.error('handleCreateAppointment ERROR:', error);
+        throw error;
     }
 };
 
@@ -134,7 +146,7 @@ const handleCreateAppointment = async ({client, date, time, service, notes, user
 const handleUpdateAppointment = async (client, appointmentId, date, time, service, notes, userId, vehicle, setAppointments) =>
 {
     try {
-        await client.graphql({
+        const result = await client.graphql({
             query: updateAppointment,
             variables: {
                 input: {
@@ -155,11 +167,14 @@ const handleUpdateAppointment = async (client, appointmentId, date, time, servic
             }
         });
 
+        if (result.errors) throw new Error(result.errors[0].message);
+
         const getAppointments = await handleGetMyAppointments(client, userId);
         setAppointments(getAppointments);
         
     } catch (error) {
-        console.error('ERROR, could not update appointment:', error);
+        console.error('handleUpdateAppointment ERROR:', error);
+        throw error;
     }
 };
 
@@ -167,7 +182,7 @@ const handleUpdateAppointment = async (client, appointmentId, date, time, servic
 const handleDeleteAppointment = async (client, appointmentId, userId, setAppointments) =>
 {
     try {
-        await client.graphql({
+        const result = await client.graphql({
             query: deleteAppointment,
             variables: {
                 input: {
@@ -176,10 +191,13 @@ const handleDeleteAppointment = async (client, appointmentId, userId, setAppoint
             }
         });
 
+        if (result.errors) throw new Error(result.errors[0].message);
+
         const getAppointments = await handleGetMyAppointments(client, userId);
         setAppointments(getAppointments);
     } catch (error) {
-        console.error('ERROR, could not delete appointment:', error);
+        console.error('handleDeleteAppointment ERROR:', error);
+        throw error;
     }
 };
 
@@ -194,20 +212,20 @@ const handleDeleteAllAppointments = async (client, userId) =>
             }
         });
 
+        if (result.errors) throw new Error(result.errors[0].message);
+
         const appointments = result.data.appointmentsByUserId.items;
 
-        for (const appointment of appointments) {
-            await client.graphql({
+        await Promise.all(appointments.map(async (appointment) => {
+            const result = await client.graphql({
                 query: deleteAppointment,
-                variables: {
-                    input: {
-                        id: appointment.id
-                    }
-                }
+                variables: { input: { id: appointment.id }}
             });
-        }
+            if (result.errors) throw new Error(result.errors[0].message);
+        }));
     } catch (error) {
-        console.error('ERROR, could not delete all appointments:', error);
+        console.error('handleDeleteAllAppointments ERROR:', error);
+        throw error;
     }
 };
 

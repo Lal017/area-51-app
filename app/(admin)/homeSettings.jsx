@@ -1,7 +1,7 @@
 import * as ImagePicker from 'expo-image-picker';
 import Carousel from 'react-native-reanimated-carousel';
 import Colors from '../../constants/colors';
-import { useApp } from '../../components/context';
+import { useApp } from '../../hooks/useApp';
 import { AdminStyles, Styles } from '../../constants/styles';
 import { ActionButton, Background, FloatingBlock, Loading, Tab } from '../../components/components';
 import { sendMassPushNotification } from '../../components/notifComponents';
@@ -29,26 +29,35 @@ const HomeSettings = () =>
 
     const pickImage = async () =>
     {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ['images'],
-            allowsEditing: true,
-            aspect: [16, 9],
-            quality: 1,
-        });
+        try {
+            let result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ['images'],
+                allowsEditing: true,
+                aspect: [16, 9],
+                quality: 1,
+            });
 
-        if (!result.canceled) {
-            setImage(result.assets[0].uri);
-            setFileType(result.assets[0].mimeType.split('/').pop());
+            if (!result.canceled) {
+                setImage(result.assets[0].uri);
+                setFileType(result.assets[0].mimeType.split('/').pop());
+            }
+        } catch (error) {
+            console.error('PickImage ERROR:', error);
+            throw error;
         }
     };
 
     useEffect(() => {
         const uploadImage = async () =>
         {
-            setLoading(true);
-            await handleUploadHomeImage(image, fileType);
-            setImage(undefined);
-            setLoading(false);
+            try {
+                setLoading(true);
+                await handleUploadHomeImage(image, fileType);
+                setImage(undefined);
+                setLoading(false);
+            } catch (error) {
+                console.error('upload ERROR:', error);
+            }
         };
 
         if (image) {
@@ -59,9 +68,13 @@ const HomeSettings = () =>
     useEffect(() => {
         const initUrls = async () =>
         {
-            const getUrls = await handleGetURLs();
-            setUrls(getUrls);
-            setLoading(false);
+            try {
+                const getUrls = await handleGetURLs();
+                setUrls(getUrls);
+                setLoading(false);
+            } catch (error) {
+                console.error('Error initializing homeSettings:', error);
+            }
         }
 
         initUrls();
@@ -122,9 +135,13 @@ const HomeSettings = () =>
                                                                     onPress: async () => {
                                                                         if (loading) return;
                                                                         setLoading(true);
-                                                                        const imageUrl = urls?.[currentIndex]?.url;
-                                                                        if (!imageUrl) return;
-                                                                        await handleRemoveHomeImage(imageUrl);
+                                                                        try {
+                                                                            const imageUrl = urls?.[currentIndex]?.url;
+                                                                            if (!imageUrl) return;
+                                                                            await handleRemoveHomeImage(imageUrl);
+                                                                        } catch (error) {
+                                                                            console.error('remove image ERROR:', error);
+                                                                        }
                                                                         setLoading(false);
                                                                     }
                                                                 }
@@ -206,10 +223,7 @@ const HomeSettings = () =>
                                                 setLoading(true);
                                                 try {
                                                     await sendMassPushNotification(client, title, body, { type: 'CUSTOM_NOTIFICATION' });
-                                                    Alert.alert(
-                                                        'Notification Sent',
-                                                        'Your notification has been sent!'
-                                                    );
+                                                    // use react native toast to show confirmation message sent
                                                     setBody('');
                                                     setTitle('');
                                                 } catch (error) {

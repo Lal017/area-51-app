@@ -11,8 +11,8 @@ import { handleSendAdminNotif, registerForPushNotifications } from "../../compon
 import { handleCreateUser, handleUpdateUser, handleGetUser } from '../../components/userComponents';
 import { handleGetCurrentUser } from "../../components/authComponents";
 import { Styles } from "../../constants/styles";
-import { AppProvider, useApp } from "../../components/context";
-import { View, Text, TouchableOpacity, Alert, Linking } from "react-native";
+import { AppProvider, useApp } from "../../hooks/useApp";
+import { View, Text, TouchableOpacity, Linking } from "react-native";
 import { router, Tabs} from "expo-router";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useEffect, useRef, useState } from 'react';
@@ -86,11 +86,15 @@ const TabsContent = () =>
     const onPermissionRefresh = async () =>
     {
         setRefreshing(true);
-        const permission = await getPermissionsAsync();
-        if (permission.granted) {
-            setPermissionScreen(false);
-            if (router.canDismiss()) router.dismissAll();
-            router.replace('(tabs)');
+        try {
+            const permission = await getPermissionsAsync();
+            if (permission.granted) {
+                setPermissionScreen(false);
+                if (router.canDismiss()) router.dismissAll();
+                router.replace('(tabs)');
+            }
+        } catch (error) {
+            console.error(error);
         }
         setRefreshing(false);
     };
@@ -113,20 +117,24 @@ const TabsContent = () =>
             const genClient = generateClient();
             setClient(genClient);
 
-            // get and set cognito info
-            const userInfo = await handleGetCurrentUser();
-            const access_arr = userInfo.accessToken.payload["cognito:groups"];
-            const getAccess = access_arr.includes('Admins') ? 'Admins' : access_arr.includes('TowDrivers') ? 'TowDrivers' : 'Customers';
-            setAccess(getAccess);
-            setUserId(userInfo.accessToken.payload.sub);
-            
-            // get local storage data
-            const savedInvoice = await AsyncStorage.getItem('invoice');
-            setNewInvoice(JSON.parse(savedInvoice));
-            const savedEstimate = await AsyncStorage.getItem('estimate');
-            setNewEstimate(JSON.parse(savedEstimate));
-            const savedCustomNotif = await AsyncStorage.getItem('customNotification');
-            setCustomNotification(JSON.parse(savedCustomNotif));
+            try {
+                // get and set cognito info
+                const userInfo = await handleGetCurrentUser();
+                const access_arr = userInfo.accessToken.payload["cognito:groups"];
+                const getAccess = access_arr.includes('Admins') ? 'Admins' : access_arr.includes('TowDrivers') ? 'TowDrivers' : 'Customers';
+                setAccess(getAccess);
+                setUserId(userInfo.accessToken.payload.sub);
+                
+                // get local storage data
+                const savedInvoice = await AsyncStorage.getItem('invoice');
+                setNewInvoice(JSON.parse(savedInvoice));
+                const savedEstimate = await AsyncStorage.getItem('estimate');
+                setNewEstimate(JSON.parse(savedEstimate));
+                const savedCustomNotif = await AsyncStorage.getItem('customNotification');
+                setCustomNotification(JSON.parse(savedCustomNotif));
+            } catch (error) {
+                console.error(error);
+            }
         };
 
         initializeApp();
@@ -295,28 +303,32 @@ const TabsContent = () =>
         notificationListener.current = addNotificationReceivedListener(async (notification) => {
             const { type } = notification.request.content.data;
 
-            if (type === "TOW_RESPONSE") {
-                await handleNotifUpdateTowRequest(client, userId, setTowRequest);
-            }
-            else if (type === "NEW_INVOICE") {
-                await setNewInvoice(true);
-            }
-            else if (type === "NEW_ESTIMATE") {
-                await setNewEstimate(true);
-            }
-            else if (type === "VEHICLE_PICKUP") {
-                await handleNotifUpdateVehicle(client, userId, setVehicles);
-                setVehiclePickup(prev => !prev);
-            }
-            else if (type === "DRIVER_ACCOUNT") {
-                setRefreshPrompt(true);
-                const userInfo = await handleGetCurrentUser();
-                const access_arr = userInfo.accessToken.payload["cognito:groups"];
-                const getAccess = access_arr.includes('Admins') ? 'Admins' : access_arr.includes('TowDrivers') ? 'TowDrivers' : 'Customers';
-                setAccess(getAccess);
-            }
-            else if (type === "CUSTOM_NOTIFICATION") {
-                await setCustomNotification(notification.request.content);
+            try {
+                if (type === "TOW_RESPONSE") {
+                    await handleNotifUpdateTowRequest(client, userId, setTowRequest);
+                }
+                else if (type === "NEW_INVOICE") {
+                    await setNewInvoice(true);
+                }
+                else if (type === "NEW_ESTIMATE") {
+                    await setNewEstimate(true);
+                }
+                else if (type === "VEHICLE_PICKUP") {
+                    await handleNotifUpdateVehicle(client, userId, setVehicles);
+                    setVehiclePickup(prev => !prev);
+                }
+                else if (type === "DRIVER_ACCOUNT") {
+                    setRefreshPrompt(true);
+                    const userInfo = await handleGetCurrentUser();
+                    const access_arr = userInfo.accessToken.payload["cognito:groups"];
+                    const getAccess = access_arr.includes('Admins') ? 'Admins' : access_arr.includes('TowDrivers') ? 'TowDrivers' : 'Customers';
+                    setAccess(getAccess);
+                }
+                else if (type === "CUSTOM_NOTIFICATION") {
+                    await setCustomNotification(notification.request.content);
+                }
+            } catch (error) {
+                console.error(error);
             }
         });
 
@@ -362,13 +374,6 @@ const TabsContent = () =>
                             await signOut({global: true });
                         } catch (error) {
                             console.error('ERROR, could not sign out', error);
-                            Alert.alert(
-                                'Error',
-                                error.message,
-                                [
-                                    { text: 'Ok'}
-                                ]
-                            );
                         }
                     }}
                 >

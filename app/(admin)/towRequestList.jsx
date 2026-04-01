@@ -2,7 +2,7 @@ import Colors from '../../constants/colors';
 import MaskedView from '@react-native-masked-view/masked-view';
 import Animated, { Easing, withRepeat, withTiming, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import { View, TextInput, TouchableOpacity } from 'react-native';
-import { useApp } from '../../components/context';
+import { useApp } from '../../hooks/useApp';
 import { AdminStyles, Styles } from '../../constants/styles';
 import { useEffect, useRef, useState } from 'react';
 import { listTowRequests } from '../../src/graphql/queries';
@@ -32,9 +32,12 @@ const TowRequestList = () =>
                 query: listTowRequests
             });
 
+            if (getRequests.errors) {
+                console.error('Error refreshing screen:', getRequests.errors[0].message);
+            }
             setRequests(getRequests.data.listTowRequests.items);  
         } catch (error) {
-            console.log('Error getting tow requests:', error);
+            console.error('Error getting tow requests:', error);
         }
 
         setRefreshing(false);
@@ -48,6 +51,9 @@ const TowRequestList = () =>
                     query: listTowRequests
                 });
 
+                if (getRequests.error) {
+                    console.error('Error getting tow requests:', getRequests.errors[0].message);
+                }
                 setRequests(getRequests.data.listTowRequests.items);  
             } catch (error) {
                 console.log('Error getting tow requests:', error);

@@ -1,14 +1,12 @@
 import Colors from '../constants/colors';
 import React from 'react';
-import { useApp } from './context';
+import { useApp } from '../hooks/useApp';
 import { formatDate, formatTime } from '../constants/utils';
 import { Styles, HomeStyles } from '../constants/styles';
-import { handleDeleteAppointment, iconCheck } from './appointmentComponents';
-import { handleSendAdminNotif } from './notifComponents';
 import { View, Text, TouchableOpacity, ScrollView, Animated as RNAnimated, ActivityIndicator, RefreshControl, Alert } from 'react-native';
 import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
-import { AntDesign, FontAwesome, Feather, Ionicons, Entypo, MaterialIcons } from '@expo/vector-icons';
+import { AntDesign, FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
 import { signOut } from '@aws-amplify/auth';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -63,13 +61,6 @@ const CustHeader = ({title, index}) =>
                             await signOut({global: true });
                         } catch (error) {
                             console.error('ERROR, could not sign out', error);
-                            Alert.alert(
-                                'Error',
-                                error.message,
-                                [
-                                    { text: 'Ok'}
-                                ]
-                            );
                         }
                         setLoading(false);
                     }}

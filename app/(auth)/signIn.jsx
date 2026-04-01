@@ -5,7 +5,7 @@ import { ActionButton, AuthBackground, ErrorDisplay } from '../../components/com
 import { handleSignIn } from '../../components/authComponents';
 import { Text, TextInput, View, TouchableOpacity, Image } from 'react-native';
 import { useState } from 'react';
-import { FontAwesome, Ionicons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { Link } from 'expo-router';
 
 const SignIn = () =>
@@ -73,11 +73,15 @@ const SignIn = () =>
                     primaryColor={Colors.secondary}
                     secondaryColor={Colors.secondaryShade}
                     onPress={async () => {
-                        setErrorMessage(await handleSignIn(email, password));
-                        if (!email) setMissingEmail(true);
-                        else setMissingEmail(false);
-                        if (!password) setMissingPassword(true);
-                        else setMissingPassword(false);
+                        try {
+                            await handleSignIn(email, password);
+                        } catch (error) {
+                            setErrorMessage(error.message);
+                            if (!email) setMissingEmail(true);
+                            else setMissingEmail(false);
+                            if (!password) setMissingPassword(true);
+                            else setMissingPassword(false);
+                        }
                     }}
                 />
             </View>
@@ -90,7 +94,7 @@ const SignIn = () =>
                 </View>
                 <View style={[Styles.infoContainer, {alignItems: 'center', rowGap: 20}]}>
                     <Link href="/(auth)/signUp" style={Styles.text}>Need an account? <Text style={{textDecorationLine: 'underline'}}>Sign Up</Text></Link>
-                    <Link href="/(auth)/resetPasswordConfirm" style={Styles.text}>Forgot Password?</Link>
+                    <Link href="/(auth)/resetPassword" style={Styles.text}>Forgot Password?</Link>
                 </View>
             </View>
         </AuthBackground>

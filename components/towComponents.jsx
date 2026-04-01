@@ -32,9 +32,11 @@ const handleGetAllTowRequests = async (client) =>
             }
         });
 
-        return result.data.listTowRequests.items;
+        if (result.errors) throw new Error(result.errors[0].message);
+        else return result.data.listTowRequests.items;
     } catch (error) {
-        console.error('ERROR, could not get all tow requests:', error);
+        console.error('handleGetAllTowRequests ERROR:', error);
+        throw error;
     }
 };
 
@@ -48,12 +50,15 @@ const handleFinalTowCheck = async (client, towId) =>
             }
         });
 
+        if (result.errors) throw new Error(result.errors[0].message);
+
         if (result.data.getTowRequest.status === 'REQUESTED') {
             return false;
         }
         return true;
     } catch (error) {
-        console.error('ERROR, could not get tow request:', error);
+        console.error('handleFinalCheck ERROR:', error);
+        throw error;
     }
 };
 
@@ -77,22 +82,19 @@ const handleUpdateCustomersTowRequestStatus = async (client, requestId, status, 
     }
 
     try {
-        await client.graphql({
+        const result = await client.graphql({
             query: updateTowRequest,
             variables: { input }
         });
 
+        if (result.errors) throw new Error(result.errors[0].message);
+
         if (status !== 'COMPLETED') {
-            Alert.alert(
-                'Sent',
-                'Customer request has been updated',
-                [
-                    { text: 'OK' }
-                ]
-            );
+            // use react native toast to show that customer request has been updated
         }
     } catch (error) {
-        console.error('ERROR, could not update tow request:', error);
+        console.error('handleUpdateCustomersTowRequestStatus ERROR:', error);
+        throw error;
     }
 };
 
@@ -107,7 +109,7 @@ const handleAcceptTowRequest = async (client, requestId, status, waitTime, drive
     try {
         const currentTime = new Date().toISOString();
 
-        await client.graphql({
+        const result = await client.graphql({
             query: updateTowRequest,
             variables: {
                 input: {
@@ -121,8 +123,11 @@ const handleAcceptTowRequest = async (client, requestId, status, waitTime, drive
                 }
             }
         });
+
+        if (result.errors) throw new Error(result.errors[0].message);
     } catch (error) {
-        console.error('ERROR, could not accept tow request:', error);
+        console.error('handleAcceptTowRequest ERROR:', error);
+        throw error;
     }
 };
 
@@ -130,7 +135,7 @@ const handleAcceptTowRequest = async (client, requestId, status, waitTime, drive
 const handleCompleteTowRequest = async (client, requestId) =>
 {
     try {
-        await client.graphql({
+        const result = await client.graphql({
             query: updateTowRequest,
             variables: {
                 input: {
@@ -139,8 +144,11 @@ const handleCompleteTowRequest = async (client, requestId) =>
                 }
             }
         });
+
+        if (result.errors) throw new Error(result.errors[0].message);
     } catch (error) {
-        console.error('ERROR, could not mark as complete:', error);
+        console.error('handleCompleteTowRequest ERROR:', error);
+        throw error;
     }
 };
 
@@ -347,7 +355,8 @@ const sendDriverLocation = async (driver_id, latitude, longitude) =>
         console.log(result);
 
     } catch (error) {
-        console.error('ERROR, could not update driver location:', error);
+        console.error('sendDriverLocation ERROR:', error);
+        throw error;
     }
 };
 
@@ -418,11 +427,13 @@ const handleCreateTowRequest = async (client, userId, vehicle, location, request
             }
         });
 
-        await setTowRequest(result.data.createTowRequest);
+        if (result.errors) throw new Error(result.errors[0].message);
 
+        setTowRequest(result.data.createTowRequest);
         router.replace('towStatus');
     } catch (error) {
-        console.error('ERROR, could not create tow request: ');
+        console.error('handleCreateTowRequest ERROR:', error);
+        throw error;
     }
 };
 
@@ -430,7 +441,7 @@ const handleCreateTowRequest = async (client, userId, vehicle, location, request
 const handleGetTowRequest = async (client, id) =>
 {
     try {
-        const request = await client.graphql({
+        const result = await client.graphql({
             query: towRequestsByUserId,
             variables: {
                 userId: id,
@@ -443,9 +454,11 @@ const handleGetTowRequest = async (client, id) =>
             }
         });
 
-        return request.data.towRequestsByUserId.items[0];
+        if (result.errors) throw new Error(result.errors[0].message);
+        else return result.data.towRequestsByUserId.items[0];
     } catch (error) {
-        console.error('ERROR, could not get tow request:', error);
+        console.error('handleGetTowRequest ERROR:', error);
+        throw error;
     }
 };
 
@@ -458,7 +471,8 @@ const handleNotifUpdateTowRequest = async (client, userId, setTowRequest) =>
         const update = await handleGetTowRequest(client, userId);
         setTowRequest(update);
     } catch (error) {
-        console.error('ERROR, could not update tow request after receiving notification:', error);
+        console.error('handleNotifUpdateTowRequest', error);
+        throw error;
     }
 };
 
@@ -466,7 +480,7 @@ const handleNotifUpdateTowRequest = async (client, userId, setTowRequest) =>
 const handleUpdateTowRequestStatus = async ({client, towId, userId, status, setTowRequest}) =>
 {
     try {
-        await client.graphql({
+        const result = await client.graphql({
             query: updateTowRequest,
             variables: {
                 input: {
@@ -475,11 +489,14 @@ const handleUpdateTowRequestStatus = async ({client, towId, userId, status, setT
                 }
             }
         });
+
+        if (result.errors) throw new Error(result.errors[0].message);
         
         const getRequest = await handleGetTowRequest(client, userId);
         setTowRequest(getRequest);
     } catch (error) {
-        console.error('ERROR, could not update tow request:', error);
+        console.error('handleUpdateTowRequestStatus ERROR:', error);
+        throw error;
     }
 };
 
@@ -494,10 +511,12 @@ const handleDeleteAllTowRequests = async (client, userID) =>
             }
         });
 
+        if (result.errors) throw new Error(result.errors[0].message);
+
         const requests = result.data.towRequestsByUserId.items;
 
-        for (const request of requests) {
-            await client.graphql({
+        await Promise.all(requests.map(async (request) => {
+            const result = await client.graphql({
                 query: deleteTowRequest,
                 variables: {
                     input: {
@@ -505,23 +524,30 @@ const handleDeleteAllTowRequests = async (client, userID) =>
                     }
                 }
             });
-        }
+            if (result.errors) throw new Error(result.errors[0].message);
+        }));
     } catch (error) {
-        console.error('ERROR, could not delete all tow requests:', error);
+        console.error('handleDeleteAllTowRequests ERROR:', error);
+        throw error;
     }
 };
 
 const createLocationClient = async () => {
-    const session = await fetchAuthSession();
+    try {
+        const session = await fetchAuthSession();
 
-    return new LocationClient({
-        region: "us-east-2",
-        credentials: {
-            accessKeyId: session.credentials.accessKeyId,
-            secretAccessKey: session.credentials.secretAccessKey,
-            sessionToken: session.credentials.sessionToken
-        }
-    });
+        return new LocationClient({
+            region: "us-east-2",
+            credentials: {
+                accessKeyId: session.credentials.accessKeyId,
+                secretAccessKey: session.credentials.secretAccessKey,
+                sessionToken: session.credentials.sessionToken
+            }
+        });
+    } catch (error) {
+        console.error('createLocationClient ERROR:', error);
+        throw error;
+    }
 }
 
 export {

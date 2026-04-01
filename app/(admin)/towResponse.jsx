@@ -3,7 +3,7 @@ import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import { handleUpdateCustomersTowRequestStatus } from '../../components/towComponents';
 import { sendPushNotification } from '../../components/notifComponents';
 import { handleGetAddress } from '../../components/adminComponents';
-import { useApp } from '../../components/context';
+import { useApp } from '../../hooks/useApp';
 import { ActionButton, Background, FloatingBlock, Tab } from '../../components/components';
 import { Styles, ServiceStyles } from '../../constants/styles';
 import { View, Text, TouchableOpacity, Alert, KeyboardAvoidingView } from 'react-native';
@@ -33,8 +33,12 @@ const TowResponse = () =>
 
     useEffect(() => {
         const fetchAddress = async () => {
-            const getAddress = await handleGetAddress(request.latitude, request.longitude);
-            setAddress(getAddress);
+            try {
+                const getAddress = await handleGetAddress(request.latitude, request.longitude);
+                setAddress(getAddress);
+            } catch (error) {
+                console.error(error);
+            }
         };
 
         fetchAddress();

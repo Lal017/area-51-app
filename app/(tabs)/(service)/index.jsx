@@ -1,6 +1,6 @@
 import LottieView from "lottie-react-native";
 import Colors from "../../../constants/colors";
-import { useApp } from "../../../components/context";
+import { useApp } from "../../../hooks/useApp";
 import { Background } from "../../../components/components";
 import { ServiceStyles, Styles } from "../../../constants/styles";
 import { router } from "expo-router";

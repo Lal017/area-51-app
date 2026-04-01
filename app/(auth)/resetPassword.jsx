@@ -2,7 +2,7 @@ import Colors from "../../constants/colors";
 import { Styles, AuthStyles } from "../../constants/styles";
 import { handleResetPassword } from "../../components/authComponents";
 import { ActionButton, AuthBackground, ErrorDisplay } from "../../components/components";
-import { FontAwesome, Ionicons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { useState } from "react";
 import { View, Text, TextInput, Image } from "react-native";
 import { Link } from "expo-router";
@@ -20,7 +20,7 @@ const ResetPassword = () =>
                     style={AuthStyles.logoImg}
                 />
             </View>
-            <View style={[Styles.block, {alignItems: 'center'}]}>
+            <View style={Styles.block}>
                 <View style={Styles.infoContainer}>
                     <Text style={Styles.headerTitle}>Reset Password</Text>
                     <Text style={Styles.tabHeader}>Enter your email to search for your account</Text>
@@ -37,15 +37,21 @@ const ResetPassword = () =>
                         style={[Styles.input, missingEmail && {borderColor: 'red'}]}
                     />
                 </View>
-                { errorMessage && (
-                    <ErrorDisplay message={errorMessage}/>
-                )}
+            </View>
+            { errorMessage && (
+                <ErrorDisplay message={errorMessage}/>
+            )}
+            <View style={Styles.block}>
                 <ActionButton
                     text='Continue'
                     onPress={async () => {
-                        setErrorMessage(await handleResetPassword(email));
-                        if (!email) setMissingEmail(true);
-                        else setMissingEmail(false);
+                        try {
+                            await handleResetPassword(email);
+                        } catch (error) {
+                            setErrorMessage(error.message);
+                            if (!email) setMissingEmail(true);
+                            else setMissingEmail(false);
+                        }
                     }}
                 />
                 <Link href="/(auth)/signIn" style={[Styles.text, {textAlign: 'center'}]}>Sign In</Link>

@@ -6,7 +6,7 @@ import { AuthStyles, Styles } from "../../constants/styles";
 import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Image, Alert } from "react-native";
 import { useState } from "react";
 import { Link } from "expo-router";
-import { Entypo, FontAwesome, Ionicons } from "@expo/vector-icons";
+import { Entypo, Ionicons } from "@expo/vector-icons";
 
 const SignUp = () =>
 {
@@ -18,7 +18,6 @@ const SignUp = () =>
     const [phoneNumber, setPhoneNumber] = useState();
     const [check, setCheck] = useState(false);
     const [step, setStep] = useState(1);
-    const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [errorMessage, setErrorMessage] = useState(undefined);
@@ -29,7 +28,7 @@ const SignUp = () =>
     const [missingLastName, setMissingLastName] = useState(false);
     const [missingPhoneNumber, setMissingPhoneNumber] = useState(false);
 
-    const continueButton = async () =>
+    const continueButton = () =>
     {
         if (!email) setMissingEmail(true);
         else setMissingEmail(false);
@@ -61,23 +60,6 @@ const SignUp = () =>
         }
         else {
             setErrorMessage('All fields are required to continue');
-        }
-    };
-
-    const signUpButton = async () =>
-    {
-        if (!firstName) setMissingFirstName(true);
-        else setMissingFirstName(false);
-        if (!lastName) setMissingLastName(true);
-        else setMissingLastName(false);
-        if (!phoneNumber) setMissingPhoneNumber(true);
-        else setMissingPhoneNumber(false);
-        
-        if (!firstName || !lastName || !phoneNumber) {
-            setErrorMessage('All fields are required to continue');
-        } else {
-            setErrorMessage(await handleSignUp(firstName, lastName, email, password, phoneNumber));
-            await AsyncStorage.setItem('wantsToBeTowDriver', JSON.stringify(check));
         }
     };
 
@@ -171,11 +153,12 @@ const SignUp = () =>
                         )}
                         <ActionButton
                             text='Continue'
-                            onPress={async () => await continueButton()}
+                            onPress={() => continueButton()}
                         />
                     </View>
                 ) : step === 2 ? (
-                    <View style={[Styles.block, {alignItems: 'center'}]}>
+                    <>
+                    <View style={Styles.block}>
                         <Text style={[Styles.title, {paddingLeft: 20, width: '100%'}]}>Sign Up</Text>
                         <View style={Styles.inputWrapper}>
                             <Ionicons name='person' size={20} style={Styles.inputIcon} />
@@ -209,16 +192,32 @@ const SignUp = () =>
                                 style={[Styles.input, missingPhoneNumber && {borderColor: 'red'}]}
                             />
                         </View>
-                        { errorMessage && step === 2 && (
-                            <ErrorDisplay message={errorMessage}/>
-                        )}
+                    </View>
+                    { errorMessage && step === 2 && (
+                        <ErrorDisplay message={errorMessage}/>
+                    )}
+                    <View style={Styles.block}>
                         <ActionButton
                             text='Sign Up'
                             primaryColor={Colors.primary}
                             secondaryColor={Colors.primaryShade}
-                            onPress={async () => await signUpButton()}
+                            onPress={async () => {
+                                try {                                
+                                    await handleSignUp(firstName, lastName, email, password, phoneNumber);
+                                    await AsyncStorage.setItem('wantsToBeTowDriver', JSON.stringify(check));
+                                } catch (error) {
+                                    if (!firstName) setMissingFirstName(true);
+                                    else setMissingFirstName(false);
+                                    if (!lastName) setMissingLastName(true);
+                                    else setMissingLastName(false);
+                                    if (!phoneNumber) setMissingPhoneNumber(true);
+                                    else setMissingPhoneNumber(false);
+                                    setErrorMessage(error.message);
+                                }
+                            }}
                         />
                     </View>
+                    </>
                 ) : null}
                 <View style={[Styles.block, {alignItems: 'center'}]}>
                     <View style={Styles.hr} />

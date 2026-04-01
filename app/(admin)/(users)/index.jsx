@@ -1,7 +1,7 @@
 import Colors from "../../../constants/colors";
 import { AdminStyles, Styles } from '../../../constants/styles';
 import { handleListUsers } from "../../../components/userComponents";
-import { useApp } from '../../../components/context';
+import { useApp } from '../../../hooks/useApp';
 import { Background, Tab } from "../../../components/components";
 import { View, TextInput, TouchableOpacity } from "react-native";
 import { useEffect, useRef, useState } from "react";
@@ -26,16 +26,26 @@ const UserList = () =>
     const onRefresh = async () =>
     {
         setRefreshing(true);
-        const getUsers = await handleListUsers(client);
-        setUsers(getUsers);
+        try {
+            const getUsers = await handleListUsers(client);
+            setUsers(getUsers);
+        } catch (error) {
+            console.error('refresh ERROR:', error);
+            // Add react native toast here for error
+        }
         setRefreshing(false);
     };
 
     useEffect(() => {
         const fetchUsers = async () =>
         {
-            const getUsers = await handleListUsers(client);
-            setUsers(getUsers);
+            try {
+                const getUsers = await handleListUsers(client);
+                setUsers(getUsers);
+            } catch (error) {
+                console.error('handleListUsers ERROR:', error);
+                // Add react native toast here for error
+            }
         }
 
         fetchUsers();

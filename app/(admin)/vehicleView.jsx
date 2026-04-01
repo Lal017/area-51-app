@@ -3,7 +3,7 @@ import { Background, FloatingBlock, Tab } from '../../components/components';
 import { Styles } from '../../constants/styles';
 import { handleUpdateVehiclePickupStatus } from '../../components/vehicleComponents';
 import { sendPushNotification } from '../../components/notifComponents';
-import { useApp } from '../../components/context';
+import { useApp } from '../../hooks/useApp';
 import { View, Text, Alert, Switch, TouchableOpacity } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
@@ -95,14 +95,18 @@ const VehicleView = () =>
                                         onPress: async () => {
                                             if (loading) return;
                                             setLoading(true);
-                                            let title = val ? 'Vehicle Pickup' : 'Vehicle Picked Up';
-                                            let body = val ? `Your ${vehicle.year} ${vehicle.make} ${vehicle.model} is ready for pickup!` : `Your ${vehicle.year} ${vehicle.make} ${vehicle.model} has been picked up!`;
-                                            const data = {
-                                                type: "VEHICLE_PICKUP"
-                                            };
-                                            await handleUpdateVehiclePickupStatus(client, vehicle.id, val);
-                                            setIsReady(val);
-                                            await sendPushNotification(vehicle.user.pushToken, title, body, data);
+                                            try {
+                                                let title = val ? 'Vehicle Pickup' : 'Vehicle Picked Up';
+                                                let body = val ? `Your ${vehicle.year} ${vehicle.make} ${vehicle.model} is ready for pickup!` : `Your ${vehicle.year} ${vehicle.make} ${vehicle.model} has been picked up!`;
+                                                const data = {
+                                                    type: "VEHICLE_PICKUP"
+                                                };
+                                                await handleUpdateVehiclePickupStatus(client, vehicle.id, val);
+                                                setIsReady(val);
+                                                await sendPushNotification(vehicle.user.pushToken, title, body, data);
+                                            } catch (error) {
+                                                console.error(error);
+                                            }
                                             setLoading(false);
                                         }
                                     }

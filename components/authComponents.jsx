@@ -3,7 +3,6 @@ import { handleDeleteStorage, handleDeleteUser } from './userComponents';
 import { handleDeleteAllAppointments } from './appointmentComponents'
 import { handleDeleteAllTowRequests } from './towComponents';
 import { handleDeleteAllVehicles } from './vehicleComponents';
-import { AuthStyles } from '../constants/styles';
 import { TouchableOpacity, Image, Text, Alert } from 'react-native';
 import { router } from 'expo-router';
 import {
@@ -31,8 +30,14 @@ import {
 // used to handle signing up via cognito
 const handleSignUp = async (given_name, family_name, email, password, phoneNumber) =>
 {
+    if (!given_name) throw new Error('Missing first name');
+    if (!family_name) throw new Error('Missing last name');
+    if (!email) throw new Error('Missing email');
+    if (!phoneNumber) throw new Error('Missing phone number');
+
     const phoneNumberCheck = phoneNumber.replace(/\D/g, '');
-    if (phoneNumberCheck.length !== 10) return 'The number you entered is not a valid phone number';
+    if (phoneNumberCheck.length !== 10) throw new Error('The number you entered is not a valid phone number');
+    
     try {
         const { nextStep } = await signUp({
             username: email,
@@ -54,13 +59,15 @@ const handleSignUp = async (given_name, family_name, email, password, phoneNumbe
             });
         }
     } catch (error) {
-        return getErrorMessage(error)
+        console.error(error);
+        throw new Error(getErrorMessage(error));
     }
 };
 
 // used to confirm signing up with confirmation code
 const handleSignUpConfirm = async (username, confirmationCode, password) =>
 {
+    if (!confirmationCode) throw new Error('Missing confirmation code');
     try {
         const { nextStep } = await confirmSignUp({
             username,
@@ -76,7 +83,7 @@ const handleSignUpConfirm = async (username, confirmationCode, password) =>
             router.replace('(auth)');
         }
     } catch (error) {
-        return getErrorMessage(error);
+        throw new Error(getErrorMessage(error));
     }
 };
 
@@ -86,7 +93,7 @@ const handleResendSignUpCode = async (username) =>
     try {
         await resendSignUpCode({ username });
     } catch (error) {
-        return getErrorMessage(error);
+        throw new Error(getErrorMessage(error));
     }
 };
 
@@ -102,7 +109,7 @@ const handleSignIn = async (username, password) =>
         const { nextStep } = await signIn({ username, password });
         await signInConfirm(username, nextStep, password);
     } catch (error) {
-        return getErrorMessage(error);
+        throw new Error(getErrorMessage(error));
     }
 };
 
@@ -131,6 +138,7 @@ const handleAutoSignIn = async (username) =>
     } catch (error) {
         console.error('ERROR, could not auto sign in', error);
         router.replace('(auth)');
+        throw new Error(getErrorMessage(error));
     }
 };
 
@@ -141,14 +149,8 @@ const handleSignInWithRedirect = async (providerName) =>
         await signInWithRedirect({ provider: providerName });
     } catch (error) {
         console.error('ERROR, could not sign in with redirect:', error);
-        Alert.alert(
-            `Error signing in with ${providerName}`,
-            'Please try again',
-            [
-                { text: 'Ok'}
-            ]
-        );
         router.replace('(auth)');
+        throw new Error(getErrorMessage(error));
     }
 };
 
@@ -188,14 +190,7 @@ const handleSignOut = async () =>
     try {
         await signOut({global: true });
     } catch (error) {
-        console.error('ERROR, could not sign out', error);
-        Alert.alert(
-            'Error',
-            error.message,
-            [
-                { text: 'Ok'}
-            ]
-        );
+        throw new Error(getErrorMessage(error));
     }
 };
 
@@ -205,7 +200,7 @@ const clearLocalStorage = async () =>
     try {
         await AsyncStorage.clear();
     } catch (error) {
-        console.error('ERROR, could not clear local storage', error);
+        throw new Error(getErrorMessage(error));
     }
 };
 
@@ -221,7 +216,7 @@ const handleResetPassword = async (username) =>
         const { nextStep } = await resetPassword({ username });
         handleResetPasswordNextSteps(nextStep, username);
     } catch (error) {
-        return getErrorMessage(error);
+        throw new Error(getErrorMessage(error));
     }
 };
 
@@ -243,13 +238,10 @@ const handleConfirmResetPassword = async (username, confirmationCode, newPasswor
 
     try {
         await confirmResetPassword({username, confirmationCode, newPassword});
-        Alert.alert(
-            'Password Reset',
-            'Your password has succesfully been reset!'
-        );
+        // use react native toast to show confirmation of password reset
         router.replace('(auth)');
     } catch (error) {
-        return getErrorMessage(error);
+        throw new Error(getErrorMessage(error));
     }
 };
 
@@ -263,13 +255,10 @@ const handleUpdatePassword = async (oldPassword, newPassword, confNewPassword) =
     if (newPassword !== confNewPassword) return 'Passwords do not match';
     try {
         await updatePassword({ oldPassword, newPassword });
-        Alert.alert(
-            'Password Updated',
-            'Your password has been updated!'
-        );
+        // use react native toast to show confirmation of password updated
         await handleRedirect();
     } catch (error) {
-        return getErrorMessage(error);
+        throw new Error(getErrorMessage(error));
     }
 };
 
@@ -281,10 +270,7 @@ const handleUpdatePassword = async (oldPassword, newPassword, confNewPassword) =
 // used to delete the users account
 const handleDeleteAccount = async (client, userId, identityId, email, inputEmail) =>
 {
-    if (email.toLowerCase() !== inputEmail.toLowerCase())
-    {
-        return 'Email is incorrect';
-    }
+    if (email.toLowerCase() !== inputEmail.toLowerCase()) throw new Error('Email is incorrect');
 
     try {
         await handleDeleteAllTowRequests(client, userId);
@@ -296,8 +282,7 @@ const handleDeleteAccount = async (client, userId, identityId, email, inputEmail
         await clearLocalStorage();
 
     } catch (error) {
-        console.error('ERROR, could not delete user', error);
-        return getErrorMessage(error);
+        throw new Error(getErrorMessage(error));
     }
 };
 
@@ -309,12 +294,12 @@ const handleDeleteAccount = async (client, userId, identityId, email, inputEmail
 // used to update a users attributes
 const handleUpdateAttributes = async (isMissingAttr, updatedEmail, updatedFirstName, updatedLastName, updatedPhone, setFirstName, setLastName, setPhoneNumber) =>
 {
-    if (!updatedFirstName) return 'First name cannot be empty';
-    if (!updatedLastName) return 'Last name cannot be empty';
-    if (!updatedEmail) return 'Email cannot be empty';
-    if (!updatedPhone) return 'Phone number cannot be empty';
+    if (!updatedFirstName) throw new Error('First name cannot be empty');
+    if (!updatedLastName) throw new Error('Last name cannot be empty');
+    if (!updatedEmail) throw new Error('Email cannot be empty');
+    if (!updatedPhone) throw new Error('Phone number cannot be empty');
     const phoneNumberCheck = updatedPhone.replace(/\D/g, '');
-    if (phoneNumberCheck.length !== 10) return 'The number you entered is not a valid phone number';
+    if (phoneNumberCheck.length !== 10) throw new Error('The number you entered is not a valid phone number');
     try {
         const attributes = await updateUserAttributes({
             userAttributes: {
@@ -329,7 +314,7 @@ const handleUpdateAttributes = async (isMissingAttr, updatedEmail, updatedFirstN
         setPhoneNumber(`+1${phoneNumberCheck}`);
         await handleUpdateAttributesNextSteps(isMissingAttr, attributes.email.nextStep.updateAttributeStep, updatedEmail);
     } catch (error) {
-        return getErrorMessage(error);
+        throw new Error(getErrorMessage(error));
     };
 };
 
@@ -337,14 +322,14 @@ const handleUpdateAttributes = async (isMissingAttr, updatedEmail, updatedFirstN
 const handleUpdateAttributesNextSteps = async (isMissingAttr, nextStep, email) =>
 {
     if (nextStep === 'DONE') {
-        Alert.alert(
-            "Account Attributes",
-            "Account attributes have been updated",
-            [
-                { text: 'Ok'}
-            ]
-        );
-        if (!isMissingAttr) await handleRedirect();
+        // use react native toast to confirm that attributes have been updated
+        if (!isMissingAttr) {
+            try {
+                await handleRedirect();
+            } catch (error) {
+                throw error;
+            }
+        }
     }
     else if (nextStep === 'CONFIRM_ATTRIBUTE_WITH_CODE') {
         router.push({
@@ -361,22 +346,9 @@ const handleConfirmUserAttribute = async (userAttributeKey, confirmationCode, em
         await confirmUserAttribute({ userAttributeKey, confirmationCode });
         setEmail(email);
         await handleRedirect();
-        Alert.alert(
-            "Confirmed",
-            "Email has been confirmed!",
-            [
-                { text: 'Ok'}
-            ]
-        );
+        // use react native toast to show that email has been confirmed
     } catch (error) {
-        console.error(error);
-        Alert.alert(
-            "Error Confirming attribute",
-            error.message,
-            [
-                { text: 'Ok'}
-            ]
-        );
+        throw new Error(getErrorMessage(error));
     }
 };
 
@@ -397,7 +369,7 @@ const handleRedirect = async () =>
         else
             router.replace('(profile)');
     } catch (error) {
-        console.error('ERROR, could not redirect:', error);
+        throw new Error(getErrorMessage(error));
     }
 };
 
@@ -408,8 +380,8 @@ const handleGetCurrentUser = async () =>
         const { tokens } = await fetchAuthSession({ forceRefresh: true });
         return tokens;
     } catch (error) {
-        console.log('no user signed in');
         // this means there is currently no user signed in
+        return null;
     }
 };
 
@@ -429,7 +401,7 @@ const getErrorMessage = (error) =>
         case 'EmptyConfirmResetPasswordNewPassword':
             return 'Please input a new password to continue';
         case 'EmptySignInUsername':
-            return 'Please enter an email and password to sign in';
+            return 'Please enter an email to sign in';
         case 'EmptySignInPassword':
             return 'Please enter a password to sign in';
         case 'EmptyConfirmSignUpCode':

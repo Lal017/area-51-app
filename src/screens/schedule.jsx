@@ -5,7 +5,7 @@ import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Dimensions, KeyboardAvoidingView } from 'react-native';
 import { handleGetAppointments, iconCheck, handleSetTimes, handleCreateAppointment, handleFinalCheck, handleUpdateAppointment } from '../../components/appointmentComponents';
-import { useApp } from '../../components/context';
+import { useApp } from '../../hooks/useApp';
 import { handleSendAdminNotif } from '../../components/notifComponents';
 import { Select, CalendarHeader, Background, Loading, SimpleList, Tab, FloatingBlock, ErrorDisplay } from '../../components/components';
 import { ServiceStyles, Styles } from "../../constants/styles";

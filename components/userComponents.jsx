@@ -9,14 +9,20 @@ import { list, remove } from 'aws-amplify/storage';
 // used to get user data from database
 const handleGetUser = async (client, userId) =>
 {
-    const exists = await client.graphql({
-        query: getUser,
-        variables: {
-            id: userId
-        }
-    });
+    try {
+        const result = await client.graphql({
+            query: getUser,
+            variables: {
+                id: userId
+            }
+        });
 
-    return exists.data.getUser;
+        if (result.errors) throw new Error(result.errors[0].message);
+        else return result.data.getUser;
+    } catch (error) {
+        console.error('handleGetUser ERROR:', error);
+        throw error;
+    }
 };
 
 // used to create database entry for user data model
@@ -37,12 +43,15 @@ const handleCreateUser = async (client, user_id, identityId, token, access, firs
         // set driverId to 1 to show the admin that they are requesting to become a towDriver.
         if (towDriverRequest) { input.driverId = '1' }
 
-        await client.graphql({
+        const result = await client.graphql({
             query: createUser,
             variables: { input }
         });
+
+        if (result.errors) throw new Error(result.errors[0].message);
     } catch (error) {
-        console.error('ERROR, could not create user database entry:', error.errors);
+        console.error('handleCreateUser ERROR:', error);
+        throw error;
     }
 };
 
@@ -63,12 +72,15 @@ const handleUpdateUser = async (client, userId, identityId, pushToken, access, f
 
         if (towDriverRequest !== undefined) { input.driverId = 1 }
 
-        await client.graphql({
+        const result = await client.graphql({
             query: updateUser,
             variables: { input }
         });
+
+        if (result.errors) throw new Error(result.errors[0].message);
     } catch (error) {
-        console.error('ERROR, could not update user database entry:', error);
+        console.error('handleUpdateUser ERROR:', error);
+        throw error;
     }
 };
 
@@ -76,16 +88,19 @@ const handleUpdateUser = async (client, userId, identityId, pushToken, access, f
 const handleDeleteUser = async (client, userId) =>
 {
     try {
-        await client.graphql({
+        const result = await client.graphql({
             query: deleteUser,
             variables: {
                 input: {
                     id: userId
                 }
-            },
+            }
         });
+
+        if (result.errors) throw new Error(result.errors[0].message);
     } catch (error) {
-        console.error('ERROR, could not delete user from database:', error.errors);
+        console.error('handleDeleteUser ERROR:', error.errors);
+        throw error;
     }
 };
 
@@ -104,7 +119,8 @@ const handleDeleteStorage = async (identityId) =>
         );
 
     } catch (error) {
-        console.error('ERROR, could not delete storage:', error);
+        console.error('handleDeleteStorage ERROR:', error);
+        throw error;
     }
 };
 
@@ -117,7 +133,7 @@ const handleDeleteStorage = async (identityId) =>
 const handleListUsers = async (client) =>
 {
     try {
-        const users = await client.graphql({
+        const result = await client.graphql({
             query: listUsers,
             variables: {
                 filter: {
@@ -129,9 +145,12 @@ const handleListUsers = async (client) =>
             }
         });
 
-        return users.data.listUsers.items;
+        // check for errors and throw
+        if (result.errors) throw new Error(result.errors[0].message);
+        else return result.data.listUsers.items;
     } catch (error) {
-        console.error('ERROR, could not get users:', error);
+        console.error('handleListUsers ERROR:', error);
+        throw error;
     }
 };
 
@@ -139,16 +158,18 @@ const handleListUsers = async (client) =>
 const handleListCustomers = async (client) =>
 {
     try {
-        const users = await client.graphql({
+        const result = await client.graphql({
             query: listUsers,
             variables: {
                 filter: { access: { eq: 'Customers' }}
             }
         });
 
-        return users.data.listUsers.items;
+        if (result.errors) throw new Error(result.errors[0].message);
+        else return result.data.listUsers.items;
     } catch (error) {
-        console.error('ERROR, could not get users:', error);
+        console.error('handleListCustomers ERROR:', error);
+        throw error;
     }
 };
 
@@ -161,7 +182,7 @@ const handleListCustomers = async (client) =>
 const handleRequestDriverAccount = async (client, userId) =>
 {
     try {
-        await client.graphql({
+        const result = await client.graphql({
             query: updateUser,
             variables: {
                 input: {
@@ -170,8 +191,11 @@ const handleRequestDriverAccount = async (client, userId) =>
                 }
             }
         });
+
+        if (result.errors) throw new Error(result.errors[0].message);
     } catch (error) {
-        console.error('ERROR, could not request a driver account:', error);
+        console.error('handleRequestDriverAccount ERROR:', error);
+        throw error;
     }
 };
 

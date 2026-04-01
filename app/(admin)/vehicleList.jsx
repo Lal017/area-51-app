@@ -2,7 +2,7 @@ import Colors from "../../constants/colors";
 import { Background, Tab } from "../../components/components";
 import { Styles } from '../../constants/styles';
 import { handleListVehicles } from "../../components/vehicleComponents";
-import { useApp } from '../../components/context';
+import { useApp } from '../../hooks/useApp';
 import { View, TextInput } from "react-native";
 import { useEffect, useState } from "react";
 import { router } from "expo-router";
@@ -19,16 +19,24 @@ const VehicleList = () =>
     const onRefresh = async () =>
     {
         setRefreshing(true);
-        const getVehicles = await handleListVehicles(client);
-        setVehicles(getVehicles);
+        try {
+            const getVehicles = await handleListVehicles(client);
+            setVehicles(getVehicles);
+        } catch (error) {
+            console.error(error);
+        }
         setRefreshing(false);
     };
 
     useEffect(() => {
         const fetchVehicles = async () =>
         {
-            const getVehicles = await handleListVehicles(client);
-            setVehicles(getVehicles);
+            try {
+                const getVehicles = await handleListVehicles(client);
+                setVehicles(getVehicles);
+            } catch (error) {
+                console.error(error);
+            }
         }
 
         fetchVehicles();

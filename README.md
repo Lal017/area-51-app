@@ -1,11 +1,18 @@
 ToDo:
     - check all functions to make sure they throw try and catch errors correctly
     - add try/catch to functions and buttons
+    - create custom hooks to simplify code
+    - add react native toast for quick messages (i.e 'Notification Sent)
+    - handle error messages accordingly with UI prompts instead of console logs
     - check to see all error message are red and not Colors.redButton
     - check to see if pages need refresh added to them
+    - check modals in layouts for styling and functionality
     - handle notification when a truck driver accepts a request and an admin marks it as completed (using two phones for real time viewing)
     - check if you can replace useState variables with useRef variables
     - check if you can add useMemos for calculations in app
+    - review what custom notification is for in homePage index.jsx
+    - reformat code (i.e put useEffects in one section, variables in another etc.)
+    - check if i need to run get/setters right after using a create in graphql. i.e using getvehicles after creatVehicle in handleCreateVehicle function
     - review logic for app i.e. why do i need to use async local storage etc.
     - condense code into functions in _layout files and wherever else necessary for readability and shorter code
     - need to test pretty much everything since update to SDK 55. DO THIS LAST

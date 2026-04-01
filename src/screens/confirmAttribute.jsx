@@ -1,9 +1,9 @@
 import Colors from '../../constants/colors';
 import { handleConfirmUserAttribute } from '../../components/authComponents';
 import { ActionButton, Background } from '../../components/components';
-import { useApp } from '../../components/context';
+import { useApp } from '../../hooks/useApp';
 import { Styles } from '../../constants/styles';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput } from 'react-native';
 import { useState } from 'react';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useLocalSearchParams } from 'expo-router';

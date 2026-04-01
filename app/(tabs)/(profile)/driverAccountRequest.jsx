@@ -1,7 +1,7 @@
 import Colors from "../../../constants/colors";
 import { handleDeleteAllAppointments } from "../../../components/appointmentComponents";
-import { ActionButton, Background } from "../../../components/components";
-import { useApp } from "../../../components/context";
+import { ActionButton, Background, ErrorDisplay } from "../../../components/components";
+import { useApp } from "../../../hooks/useApp";
 import { handleDeleteAllTowRequests } from "../../../components/towComponents";
 import { handleDeleteStorage, handleRequestDriverAccount } from "../../../components/userComponents";
 import { handleDeleteAllVehicles } from "../../../components/vehicleComponents";
@@ -18,6 +18,7 @@ const DriverAccountRequest = () =>
     const { client, userId, identityId, setDriverId } = useApp();
 
     const [ loading, setLoading ] = useState(false);
+    const [ errorMessage, setErrorMessage ] = useState(false);
 
     return (
         <Background>
@@ -33,6 +34,9 @@ const DriverAccountRequest = () =>
                         </View>
                     </View>
             </View>
+            { errorMessage && (
+                <ErrorDisplay message={errorMessage}/>
+            )}
             <ActionButton
                 text='Request'
                 primaryColor={Colors.primary}
@@ -59,7 +63,7 @@ const DriverAccountRequest = () =>
                                         if (router.canDismiss()) router.dismissAll();
                                     } catch (error) {
                                         console.log(error);
-                                        Alert.alert('ERROR', 'Could not request a driver account');
+                                        setErrorMessage(error.message);
                                     }
                                     setLoading(false);
                                 }

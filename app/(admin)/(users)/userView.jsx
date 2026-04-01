@@ -7,7 +7,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { AntDesign, Entypo, FontAwesome, FontAwesome6, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { handleAssignTowDriverId, handleMakeUserTowDriver } from '../../../components/adminComponents';
-import { useApp } from '../../../components/context';
+import { useApp } from '../../../hooks/useApp';
 import { callUser, textUser, formatDate, formatNumber } from '../../../constants/utils';
 
 const UserView = () =>
@@ -222,13 +222,14 @@ const UserView = () =>
                                     {
                                         text: 'Yes',
                                         onPress: async () => {
-                                            await sendPushNotification(customer.pushToken, title, body, {type: 'CUSTOM_NOTIFICATION'});
-                                            Alert.alert(
-                                                'Notification Sent',
-                                                'Your notification has been sent!'
-                                            );
-                                            setBody('');
-                                            setTitle('');
+                                            try {
+                                                await sendPushNotification(customer.pushToken, title, body, {type: 'CUSTOM_NOTIFICATION'});
+                                                // add react native toast for notification sent message
+                                                setBody('');
+                                                setTitle('');
+                                            } catch (error) {
+                                                console.error('Could not send Notification:', error);
+                                            }
                                         }
                                     }
                                 ]

@@ -3,7 +3,7 @@ import { Styles, AuthStyles } from "../../constants/styles";
 import { useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { handleConfirmResetPassword } from "../../components/authComponents";
-import { FontAwesome, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import Colors from "../../constants/colors";
 import { ActionButton, AuthBackground, ErrorDisplay } from "../../components/components";
 
@@ -96,13 +96,17 @@ const ResetPasswordConfirm = () =>
                     <ActionButton
                         text='Reset'
                         onPress={async () => {
-                            setErrorMessage(await handleConfirmResetPassword(username, confirmationCode, newPassword, confNewPassword));
-                            if (!confirmationCode) setMissingConfCode(true);
-                            else setMissingConfCode(false);
-                            if (!newPassword) setMissingNewPassword(true);
-                            else setMissingNewPassword(false);
-                            if (!confNewPassword) setMissingConfNewPassword(true);
-                            else setMissingConfNewPassword(false);
+                            try {
+                                await handleConfirmResetPassword(username, confirmationCode, newPassword, confNewPassword);
+                            } catch (error) {
+                                setErrorMessage(error.message);
+                                if (!confirmationCode) setMissingConfCode(true);
+                                else setMissingConfCode(false);
+                                if (!newPassword) setMissingNewPassword(true);
+                                else setMissingNewPassword(false);
+                                if (!confNewPassword) setMissingConfNewPassword(true);
+                                else setMissingConfNewPassword(false);
+                            }
                         }}
                     />
                 </View>
