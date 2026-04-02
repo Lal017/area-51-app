@@ -1,6 +1,6 @@
 import Colors from '../../constants/colors';
 import MaskedView from '@react-native-masked-view/masked-view';
-import Animated, { Easing, withRepeat, withTiming, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import { View, TextInput, TouchableOpacity } from 'react-native';
 import { useApp } from '../../hooks/useApp';
 import { AdminStyles, Styles } from '../../constants/styles';
@@ -11,6 +11,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { AntDesign, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
+import useShimmer from '../../hooks/useShimmer';
 
 const TowRequestList = () =>
 {
@@ -20,7 +21,9 @@ const TowRequestList = () =>
     const [ statusFilter, setStatusFilter ] = useState('ALL');
     const [ refresing, setRefreshing ] = useState();
 
-    const shimmer = useSharedValue(-10);
+    const pickerRef = useRef();
+
+    const shimmerStyle = useShimmer(requests);
 
     const onRefresh = async () =>
     {
@@ -61,20 +64,6 @@ const TowRequestList = () =>
 
         handleGetTowRequests();
     }, []);
-
-    useEffect(() => {
-        shimmer.value = withRepeat(
-            withTiming(1, { duration: 3000, easing: Easing.inOut(Easing.ease) }),
-            -1,
-            false
-        );
-    }, [requests]);
-
-    const shimmerStyle = useAnimatedStyle(() => ({
-        transform: [{ translateX: shimmer.value * 100 }]
-    }));
-
-    const pickerRef = useRef();
 
     return (
         <Background refreshing={refresing} onRefresh={onRefresh}>

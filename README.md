@@ -13,6 +13,7 @@ ToDo:
     - check if i need to run get/setters right after using a create in graphql. i.e using getvehicles after creatVehicle in handleCreateVehicle function
     - review logic for app i.e. why do i need to use async local storage etc.
     - condense code into functions in _layout files and wherever else necessary for readability and shorter code
+    - handle env variables properly
     - need to test pretty much everything since update to SDK 55. DO THIS LAST
 
 PotentialChanges:

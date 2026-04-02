@@ -1,7 +1,7 @@
 import MaskedView from '@react-native-masked-view/masked-view';
 import LottieView from 'lottie-react-native';
 import Colors from '../../../constants/colors';
-import Animated, { Easing, withRepeat, withTiming, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import { useApp } from '../../../hooks/useApp';
 import { Background, Loading, Tab, getStatus } from '../../../components/components';
 import { Styles } from '../../../constants/styles';
@@ -9,8 +9,9 @@ import { handleGetAllTowRequests } from '../../../services/towService';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Text, View } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useState } from 'react';
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
+import useShimmer from '../../../hooks/useShimmer';
 
 const RequestList = () =>
 {
@@ -20,7 +21,7 @@ const RequestList = () =>
     const [ ready, setReady ] = useState(false);
     const [ refreshing, setRefreshing ] = useState();
 
-    const shimmer = useSharedValue(-10);
+    const shimmerStyle = useShimmer(towRequests);
 
     const onRefresh = async () =>
     {
@@ -66,18 +67,6 @@ const RequestList = () =>
             getTowRequests();
         }, [client, driverId])
     );
-
-    useEffect(() => {
-        shimmer.value = withRepeat(
-            withTiming(1, { duration: 3000, easing: Easing.inOut(Easing.ease) }),
-            -1,
-            false
-        );
-    }, [towRequests]);
-
-    const shimmerStyle = useAnimatedStyle(() => ({
-        transform: [{ translateX: shimmer.value * 100 }]
-    }));
 
     return (
         <>

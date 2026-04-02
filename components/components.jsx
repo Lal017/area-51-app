@@ -11,7 +11,8 @@ import { AntDesign, FontAwesome, MaterialIcons, FontAwesome5, Entypo, MaterialCo
 import { useEffect, useRef, useState } from 'react';
 import { signOut } from '@aws-amplify/auth';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Animated, { Easing, useAnimatedStyle, useSharedValue, withRepeat, withTiming, withSpring } from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import useShimmer from '../hooks/useShimmer';
 
 // loading page
 const Loading = () => {
@@ -227,19 +228,7 @@ const AppointmentReminder = ({appointments}) =>
     const [ index, setIndex ] = useState(0);
     const fadeAnim = useRef(new RNAnimated.Value(1)).current;
 
-    const shimmer = useSharedValue(-5);
-
-    useEffect(() => {
-        shimmer.value = withRepeat(
-            withTiming(1, { duration: 5000, easing: Easing.inOut(Easing.ease) }),
-            -1,
-            false
-        );
-    }, [appointments]);
-
-    const shimmerStyle = useAnimatedStyle(() => ({
-        transform: [{ translateX: shimmer.value * 300}]
-    }));
+    const shimmerStyle = useShimmer(appointments, 5000);
 
     useEffect(() => {
         if(!appointments || appointments?.length <= 1) return;

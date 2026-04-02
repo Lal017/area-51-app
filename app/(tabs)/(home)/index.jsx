@@ -10,10 +10,11 @@ import { useApp } from "../../../hooks/useApp";
 import { requestForegroundPermissionsAsync } from "expo-location";
 import { Text, TouchableOpacity, Linking, View, Alert, Image, Dimensions, ActivityIndicator } from "react-native";
 import { AntDesign, Entypo, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import Animated, { Easing , useAnimatedStyle, useSharedValue, withRepeat, withTiming } from "react-native-reanimated";
+import Animated from "react-native-reanimated";
 import { useEffect, useState, useRef } from "react";
 import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
+import useShimmer from "../../../hooks/useShimmer";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -40,7 +41,8 @@ const Index = () =>
   const [ refreshing, setRefreshing ] = useState(false);
 
   const ref = useRef();
-  const shimmer = useSharedValue(-10);
+
+  const shimmerStyle = useShimmer(vehiclePickup, 2500);
 
   const onRefresh = async () =>
   {
@@ -80,18 +82,6 @@ const Index = () =>
 
     setRefreshing(false);
   };
-
-  useEffect(() => {
-    shimmer.value = withRepeat(
-      withTiming(1, { duration: 2500, easing: Easing.inOut(Easing.ease) }),
-      -1,
-      false
-    );
-  }, [vehiclePickup]);
-
-  const shimmerStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: shimmer.value * 100 }]
-  }));
 
   useEffect(() => {
     const initUrls = async () =>

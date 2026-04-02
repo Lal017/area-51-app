@@ -10,7 +10,8 @@ import { AntDesign, Entypo, Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
-import Animated, { useSharedValue, withRepeat, withTiming, Easing, useAnimatedStyle } from "react-native-reanimated";
+import Animated from "react-native-reanimated";
+import useShimmer from "../../../hooks/useShimmer";
 
 const UserList = () =>
 {
@@ -21,7 +22,7 @@ const UserList = () =>
     const [ refreshing, setRefreshing ] = useState();
     const [ statusFilter, setStatusFilter ] = useState('All');
 
-    const shimmer = useSharedValue(-10);
+    const shimmerStyle = useShimmer(users);
 
     const onRefresh = async () =>
     {
@@ -50,18 +51,6 @@ const UserList = () =>
 
         fetchUsers();
     }, []);
-
-    useEffect(() => {
-        shimmer.value = withRepeat(
-            withTiming(1, { duration: 3000, easing: Easing.inOut(Easing.ease) }),
-            -1,
-            false
-        );
-    }, [users]);
-
-    const shimmerStyle = useAnimatedStyle(() => ({
-        transform: [{ translateX: shimmer.value * 100 }]
-    }));
 
     const pickerRef = useRef();
 

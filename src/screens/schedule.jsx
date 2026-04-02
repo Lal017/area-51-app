@@ -511,7 +511,7 @@ const Schedule = () =>
                     setLoading(true);
                     
                     let isTaken = false;
-                    if (appointment.date === selectedDay && appointment.time === selectedTime) isTaken = false;
+                    if (appointment?.date === selectedDay && appointment?.time === selectedTime) isTaken = false;
                     else
                       isTaken = await handleFinalCheck({date: selectedDay, time: selectedTime});
 
