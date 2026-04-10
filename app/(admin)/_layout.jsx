@@ -10,31 +10,17 @@ import { useEffect, useRef, useState } from 'react';
 import { Linking, View, Text } from 'react-native';
 import { generateClient } from "aws-amplify/api";
 import { getPermissionsAsync, addNotificationReceivedListener, addNotificationResponseReceivedListener } from "expo-notifications";
-import { fetchAuthSession, fetchUserAttributes } from "aws-amplify/auth";
 import useUser from '../../hooks/useUser';
+import useInitData from '../../hooks/useInitData';
 
 const AdminContent = () =>
 {
-    // get setters from context
     const {
-        client,
-        setClient,
-        userId,
-        access,
-        identityId,
-        setIdentityId,
-        pushToken,
-        setPushToken,
-        firstName,
-        setFirstName,
-        lastName,
-        setLastName,
-        email,
-        setEmail,
-        phoneNumber,
-        setPhoneNumber,
-        isMissingAttr,
-        setIsMissingAttr
+        client, setClient,
+        userId, identityId, access,
+        pushToken, setPushToken,
+        firstName, lastName, email, phoneNumber,
+        isMissingAttr
     } = useApp();
 
     // load components when finished fetching data
@@ -48,6 +34,7 @@ const AdminContent = () =>
 
     // custom hooks
     const { initUser } = useUser();
+    const { initData } = useInitData();
 
     const onRefresh = async () =>
     {
@@ -100,51 +87,8 @@ const AdminContent = () =>
         const handleGetRequests = async () =>
         {
             try {
-                // get user info from database
-                const user = await handleGetUser(client, userId);
-                let userAtt;
-                if (!user?.email || !user?.firstName || !user?.lastName || !user?.phone || !user?.identityId) {
-                    userAtt = await fetchUserAttributes();
-                }
-                // set email
-                if (!user?.email) { 
-                    setEmail(userAtt?.email);
-                } else { setEmail(user?.email); }
-
-                // set name
-                if (!user?.firstName || !user?.lastName) {
-                    if (userAtt.given_name && userAtt.family_name) {
-                        setFirstName(userAtt.given_name);
-                        setLastName(userAtt.family_name);
-                    } else if (userAtt.name) {
-                        const nameSplit = userAtt.name.trim().split(/\s+/);
-
-                        if (nameSplit.length >= 2) {
-                            setFirstName(nameSplit[0]);
-                            setLastName(nameSplit.slice(1).join(' '));
-                        } else {
-                            setFirstName(nameSplit[0]);
-                        }
-                    }
-
-                    if ((!userAtt?.given_name || !userAtt?.family_name) && !userAtt?.name) {
-                        setIsMissingAttr(true);
-                    }
-                } else { setFirstName(user?.firstName); setLastName(user?.lastName); }
-
-                // set phone number
-                if (!user?.phone) {
-                    setPhoneNumber(userAtt?.phone_number);
-                    if (!userAtt?.phone_number) {
-                        setIsMissingAttr(true);
-                    }
-                } else { setPhoneNumber(user?.phone); }
-
-                // set identityId (for amplify storage)
-                if (!user?.identityId) {
-                    const getDetails = await fetchAuthSession();
-                    setIdentityId(getDetails.identityId);
-                } else { setIdentityId(user?.identityId); }
+                // custom hook to initialize data
+                await initData();
             } catch (error) {
                 console.error('ERROR, could not get user info:', error);
             }

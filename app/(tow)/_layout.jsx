@@ -10,31 +10,17 @@ import { Stack, router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { View, Text, Linking } from 'react-native';
 import { generateClient } from "aws-amplify/api";
-import { fetchUserAttributes, fetchAuthSession } from "@aws-amplify/auth";
 import useUser from '../../hooks/useUser';
+import useInitData from '../../hooks/useInitData';
 
 const TowDriverContent = () =>
 {
     const {
-        client,
-        setClient,
-        userId,
-        pushToken,
-        setPushToken,
-        firstName,
-        setFirstName,
-        lastName,
-        setLastName,
-        email,
-        setEmail,
-        phoneNumber,
-        setPhoneNumber,
-        access,
-        identityId,
-        setIdentityId,
-        isMissingAttr,
-        setIsMissingAttr,
-        setDriverId
+        client, setClient,
+        userId, identityId, access,
+        pushToken, setPushToken,
+        firstName, lastName, email, phoneNumber,
+        isMissingAttr, setDriverId
     } = useApp();
 
     // load components when finished fetching data
@@ -48,6 +34,7 @@ const TowDriverContent = () =>
 
     // custom hooks
     const { initUser } = useUser();
+    const { initData } = useInitData();
 
     const onRefresh = async () =>
     {
@@ -84,7 +71,7 @@ const TowDriverContent = () =>
                 const genClient = generateClient();
                 setClient(genClient);
 
-                // get and set cognito info
+                // custom hook to initialize cognito info
                 await initUser();
             } catch (error) {
                 console.error('error initializing app:', error);
@@ -98,51 +85,8 @@ const TowDriverContent = () =>
         const handleGetRequests = async () =>
         {
             try {
-                // get user info from database
-                const user = await handleGetUser(client, userId);
-                let userAtt;
-                if (!user?.email || !user?.firstName || !user?.lastName || !user?.phone || !user?.identityId) {
-                    userAtt = await fetchUserAttributes();
-                }
-                // set email
-                if (!user?.email) { 
-                    setEmail(userAtt?.email);
-                } else { setEmail(user?.email); }
-
-                // set name
-                if (!user?.firstName || !user?.lastName) {
-                    if (userAtt.given_name && userAtt.family_name) {
-                        setFirstName(userAtt.given_name);
-                        setLastName(userAtt.family_name);
-                    } else if (userAtt.name) {
-                        const nameSplit = userAtt.name.trim().split(/\s+/);
-
-                        if (nameSplit.length >= 2) {
-                            setFirstName(nameSplit[0]);
-                            setLastName(nameSplit.slice(1).join(' '));
-                        } else {
-                            setFirstName(nameSplit[0]);
-                        }
-                    }
-
-                    if ((!userAtt?.given_name || !userAtt?.family_name) && !userAtt?.name) {
-                        setIsMissingAttr(true);
-                    }
-                } else { setFirstName(user?.firstName); setLastName(user?.lastName); }
-
-                // set phone number
-                if (!user?.phone) {
-                    setPhoneNumber(userAtt?.phone_number);
-                    if (!userAtt?.phone_number) {
-                        setIsMissingAttr(true);
-                    }
-                } else { setPhoneNumber(user?.phone); }
-
-                // set identityId (for amplify storage)
-                if (!user?.identityId) {
-                    const getDetails = await fetchAuthSession();
-                    setIdentityId(getDetails.identityId);
-                } else { setIdentityId(user?.identityId); }
+                // custom hook to initialize data
+                await initData();
             } catch (error) {
                 console.error('ERROR, could not get user info:', error);
             }
