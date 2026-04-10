@@ -1,5 +1,5 @@
 ToDo:
-    - create custom hooks to simplify code
+    - create custom hooks to simplify code i.e fetch towRequests into one hook, fetch userId into another hook etc.
     - add react native toast for quick messages (i.e 'Notification Sent)
     - handle error messages accordingly with UI prompts instead of console logs
     - check to see all error message are red and not Colors.redButton
@@ -14,6 +14,7 @@ ToDo:
     - review logic for app i.e. why do i need to use async local storage etc.
     - condense code into functions in _layout files and wherever else necessary for readability and shorter code
     - handle env variables properly
+    - remove logs and useless try/catches
     - need to test pretty much everything since update to SDK 55. DO THIS LAST
 
 PotentialChanges:

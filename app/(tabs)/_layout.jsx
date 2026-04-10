@@ -9,7 +9,6 @@ import { ActionButton, Background, Loading } from "../../components/components";
 import { handleGetVehicles, handleNotifUpdateVehicle } from "../../services/vehicleService";
 import { handleSendAdminNotif, registerForPushNotifications } from "../../services/notificationService";
 import { handleCreateUser, handleUpdateUser, handleGetUser } from '../../services/userService';
-import { handleGetCurrentUser } from "../../services/authService";
 import { Styles } from "../../constants/styles";
 import { AppProvider, useApp } from "../../hooks/useApp";
 import { View, Text, TouchableOpacity, Linking } from "react-native";
@@ -20,6 +19,7 @@ import { generateClient } from "aws-amplify/api";
 import { addNotificationReceivedListener, addNotificationResponseReceivedListener, useLastNotificationResponse, getPermissionsAsync } from "expo-notifications";
 import { fetchUserAttributes, fetchAuthSession, signOut } from "aws-amplify/auth";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import useUser from "../../hooks/useUser";
 
 const TabsContent = () =>
 {
@@ -28,11 +28,9 @@ const TabsContent = () =>
         client,
         setClient,
         userId,
-        setUserId,
         identityId,
         setIdentityId,
         access,
-        setAccess,
         pushToken,
         setPushToken,
         firstName,
@@ -75,6 +73,9 @@ const TabsContent = () =>
     const notificationListener = useRef();
     const responseListener = useRef();
 
+    // custom hooks
+    const { initUser } = useUser();
+
     const onRefresh = async () =>
     {
         setRefreshing(true);
@@ -113,17 +114,13 @@ const TabsContent = () =>
                 return;
             }
 
-            // generate client
-            const genClient = generateClient();
-            setClient(genClient);
-
             try {
+                // generate client
+                const genClient = generateClient();
+                setClient(genClient);
+
                 // get and set cognito info
-                const userInfo = await handleGetCurrentUser();
-                const access_arr = userInfo.accessToken.payload["cognito:groups"];
-                const getAccess = access_arr.includes('Admins') ? 'Admins' : access_arr.includes('TowDrivers') ? 'TowDrivers' : 'Customers';
-                setAccess(getAccess);
-                setUserId(userInfo.accessToken.payload.sub);
+                await initUser();
                 
                 // get local storage data
                 const savedInvoice = await AsyncStorage.getItem('invoice');
@@ -319,10 +316,7 @@ const TabsContent = () =>
                 }
                 else if (type === "DRIVER_ACCOUNT") {
                     setRefreshPrompt(true);
-                    const userInfo = await handleGetCurrentUser();
-                    const access_arr = userInfo.accessToken.payload["cognito:groups"];
-                    const getAccess = access_arr.includes('Admins') ? 'Admins' : access_arr.includes('TowDrivers') ? 'TowDrivers' : 'Customers';
-                    setAccess(getAccess);
+                    await initUser();
                 }
                 else if (type === "CUSTOM_NOTIFICATION") {
                     await setCustomNotification(notification.request.content);

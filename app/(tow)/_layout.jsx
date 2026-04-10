@@ -3,7 +3,6 @@ import Modal from 'react-native-modal';
 import { ActionButton, Background, CustHeader, Loading } from "../../components/components";
 import { AppProvider, useApp } from "../../hooks/useApp";
 import { registerForPushNotifications } from "../../services/notificationService";
-import { handleGetCurrentUser } from "../../services/authService";
 import { Styles } from '../../constants/styles';
 import { handleGetUser, handleCreateUser, handleUpdateUser } from "../../services/userService";
 import { getPermissionsAsync, addNotificationReceivedListener, addNotificationResponseReceivedListener } from "expo-notifications";
@@ -12,6 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import { View, Text, Linking } from 'react-native';
 import { generateClient } from "aws-amplify/api";
 import { fetchUserAttributes, fetchAuthSession } from "@aws-amplify/auth";
+import useUser from '../../hooks/useUser';
 
 const TowDriverContent = () =>
 {
@@ -19,7 +19,6 @@ const TowDriverContent = () =>
         client,
         setClient,
         userId,
-        setUserId,
         pushToken,
         setPushToken,
         firstName,
@@ -31,7 +30,6 @@ const TowDriverContent = () =>
         phoneNumber,
         setPhoneNumber,
         access,
-        setAccess,
         identityId,
         setIdentityId,
         isMissingAttr,
@@ -47,6 +45,9 @@ const TowDriverContent = () =>
     // notification listeners
     const notificationListener = useRef();
     const responseListener = useRef();
+
+    // custom hooks
+    const { initUser } = useUser();
 
     const onRefresh = async () =>
     {
@@ -84,11 +85,7 @@ const TowDriverContent = () =>
                 setClient(genClient);
 
                 // get and set cognito info
-                const userInfo = await handleGetCurrentUser();
-                const access_arr = userInfo.accessToken.payload["cognito:groups"];
-                const getAccess = access_arr.includes('Admins') ? 'Admins' : access_arr.includes('TowDrivers') ? 'TowDrivers' : 'Customers';
-                setAccess(getAccess);
-                setUserId(userInfo.accessToken.payload.sub);
+                await initUser();
             } catch (error) {
                 console.error('error initializing app:', error);
             }

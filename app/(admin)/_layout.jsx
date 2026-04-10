@@ -4,7 +4,6 @@ import { ActionButton, Background, CustHeader, Loading } from "../../components/
 import { AppProvider, useApp } from "../../hooks/useApp";
 import { registerForPushNotifications } from "../../services/notificationService";
 import { handleCreateUser, handleUpdateUser, handleGetUser } from '../../services/userService';
-import { handleGetCurrentUser } from "../../services/authService";
 import { Styles } from '../../constants/styles';
 import { Stack, router } from "expo-router";
 import { useEffect, useRef, useState } from 'react';
@@ -12,6 +11,7 @@ import { Linking, View, Text } from 'react-native';
 import { generateClient } from "aws-amplify/api";
 import { getPermissionsAsync, addNotificationReceivedListener, addNotificationResponseReceivedListener } from "expo-notifications";
 import { fetchAuthSession, fetchUserAttributes } from "aws-amplify/auth";
+import useUser from '../../hooks/useUser';
 
 const AdminContent = () =>
 {
@@ -20,9 +20,7 @@ const AdminContent = () =>
         client,
         setClient,
         userId,
-        setUserId,
         access,
-        setAccess,
         identityId,
         setIdentityId,
         pushToken,
@@ -47,6 +45,9 @@ const AdminContent = () =>
     // notification listeners
     const notificationListener = useRef();
     const responseListener = useRef();
+
+    // custom hooks
+    const { initUser } = useUser();
 
     const onRefresh = async () =>
     {
@@ -85,11 +86,7 @@ const AdminContent = () =>
                 setClient(genClient);
 
                 // get and set cognito info
-                const userInfo = await handleGetCurrentUser();
-                const access_arr = userInfo.accessToken.payload["cognito:groups"];
-                const getAccess = access_arr.includes('Admins') ? 'Admins' : access_arr.includes('TowDrivers') ? 'TowDrivers' : 'Customers';
-                setAccess(getAccess);
-                setUserId(userInfo.accessToken.payload.sub);
+                await initUser();
             } catch (error) {
                 console.error('Error initializing app:', error);
             }
