@@ -302,7 +302,7 @@ const SimpleList = ({data = [], renderItem}) =>
 {
     return(
         <View style={{rowGap: 5}}>
-            {data.map((item, index) => (
+            {data?.map((item, index) => (
                 <React.Fragment key={index}>
                     {renderItem({ item })}
                 </React.Fragment>

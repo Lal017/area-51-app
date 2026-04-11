@@ -1,7 +1,6 @@
 import Colors from "../../../constants/colors";
 import Carousel from 'react-native-reanimated-carousel';
 import { handleGetURLs } from "../../../services/adminService";
-import { handleGetVehicles } from "../../../services/vehicleService";
 import { handleGetMyAppointments } from "../../../services/appointmentService";
 import { handleGetTowRequest } from '../../../services/towService';
 import { AppointmentReminder, Background } from "../../../components/components";
@@ -15,6 +14,7 @@ import { useEffect, useState, useRef } from "react";
 import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import useShimmer from "../../../hooks/useShimmer";
+import useVehicle from "../../../hooks/useVehicle";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -30,11 +30,9 @@ const Index = () =>
     appointments,
     setTowRequest,
     setAppointments,
-    setVehicles,
     vehiclePickup,
     customNotification,
     setCustomNotification,
-    setVehiclePickup
   } = useApp();
   
   const [ urls, setUrls ] = useState();
@@ -42,7 +40,9 @@ const Index = () =>
 
   const ref = useRef();
 
+  // custom hooks
   const shimmerStyle = useShimmer(vehiclePickup, 2500);
+  const { initVehicles } = useVehicle();
 
   const onRefresh = async () =>
   {
@@ -53,21 +53,8 @@ const Index = () =>
       const getAppointments = await handleGetMyAppointments(client, userId);
       setAppointments(getAppointments);
 
-      // get vehicleIds that have an appointment scheduled for pickup
-      const scheduledVehiclePickups = getAppointments
-        ?.filter(appt => appt.service === 'Vehicle Pickup')
-        .map(appt => appt.vehicle?.id);
-
       // refresh vehicles
-      const getVehicles = await handleGetVehicles(client, userId);
-      setVehicles(getVehicles);
-
-      // filter out vehicles that already have a scheduled pickup appointment
-      const filterVehicles = getVehicles
-        ?.some(item => item.readyForPickup === true && !scheduledVehiclePickups.includes(item.id));
-
-      // set vehicles that are ready for pickup with no appointment
-      setVehiclePickup(filterVehicles);
+      await initVehicles(getAppointments);
 
       // refresh tow requests
       const getTowRequest = await handleGetTowRequest(client, userId);
@@ -84,28 +71,21 @@ const Index = () =>
   };
 
   useEffect(() => {
-    const initUrls = async () =>
+    const initHome = async () =>
     {
       try {
+        // initialize urls for carousel
         const getUrls = await handleGetURLs();
         setUrls(getUrls);
+
+        // custom hook to refresh vehicles
+        await initVehicles();
       } catch (error) {
         console.error(error);
       }
-
-      // get vehicleIds that have an appointment scheduled for pickup
-      const scheduledVehiclePickups = appointments
-        ?.filter(appt => appt.service === 'Vehicle Pickup')
-        .map(appt => appt.vehicle?.id);
-
-      // filter out vehicles that already have a scheduled pickup appointment
-      const filterVehicles = vehicles
-        ?.some(item => item.readyForPickup === true && !scheduledVehiclePickups.includes(item.id));
-      
-      setVehiclePickup(filterVehicles);
     }
 
-    initUrls();
+    initHome();
   }, []);
   
   return (

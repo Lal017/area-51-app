@@ -21,6 +21,7 @@ import { signOut } from "aws-amplify/auth";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import useUser from "../../hooks/useUser";
 import useInitData from "../../hooks/useInitData";
+import useVehicle from "../../hooks/useVehicle";
 
 const TabsContent = () =>
 {
@@ -53,6 +54,7 @@ const TabsContent = () =>
     // custom hooks
     const { initUser } = useUser();
     const { initData } = useInitData();
+    const { initVehicles } = useVehicle();
 
     const onRefresh = async () =>
     {
@@ -156,20 +158,8 @@ const TabsContent = () =>
                 const getAppointments = await handleGetMyAppointments(client, userId);
                 setAppointments(getAppointments);
 
-                // get vehicleIds that have an appointment scheduled for pickup
-                const scheduledVehiclePickups = getAppointments
-                    ?.filter(appt => appt.service === 'Vehicle Pickup')
-                    .map(appt => appt.vehicle?.id);
-
-                // set vehicles
-                const getVehicles = await handleGetVehicles(client, userId);
-                setVehicles(getVehicles);
-
-                // filter out vehicles that already have a scheduled pickup appointment
-                const filterVehicles = getVehicles
-                    ?.some(item => item.readyForPickup === true && !scheduledVehiclePickups.includes(item.id));
-                    
-                setVehiclePickup(filterVehicles);
+                // custom hook to initialize vehicles
+                await initVehicles(getAppointments);
 
                 // custom hook to initialize data
                 await initData();

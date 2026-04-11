@@ -13,15 +13,22 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { handleSendAdminNotif } from '../../services/notificationService';
 import { handleCreateAppointment } from '../../services/appointmentService';
 import { textSize, formatDate, formatTime } from '../../utils/utils';
+import useVehicle from '../../hooks/useVehicle';
 
 const VehiclePickup = () =>
 {
-    const { client, vehicles, setVehiclePickup, userId, appointments, setAppointments } = useApp();
-    const [ vehiclesToPickup, setVehiclesToPickup ] = useState();
+    const { client, userId, setAppointments, vehiclePickup } = useApp();
+
     const [ errorMessage, setErrorMessage ] = useState(undefined);
     const [ date, setDate ] = useState(new Date());
     const [ time, setTime ] = useState(undefined);
-    
+
+    // custom hooks
+    const { initVehicles } = useVehicle();
+
+    // refs
+    const bottomSheetRef = useRef(null);
+
     const TIME_SLOTS = [ '09:00:00', '09:30:00', '10:00:00', '10:30:00', '11:00:00', '11:30:00', '12:00:00', '12:30:00', '13:00:00', '13:30:00', '14:00:00', '14:30:00', '15:00:00', '15:30:00', '16:00:00', '16:30:00', '17:00:00', '17:30:00' ];
 
     const isToday = date.toLocaleDateString('sv-SE') === new Date().toLocaleDateString('sv-SE');
@@ -29,30 +36,13 @@ const VehiclePickup = () =>
 
     const availableSlots = isToday ? TIME_SLOTS.filter(slot => slot >= currentTime) : TIME_SLOTS;
 
-    const bottomSheetRef = useRef(null);
-
     const snapPoints = useMemo(() => ['25%', '60%', '80%'], []);
     const handleClosePress = () => bottomSheetRef.current?.close();
     const handleOpenPress = () => bottomSheetRef.current?.snapToIndex(2);
 
     useEffect(() => {
-        const initVehicles = async () =>
-        {
-            // filter vehicles out that already have a scheduled pickup date
-            const scheduledVehicles = appointments
-                ?.filter(appt => appt.service === 'Vehicle Pickup')
-                .map(appt => appt.vehicle?.id);
-
-            // filter vehicles only if they have been set to ready for pickup
-            const getVehicles = vehicles
-                ?.filter(item => item.readyForPickup === true)
-                .filter(item => !scheduledVehicles?.includes(item.id));
-
-            setVehiclesToPickup(getVehicles);
-        }
-
         initVehicles();
-    }, [vehicles]);
+    }, []);
 
     const showDateMode = () =>
     {
@@ -85,7 +75,7 @@ const VehiclePickup = () =>
                 </View>
                 <View style={Styles.block}>
                     <SimpleList
-                        data={vehiclesToPickup}
+                        data={vehiclePickup}
                         renderItem={({item}) =>
                             <>
                                 <View style={Styles.infoContainer}>
@@ -164,13 +154,10 @@ const VehiclePickup = () =>
                                             try {
                                                 await handleSendAdminNotif('Pickup Scheduled', 'A customer has scheduled a vehicle pickup');
                                                 const newAppointments = await handleCreateAppointment({client, date: date?.toLocaleDateString('sv-SE'), time, service: 'Vehicle Pickup', userId, vehicle: item, setAppointments});
-                                                // get vehicleIds that have an appointment scheduled for pickup
-                                                const scheduledVehiclePickups = newAppointments
-                                                    ?.filter(appt => appt.service === 'Vehicle Pickup')
-                                                    .map(appt => appt.vehicle?.id);
-                                                // filter out vehicles that already have a scheduled pickup appointment
-                                                const filterVehicles = vehicles?.some(item => item.readyForPickup === true && !scheduledVehiclePickups.includes(item.id));
-                                                setVehiclePickup(filterVehicles);
+
+                                                // refresh vehicles
+                                                await initVehicles(newAppointments);
+
                                                 router.dismissAll();
                                             } catch (error) {
                                                 console.error(error);
