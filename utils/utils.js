@@ -176,122 +176,124 @@ const getDistance = (distanceUntilNextStep) =>
 // used to set the icon for the next turn being made
 const setDirectionIcon = (direction, angle) =>
 {
-    if (direction === 'Straight') return 'straight';
-    else if (direction === 'UTurn') return 'u-turn-left';
-    else if (direction === 'Left') {
-        if (angle >= 70 && angle < 110) {
-            return 'turn-left';
-        }
-        else if (angle >= 0 && angle < 70) {
-            return 'turn-slight-left';
-        }
-    }
-    else if (direction === 'Right') {
-        if (angle >= 70 && angle < 110) {
-            return 'turn-right';
-        }
-        else if (angle >= 0 && angle < 70) {
-            return 'turn-slight-right';
-        }
+    switch (direction) {
+        case 'Straight':
+            return 'straight';
+        case 'UTurn':
+            return 'u-turn-left';
+        case 'Left':
+            if (angle >= 70 && angle < 110) return 'turn-left';
+            else if (angle >= 0 && angle < 70) return 'turn-slight-left';
+        case 'Right':
+            if (angle >= 70 && angle < 110) return 'turn-right';
+            else if (angle >= 0 && angle < 70) return 'turn-slight-right';
     }
 };
 
 // used to get the text for the next instruction
 const getInstructionText = (step, distance) =>
 {
-    // if value exists then is a highway
-    if (step.Type === 'Turn') {
-        let road = "";
-        if (step.NextRoad) {
-            road = step.NextRoad?.RoadName[0]?.Value ? step.NextRoad?.RoadName[0]?.Value : `${step.NextRoad?.RouteNumber[0].Value} ${step.NextRoad?.RouteNumber[0].Direction}`;
+    switch (step.Type) {
+        case 'Turn':
+        {
+            let road = "";
+            if (step.NextRoad) {
+                road = step.NextRoad?.RoadName[0]?.Value ? step.NextRoad?.RoadName[0]?.Value : `${step.NextRoad?.RouteNumber[0].Value} ${step.NextRoad?.RouteNumber[0].Direction}`;
+            }
+
+            // set direction to turn
+            const turnDirection = step.TurnStepDetails?.SteeringDirection;
+            const turnAngle = Math.abs(step.TurnStepDetails?.TurnAngle);
+
+            // set speech text
+            const speechText = road === "" ? `turn ${turnDirection} in ${distance}` : `In ${distance} turn ${turnDirection} onto ${road}`;
+
+            return {
+                instructionText: `${distance}\n${road}`,
+                instructionIcon: setDirectionIcon(turnDirection, turnAngle),
+                speechText: speechText
+            };
         }
+        case 'Highway':
+        {
+            const highway = step.NextRoad?.RouteNumber[0]?.Value;
+            const highwayDirection = step.NextRoad?.RouteNumber[0]?.Direction;
 
-        // set direction to turn
-        const turnDirection = step.TurnStepDetails?.SteeringDirection;
-        const turnAngle = Math.abs(step.TurnStepDetails?.TurnAngle);
+            // set direction to turn
+            const turnDirection = step.TurnStepDetails?.SteeringDirection;
+            const turnAngle = Math.abs(step.TurnStepDetails?.TurnAngle);
 
-        // set speech text
-        const speechText = road === "" ? `turn ${turnDirection} in ${distance}` : `In ${distance} turn ${turnDirection} onto ${road}`;
+            return {
+                instructionText: `Turn ${turnDirection.toLowerCase()} onto ${highway} ${highwayDirection}`,
+                instructionIcon: setDirectionIcon(turnDirection, turnAngle),
+                speechText: `In ${distance} turn ${turnDirection} onto ${highwayDirection} ${highway}`
+            };
+        }
+        case 'EnterHighway':
+        {
+            const highway = step.NextRoad?.RouteNumber[0]?.Value;
+            const highwayDirection = step.NextRoad?.RouteNumber[0]?.Direction;
 
-        return {
-            instructionText: `${distance}\n${road}`,
-            instructionIcon: setDirectionIcon(turnDirection, turnAngle),
-            speechText: speechText
-        };
-    }
-    else if (step.Type === 'Highway') {
-        const highway = step.NextRoad?.RouteNumber[0]?.Value;
-        const highwayDirection = step.NextRoad?.RouteNumber[0]?.Direction;
+            return {
+                instructionText: `Merge onto ${highway} ${highwayDirection}`,
+                instructionIcon: setDirectionIcon('Straight'),
+                speechText: `In ${distance} merge onto ${highwayDirection} ${highway}`
+            };
+        }
+        case 'ContinueHighway':
+        {
+            const highway = step.NextRoad?.RouteNumber[0]?.Value;
+            const highwayDirection = step.NextRoad?.RouteNumber[0]?.Direction;
 
-        // set direction to turn
-        const turnDirection = step.TurnStepDetails?.SteeringDirection;
-        const turnAngle = Math.abs(step.TurnStepDetails?.TurnAngle);
+            return {
+                instructionText: `Continue on ${highway} ${highwayDirection}`,
+                instructionIcon: setDirectionIcon('Straight'),
+                speechText: `Continue on ${highwayDirection} ${highway} for ${distance}`
+            };
+        }
+        case 'Exit':
+        {
+            const exitNumber = step.ExitNumber[0]?.Value;
+            const exitRoad = step.NextRoad.RoadName[0].Value;
+            const exitDirection = step.ExitStepDetails?.SteeringDirection;
+            const exitAngle = step.ExitStepDetails?.TurnAngle;
 
-        return {
-            instructionText: `Turn ${turnDirection.toLowerCase()} onto ${highway} ${highwayDirection}`,
-            instructionIcon: setDirectionIcon(turnDirection, turnAngle),
-            speechText: `In ${distance} turn ${turnDirection} onto ${highwayDirection} ${highway}`
-        };
-    }
-    else if (step.Type === 'EnterHighway') {
-        const highway = step.NextRoad?.RouteNumber[0]?.Value;
-        const highwayDirection = step.NextRoad?.RouteNumber[0]?.Direction;
+            return {
+                instructionText: `Take exit ${exitNumber} onto ${exitRoad}`,
+                instructionIcon: setDirectionIcon(exitDirection, exitAngle),
+                speechText: `In ${distance} take exit ${exitNumber} onto ${exitRoad}`
+            };
+        }
+        case 'Keep':
+        {
+            const keepDirection = step.KeepStepDetails?.SteeringDirection;
+            const keepAngle = step.KeepStepDetails?.TurnAngle;
+            const nextRoad = step.CurrentRoad?.Towards[0].Value;
 
-        return {
-            instructionText: `Merge onto ${highway} ${highwayDirection}`,
-            instructionIcon: setDirectionIcon('Straight'),
-            speechText: `In ${distance} merge onto ${highwayDirection} ${highway}`
-        };
-    }
-    else if (step.Type === 'ContinueHighway') {
-        const highway = step.NextRoad?.RouteNumber[0]?.Value;
-        const highwayDirection = step.NextRoad?.RouteNumber[0]?.Direction;
-
-        return {
-            instructionText: `Continue on ${highway} ${highwayDirection}`,
-            instructionIcon: setDirectionIcon('Straight'),
-            speechText: `Continue on ${highwayDirection} ${highway} for ${distance}`
-        };
-    }
-    else if (step.Type === 'Exit') {
-        const exitNumber = step.ExitNumber[0]?.Value;
-        const exitRoad = step.NextRoad.RoadName[0].Value;
-        const exitDirection = step.ExitStepDetails?.SteeringDirection;
-        const exitAngle = step.ExitStepDetails?.TurnAngle;
-
-        return {
-            instructionText: `Take exit ${exitNumber} onto ${exitRoad}`,
-            instructionIcon: setDirectionIcon(exitDirection, exitAngle),
-            speechText: `In ${distance} take exit ${exitNumber} onto ${exitRoad}`
-        };
-    }
-    else if (step.Type === 'Keep') {
-        const keepDirection = step.KeepStepDetails?.SteeringDirection;
-        const keepAngle = step.KeepStepDetails?.TurnAngle;
-        const nextRoad = step.CurrentRoad?.Towards[0].Value;
-
-        return {
-            instructionText: `Keep on ${keepDirection} lane towards ${nextRoad}`,
-            instructionIcon: setDirectionIcon(keepDirection, keepAngle),
-            speechText: `Keep on ${keepDirection} lane towards ${nextRoad}`
-        };
-    }
-    else if (step.Type === 'UTurn') {
-        return {
-            instructionText: `Make a U-Turn`,
-            instructionIcon: setDirectionIcon('UTurn'),
-            speechText: `In ${distance} make a U-turn`
-        };
-    }
-    else if (step.Type === 'Arrive') {
-        return {
-            instructionText: 'Arriving at your destination',
-            instructionIcon: setDirectionIcon('Straight'),
-            speechText: `Arriving at your destination in ${distance}`
-        };
-    }
-    else {
-        console.log(step);
+            return {
+                instructionText: `Keep on ${keepDirection} lane towards ${nextRoad}`,
+                instructionIcon: setDirectionIcon(keepDirection, keepAngle),
+                speechText: `Keep on ${keepDirection} lane towards ${nextRoad}`
+            };
+        }
+        case 'UTurn':
+        {
+            return {
+                instructionText: `Make a U-Turn`,
+                instructionIcon: setDirectionIcon('UTurn'),
+                speechText: `In ${distance} make a U-turn`
+            };
+        }
+        case 'Arrive':
+        {
+            return {
+                instructionText: 'Arriving at your destination',
+                instructionIcon: setDirectionIcon('Straight'),
+                speechText: `Arriving at your destination in ${distance}`
+            };
+        }
+        default:
+            console.log(step);
     }
 };
 

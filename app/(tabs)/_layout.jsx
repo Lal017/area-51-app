@@ -16,7 +16,7 @@ import { router, Tabs} from "expo-router";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useEffect, useRef, useState } from 'react';
 import { generateClient } from "aws-amplify/api";
-import { addNotificationReceivedListener, addNotificationResponseReceivedListener, useLastNotificationResponse, getPermissionsAsync } from "expo-notifications";
+import Notifications, { addNotificationReceivedListener, addNotificationResponseReceivedListener, useLastNotificationResponse, getPermissionsAsync } from "expo-notifications";
 import { signOut } from "aws-amplify/auth";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import useUser from "../../hooks/useUser";
@@ -45,11 +45,10 @@ const TabsContent = () =>
     const [ refreshing, setRefreshing ] = useState(false);
     const [ permissionScreen, setPermissionScreen ] = useState(false);
 
-    const lastNotificationResponse = useLastNotificationResponse();
-
-    // notification listeners
+    // notification hooks
     const notificationListener = useRef();
     const responseListener = useRef();
+    const lastNotificationResponse = useLastNotificationResponse();
 
     // custom hooks
     const { initUser } = useUser();
@@ -116,20 +115,30 @@ const TabsContent = () =>
         initializeApp();
     }, []);
 
+    // triggered when a user opens the app by tapping on a notification
     useEffect(() => {
-        if (lastNotificationResponse) {
-            // triggered when a user opens the app by tapping on a notification
+        if (!lastNotificationResponse) return;
+
+        const actionIdentifier = lastNotificationResponse.actionIdentifier;
+
+        // DEFAULT_ACTION_IDENTIFIER means the user actually tapped on the notification
+        if (actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER) {
             const type = lastNotificationResponse.notification.request.content.data.type;
-            if (type === "NEW_INVOICE") {
-                setNewInvoice(true);
-                router.push('(profile)');
-            } else if (type === "NEW_ESTIMATE") {
-                setNewEstimate(true);
-                router.push('(profile)');
-            } else if (type === "VEHICLE_PICKUP") {
-                router.push('(profile)');
-            } else if (type === "CUSTOM_NOTIFICATION") {
-                setCustomNotification(lastNotificationResponse.notification.request.content);
+            switch (type) {
+                case 'NEW_INVOICE':
+                    setNewInvoice(true);
+                    router.push('(profile)');
+                    break;
+                case 'NEW_ESTIMATE':
+                    setNewEstimate(true);
+                    router.push('(profile)');
+                    break;
+                case 'VEHICLE_PICKUP':
+                    router.push('(profile)');
+                    break;
+                case 'CUSTOM_NOTIFICATION':
+                    setCustomNotification(lastNotificationResponse.notification.request.content);
+                    break;
             }
         }
     }, [lastNotificationResponse]);
@@ -233,25 +242,27 @@ const TabsContent = () =>
             const { type } = notification.request.content.data;
 
             try {
-                if (type === "TOW_RESPONSE") {
-                    await handleNotifUpdateTowRequest(client, userId, setTowRequest);
-                }
-                else if (type === "NEW_INVOICE") {
-                    await setNewInvoice(true);
-                }
-                else if (type === "NEW_ESTIMATE") {
-                    await setNewEstimate(true);
-                }
-                else if (type === "VEHICLE_PICKUP") {
-                    await handleNotifUpdateVehicle(client, userId, setVehicles);
-                    setVehiclePickup(prev => !prev);
-                }
-                else if (type === "DRIVER_ACCOUNT") {
-                    setRefreshPrompt(true);
-                    await initUser();
-                }
-                else if (type === "CUSTOM_NOTIFICATION") {
-                    await setCustomNotification(notification.request.content);
+                switch (type) {
+                    case 'TOW_RESPONSE':
+                        await handleNotifUpdateTowRequest(client, userId, setTowRequest);
+                        break;
+                    case 'NEW_INVOICE':
+                        setNewInvoice(true);
+                        break;
+                    case 'NEW_ESTIMATE':
+                        setNewEstimate(true);
+                        break;
+                    case 'VEHICLE_PICKUP':
+                        await handleNotifUpdateVehicle(client, userId, setVehicles);
+                        setVehiclePickup(prev => !prev);
+                        break;
+                    case 'DRIVER_ACCOUNT':
+                        setRefreshPrompt(true);
+                        await initUser();
+                        break;
+                    case 'CUSTOM_NOTIFICATION':
+                        await setCustomNotification(notification.request.content);
+                        break;
                 }
             } catch (error) {
                 console.error(error);
@@ -262,17 +273,19 @@ const TabsContent = () =>
         responseListener.current = addNotificationResponseReceivedListener(response => {
             const { type } = response.notification.request.content.data;
 
-            if (type === "TOW_RESPONSE") {
-                router.push('(tabs)');
-            }
-            else if (type === "NEW_INVOICE") {
-                router.push('(profile)');
-            }
-            else if (type === "NEW_ESTIMATE") {
-                router.push('(profile)');
-            }
-            else if (type === "VEHICLE_PICKUP") {
-                router.push('(profile)');
+            switch (type) {
+                case 'TOW_RESPONSE':
+                    router.push('(tabs)');
+                    break;
+                case 'NEW_INVOICE':
+                    router.push('(profile)');
+                    break;
+                case 'NEW_ESTIMATE':
+                    router.push('(profile)');
+                    break;
+                case 'VEHICLE_PICKUP':
+                    router.push('(profile)');
+                    break;
             }
         });
 
