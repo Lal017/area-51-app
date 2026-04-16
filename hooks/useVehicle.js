@@ -14,7 +14,8 @@ const useVehicle = () =>
 
         // set vehicles
         const getVehicles = await handleGetVehicles(client, userId);
-        setVehicles(getVehicles);
+        if (getVehicles.errors) throw new Error(getVehicles.errors[0].message);
+        else setVehicles(getVehicles);
 
         // filter out vehicles that already have a scheduled pickup appointment
         const filterVehicles = getVehicles

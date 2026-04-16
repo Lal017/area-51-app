@@ -156,10 +156,6 @@ const handleUpdateVehiclePickup = async (client, vehicleId, userId, setVehicles)
         });
 
         if (result.errors) throw new Error(result.errors[0].message);
-
-        const getVehicles = await handleGetVehicles(client, userId);
-        if (getVehicles.errors) throw new Error(getVehicles.errors[0].message);
-        else setVehicles(getVehicles);
     } catch (error) {
         console.error('handleUpdateVehiclePickup ERROR:', error);
         throw error;

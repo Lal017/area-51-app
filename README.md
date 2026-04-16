@@ -1,5 +1,4 @@
 ToDo:
-    - fix refresh data for pickup vehicle when scheduling a vehicle pickup
     - add vehicle has been picked up already option to vehicle pickup screen
     - create custom hooks to simplify code i.e fetch towRequests into one hook, fetch userId into another hook etc.
     - add react native toast for quick messages (i.e 'Notification Sent)

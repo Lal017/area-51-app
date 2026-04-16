@@ -85,7 +85,7 @@ const VehicleList = () =>
                                                                                     setLoading(true);
                                                                                     await handleUpdateVehiclePickup(client, item.id, userId, setVehicles);
                                                                                     await handleDeleteAppointment(client, scheduledVehicles.find(vehicle => vehicle.vehicleId === item.id).appointmentId, userId, setAppointments);
-                                                                                    router.dismissAll();
+                                                                                    if (router.canDismiss()) router.dismissAll();
                                                                                     setLoading(false);
                                                                                 } catch (error) {
                                                                                     console.log(error);

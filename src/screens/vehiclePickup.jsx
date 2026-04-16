@@ -14,10 +14,11 @@ import { handleSendAdminNotif } from '../../services/notificationService';
 import { handleCreateAppointment } from '../../services/appointmentService';
 import { textSize, formatDate, formatTime } from '../../utils/utils';
 import useVehicle from '../../hooks/useVehicle';
+import { handleUpdateVehiclePickup } from '../../services/vehicleService';
 
 const VehiclePickup = () =>
 {
-    const { client, userId, setAppointments, vehiclePickup } = useApp();
+    const { client, userId, setAppointments, vehiclePickup, setVehicles } = useApp();
 
     const [ errorMessage, setErrorMessage ] = useState(undefined);
     const [ date, setDate ] = useState(new Date());
@@ -146,24 +147,43 @@ const VehiclePickup = () =>
                                     { errorMessage && (
                                         <ErrorDisplay message={errorMessage}/>
                                     )}
-                                    <ActionButton
-                                        text='Schedule Pickup'
-                                        primaryColor={Colors.secondary}
-                                        secondaryColor={Colors.secondaryShade}
-                                        onPress={async () => {
-                                            try {
-                                                await handleSendAdminNotif('Pickup Scheduled', 'A customer has scheduled a vehicle pickup');
-                                                const newAppointments = await handleCreateAppointment({client, date: date?.toLocaleDateString('sv-SE'), time, service: 'Vehicle Pickup', userId, vehicle: item, setAppointments});
+                                    <View style={{rowGap: 10}}>
+                                        <ActionButton
+                                            text='Schedule Pickup'
+                                            primaryColor={Colors.secondary}
+                                            secondaryColor={Colors.secondaryShade}
+                                            onPress={async () => {
+                                                try {
+                                                    await handleSendAdminNotif('Pickup Scheduled', 'A customer has scheduled a vehicle pickup');
+                                                    const newAppointments = await handleCreateAppointment({client, date: date?.toLocaleDateString('sv-SE'), time, service: 'Vehicle Pickup', userId, vehicle: item, setAppointments});
 
-                                                // refresh vehicles
-                                                await initVehicles(newAppointments);
+                                                    // refresh vehicles
+                                                    await initVehicles(newAppointments);
 
-                                                router.dismissAll();
-                                            } catch (error) {
-                                                console.error(error);
-                                            }
-                                        }}
-                                    />
+                                                    if (router.canDismiss()) router.dismissAll();
+                                                } catch (error) {
+                                                    console.error(error);
+                                                }
+                                            }}
+                                        />
+                                        <ActionButton
+                                            text='Vehicle has been picked up'
+                                            primaryColor={Colors.primary}
+                                            secondaryColor={Colors.primaryShade}
+                                            onPress={async () => {
+                                                try {
+                                                    await handleUpdateVehiclePickup(client, item.id, userId, setVehicles);
+
+                                                    // refresh vehicles
+                                                    await initVehicles();
+
+                                                    if (router.canDismiss()) router.dismissAll();
+                                                } catch (error) {
+                                                    console.error(error);
+                                                }
+                                            }}
+                                        />
+                                    </View>
                                 </View>
                             </>
                         }
