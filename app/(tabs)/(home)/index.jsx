@@ -198,7 +198,7 @@ const Index = () =>
           <TouchableOpacity
             style={HomeStyles.shortcutButton}
             onPress={() => {
-              if (vehiclePickup === true) {
+              if (vehiclePickup?.length > 0) {
                 router.push('vehiclePickup');
               } else {
                 router.push('vehicleList');
@@ -211,7 +211,7 @@ const Index = () =>
               start={{ x: 0, y: 0}}
               end={{ x: 0, y: 1}}
             />
-            { vehiclePickup && (
+            { vehiclePickup?.length > 0 && (
               <Animated.View
                 style={[shimmerStyle, {
                   position: 'absolute',
@@ -237,7 +237,7 @@ const Index = () =>
         justifyContent: 'center',
         padding: 15,
       }}>
-      { vehiclePickup ? (
+      { vehiclePickup?.length > 0 ? (
         <Text style={Styles.text}>Your vehicle is ready for pickup!</Text>
       ) : (
         <Text style={Styles.text}>Welcome {firstName}!</Text>

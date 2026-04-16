@@ -1,11 +1,11 @@
 import { handleGetVehicles } from "../services/vehicleService";
 import { useApp } from "./useApp";
 
-const useVehicle = (newAppointments) =>
+const useVehicle = () =>
 {
     const { client, userId, setVehicles, setVehiclePickup, appointments } = useApp();
 
-    const initVehicles = async () =>
+    const initVehicles = async (newAppointments) =>
     {
         // get vehicleIds that have an appointment scheduled for pickup
         const scheduledVehiclePickups = (newAppointments ?? appointments)

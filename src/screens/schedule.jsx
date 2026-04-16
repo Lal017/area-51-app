@@ -225,7 +225,7 @@ const Schedule = () =>
                     end={{ x: 1, y: 1}}
                   />
                   <FontAwesome6 name='caret-down' size={25} style={Styles.rightIcon}/>
-                  <Text style={Styles.tabText}>{selectedTime ? formatTime(selectedTime) : 'Select a time'}</Text>
+                  <Text style={Styles.text}>{selectedTime ? formatTime(selectedTime) : 'Select a time'}</Text>
                 </TouchableOpacity>
               </View>
               { errorMessage && (
@@ -261,26 +261,29 @@ const Schedule = () =>
               >
                 <BottomSheetView>
                   <View style={Styles.block}>
-                    <View style={ServiceStyles.timeContainer}>
-                      {availableAppointments?.map((time, index) => (
+                    <SimpleList
+                      data={availableAppointments}
+                      style={ServiceStyles.timeContainer}
+                      renderItem={({item}) =>
                         <TouchableOpacity
-                          key={index}
-                          style={[Styles.tabWrapper, {width: '45%', height: 60, justifyContent: 'center', paddingLeft: 0}]}
+                          style={[{
+                              backgroundColor: Colors.contrastShade,
+                              borderRadius: 3,
+                              padding: 10,
+                              width: '45%' },
+                              selectedTime === item && {
+                                  backgroundColor: Colors.contrast
+                              }
+                          ]}
                           onPress={() => {
-                            setSelectedTime(time);
+                            setSelectedTime(item);
                             handleClosePress();
                           }}
                         >
-                          <LinearGradient
-                            colors={[Colors.backgroundContrast, Colors.backgroundContrastShade, Colors.backgroundContrastShade]}
-                            start={{ x: 0, y: 0}}
-                            end={{ x: 0, y: 1}}
-                            style={{position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, borderRadius: 10}}
-                          />
-                          <Text style={Styles.tabText}>{formatTime(time)}</Text>
+                          <Text style={[Styles.text, { textAlign: 'center' }]}>{formatTime(item)}</Text>
                         </TouchableOpacity>
-                      ))}
-                    </View>
+                      }
+                    />
                   </View>
                 </BottomSheetView>
               </BottomSheet>
@@ -296,6 +299,7 @@ const Schedule = () =>
               <View style={Styles.block}>
                 <SimpleList
                   data={vehicles}
+                  style={{rowGap: 5}}
                   renderItem={({item}) =>
                     <Select
                       header={`${item.year}`}

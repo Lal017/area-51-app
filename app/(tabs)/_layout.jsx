@@ -6,7 +6,7 @@ import LottieView from "lottie-react-native";
 import { handleGetMyAppointments } from "../../services/appointmentService";
 import { handleGetTowRequest, handleNotifUpdateTowRequest } from '../../services/towService';
 import { ActionButton, Background, Loading } from "../../components/components";
-import { handleGetVehicles, handleNotifUpdateVehicle } from "../../services/vehicleService";
+import { handleNotifUpdateVehicle } from "../../services/vehicleService";
 import { handleSendAdminNotif, registerForPushNotifications } from "../../services/notificationService";
 import { handleCreateUser, handleUpdateUser, handleGetUser } from '../../services/userService';
 import { Styles } from "../../constants/styles";

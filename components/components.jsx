@@ -166,7 +166,7 @@ const Tab = ({header, text, action, leftIcon, rightIcon, style}) =>
             {leftIcon}
             <View style={!header ? {flexDirection: 'row'} : {flexDirection: 'column'}}>
                 <Text style={Styles.tabHeader}>{header}</Text>
-                <Text style={Styles.tabText}>{text}</Text>
+                <Text style={Styles.text}>{text}</Text>
             </View>
             {rightIcon}
         </TouchableOpacity>
@@ -190,7 +190,7 @@ const Select = ({header, text, selected, action, leftIcon, rightIcon, style}) =>
             {leftIcon}
             <View style={!header ? {flexDirection: 'row'} : {flexDirection: 'column'}}>
                 <Text style={[Styles.tabHeader, selected && {color: Colors.text}]}>{header}</Text>
-                <Text style={Styles.tabText}>{text}</Text>
+                <Text style={Styles.text}>{text}</Text>
             </View>
             {rightIcon}         
         </TouchableOpacity>
@@ -210,13 +210,13 @@ const BinarySelect = ({trueText, falseText, value, onChange}) =>
                 style={[Styles.binaryTabWrapper, value && {padding: 15, backgroundColor: Colors.secondary}]}
                 onPress={() => onChange(true)}
             >
-                <Text style={[Styles.tabText, {textAlign: 'center'}]}>{trueText}</Text>
+                <Text style={[Styles.text, {textAlign: 'center'}]}>{trueText}</Text>
             </TouchableOpacity>
             <TouchableOpacity
                 style={[Styles.binaryTabWrapper, value === false && {padding: 15, backgroundColor: Colors.error}]}
                 onPress={() => onChange(false)}
             >
-                <Text style={[Styles.tabText, {textAlign: 'center'}]}>{falseText}</Text>
+                <Text style={[Styles.text, {textAlign: 'center'}]}>{falseText}</Text>
             </TouchableOpacity>
         </View>
     );
@@ -298,10 +298,10 @@ const AppointmentReminder = ({appointments}) =>
 };
 
 // resuable list component without virtualization
-const SimpleList = ({data = [], renderItem}) =>
+const SimpleList = ({data = [], renderItem, style}) =>
 {
     return(
-        <View style={{rowGap: 5}}>
+        <View style={style}>
             {data?.map((item, index) => (
                 <React.Fragment key={index}>
                     {renderItem({ item })}
@@ -428,7 +428,7 @@ const SubTab = ({header, text, icon}) =>
             {icon}
             <View style={!header ? {flexDirection: 'row'} : {flexDirection: 'column'}}>
                 <Text style={Styles.tabHeader}>{header}</Text>
-                <Text style={Styles.tabText}>{text}</Text>
+                <Text style={Styles.text}>{text}</Text>
             </View>
         </View>
     );
@@ -485,13 +485,13 @@ const getStatus = (status) =>
 {
     switch (status) {
         case 'COMPLETED':
-            return <Text style={Styles.tabText}>Completed</Text>;
+            return <Text style={Styles.text}>Completed</Text>;
         case 'IN_PROGRESS':
-            return <Text style={[Styles.tabText, {color: Colors.primary}]}>In Progress</Text>;
+            return <Text style={[Styles.text, {color: Colors.primary}]}>In Progress</Text>;
         case 'CANCELLED':
-            return <Text style={[Styles.tabText, {color: Colors.error}]}>Cancelled</Text>;
+            return <Text style={[Styles.text, {color: Colors.error}]}>Cancelled</Text>;
         case 'REQUESTED':
-            return <Text style={[Styles.tabText, {color: Colors.secondary}]}>Requested</Text>;
+            return <Text style={[Styles.text, {color: Colors.secondary}]}>Requested</Text>;
         default:
             return <Text>N/A</Text>
     }

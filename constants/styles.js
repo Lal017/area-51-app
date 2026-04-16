@@ -108,12 +108,6 @@ const Styles = StyleSheet.create({
         textAlign: 'left',
         color: Colors.grayText
     },
-    tabText: {
-        fontSize: textSize(15),
-        fontFamily: 'Roboto-Light',
-        textAlign: 'left',
-        color: Colors.text
-    },
     errorText: {
         fontSize: textSize(15),
         fontFamily: 'SpaceMono-Regular',
@@ -288,7 +282,7 @@ const ServiceStyles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'space-evenly',
-        rowGap: 10,
+        rowGap: 10
     },
     // towRequest.jsx
     mapContainer: {

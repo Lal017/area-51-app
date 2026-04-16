@@ -15,6 +15,7 @@ const Profile = () =>
 {
     const { email, firstName, lastName, newInvoice, setNewInvoice, newEstimate, setNewEstimate, vehiclePickup } = useApp();
 
+    // custom hooks
     const shimmerStyle = useShimmer();
 
     return(

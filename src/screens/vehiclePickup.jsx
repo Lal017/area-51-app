@@ -185,39 +185,33 @@ const VehiclePickup = () =>
                         end={{ x: 0, y: 1}}
                     />
                     <View style={[Styles.block, {paddingTop: 20}]}>
-                        <View style={ServiceStyles.timeContainer}>
-                            { availableSlots.length > 0 ? (
-                                <SimpleList
-                                    data={availableSlots}
-                                    renderItem={({item}) =>
-                                        <TouchableOpacity
-                                            onPress={() => setTime(item)}
-                                            style={[
-                                            {
-                                                backgroundColor: 'rgba(0,0,0,0.5)',
-                                                borderRadius: 5,
-                                                padding: 10,
-                                                width: '45%'
-                                            },
+                        { availableSlots.length > 0 ? (
+                            <SimpleList
+                                data={availableSlots}
+                                style={ServiceStyles.timeContainer}
+                                renderItem={({item}) =>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            setTime(item);
+                                            handleClosePress();
+                                        }}
+                                        style={[{
+                                            backgroundColor: Colors.contrastShade,
+                                            borderRadius: 3,
+                                            padding: 10,
+                                            width: '45%' },
                                             time === item && {
                                                 backgroundColor: Colors.contrast
                                             }
-                                            ]}
-                                        >
-                                            <Text style={[Styles.text, time === item && {color: Colors.textAlt}, { textAlign: 'center' }]}>{formatTime(item)}</Text>
-                                        </TouchableOpacity>
-                                    }
-                                />
-                            ) : (
-                                <View style={Styles.block}>
-                                    <Text style={[Styles.headerTitle, {textAlign: 'center'}]}>No Available Times</Text>
-                                </View>
-                            )}
-                        </View>
-                        <ActionButton
-                            text='Done'
-                            onPress={async () => handleClosePress()}
-                        />
+                                        ]}
+                                    >
+                                        <Text style={[Styles.text, { textAlign: 'center' }]}>{formatTime(item)}</Text>
+                                    </TouchableOpacity>
+                                }
+                            />
+                        ) : (
+                            <Text style={[Styles.headerTitle, {textAlign: 'center'}]}>No Available Times</Text>
+                        )}
                     </View>
                 </BottomSheetScrollView>
             </BottomSheet>
