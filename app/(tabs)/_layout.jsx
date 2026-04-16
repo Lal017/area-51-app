@@ -387,7 +387,7 @@ const TabsContent = () =>
                         tabBarIcon: ({ color, size }) => (
                             <Ionicons name="person" size={size} color={color}/>
                         ),
-                        tabBarBadge: newInvoice && newEstimate && vehiclePickup ? (3) : [newInvoice, newEstimate, vehiclePickup].filter(Boolean).length === 2 ? (2) : newInvoice || newEstimate || vehiclePickup ? (1) : undefined, 
+                        tabBarBadge: [newInvoice, newEstimate, vehiclePickup?.length > 0].filter(Boolean).length || undefined, 
                     }}
                 />
             </Tabs>

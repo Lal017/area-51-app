@@ -23,7 +23,7 @@ const TowRequestList = () =>
 
     const pickerRef = useRef();
 
-    const shimmerStyle = useShimmer(requests);
+    const shimmerStyle = useShimmer();
 
     const onRefresh = async () =>
     {

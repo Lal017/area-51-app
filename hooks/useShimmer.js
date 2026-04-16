@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useAnimatedStyle, useSharedValue, withRepeat, withTiming, Easing } from "react-native-reanimated";
 
-const useShimmer = (dependency, duration = 3000) =>
+const useShimmer = (duration = 3000) =>
 {
     const shimmer = useSharedValue(-10);
 
@@ -11,7 +11,7 @@ const useShimmer = (dependency, duration = 3000) =>
             -1,
             false
         );
-    }, [dependency]);
+    }, []);
 
     const shimmerStyle = useAnimatedStyle(() => ({
         transform: [{ translateX: shimmer.value * 100 }]

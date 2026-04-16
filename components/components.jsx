@@ -228,7 +228,7 @@ const AppointmentReminder = ({appointments}) =>
     const [ index, setIndex ] = useState(0);
     const fadeAnim = useRef(new RNAnimated.Value(1)).current;
 
-    const shimmerStyle = useShimmer(appointments, 5000);
+    const shimmerStyle = useShimmer(5000);
 
     useEffect(() => {
         if(!appointments || appointments?.length <= 1) return;

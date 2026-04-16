@@ -41,7 +41,7 @@ const Index = () =>
   const ref = useRef();
 
   // custom hooks
-  const shimmerStyle = useShimmer(vehiclePickup, 2500);
+  const shimmerStyle = useShimmer(2500);
   const { initVehicles } = useVehicle();
 
   const onRefresh = async () =>

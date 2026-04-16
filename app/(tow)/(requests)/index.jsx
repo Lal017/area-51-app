@@ -2,6 +2,7 @@ import MaskedView from '@react-native-masked-view/masked-view';
 import LottieView from 'lottie-react-native';
 import Colors from '../../../constants/colors';
 import Animated from 'react-native-reanimated';
+import useShimmer from '../../../hooks/useShimmer';
 import { useApp } from '../../../hooks/useApp';
 import { Background, Loading, Tab, getStatus } from '../../../components/components';
 import { Styles } from '../../../constants/styles';
@@ -11,7 +12,6 @@ import { Text, View } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
-import useShimmer from '../../../hooks/useShimmer';
 
 const RequestList = () =>
 {
@@ -21,7 +21,7 @@ const RequestList = () =>
     const [ ready, setReady ] = useState(false);
     const [ refreshing, setRefreshing ] = useState();
 
-    const shimmerStyle = useShimmer(towRequests);
+    const shimmerStyle = useShimmer();
 
     const onRefresh = async () =>
     {

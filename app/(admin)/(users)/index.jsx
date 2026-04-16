@@ -22,7 +22,7 @@ const UserList = () =>
     const [ refreshing, setRefreshing ] = useState();
     const [ statusFilter, setStatusFilter ] = useState('All');
 
-    const shimmerStyle = useShimmer(users);
+    const shimmerStyle = useShimmer();
 
     const onRefresh = async () =>
     {
