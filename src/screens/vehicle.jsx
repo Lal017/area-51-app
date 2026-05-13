@@ -150,17 +150,14 @@ const Vehicle = () =>
 
                                 if (!year || !make || !model || !color) { setLoading(false); return; }
                                 if (vehicle) {
-                                    getError = await handleUpdateVehicle(client, {year, make, model, color, plate, vin}, vehicle.id, userId, setVehicles);
+                                    await handleUpdateVehicle(client, {year, make, model, color, plate, vin}, vehicle.id, userId, setVehicles);
                                 } else {
-                                    getError = await handleCreateVehicle(client, {year, make, model, color, plate, vin}, userId, setVehicles);
+                                    await handleCreateVehicle(client, {year, make, model, color, plate, vin}, userId, setVehicles);
                                 }
-                                if (!getError) {
-                                    router.dismissAll();
-                                } else {
-                                    setErrorMessage(getError);
-                                }
+                                router.dismissAll();
                             } catch (error) {
                                 console.error(error);
+                                setErrorMessage(error.message);
                             }
                         }}
                     />

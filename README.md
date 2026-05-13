@@ -1,5 +1,4 @@
 ToDo:
-    - add vehicle has been picked up already option to vehicle pickup screen
     - create custom hooks to simplify code i.e fetch towRequests into one hook, fetch userId into another hook etc.
     - add react native toast for quick messages (i.e 'Notification Sent)
     - handle error messages accordingly with UI prompts instead of console logs
@@ -25,6 +24,7 @@ PotentialChanges:
     - Add dataModel to save data for notifications instead of sending data directly through a notification
     - newEstimate and newInvoice do not update if you launch the app from the terminated state by clicking on the app itself (Adding dataModel for notification data would fix this)
     - move initialize app functions to components file
+    - allow admin to reschedule a customers appointment
     - make a function to catch certain error messages so i can output my desired user friendly error message
     - add navigation screen that doesnt compute bearing in case phone doesnt have a bearing sensor (rare) OR don't allow navigation if no bearing sensor
     - update notification listeners for Admins and TowDrivers

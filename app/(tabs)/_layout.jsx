@@ -34,7 +34,8 @@ const TabsContent = () =>
         setVehicles, towRequest, setTowRequest, setAppointments,
         newInvoice, setNewInvoice, newEstimate, setNewEstimate,
         vehiclePickup, setVehiclePickup,
-        isMissingAttr, setCustomNotification, driverId
+        isMissingAttr, setCustomNotification, driverId,
+        vehicles
     } = useApp();
 
     // load components when finished fetching data
@@ -55,6 +56,8 @@ const TabsContent = () =>
     const { initUser } = useUser();
     const { initData } = useInitData();
     const { initVehicles } = useVehicle();
+
+    console.log(vehicles);
 
     const onRefresh = async () =>
     {

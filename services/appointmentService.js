@@ -116,10 +116,23 @@ const handleCreateAppointment = async ({client, date, time, service, notes, user
         });
 
         if (result.errors) throw new Error(result.errors[0].message);
-        
-        const getAppointments = await handleGetMyAppointments(client, userId);
-        setAppointments(getAppointments);
-        return getAppointments;
+
+        const newAppointmentData = result.data.createAppointment;
+
+        const newAppointment = {
+            ...newAppointmentData,
+            vehicle: {
+                id: newAppointmentData.vehicleId,
+                year: newAppointmentData.vehicleYear,
+                make: newAppointmentData.vehicleMake,
+                model: newAppointmentData.vehicleModel,
+                color: newAppointmentData.vehicleColor,
+                plate: newAppointmentData.vehiclePlate,
+                vin: newAppointmentData.vehicleVin
+            }
+        };
+
+        setAppointments(prev => [...prev, newAppointment]);
     } catch (error) {
         console.error('handleCreateAppointment ERROR:', error);
         throw error;
@@ -152,10 +165,25 @@ const handleUpdateAppointment = async (client, appointmentId, date, time, servic
         });
 
         if (result.errors) throw new Error(result.errors[0].message);
-
-        const getAppointments = await handleGetMyAppointments(client, userId);
-        setAppointments(getAppointments);
         
+        const updatedAppointmentData = result.data.updateAppointment;
+
+        const updatedAppointment = {
+            ...updatedAppointmentData,
+            vehicle: {
+                id: updatedAppointmentData.vehicleId,
+                year: updatedAppointmentData.vehicleYear,
+                make: updatedAppointmentData.vehicleMake,
+                model: updatedAppointmentData.vehicleModel,
+                color: updatedAppointmentData.vehicleColor,
+                plate: updatedAppointmentData.vehiclePlate,
+                vin: updatedAppointmentData.vehicleVin
+            }
+        };
+
+        setAppointments(prev =>
+            prev.map(appt => appt.id === appointmentId ? updatedAppointment : appt)
+        );
     } catch (error) {
         console.error('handleUpdateAppointment ERROR:', error);
         throw error;
@@ -177,8 +205,9 @@ const handleDeleteAppointment = async (client, appointmentId, userId, setAppoint
 
         if (result.errors) throw new Error(result.errors[0].message);
 
-        const getAppointments = await handleGetMyAppointments(client, userId);
-        setAppointments(getAppointments);
+        setAppointments(prev =>
+            prev.filter(appt => appt.id !== appointmentId)
+        );
     } catch (error) {
         console.error('handleDeleteAppointment ERROR:', error);
         throw error;

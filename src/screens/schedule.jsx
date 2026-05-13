@@ -527,7 +527,8 @@ const Schedule = () =>
                         await handleSendAdminNotif('Appointment Scheduled', 'A customer has scheduled an appointment');
                         await handleCreateAppointment({client, date: selectedDay, time: selectedTime, service: selectedService, notes, userId, vehicle: selectedVehicle, setAppointments});
                       }
-                        router.replace('(tabs)');
+                      if (router.canDismiss()) router.dismissAll();
+                      router.replace('(tabs)');
                     } else {
                       Alert.alert(
                         'Time slot invalid',

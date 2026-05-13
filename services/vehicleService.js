@@ -68,9 +68,8 @@ const handleCreateVehicle = async (client, vehicle, userId, setVehicles) =>
 
         if (result.errors) throw new Error(result.errors[0].message);
 
-        const newVehicle = await client.graphql({ query: listVehicles });
-        if (newVehicle.errors) throw new Error(newVehicle.errors[0].message);
-        else setVehicles(newVehicle.data.listVehicles.items);
+        const newVehicle = result.data.createVehicle;
+        setVehicles(prev => [...prev, newVehicle]);
     } catch (error) {
         console.error('handleCreateVehicle ERROR:', error);
         throw error;
@@ -99,9 +98,10 @@ const handleUpdateVehicle = async (client, vehicle, vehicleId, userId, setVehicl
 
         if (result.errors) throw new Error(result.errors[0].message);
 
-        const newVehicles = await client.graphql({ query: listVehicles });
-        if (newVehicles.errors) throw new Error(newVehicles.errors[0].message);
-        else setVehicles(newVehicles.data.listVehicles.items);
+        const updatedVehicle = result.data.updateVehicle;
+        setVehicles(prev =>
+            prev.map(vehicle => vehicle.id === updatedVehicle.id ? updatedVehicle : vehicle)
+        );
     } catch (error) {
         console.error('handleUpdateVehicle ERROR:', error);
         throw error;
@@ -177,9 +177,9 @@ const handleDeleteVehicle = async (client, vehicleId, setVehicles) =>
 
         if (result.errors) throw new Error(result.errors[0].message);
 
-        const newVehicles = await client.graphql({ query: listVehicles });
-        if (newVehicles.errors) throw new Error(newVehicles.errors[0].message);
-        else setVehicles(newVehicles.data.listVehicles.items);
+        setVehicles(prev =>
+            prev.filter(vehicle => vehicle.id !== vehicleId)
+        );
     } catch (error) {
         console.error('handleDeleteVehicle ERROR:', error);
         throw error;
